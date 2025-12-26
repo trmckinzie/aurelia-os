@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA // GARDEN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { aurelia: { bg: '#050505', panel: '#0a0a0a', cyan: '#00FFFF', orange: '#FFA500', green: '#00FF00', dim: '#333333', text: '#e5e5e5' } },
+                    fontFamily: { mono: ['"Space Mono"', 'monospace'], sans: ['"Inter"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-aurelia-bg text-aurelia-text font-sans min-h-screen selection:bg-aurelia-cyan selection:text-black overflow-y-auto flex flex-col">
+
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-bg/90 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between font-mono text-xs tracking-widest">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <span class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></span>
+                <span class="text-aurelia-green">AURELIA OS // GARDEN</span>
+            </a>
+            <div class="flex gap-6 text-gray-500">
+                <a href="index.html" class="hover:text-aurelia-green transition-colors">LOBBY</a>
+                <a href="garden.html" class="text-aurelia-cyan border-b border-aurelia-cyan pb-1">GARDEN</a>
+                <a href="museum.html" class="hover:text-aurelia-green transition-colors">MUSEUM</a>
+                <a href="portfolio.html" class="hover:text-white transition-colors">PORTFOLIO</a>
+                <a href="services.html" class="hover:text-aurelia-orange transition-colors">SERVICES</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-6 pt-32 pb-20 w-full grid grid-cols-1 lg:grid-cols-4 gap-12">
+        
+        <div class="lg:col-span-3">
+            <div class="font-mono text-aurelia-cyan text-xs mb-4">> /ACCESSING_GROWTH_NODES...</div>
+            <h1 class="text-4xl font-bold mb-8">DIGITAL GARDEN</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <article class="bg-aurelia-panel border border-aurelia-dim p-6 hover:border-aurelia-cyan transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-[10px] text-aurelia-cyan bg-aurelia-cyan/10 px-2 py-1">IDEA</span>
+                        <span class="text-lg">🌱</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-aurelia-cyan transition-colors">A Note on Entropy</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Why disorder increases in systems without active maintenance.</p>
+                </article>
+                
+                <article class="bg-aurelia-panel border border-aurelia-dim p-6 hover:border-aurelia-green transition-colors group cursor-pointer">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="font-mono text-[10px] text-aurelia-green bg-aurelia-green/10 px-2 py-1">THEORY</span>
+                        <span class="text-lg">🌳</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 group-hover:text-aurelia-green transition-colors">Memetics</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Ideas survive using the same selection pressures as genes.</p>
+                </article>
+            </div>
+        </div>
+
+        <aside class="hidden lg:block space-y-8">
+            <div class="border border-aurelia-dim p-5">
+                <h4 class="font-mono text-xs text-aurelia-cyan mb-4 border-b border-aurelia-dim pb-2">INPUT_STREAM</h4>
+                <div class="flex gap-4 items-center">
+                    <div class="w-12 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center text-[8px] text-gray-500">[IMG]</div>
+                    <div>
+                        <p class="text-sm font-bold text-white">Current Read</p>
+                        <p class="text-xs text-gray-500">Author Name</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <footer class="border-t border-aurelia-dim py-6 bg-aurelia-panel">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-widest">
+            <span>LOC: UNITED STATES</span>
+            <span>AURELIA_OS // GARDEN MODULE</span>
+        </div>
+    </footer>
+</body>
+</html>
