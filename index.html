@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA // MAIN_HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        aurelia: { 
+                            bg: '#050505', 
+                            panel: '#0a0a0a', 
+                            cyan: '#00FFFF', 
+                            orange: '#FFA500', 
+                            green: '#00FF00', 
+                            dim: '#333333', 
+                            text: '#e5e5e5' 
+                        }
+                    },
+                    fontFamily: { 
+                        mono: ['"Space Mono"', 'monospace'], 
+                        sans: ['"Inter"', 'sans-serif'] 
+                    },
+                    animation: {
+                        'cursor-blink': 'blink 1s step-end infinite',
+                    },
+                    keyframes: {
+                        blink: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-aurelia-bg text-aurelia-text font-sans min-h-screen selection:bg-aurelia-green selection:text-black flex flex-col overflow-y-scroll">
+
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-bg/90 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between font-mono text-xs tracking-widest">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <span class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></span>
+                <span class="text-aurelia-green">AURELIA OS // ONLINE</span>
+            </a>
+            <div class="flex gap-6 text-gray-500">
+                <a href="index.html" class="text-aurelia-green border-b border-aurelia-green pb-1">LOBBY</a> 
+                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">GARDEN</a>
+                <a href="museum.html" class="hover:text-aurelia-green transition-colors">MUSEUM</a>
+                <a href="portfolio.html" class="hover:text-white transition-colors">PORTFOLIO</a>
+                <a href="services.html" class="hover:text-aurelia-orange transition-colors">SERVICES</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col justify-center pt-32 pb-20 max-w-6xl mx-auto w-full px-6">
+
+        <header class="mb-20">
+            <div class="font-mono text-aurelia-green text-xs mb-6 flex items-center gap-2 border border-aurelia-dim w-fit px-3 py-1 bg-aurelia-panel">
+                <span class="w-1 h-1 bg-aurelia-green rounded-full"></span>
+                SYSTEM_READY // v2.4
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-bold mb-8 tracking-tighter leading-none">
+                THOUGHT <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-aurelia-green via-aurelia-cyan to-white">ARCHITECTURE.</span>
+            </h1>
+            
+            <div class="h-px w-24 bg-aurelia-dim mb-8"></div>
+
+            <p class="text-xl text-gray-400 max-w-2xl font-mono leading-relaxed h-16">
+                <span id="typewriter"></span><span class="animate-cursor-blink text-aurelia-green">_</span>
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+<a href="garden.html" class="group relative h-72 bg-aurelia-panel border border-aurelia-dim p-8 hover:border-aurelia-cyan transition-all duration-500 overflow-hidden flex flex-col justify-between">
+    
+    <div class="absolute inset-0 z-0">
+        <img src="assets/garden-pixel.png" 
+             alt="Digital Garden Interface" 
+             class="w-full h-full object-cover opacity-75 mix-blend-luminosity group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out">
+        <div class="absolute inset-0 bg-gradient-to-t from-aurelia-panel via-transparent to-transparent opacity-90"></div>
+    </div>
+
+    <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity z-10">
+        <span class="font-mono text-4xl font-bold text-aurelia-cyan">01</span>
+    </div>
+
+    <div class="absolute inset-0 bg-aurelia-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none"></div>
+    
+    <div class="relative z-20">
+        <span class="font-mono text-[10px] text-aurelia-cyan mb-2 block tracking-widest">INPUT // WORKSHOP</span>
+        <h2 class="text-3xl font-bold text-white group-hover:text-aurelia-cyan transition-colors shadow-black drop-shadow-md">The Garden</h2>
+    </div>
+
+    <div class="relative z-20 border-t border-aurelia-dim pt-4 group-hover:border-aurelia-cyan/30 transition-colors">
+        <p class="text-xs font-mono text-gray-400 group-hover:text-gray-200">
+            > DAILY NOTES<br>
+            > RAW IDEAS<br>
+            > CURRENT READING
+        </p>
+    </div>
+</a>
+
+            <a href="museum.html" class="group relative h-72 bg-aurelia-panel border border-aurelia-dim p-8 hover:border-aurelia-green transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <span class="font-mono text-4xl font-bold text-aurelia-green">02</span>
+                </div>
+                <div class="absolute inset-0 bg-aurelia-green/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="relative z-10">
+                    <span class="font-mono text-[10px] text-aurelia-green mb-2 block tracking-widest">STORAGE // GALLERY</span>
+                    <h2 class="text-3xl font-bold text-white group-hover:text-aurelia-green transition-colors">The Museum</h2>
+                </div>
+                <div class="relative z-10 border-t border-aurelia-dim pt-4 group-hover:border-aurelia-green/30 transition-colors">
+                    <p class="text-xs font-mono text-gray-500 group-hover:text-gray-300">
+                        > CURATED EXHIBITS<br>
+                        > EVERGREEN TOPICS<br>
+                        > DEEP DIVES
+                    </p>
+                </div>
+            </a>
+
+            <a href="portfolio.html" class="group relative h-72 bg-aurelia-panel border border-aurelia-dim p-8 hover:border-white transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <span class="font-mono text-4xl font-bold text-white">03</span>
+                </div>
+                <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="relative z-10">
+                    <span class="font-mono text-[10px] text-gray-400 mb-2 block tracking-widest">OUTPUT // PROOF</span>
+                    <h2 class="text-3xl font-bold text-white">Portfolio</h2>
+                </div>
+                <div class="relative z-10 border-t border-aurelia-dim pt-4 group-hover:border-white/30 transition-colors">
+                    <p class="text-xs font-mono text-gray-500 group-hover:text-gray-300">
+                        > CASE STUDIES<br>
+                        > DEPLOYED PROJECTS<br>
+                        > PUBLICATIONS
+                    </p>
+                </div>
+            </a>
+
+            <a href="services.html" class="group relative h-72 bg-aurelia-panel border border-aurelia-dim p-8 hover:border-aurelia-orange transition-all duration-300 overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-0 right-0 p-4 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <span class="font-mono text-4xl font-bold text-aurelia-orange">04</span>
+                </div>
+                <div class="absolute inset-0 bg-aurelia-orange/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div class="relative z-10">
+                    <span class="font-mono text-[10px] text-aurelia-orange mb-2 block tracking-widest">COMMERCE // MARKET</span>
+                    <h2 class="text-3xl font-bold text-white group-hover:text-aurelia-orange transition-colors">Services</h2>
+                </div>
+                <div class="relative z-10 border-t border-aurelia-dim pt-4 group-hover:border-aurelia-orange/30 transition-colors">
+                    <p class="text-xs font-mono text-gray-500 group-hover:text-gray-300">
+                        > SYSTEMS ARCHITECTURE<br>
+                        > CONSULTING<br>
+                        > WEB DEVELOPMENT
+                    </p>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-aurelia-dim py-6 bg-aurelia-panel mt-auto">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-widest">
+            <div>
+                <span>LOC: UNITED STATES</span>
+                <span class="mx-2">|</span>
+                <span>LATENCY: 12ms</span>
+            </div>
+            <div>
+                ALL SYSTEMS NOMINAL
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const text = "Designing personal knowledge management systems that turn information into intelligence.";
+        const element = document.getElementById("typewriter");
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 25); // Slightly faster typing speed
+            }
+        }
+
+        // Start typing when page loads
+        window.onload = typeWriter;
+    </script>
+
+</body>
+</html>

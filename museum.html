@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA // MUSEUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { aurelia: { bg: '#050505', panel: '#0a0a0a', cyan: '#00FFFF', orange: '#FFA500', green: '#00FF00', dim: '#333333', text: '#e5e5e5' } },
+                    fontFamily: { mono: ['"Space Mono"', 'monospace'], sans: ['"Inter"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-aurelia-bg text-aurelia-text font-sans min-h-screen selection:bg-aurelia-cyan selection:text-black overflow-y-auto flex flex-col">
+
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-bg/90 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between font-mono text-xs tracking-widest">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <span class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></span>
+                <span class="text-aurelia-green">AURELIA OS // MUSEUM</span>
+            </a>
+            <div class="flex gap-6 text-gray-500">
+                <a href="index.html" class="hover:text-aurelia-green transition-colors">LOBBY</a>
+                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">GARDEN</a>
+                <a href="museum.html" class="text-aurelia-green border-b border-aurelia-green pb-1">MUSEUM</a>
+                <a href="portfolio.html" class="hover:text-white transition-colors">PORTFOLIO</a>
+                <a href="services.html" class="hover:text-aurelia-orange transition-colors">SERVICES</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 px-6 max-w-6xl mx-auto w-full">
+        <div class="font-mono text-white text-xs mb-4">> /LOADING_EXHIBITS...</div>
+        <h1 class="text-4xl md:text-5xl font-bold mb-8">THE EXHIBITS</h1>
+        
+        <div class="relative max-w-2xl group">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span class="text-aurelia-green font-mono">></span>
+            </div>
+            <input type="text" class="w-full bg-aurelia-panel border border-aurelia-dim text-white font-mono text-sm py-4 pl-10 pr-4 focus:outline-none focus:border-white transition-colors placeholder-gray-700" placeholder="SEARCH_EXHIBITS...">
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto px-6 pb-20 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="bg-aurelia-panel border border-aurelia-dim p-6 relative group overflow-hidden hover:border-white transition-all duration-300 h-64 flex flex-col justify-between">
+                <div class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative z-10">
+                    <span class="font-mono text-[10px] text-white border border-white/30 px-2 py-1">SLOT_01</span>
+                    <h2 class="text-2xl font-bold text-white mt-4">Evolutionary Theory</h2>
+                    <p class="text-xs text-gray-500 mt-2 font-mono">The algorithm of life.</p>
+                </div>
+                <div class="relative z-10">
+                    <button class="w-full border border-aurelia-dim text-gray-400 text-xs font-mono py-2 group-hover:bg-white group-hover:text-black transition-all uppercase">Enter Exhibit ></button>
+                </div>
+            </div>
+
+            <div class="border border-aurelia-dim border-dashed p-6 h-64 flex flex-col justify-center items-center opacity-50">
+                <div class="font-mono text-2xl text-gray-700 mb-2">SLOT_02</div>
+                <div class="font-mono text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded">[LOCKED]</div>
+            </div>
+
+            </div>
+    </main>
+
+    <footer class="border-t border-aurelia-dim py-6 bg-aurelia-panel">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-widest">
+            <span>LOC: UNITED STATES</span>
+            <span>AURELIA_OS // MUSEUM MODULE</span>
+        </div>
+    </footer>
+</body>
+</html>

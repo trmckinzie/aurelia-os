@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURELIA // SERVICES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { aurelia: { bg: '#050505', panel: '#0a0a0a', cyan: '#00FFFF', orange: '#FFA500', green: '#00FF00', dim: '#333333', text: '#e5e5e5' } },
+                    fontFamily: { mono: ['"Space Mono"', 'monospace'], sans: ['"Inter"', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-aurelia-bg text-aurelia-text font-sans min-h-screen selection:bg-aurelia-cyan selection:text-black overflow-y-auto flex flex-col">
+
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-bg/90 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between font-mono text-xs tracking-widest">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <span class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></span>
+                <span class="text-aurelia-green">AURELIA OS // SERVICES</span>
+            </a>
+            <div class="flex gap-6 text-gray-500">
+                <a href="index.html" class="hover:text-aurelia-green transition-colors">LOBBY</a>
+                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">GARDEN</a>
+                <a href="museum.html" class="hover:text-aurelia-green transition-colors">MUSEUM</a>
+                <a href="portfolio.html" class="hover:text-white transition-colors">PORTFOLIO</a>
+                <a href="services.html" class="text-aurelia-orange border-b border-aurelia-orange pb-1">SERVICES</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-6 pt-32 pb-20 w-full">
+        <div class="font-mono text-aurelia-orange text-xs mb-4">> /INITIATING_COMMERCE_PROTOCOL...</div>
+        <h1 class="text-4xl font-bold mb-12">AVAILABLE SERVICES</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div class="border border-aurelia-dim bg-aurelia-panel p-8 hover:border-aurelia-orange transition-all duration-300 flex flex-col justify-between h-full">
+                <div>
+                    <span class="text-aurelia-orange font-mono text-xs border border-aurelia-orange/30 px-2 py-1 mb-4 inline-block">STRATEGY</span>
+                    <h3 class="text-2xl font-bold text-white mb-4">Systems Architecture</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                        Complete audit and restructuring of your personal knowledge management systems. We turn your chaotic notes into a streamlined engine for thought.
+                    </p>
+                    <ul class="text-xs font-mono text-gray-500 space-y-2 mb-8">
+                        <li>> OBSIDIAN VAULT SETUP</li>
+                        <li>> WORKFLOW OPTIMIZATION</li>
+                        <li>> DATA MIGRATION</li>
+                    </ul>
+                </div>
+                <button class="w-full bg-aurelia-dim/30 border border-aurelia-dim text-white py-3 hover:bg-aurelia-orange hover:text-black hover:border-aurelia-orange transition-all font-mono text-sm">
+                    INQUIRE NOW
+                </button>
+            </div>
+
+            <div class="border border-aurelia-dim bg-aurelia-panel p-8 hover:border-aurelia-orange transition-all duration-300 flex flex-col justify-between h-full">
+                <div>
+                    <span class="text-aurelia-orange font-mono text-xs border border-aurelia-orange/30 px-2 py-1 mb-4 inline-block">BUILD</span>
+                    <h3 class="text-2xl font-bold text-white mb-4">Web Development</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                        High-fidelity, aesthetic web experiences like Aurelia OS. Custom-coded, fast, and designed to impress.
+                    </p>
+                    <ul class="text-xs font-mono text-gray-500 space-y-2 mb-8">
+                        <li>> CUSTOM HTML/CSS/TAILWIND</li>
+                        <li>> BRAND IDENTITY</li>
+                        <li>> DEPLOYMENT</li>
+                    </ul>
+                </div>
+                <button class="w-full bg-aurelia-dim/30 border border-aurelia-dim text-white py-3 hover:bg-aurelia-orange hover:text-black hover:border-aurelia-orange transition-all font-mono text-sm">
+                    INQUIRE NOW
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-aurelia-dim py-6 bg-aurelia-panel">
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center font-mono text-[10px] text-gray-600 uppercase tracking-widest">
+            <span>LOC: UNITED STATES</span>
+            <span>AURELIA_OS // COMMERCE MODULE</span>
+        </div>
+    </footer>
+</body>
+</html>
