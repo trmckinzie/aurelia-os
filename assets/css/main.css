@@ -1,0 +1,34 @@
+/*
+  This is the main CSS file for Aurelia OS.
+  It uses Tailwind CSS, a utility-first CSS framework.
+  https://tailwindcss.com/
+*/
+
+/*
+  These are called "directives". They tell Tailwind to inject its
+  "base" styles, "components" styles, and "utilities" styles into the CSS.
+  This is what makes all the `bg-`, `text-`, `p-` classes work.
+*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  This is an "@layer" rule. It tells Tailwind to add our custom styles
+  to its "base" layer. This is how we can extend the default theme.
+*/
+@layer base {
+    body {
+        /*
+          These are custom properties (also called CSS variables).
+          They allow us to reuse values, like our color palette.
+        */
+        --color-aurelia-bg: #050505;
+        --color-aurelia-panel: #0a0a0a;
+        --color-aurelia-cyan: #00FFFF;
+        --color-aurelia-orange: #FFA500;
+        --color-aurelia-green: #00FF00;
+        --color-aurelia-dim: #333333;
+        --color-aurelia-text: #e5e5e5;
+    }
+}
