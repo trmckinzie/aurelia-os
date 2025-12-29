@@ -1,4 +1,5 @@
 ---
+publish: true
 created: 2025-12-24
 tags:
   - type/concept
