@@ -1,0 +1,58 @@
+{
+  "collapse-filter": false,
+  "search": "-path:90_SYSTEM  ",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": false,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:10_GARDEN/11_Daily_Bridge  ",
+      "color": {
+        "a": 1,
+        "rgb": 197379
+      }
+    },
+    {
+      "query": "path:10_GARDEN/12_Seeds/12.1_Concepts  ",
+      "color": {
+        "a": 1,
+        "rgb": 464877
+      }
+    },
+    {
+      "query": "path:20_MUSEUM/22_Library/22.1_Authors  ",
+      "color": {
+        "a": 1,
+        "rgb": 15795204
+      }
+    },
+    {
+      "query": "path:20_MUSEUM/23_Disciplines  ",
+      "color": {
+        "a": 1,
+        "rgb": 391685
+      }
+    },
+    {
+      "query": "path:20_MUSEUM/22_Library/22.2_Materials  ",
+      "color": {
+        "a": 1,
+        "rgb": 15794421
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": false,
+  "textFadeMultiplier": -0.4,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1.784375,
+  "collapse-forces": false,
+  "centerStrength": 0,
+  "repelStrength": 20,
+  "linkStrength": 1,
+  "linkDistance": 500,
+  "scale": 0.0989543021863706,
+  "close": false
+}

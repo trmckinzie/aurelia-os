@@ -1,0 +1,249 @@
+{
+  "main": {
+    "id": "af27bb463dedf73a",
+    "type": "split",
+    "children": [
+      {
+        "id": "3212e1961c4488d4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6da8adecba6f3e00",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4d8f77f9698fe714",
+    "type": "split",
+    "children": [
+      {
+        "id": "c8e9c2aa633bb1ff",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e65373cadd01ed0f",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3242358b6c5d1899",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:status/seed",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "42d1d1ef523ab0ca",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 422.5
+  },
+  "right": {
+    "id": "fa00e42778c428e9",
+    "type": "split",
+    "children": [
+      {
+        "id": "04cfdf26b4ac3925",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "df55f8deadaa113c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "7940086a71b43f2c",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "67f20e06f732b112",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "958912d09f0382b8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.canvas",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Untitled"
+            }
+          },
+          {
+            "id": "84ee9d2bc9c3db38",
+            "type": "leaf",
+            "state": {
+              "type": "smart-connections-view",
+              "state": {},
+              "icon": "smart-connections",
+              "title": "Connections"
+            }
+          },
+          {
+            "id": "a26fb13fce28c318",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          }
+        ],
+        "currentTab": 2
+      },
+      {
+        "id": "14d3c84de7ea7f9e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4f240b44ec5d8481",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "daily-notes:Open today's daily note": false,
+      "graph:Open graph view": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "templater-obsidian:Templater": false,
+      "smart-connections:Smart Connections: Open connections view": false,
+      "smart-connections:Smart Lookup: Open lookup view": false,
+      "smart-connections:Smart Connections: Open random connection": false,
+      "canvas:Create new canvas": false
+    }
+  },
+  "active": "6da8adecba6f3e00",
+  "lastOpenFiles": [
+    "00_INBOX/negative feedback.md",
+    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
+    "90_SYSTEM/92_Templates/TPL_Synthesis_Note.md",
+    "20_MUSEUM/22_Library/22.2_Materials/Darwin's Dangerous Idea.md",
+    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis.md",
+    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",
+    "Untitled",
+    "90_SYSTEM/92_Templates/TPL_Source.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
+    "Untitled.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Evolution.md",
+    "Biology.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-27.md",
+    "Natural Selection.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Information Retrieval.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Transistor.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Feynman Technique.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Free-Floating Rationale.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Feed Forward.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/DNA.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Coevolution.md",
+    "logic gate.md",
+    "Complexity.md",
+    "binary switch.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Genes.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Survival Machines.md",
+    "90_SYSTEM/93_Assets",
+    "40_SERVICES/42_Business_Logic",
+    "40_SERVICES/41_Clients",
+    "30_PORTFOLIO/32_Archive",
+    "30_PORTFOLIO/31_Active_Projects",
+    "20_MUSEUM/23_Disciplines",
+    "20_MUSEUM/22_Library",
+    "20_MUSEUM/21_Exhibits",
+    "Untitled.canvas"
+  ]
+}
