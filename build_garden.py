@@ -200,7 +200,7 @@ def build_garden():
 
                     <div class="w-full h-px bg-gray-800/50"></div>
 
-                   <p class="text-sm text-white leading-relaxed font-normal line-clamp-5">
+                   <p class="text-sm text-gray-100 leading-relaxed font-normal line-clamp-5">
     {blurb}
 </p>
 

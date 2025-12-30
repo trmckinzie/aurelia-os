@@ -36,6 +36,7 @@
     <style>
       body { background-color: #0a0a0b; }
       
+      
       /* THE AURELIA ATMOSPHERE */
       .scanline {
         width: 100%; height: 100px; z-index: 40;
@@ -67,10 +68,8 @@
       .prose h1 { color: white; font-size: 1.8em; font-weight: 700; margin-bottom: 0.5em; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
       .prose h2 { color: #e5e7eb; font-size: 1.4em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
       .prose h3 { color: #00f2ff; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
-      
-      /* Brighter body text */
+      /* Brighter body text (matches text-gray-200) */
       .prose p { color: #e5e7eb; line-height: 1.6; margin-bottom: 1em; }
-      
       /* Brighter list items */
       .prose ul { list-style: disc; padding-left: 1.5em; color: #e5e7eb; margin-bottom: 1em; }
       .prose blockquote { border-left: 3px solid #00f2ff; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(0,242,255,0.05); padding: 1em; border-radius: 4px; }
@@ -83,9 +82,7 @@
       ::-webkit-scrollbar-thumb:hover { background: #00f2ff; }
     </style>
 </head>
-<body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col relative">
-    
-    <canvas id="neural-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+<body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
     
     <div class="scanline"></div>
 
@@ -104,7 +101,7 @@
         </div>
     </nav>
 
-    <div class="fixed top-14 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+<div class="fixed top-14 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-wrap gap-2" id="filter-controls">
                 <button onclick="setFilter('all')" class="filter-btn active px-5 py-2 text-xs font-mono border border-aurelia-cyan bg-aurelia-cyan/10 text-aurelia-cyan rounded uppercase tracking-wider transition-all">All_Systems</button>
@@ -114,32 +111,29 @@
                 <button onclick="setFilter('author')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white rounded transition-colors uppercase tracking-wider">Authors</button>
                 <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-green hover:border-aurelia-green rounded transition-colors uppercase tracking-wider">Disciplines</button>
             </div>
-            
-            <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
+            //
+<div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
                 <span class="text-xs opacity-50">CMD://</span>
                 <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-cyan focus:outline-none w-full placeholder-gray-200">
             </div>
         </div>
     </div>
 
-    <main class="relative z-10 flex-grow pt-44 pb-20 px-6 w-full max-w-[1600px] mx-auto">
+    <main class="flex-grow pt-44 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-800">
-            <img src="assets/garden_banner.png" 
-                 alt="System Header" 
-                 class="w-full h-48 object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-in-out">
-            <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif')] opacity-5 pointer-events-none mix-blend-overlay"></div>
-            <div class="absolute bottom-4 left-6">
-                <h1 class="text-4xl font-bold text-white font-mono tracking-tighter">COGNITIVE_ATLAS</h1>
-                <p class="text-xs text-aurelia-cyan font-mono mt-1 tracking-widest">SYSTEM STATUS: ONLINE // MOUNTED</p>
-            </div>
+        <img src="assets/images/garden_banner.jpg" 
+     alt="System Header" 
+     class="w-full h-48 object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-in-out">
+        <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif')] opacity-5 pointer-events-none mix-blend-overlay"></div>
+        <div class="absolute bottom-4 left-6">
+            <h1 class="text-4xl font-bold text-white font-mono tracking-tighter">COGNITIVE_ATLAS</h1>
+            <p class="text-xs text-aurelia-cyan font-mono mt-1 tracking-widest">SYSTEM STATUS: ONLINE // MOUNTED</p>
         </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="cardGrid">
-            </div>
+    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="cardGrid"><!-- CARDS_INJECTION_POINT --></div>
     </main>
 
-    <div id="data-storage" style="display: none;">
-        </div>
+    <div id="data-storage" style="display: none;"><!-- DATA_INJECTION_POINT --></div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
         <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-6xl h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
@@ -157,7 +151,7 @@
             </div>
 
             <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none text-sm font-sans leading-relaxed">
-            </div>
+                </div>
 
             <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
                 <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE</span>
@@ -239,98 +233,6 @@
         document.addEventListener('keydown', (e) => { 
             if (e.key === 'Escape') closeModal(); 
         });
-    </script>
-
-    <script>
-        const canvas = document.getElementById('neural-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let particles = [];
-        
-        // CONFIGURATION
-        const particleCount = 60; // Number of nodes
-        const connectionDistance = 150; // How far to connect
-        const moveSpeed = 0.3; // How fast they float
-        
-        // AURELIA PALETTE
-        const colors = [
-            '#00f2ff', // Cyan
-            '#39ff14', // Green
-            '#ff8c00', // Orange
-            '#ffffff'  // White
-        ];
-
-        // RESIZE HANDLER
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        // PARTICLE CLASS
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * moveSpeed;
-                this.vy = (Math.random() - 0.5) * moveSpeed;
-                this.size = Math.random() * 2 + 1;
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-        }
-
-        // INIT
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // ANIMATION LOOP
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-                p.update();
-                p.draw();
-
-                for (let j = i; j < particles.length; j++) {
-                    let p2 = particles[j];
-                    let dx = p.x - p2.x;
-                    let dy = p.y - p2.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < connectionDistance) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = p.color; 
-                        ctx.lineWidth = 0.5;
-                        ctx.globalAlpha = 1 - (distance / connectionDistance); 
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.stroke();
-                        ctx.globalAlpha = 1; 
-                    }
-                }
-            }
-            requestAnimationFrame(animate);
-        }
-
-        animate();
     </script>
 </body>
 </html>
