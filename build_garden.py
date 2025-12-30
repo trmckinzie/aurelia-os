@@ -193,16 +193,17 @@ def build_garden():
                                 <span class="w-1.5 h-1.5 {color.replace('border-l-', 'bg-')} rounded-full"></span>
                                 <span class="text-[10px] font-mono {color.replace('border-l-', 'text-')} uppercase tracking-widest">{label}</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-gray-100 font-mono group-hover:text-white transition-colors">{title}</h3>
+                            <h3 class="text-3xl font-bold text-white font-mono group-hover:text-white transition-colors">{title}</h3>
                         </div>
                         <div class="text-3xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">{icon}</div>
                     </div>
 
                     <div class="w-full h-px bg-gray-800/50"></div>
 
-                    <p class="text-sm text-gray-400 leading-relaxed font-light line-clamp-5">
-                        {blurb}
-                    </p>
+                   <p class="text-sm text-white leading-relaxed font-normal line-clamp-5">
+    {blurb}
+</p>
+
 
                     {extra}
                 </article>
