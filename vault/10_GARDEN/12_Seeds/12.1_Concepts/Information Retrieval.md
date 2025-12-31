@@ -15,7 +15,7 @@ tags:
 ---
 
 ### 💡 Definition
-> Information retrieval is the process of accessing stored representations to make them available for use in [[cognition]], [[computation]], or decision-making.
+> Information retrieval is the process of accessing stored representations to make them available for use in [[Cognition]], [[computation]], or decision-making.
 
 ### 📝 Key Insight
 - Retrieval is **reconstructive**, shaped by context, cues, and prior knowledge.

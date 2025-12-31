@@ -5,10 +5,11 @@ tags:
   - topic/systems
   - topic/computation
   - topic/cognitive-science
+publish: true
 ---
 # ⚛️ Feed Forward
 
-**🔗 Related:** [[negative feedback]]
+**🔗 Related:** [[Negative Feedback]]
 
 ---
 
@@ -18,7 +19,7 @@ tags:
 ### 📝 Key Insight
 - Feedforward enables **speed and efficiency** by acting before errors occur.
 - It depends on accurate models of the environment or system dynamics.
-- Biological [[cognition]] often combines feedforward prediction with feedback correction.
+- Biological [[Cognition]] often combines feedforward prediction with feedback correction.
 
 ---
 

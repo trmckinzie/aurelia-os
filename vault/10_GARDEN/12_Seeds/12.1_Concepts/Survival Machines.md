@@ -5,6 +5,7 @@ tags:
   - status/seed
   - topic/biology
   - topic/evolution
+publish: true
 ---
 # ⚛️ Survival Machines
 
@@ -13,7 +14,7 @@ tags:
 ---
 
 ### 💡 Definition
-> Survival machines are organisms understood as temporary vehicles constructed by[[Genes]] to protect themselves and promote their replication in a given environment.
+> Survival machines are organisms understood as temporary vehicles constructed by[[Gene]] to protect themselves and promote their replication in a given environment.
 
 ### 📝 Key Insight
 * Organisms are not the ultimate beneficiaries of [[Evolution]]; they are expendable structures that genes use to persist across generations.

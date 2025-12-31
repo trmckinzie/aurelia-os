@@ -5,10 +5,11 @@ tags:
   - status/seed
   - topic/biology
   - topic/evolution
+publish: true
 ---
-# ⚛️ Genes
+# ⚛️ Gene
 
-**🔗 Related:** [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]], [[Richard Dawkins]] [[Survival Machines]], [[Replicator]] ,[[Evolution]], [[The Selfish Gene]]
+**🔗 Related:** [[Natural Selection]], [[Richard Dawkins]] [[Survival Machines]], [[Replicator]] ,[[Evolution]], [[The Selfish Gene]]
 
 ---
 

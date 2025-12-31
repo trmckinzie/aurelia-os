@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "3212e1961c4488d4",
+        "id": "e12fded50058ddcd",
         "type": "tabs",
         "children": [
           {
-            "id": "6da8adecba6f3e00",
+            "id": "146487451c56e46a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Psychology.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Psychology"
             }
           }
         ]
@@ -49,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:status/seed",
+                "query": "tag:stat",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for Non-Teleological Process"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from Non-Teleological Process"
             }
           },
           {
@@ -136,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Untitled.canvas",
+                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Untitled"
+              "title": "Outline of Non-Teleological Process"
             }
           },
           {
@@ -168,9 +174,19 @@
               "icon": "lucide-archive",
               "title": "All properties"
             }
+          },
+          {
+            "id": "30199277bf44703e",
+            "type": "leaf",
+            "state": {
+              "type": "smart-lookup-view",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "smart-lookup-view"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 4
       },
       {
         "id": "14d3c84de7ea7f9e",
@@ -190,7 +206,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 559.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -199,51 +215,51 @@
       "graph:Open graph view": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
+      "canvas:Create new canvas": false,
       "templater-obsidian:Templater": false,
       "smart-connections:Smart Connections: Open connections view": false,
       "smart-connections:Smart Lookup: Open lookup view": false,
-      "smart-connections:Smart Connections: Open random connection": false,
-      "canvas:Create new canvas": false
+      "smart-connections:Smart Connections: Open random connection": false
     }
   },
-  "active": "6da8adecba6f3e00",
+  "active": "146487451c56e46a",
   "lastOpenFiles": [
-    "00_INBOX/negative feedback.md",
+    "20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
+    "Psychology.md",
+    "20_MUSEUM/22_Library/22.1_Authors/Steven Pinker.md",
+    "Computation.md",
+    "Cognition.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Heuristic.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
+    "Binary Switch.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
+    "Untitled.md",
+    "90_SYSTEM/92_Templates/TPL_Author.md",
+    "90_SYSTEM/92_Templates/TPL_Author 1.md",
+    "90_SYSTEM/92_Templates/TPL_Concept.md",
+    "10_GARDEN/12_Seeds/12.2_Ideas",
+    "10_GARDEN/12_Seeds/Untitled.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-30.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-27.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-22.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "90_SYSTEM/91_Manual/Master Operating Manual.md",
+    "90_SYSTEM/91_Manual/Template_Protocols.md",
+    "20_MUSEUM/22_Library/22.2_Materials/The Selfish Gene.md",
+    "10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
-    "90_SYSTEM/92_Templates/TPL_Synthesis_Note.md",
+    "20_MUSEUM/22_Library/22.2_Materials/The Blank Slate.md",
+    "Mind.md",
     "20_MUSEUM/22_Library/22.2_Materials/Darwin's Dangerous Idea.md",
-    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis.md",
+    "Untitled.base",
+    "Untitled.canvas",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",
     "Untitled",
-    "90_SYSTEM/92_Templates/TPL_Source.md",
-    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
-    "20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
-    "Untitled.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Evolution.md",
-    "Biology.md",
-    "10_GARDEN/11_Daily_Bridge/2025-12-27.md",
-    "Natural Selection.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Information Retrieval.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Transistor.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Feynman Technique.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Free-Floating Rationale.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Feed Forward.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/DNA.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Coevolution.md",
-    "logic gate.md",
-    "Complexity.md",
-    "binary switch.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Genes.md",
-    "10_GARDEN/12_Seeds/12.1_Concepts/Survival Machines.md",
     "90_SYSTEM/93_Assets",
     "40_SERVICES/42_Business_Logic",
     "40_SERVICES/41_Clients",
     "30_PORTFOLIO/32_Archive",
     "30_PORTFOLIO/31_Active_Projects",
-    "20_MUSEUM/23_Disciplines",
-    "20_MUSEUM/22_Library",
-    "20_MUSEUM/21_Exhibits",
-    "Untitled.canvas"
+    "20_MUSEUM/23_Disciplines"
   ]
 }

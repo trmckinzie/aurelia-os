@@ -5,6 +5,7 @@ tags:
   - status/seed
   - topic/cognitive-science
   - topic/evolution
+publish: true
 ---
 # ⚛️ Crane
 
@@ -17,7 +18,7 @@ tags:
 
 ### 📝 Key Insight
 * Cranes contrast with “[[Skyhook]],” which falsely explain complexity by appealing to unexplained intelligence or magic.
-- Darwinian [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]] is Dennett’s paradigmatic crane: a blind, cumulative process capable of producing design-like outcomes. [[Non-Teleological Process]]
+- Darwinian [[Natural Selection]] is Dennett’s paradigmatic crane: a blind, cumulative process capable of producing design-like outcomes. [[Non-Teleological Process]]
 - Using cranes forces explanations to remain mechanistic, historical, and testable, disciplining intuition and preventing metaphysical shortcuts.
 
 ---
