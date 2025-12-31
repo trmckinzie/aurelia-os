@@ -4,7 +4,7 @@ tags:
   - type/concept
   - topic/
   - status/seed
-publish: true
+publish: false
 ---
 # ⚛️ Sense Organ
 
