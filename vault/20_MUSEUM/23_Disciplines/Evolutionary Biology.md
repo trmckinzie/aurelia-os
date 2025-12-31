@@ -14,7 +14,7 @@ publish: true
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-* [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection|Natural Selection]]
+* [[Natural Selection|Natural Selection]]
 - [[Genetic Variation]]
 - [[Inheritance]]
 - [[Fitness]]
