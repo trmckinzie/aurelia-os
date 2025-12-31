@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "ef45287ee42f184f",
+        "id": "76eb83a0cc44b8e6",
         "type": "tabs",
         "children": [
           {
-            "id": "abe8db236ba0fece",
+            "id": "88ece8c1288583fe",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -176,6 +176,9 @@
       "bases:Create new base": false
     }
   },
-  "active": "abe8db236ba0fece",
-  "lastOpenFiles": []
+  "active": "88ece8c1288583fe",
+  "lastOpenFiles": [
+    "GEMINI.md",
+    "vault/90_SYSTEM/91_Manual/Master Operating Manual.md"
+  ]
 }
