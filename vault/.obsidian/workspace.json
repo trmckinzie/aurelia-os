@@ -157,8 +157,8 @@
             "state": {
               "type": "smart-connections-view",
               "state": {},
-              "icon": "smart-connections",
-              "title": "Connections"
+              "icon": "lucide-ghost",
+              "title": "smart-connections-view"
             }
           },
           {
@@ -198,8 +198,8 @@
             "state": {
               "type": "calendar",
               "state": {},
-              "icon": "calendar-with-checkmark",
-              "title": "Calendar"
+              "icon": "lucide-ghost",
+              "title": "calendar"
             }
           }
         ]
@@ -215,12 +215,7 @@
       "graph:Open graph view": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "canvas:Create new canvas": false,
-      "templater-obsidian:Templater": false,
-      "smart-connections:Smart Connections: Open connections view": false,
-      "smart-connections:Smart Lookup: Open lookup view": false,
-      "smart-connections:Smart Connections: Open random connection": false,
-      "obsidian-git:Open Git source control": false
+      "canvas:Create new canvas": false
     }
   },
   "active": "e65373cadd01ed0f",
