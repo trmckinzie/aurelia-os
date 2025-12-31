@@ -4,7 +4,7 @@ tags:
   - type/concept
   - topic/
   - status/seed
-publish: false
+publish: true
 ---
 # ⚛️ Sense Organ
 
@@ -13,7 +13,7 @@ publish: false
 ---
 
 ### 💡 Definition
-> TEST
+> TEST DID THIS WORK 
 
 ### 📝 Key Insight
 * TEST

@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "408cb67236a3e198",
+        "id": "a93914b1b9d12ab6",
         "type": "tabs",
         "children": [
           {
-            "id": "fc375eee39ce7cf0",
+            "id": "77bb42e318d1f01a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -223,8 +223,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "fc375eee39ce7cf0",
+  "active": "77bb42e318d1f01a",
   "lastOpenFiles": [
+    "vault/00_INBOX/Sense Organ.md",
     "vault/00_INBOX/Test Note.md",
     "vault/20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
     "vault/20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
@@ -251,7 +252,6 @@
     "20_MUSEUM/22_Library/22.2_Materials/The Selfish Gene.md",
     "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
-    "20_MUSEUM/22_Library/22.2_Materials/The Blank Slate.md",
     "Untitled.base",
     "Untitled.canvas",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",
