@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "80c1be8976a0598a",
+        "id": "408cb67236a3e198",
         "type": "tabs",
         "children": [
           {
-            "id": "e9f5bd646acc47e6",
+            "id": "fc375eee39ce7cf0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "vault/00_INBOX/Sense Organ.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Sense Organ"
             }
           }
         ]
@@ -153,8 +157,8 @@
             "state": {
               "type": "smart-connections-view",
               "state": {},
-              "icon": "lucide-ghost",
-              "title": "smart-connections-view"
+              "icon": "smart-connections",
+              "title": "Connections"
             }
           },
           {
@@ -194,8 +198,8 @@
             "state": {
               "type": "calendar",
               "state": {},
-              "icon": "lucide-ghost",
-              "title": "calendar"
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
             }
           }
         ]
@@ -211,11 +215,19 @@
       "graph:Open graph view": false,
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
-      "canvas:Create new canvas": false
+      "canvas:Create new canvas": false,
+      "templater-obsidian:Templater": false,
+      "smart-connections:Smart Connections: Open connections view": false,
+      "smart-connections:Smart Lookup: Open lookup view": false,
+      "smart-connections:Smart Connections: Open random connection": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "fc375eee39ce7cf0",
   "lastOpenFiles": [
+    "vault/00_INBOX/Test Note.md",
+    "vault/20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
+    "vault/20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
     "Psychology.md",
     "20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
     "20_MUSEUM/22_Library/22.1_Authors/Steven Pinker.md",
@@ -225,7 +237,6 @@
     "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
     "Binary Switch.md",
     "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
-    "Untitled.md",
     "90_SYSTEM/92_Templates/TPL_Author.md",
     "90_SYSTEM/92_Templates/TPL_Author 1.md",
     "90_SYSTEM/92_Templates/TPL_Concept.md",
@@ -241,8 +252,6 @@
     "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
     "20_MUSEUM/22_Library/22.2_Materials/The Blank Slate.md",
-    "Mind.md",
-    "20_MUSEUM/22_Library/22.2_Materials/Darwin's Dangerous Idea.md",
     "Untitled.base",
     "Untitled.canvas",
     "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",

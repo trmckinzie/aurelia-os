@@ -1,6 +1,6 @@
 {
   "command_timeout": 5,
-  "templates_folder": "90_SYSTEM/92_Templates",
+  "templates_folder": "vault/90_SYSTEM/92_Templates",
   "templates_pairs": [
     [
       "",
