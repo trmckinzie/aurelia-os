@@ -1,0 +1,54 @@
+name: Deploy Aurelia OS
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Check out your code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # 3. Run Your Engine (Creates garden.html)
+      - name: Build Garden Module
+        run: python build_garden.py
+
+      # 4. Assemble Site (Prepare the clean folder)
+      - name: Assemble Site
+        run: |
+          mkdir public_site
+          
+          # Copy the core HTML files
+          cp index.html public_site/
+          cp garden.html public_site/
+          cp museum.html public_site/
+          cp portfolio.html public_site/
+          cp services.html public_site/
+          
+          # Copy the Assets folder (Recursively)
+          # IMPORTANT: Ensure your local folder is named exactly 'assets' (lowercase)
+          if [ -d "assets" ]; then cp -r assets public_site/; fi
+          
+          # Copy the Vault (Optional: only if you link to images inside the vault)
+          if [ -d "vault" ]; then cp -r vault public_site/; fi
+
+      # 5. Deploy to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public_site
+
+          "Add deployment workflow"
