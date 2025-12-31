@@ -19,7 +19,7 @@ publish: true
 ---
 
 ### 💡 The Core Argument (Thesis)
->Dennett argues that Darwin’s theory of [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design without foresight, and that taking this idea seriously “eats through” traditional views about [[Mind]], [[meaning]], [[morality]], and [[human exceptionalism]].
+>Dennett argues that Darwin’s theory of [[Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design without foresight, and that taking this idea seriously “eats through” traditional views about [[Mind]], [[meaning]], [[morality]], and [[human exceptionalism]].
 
 ---
 
