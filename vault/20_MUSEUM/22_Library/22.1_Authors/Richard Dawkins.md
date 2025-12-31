@@ -5,6 +5,7 @@ tags:
   - topic/biology
   - topic/evolution
   - topic/memetics
+publish: true
 ---
 # 👤 Richard Dawkins
 ---

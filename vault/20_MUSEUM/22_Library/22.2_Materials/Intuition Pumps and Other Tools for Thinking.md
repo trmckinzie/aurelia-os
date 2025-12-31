@@ -7,6 +7,7 @@ tags:
   - topic/cognitive-science
   - topic/phil-mind
   - topic/memetics
+publish: true
 ---
 # 📖 [[Intuition Pumps and Other Tools for Thinking]]
 
@@ -23,7 +24,7 @@ tags:
 
 ### 🧠 Concepts Extracted
 *(Concepts linked here will show in Graph View)*
-* - **[[Intuition Pump]]— Thought experiments engineered to train intuition rather than prove conclusions.
+*  [[Intuition Pump]]— Thought experiments engineered to train intuition rather than prove conclusions.
 - **[[Thinking Tool]]** — Conceptual devices (heuristics, distinctions, questions) that improve reasoning quality.
 - **[[Skyhook]] vs. [[Crane]]** — Illegitimate “magic” explanations versus stepwise, mechanistic ones.
 - [[Competence Without Comprehension]] — Systems can perform intelligently without understanding (key to mind/AI debates).

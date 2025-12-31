@@ -8,6 +8,7 @@ tags:
   - topic/systems
   - topic/cognitive-science
   - status/seed
+publish: true
 ---
 # ⚛️ Coevolution
 

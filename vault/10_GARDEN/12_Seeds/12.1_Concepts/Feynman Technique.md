@@ -5,6 +5,7 @@ tags:
   - status/seed
   - topic/cognitive-science
   - topic/learning
+publish: true
 ---
 # ⚛️ [[Feynman Technique]]
 

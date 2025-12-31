@@ -6,6 +6,7 @@ tags:
   - topic/computation
   - topic/systems
   - status/seed
+publish: true
 ---
 # ⚛️ Transistor
 
@@ -14,12 +15,12 @@ tags:
 ---
 
 ### 💡 Definition
-> A transistor is a [[semiconductor]] device that controls the flow of electrical current, enabling amplification, switching, and digital computation.
+> A transistor is a [[Semiconductor]] device that controls the flow of electrical current, enabling amplification, switching, and digital computation.
 
 ### 📝 Key Insight
 
 - Transistors are the **fundamental building blocks** of modern computing and information processing [[Systems]].
-- Their ability to act as [[binary switch]] underlies [[logic gate]] and [[algorithm]]s.
+- Their ability to act as [[Binary Switch]] underlies [[Logic Gate]] and [[Algorithm]]s.
 - They exemplify how simple components can generate complex behavior when scaled and networked.
 ---
 

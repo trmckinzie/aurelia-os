@@ -8,12 +8,11 @@ tags:
 # 🧠 <% tp.file.title %>
 
 ### 🧐 Definition (The Scope)
-> *Define what this field includes and excludes.*
+>
 
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-*Reviewing these concepts builds understanding of the discipline.*
 * [[ ]]
 * [[ ]]
 * [[ ]]

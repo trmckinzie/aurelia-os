@@ -6,10 +6,12 @@ tags:
   - topic/phil-mind
   - topic/evolution
   - topic/biology
+publish: true
+aliases:
 ---
 # ⚛️ Non-Teleological Process
 
-**🔗 Related:** [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]]
+**🔗 Related:** [[Natural Selection]]
 
 ---
 

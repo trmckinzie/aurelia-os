@@ -1,5 +1,4 @@
 ---
-Publish: true
 created: 2025-12-27
 tags:
   - type/concept
@@ -8,16 +7,18 @@ tags:
   - topic/evolution
   - topic/phil-mind
   - status/sapling
+publish: true
 ---
 # ⚛️ Evolution
 
-**🔗 Related:** [[[[Natural Selection]]
+**🔗 Related:** 
 - [[Genetic Variation]]
 - [[Inheritance]]
 - [[Fitness]]
 - [[Adaptation]]
 - [[Population Thinking]]
 - [[Evolutionary Biology]]
+- [[Natural Selection]]
 
 ---
 

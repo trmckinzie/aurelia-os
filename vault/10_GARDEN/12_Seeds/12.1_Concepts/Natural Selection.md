@@ -6,10 +6,15 @@ tags:
   - topic/biology
   - topic/evolution
   - topic/memetics
+publish: true
 ---
 # ⚛️ Natural Selection
 
-**🔗 Related:** [[Non-Teleological Process]][[Genes]][[Richard Dawkins]][[The Selfish Gene]]
+**🔗 Related:** 
+[[Non-Teleological Process]]
+[[Gene]]
+[[Evolution]]
+[[Evolutionary Biology]]
 
 ---
 
