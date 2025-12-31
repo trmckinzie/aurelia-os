@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "af27bb463dedf73a",
+    "id": "4c25ef275dc5eac7",
     "type": "split",
     "children": [
       {
-        "id": "80c1be8976a0598a",
+        "id": "11592aeb94526968",
         "type": "tabs",
         "children": [
           {
-            "id": "e9f5bd646acc47e6",
+            "id": "be7b64ad2186fe17",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Cognition.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Cognition"
+              "title": "New tab"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "4d8f77f9698fe714",
+    "id": "db0174fe3ca0d79c",
     "type": "split",
     "children": [
       {
-        "id": "c8e9c2aa633bb1ff",
+        "id": "e457e11d8b7e0c39",
         "type": "tabs",
         "children": [
           {
-            "id": "e65373cadd01ed0f",
+            "id": "9e4d554c395ef9c0",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,12 +44,12 @@
             }
           },
           {
-            "id": "3242358b6c5d1899",
+            "id": "75238317a9f3188d",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:stat",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -65,7 +61,7 @@
             }
           },
           {
-            "id": "42d1d1ef523ab0ca",
+            "id": "9d0435964a261391",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -78,23 +74,22 @@
       }
     ],
     "direction": "horizontal",
-    "width": 422.5
+    "width": 300
   },
   "right": {
-    "id": "fa00e42778c428e9",
+    "id": "ca0d5ba9c666e9d5",
     "type": "split",
     "children": [
       {
-        "id": "04cfdf26b4ac3925",
+        "id": "35b1370d3ecff198",
         "type": "tabs",
         "children": [
           {
-            "id": "df55f8deadaa113c",
+            "id": "6c92fadb269a941d",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,25 +99,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Non-Teleological Process"
+              "title": "Backlinks"
             }
           },
           {
-            "id": "7940086a71b43f2c",
+            "id": "55cd736e673f9a33",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Non-Teleological Process"
+              "title": "Outgoing links"
             }
           },
           {
-            "id": "67f20e06f732b112",
+            "id": "70980da558f24cf7",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -137,32 +131,7 @@
             }
           },
           {
-            "id": "958912d09f0382b8",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-list",
-              "title": "Outline of Non-Teleological Process"
-            }
-          },
-          {
-            "id": "84ee9d2bc9c3db38",
-            "type": "leaf",
-            "state": {
-              "type": "smart-connections-view",
-              "state": {},
-              "icon": "lucide-ghost",
-              "title": "smart-connections-view"
-            }
-          },
-          {
-            "id": "a26fb13fce28c318",
+            "id": "20c0e95ad936548c",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -176,86 +145,37 @@
             }
           },
           {
-            "id": "30199277bf44703e",
+            "id": "c547b98b76ca1baf",
             "type": "leaf",
             "state": {
-              "type": "smart-lookup-view",
-              "state": {},
-              "icon": "lucide-ghost",
-              "title": "smart-lookup-view"
-            }
-          }
-        ],
-        "currentTab": 4
-      },
-      {
-        "id": "14d3c84de7ea7f9e",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "4f240b44ec5d8481",
-            "type": "leaf",
-            "state": {
-              "type": "calendar",
-              "state": {},
-              "icon": "lucide-ghost",
-              "title": "calendar"
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 559.5
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
       "switcher:Open quick switcher": false,
-      "daily-notes:Open today's daily note": false,
       "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false,
-      "canvas:Create new canvas": false
+      "bases:Create new base": false
     }
   },
-  "active": "e65373cadd01ed0f",
-  "lastOpenFiles": [
-    "Psychology.md",
-    "20_MUSEUM/23_Disciplines/Evolutionary Biology.md",
-    "20_MUSEUM/22_Library/22.1_Authors/Steven Pinker.md",
-    "Computation.md",
-    "Cognition.md",
-    "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Heuristic.md",
-    "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
-    "Binary Switch.md",
-    "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
-    "Untitled.md",
-    "90_SYSTEM/92_Templates/TPL_Author.md",
-    "90_SYSTEM/92_Templates/TPL_Author 1.md",
-    "90_SYSTEM/92_Templates/TPL_Concept.md",
-    "00_INBOX/10_GARDEN/12_Seeds/12.2_Ideas",
-    "10_GARDEN/12_Seeds/Untitled.md",
-    "00_INBOX/10_GARDEN/11_Daily_Bridge/2025-12-30.md",
-    "00_INBOX/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
-    "00_INBOX/10_GARDEN/11_Daily_Bridge/2025-12-22.md",
-    "00_INBOX/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
-    "90_SYSTEM/91_Manual/Master Operating Manual.md",
-    "90_SYSTEM/91_Manual/Template_Protocols.md",
-    "20_MUSEUM/22_Library/22.2_Materials/The Selfish Gene.md",
-    "00_INBOX/10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
-    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis/Lit Review Pipeline.md",
-    "20_MUSEUM/22_Library/22.2_Materials/The Blank Slate.md",
-    "Mind.md",
-    "20_MUSEUM/22_Library/22.2_Materials/Darwin's Dangerous Idea.md",
-    "Untitled.base",
-    "Untitled.canvas",
-    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",
-    "Untitled",
-    "90_SYSTEM/93_Assets",
-    "40_SERVICES/42_Business_Logic",
-    "40_SERVICES/41_Clients",
-    "30_PORTFOLIO/32_Archive",
-    "30_PORTFOLIO/31_Active_Projects",
-    "20_MUSEUM/23_Disciplines"
-  ]
+  "active": "be7b64ad2186fe17",
+  "lastOpenFiles": []
 }
