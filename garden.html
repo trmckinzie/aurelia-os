@@ -35,6 +35,15 @@
       }
     </script>
     <style>
+        /* SEARCH HIGHLIGHTING */
+      .highlight {
+          background-color: rgba(238, 241, 30, 0.966); /* Semi-transparent yellow */
+          color: white;
+          font-weight: bold;
+          border-radius: 2px;
+          padding: 0 2px;
+      }
+
       body { background-color: #0a0a0b; }
       
       
@@ -1855,16 +1864,19 @@
             updateGrid();
         }
 
-        // 2. SEARCH LOGIC
+// 2. SEARCH LOGIC (With Highlighting)
         function handleSearch() {
-            currentQuery = document.getElementById('searchInput').value.toLowerCase();
+            const input = document.getElementById('searchInput');
+            currentQuery = input.value.toLowerCase().trim();
             updateGrid();
         }
 
-        // 3. ADDITIVE EVALUATION
+        // 3. ADDITIVE EVALUATION & HIGHLIGHTING
         function updateGrid() {
             const items = document.querySelectorAll('.searchable-item');
+            
             items.forEach(item => {
+                // A. FILTERING LOGIC
                 const itemType = item.dataset.type;
                 const itemSearch = item.dataset.search;
                 const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
@@ -1872,8 +1884,51 @@
 
                 if (typeMatch && searchMatch) {
                     item.style.display = 'flex';
+                    // B. HIGHLIGHTING LOGIC (Only run if there is a query)
+                    if (currentQuery.length > 0) {
+                        highlightText(item, currentQuery);
+                    } else {
+                        clearHighlights(item); // Remove highlights if search is empty
+                    }
                 } else {
                     item.style.display = 'none';
+                    clearHighlights(item); // Clean up hidden items
+                }
+            });
+        }
+
+        // HELPER: Wraps matching text in <span class="highlight">
+        function highlightText(card, term) {
+            // We only want to highlight the Title (h3) and the Body (p)
+            const targets = card.querySelectorAll('h3, p');
+            
+            targets.forEach(element => {
+                // 1. Reset to original text first (to prevent messy nested spans)
+                // We use a custom attribute 'data-original' to store the clean text
+                if (!element.dataset.original) {
+                    element.dataset.original = element.innerHTML;
+                }
+                
+                const originalText = element.dataset.original;
+                // 2. Regex to find the term (case insensitive)
+                const regex = new RegExp(`(${term})`, 'gi');
+                
+                // 3. Replace matches with wrapped span
+                // We check if it matches to avoid unnecessary DOM updates
+                if (originalText.toLowerCase().includes(term)) {
+                    element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+                } else {
+                    element.innerHTML = originalText;
+                }
+            });
+        }
+
+        // HELPER: Removes highlights
+        function clearHighlights(card) {
+            const targets = card.querySelectorAll('h3, p');
+            targets.forEach(element => {
+                if (element.dataset.original) {
+                    element.innerHTML = element.dataset.original;
                 }
             });
         }
