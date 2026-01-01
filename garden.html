@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AURELIA // GARDEN_DECK</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
@@ -133,6 +134,33 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="cardGrid">
                 <article 
                     onclick="openNote('note-1')" 
+                    data-type="discipline"
+                    data-search="psychology the scientific study of mind and behavior, analyzed as the output of biological information processing. in the **evolutionary naturalist** framework, psychology is the bridge betwe... discipline"
+                    class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-green hover:border-r hover:border-r-aurelia-green/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
+                    
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-1.5 h-1.5 bg-aurelia-green rounded-full"></span>
+                                <span class="text-[10px] font-mono text-aurelia-green uppercase tracking-widest">Discipline</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white font-mono group-hover:text-white transition-colors">Psychology</h3>
+                        </div>
+                        <div class="text-3xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">🧠</div>
+                    </div>
+
+                    <div class="w-full h-px bg-gray-800/50"></div>
+
+                   <p class="text-sm text-gray-100 leading-relaxed font-normal line-clamp-5">
+    The scientific study of mind and behavior, analyzed as the output of biological information processing. In the **Evolutionary Naturalist** framework, psychology is the bridge betwe...
+</p>
+
+
+                    <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-green font-mono mb-2 opacity-70">CORE_BRICKS:</div><div class="flex gap-2 text-[10px] text-gray-500 font-mono flex-wrap"><span class="px-2 py-1 bg-white/5 rounded border border-white/5">How the Mind Works by Steven Pinker (The Computational Theory of Mind).</span><span class="px-2 py-1 bg-white/5 rounded border border-white/5">The "Hard Problem" of Consciousness: How does subjective experience (qualia) arise from physical neural processing?_</span></div></div>
+                </article>
+                
+                <article 
+                    onclick="openNote('note-2')" 
                     data-type="daily-bridge"
                     data-search="2025-12-21 organisms are the survival machines built by dna that ensure that genes are propagated into future generations by way of reproduction (sexual/asexual). evolution by natural selecti... daily-bridge"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-orange hover:border-r hover:border-r-aurelia-orange/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -159,7 +187,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-2')" 
+                    onclick="openNote('note-3')" 
                     data-type="daily-bridge"
                     data-search="2025-12-22 natural physical processes led to stability in early molecules, then replicators that evolved by natural selection which favors fecundity (speed), longevity (lifespan), and high fi... daily-bridge"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-orange hover:border-r hover:border-r-aurelia-orange/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -182,11 +210,11 @@
 </p>
 
 
-                    <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-800/50"><div class="flex gap-2 flex-wrap"><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection</span><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">Gene</span><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">Non-Teleological Process</span></div><span class="text-[9px] font-mono text-gray-600 group-hover:text-aurelia-orange">OPEN_FILE -></span></div>
+                    <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-800/50"><div class="flex gap-2 flex-wrap"><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">Natural Selection</span><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">Gene</span><span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">Non-Teleological Process</span></div><span class="text-[9px] font-mono text-gray-600 group-hover:text-aurelia-orange">OPEN_FILE -></span></div>
                 </article>
                 
                 <article 
-                    onclick="openNote('note-3')" 
+                    onclick="openNote('note-4')" 
                     data-type="daily-bridge"
                     data-search="2025-12-27 organisms are complex survival machines that are directed by the influence of genes. genes coordinate the construction of bodies, by communicating with other genes and instructing ... daily-bridge"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-orange hover:border-r hover:border-r-aurelia-orange/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -213,7 +241,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-4')" 
+                    onclick="openNote('note-5')" 
                     data-type="daily-bridge"
                     data-search="2025-12-30 dennett opens the section with his 1st of 12 general thinking tools for philosophers and really any person wanting to think more clearly and effectively. he emphasizes that being a... daily-bridge"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-orange hover:border-r hover:border-r-aurelia-orange/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -240,7 +268,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-5')" 
+                    onclick="openNote('note-6')" 
                     data-type="concept"
                     data-search="algorithm a finite, deterministic sequence of well-defined instructions designed to perform a specific task or solve a class of problems. in the context of **evolutionary naturalism**, an al... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -267,7 +295,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-6')" 
+                    onclick="openNote('note-7')" 
                     data-type="concept"
                     data-search="coevolution co-evolution is a process in which two or more interacting [[systems]] (biological, cognitive, or cultural) reciprocally influence each other’s evolutionary trajectories over time.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -294,7 +322,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-7')" 
+                    onclick="openNote('note-8')" 
                     data-type="concept"
                     data-search="crane a crane is a legitimate, step-by-step explanatory mechanism that builds complexity from simpler components without invoking mystery, purpose, or supernatural intervention.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -321,7 +349,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-8')" 
+                    onclick="openNote('note-9')" 
                     data-type="concept"
                     data-search="dna dna is the molecular medium of heredity that stores, transmits, and enables the expression of genetic information through sequences of nucleotide bases. ... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -348,7 +376,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-9')" 
+                    onclick="openNote('note-10')" 
                     data-type="concept"
                     data-search="evolution evolution is the process by which heritable variation in populations changes over generations through mechanisms such as natural selection, mutation, genetic drift, and gene flow.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -375,7 +403,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-10')" 
+                    onclick="openNote('note-11')" 
                     data-type="concept"
                     data-search="feed forward feedforward is a control strategy in which a [[systems]] anticipates future states and adjusts [[behavior]] in advance, without relying on error correction.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -402,7 +430,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-11')" 
+                    onclick="openNote('note-12')" 
                     data-type="concept"
                     data-search="feynman technique a learning method for achieving deep understanding by explaining a concept in simple, clear language as if teaching it to a novice, thereby revealing gaps in knowledge.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -429,7 +457,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-12')" 
+                    onclick="openNote('note-13')" 
                     data-type="concept"
                     data-search="free-floating rationale a free-floating rationale is an apparent reason, purpose, or [[function]] that emerges from evolutionary or [[algorithm]]ic processes without being represented, understood, or inte... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -456,7 +484,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-13')" 
+                    onclick="openNote('note-14')" 
                     data-type="concept"
                     data-search="gene the fundamental physical and functional unit of heredity. a specific sequence of nucleotides in dna (or rna) that encodes instructions for building proteins or regulating other gen... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -483,7 +511,34 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-14')" 
+                    onclick="openNote('note-15')" 
+                    data-type="concept"
+                    data-search="heuristic a mental shortcut or "rule of thumb" used to solve problems and make judgments quickly and efficiently. unlike an **algorithm**, which follows a strict step-by-step procedure to gu... concept"
+                    class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
+                    
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full"></span>
+                                <span class="text-[10px] font-mono text-aurelia-cyan uppercase tracking-widest">Concept_Node</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-white font-mono group-hover:text-white transition-colors">Heuristic</h3>
+                        </div>
+                        <div class="text-3xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">⚛️</div>
+                    </div>
+
+                    <div class="w-full h-px bg-gray-800/50"></div>
+
+                   <p class="text-sm text-gray-100 leading-relaxed font-normal line-clamp-5">
+    A mental shortcut or "rule of thumb" used to solve problems and make judgments quickly and efficiently. Unlike an **algorithm**, which follows a strict step-by-step procedure to gu...
+</p>
+
+
+                    <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-cyan font-mono mb-2 opacity-70">LINKED_TO:</div><div class="flex gap-3 text-[10px] text-gray-500 font-mono flex-wrap"><span class="hover:text-white transition-colors">→ Algorithm</span><span class="hover:text-white transition-colors">→ Bounded Rationality</span><span class="hover:text-white transition-colors">→ Satisficing</span></div></div>
+                </article>
+                
+                <article 
+                    onclick="openNote('note-16')" 
                     data-type="concept"
                     data-search="natural selection the differential survival and reproduction of individuals due to differences in phenotype. it is the passive mechanical process where traits that enhance survival in a specific env... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -510,7 +565,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-15')" 
+                    onclick="openNote('note-17')" 
                     data-type="concept"
                     data-search="non-teleological process a system or mechanism that generates complexity without a pre-existing goal, purpose, or blueprint. it operates blindly through immediate cause-and-effect rather than working towar... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -537,7 +592,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-16')" 
+                    onclick="openNote('note-18')" 
                     data-type="concept"
                     data-search="replicator replicators are entities—most notably genes—that make copies of themselves with sufficient fidelity, longevity, and fecundity to persist through [[evolution]]ary time.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -564,7 +619,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-17')" 
+                    onclick="openNote('note-19')" 
                     data-type="concept"
                     data-search="skyhook skyhooks are illegitimate explanatory shortcuts that account for complexity by appealing to unexplained intelligence, purpose, or magic rather than to step-by-step mechanisms.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -591,7 +646,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-18')" 
+                    onclick="openNote('note-20')" 
                     data-type="concept"
                     data-search="survival machines survival machines are organisms understood as temporary vehicles constructed by[[gene]] to protect themselves and promote their replication in a given environment.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -618,7 +673,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-19')" 
+                    onclick="openNote('note-21')" 
                     data-type="concept"
                     data-search="transistor a transistor is a [[semiconductor]] device that controls the flow of electrical current, enabling amplification, switching, and digital computation.... concept"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-cyan hover:border-r hover:border-r-aurelia-cyan/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -645,7 +700,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-20')" 
+                    onclick="openNote('note-22')" 
                     data-type="author"
                     data-search="daniel dennett dennett is a central architect of modern naturalistic thinking about mind, [[evolution]], and meaning, offering mechanistic explanations that align closely with your interests in c... author"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-white hover:border-r hover:border-r-white/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -672,7 +727,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-21')" 
+                    onclick="openNote('note-23')" 
                     data-type="author"
                     data-search="richard dawkins dawkins clarified the logic of natural selection through a gene-centered lens, providing conceptual tools that strongly support my interest in evolutionary explanations of behavior... author"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-white hover:border-r hover:border-r-white/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -699,7 +754,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-22')" 
+                    onclick="openNote('note-24')" 
                     data-type="author"
                     data-search="steven pinker pinker is a central figure in modern cognitive science who integrates [[psychology]], [[linguistics]], and evolutionary theory to explain language, [[mind]], and human behavior in ... author"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-white hover:border-r hover:border-r-white/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -726,9 +781,9 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-23')" 
+                    onclick="openNote('note-25')" 
                     data-type="source"
-                    data-search="darwin's dangerous idea dennett argues that darwin’s theory of [[10_garden/12_seeds/12.1_concepts/natural selection]] is a powerful, universal [[algorithm]] that explains the emergence of complex design w... source"
+                    data-search="darwin's dangerous idea dennett argues that darwin’s theory of [[natural selection]] is a powerful, universal [[algorithm]] that explains the emergence of complex design without foresight, and that taking... source"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-yellow-500 hover:border-r hover:border-r-yellow-500/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
                     
                     <div class="flex justify-between items-start">
@@ -745,7 +800,7 @@
                     <div class="w-full h-px bg-gray-800/50"></div>
 
                    <p class="text-sm text-gray-100 leading-relaxed font-normal line-clamp-5">
-    Dennett argues that Darwin’s theory of [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design w...
+    Dennett argues that Darwin’s theory of [[Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design without foresight, and that taking...
 </p>
 
 
@@ -753,7 +808,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-24')" 
+                    onclick="openNote('note-26')" 
                     data-type="source"
                     data-search="intuition pumps and other tools for thinking dennett argues that good thinking depends on using well-designed cognitive tools—especially carefully constructed thought experiments (“[[intuition pump]]”)—to discipline intuition... source"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-yellow-500 hover:border-r hover:border-r-yellow-500/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -780,7 +835,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-25')" 
+                    onclick="openNote('note-27')" 
                     data-type="source"
                     data-search="the blank slate pinker argues that the “blank slate” view of human nature is empirically false and intellectually damaging, and that recognizing evolved psychological predispositions is essential ... source"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-yellow-500 hover:border-r hover:border-r-yellow-500/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -807,7 +862,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-26')" 
+                    onclick="openNote('note-28')" 
                     data-type="source"
                     data-search="the selfish gene [[evolution]] is best understood from a gene's perspective, viewing organisms as survival machines built by genes to perpetuate themselves, with [[gene]]s as the fundamental units ... source"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-yellow-500 hover:border-r hover:border-r-yellow-500/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -834,7 +889,7 @@
                 </article>
                 
                 <article 
-                    onclick="openNote('note-27')" 
+                    onclick="openNote('note-29')" 
                     data-type="discipline"
                     data-search="evolutionary biology evolutionary biology is the scientific study of how heritable variation in populations changes over time through mechanisms such as natural selection, mutation, genetic drift, and ... discipline"
                     class="searchable-item glass p-6 rounded-sm border-l-2 border-l-aurelia-green hover:border-r hover:border-r-aurelia-green/50 cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
@@ -857,12 +912,43 @@
 </p>
 
 
-                    <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-green font-mono mb-2 opacity-70">CORE_BRICKS:</div><div class="flex gap-2 text-[10px] text-gray-500 font-mono flex-wrap"><span class="px-2 py-1 bg-white/5 rounded border border-white/5">10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection|Natural Selection</span><span class="px-2 py-1 bg-white/5 rounded border border-white/5">On the Origin of Species — Charles Darwin</span></div></div>
+                    <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-green font-mono mb-2 opacity-70">CORE_BRICKS:</div><div class="flex gap-2 text-[10px] text-gray-500 font-mono flex-wrap"><span class="px-2 py-1 bg-white/5 rounded border border-white/5">Natural Selection|Natural Selection</span><span class="px-2 py-1 bg-white/5 rounded border border-white/5">On the Origin of Species — Charles Darwin</span></div></div>
                 </article>
                 </div>
     </main>
 
-    <div id="data-storage" style="display: none;"><div id="note-1" class="hidden"># 📅 [[2025-12-21]]
+    <div id="data-storage" style="display: none;"><div id="note-1" class="hidden"># 🧠 Psychology
+
+### 🧐 Definition (The Scope)
+&gt;The scientific study of mind and behavior, analyzed as the output of biological information processing. In the **Evolutionary Naturalist** framework, psychology is the bridge between Biology (the hardware) and Sociology (the network). It seeks to reverse-engineer the &quot;software&quot; of the human animal—mapping the algorithms, heuristics, and drives that evolution installed to solve the problems of survival and reproduction. It moves from the &quot;How&quot; of neuroscience to the &quot;Why&quot; of behavior.
+&gt;
+&gt;In a wider context, psychology serves as the &quot;hub science&quot; connecting social sciences, natural sciences, and the humanities. It investigates the full spectrum of the human condition, including **phenomenology** (subjective experience), **pathology** (mental illness), and **interpersonal dynamics**. While evolutionary approaches focus on _ultimate_ causes (why traits exist), broader psychology often focuses on _proximate_ causes (how environment, culture, and personal history shape an individual right now). This encompasses diverse schools of thought—from Freud’s psychodynamics to Maslow’s humanism—aiming to alleviate suffering and optimize human well-being beyond mere survival metrics.
+
+---
+
+### 🔑 Core Concepts (The Bricks)
+- [[Evolutionary Psychology]]: The understanding that our mental faculties are adaptations—tools forged by natural selection to solve specific ancestral problems (e.g., mate selection, cheater detection).
+- [[Cognitive Architecture]]: The structural design of the mind, often modeled as **Information Processing** (Input $\to$ Algorithm $\to$ Output). Includes the distinction between System 1 (Fast/Heuristic) and System 2 (Slow/Rational).
+- [[Behaviorism &amp; Conditioning]]: The study of how organisms learn through interaction with the environment via reinforcement (rewards) and punishment (costs). This is the &quot;habit loop&quot; layer.
+- [[Neuroplasticity]]: The brain&#x27;s ability to reorganize itself by forming new neural connections throughout life; the mechanism by which &quot;software&quot; updates occur.
+
+- **[[Social Influence &amp; Situationism]]:** The study of how the immediate environment and group dynamics override individual personality. This covers conformity, obedience to authority (Milgram), and the &quot;Fundamental Attribution Error&quot;—our tendency to blame people&#x27;s character rather than their context.
+- **[[The Unconscious &amp; Defense Mechanisms]]:** Rooted in Psychodynamics (Freud/Jung), this concept posits that the vast majority of mental activity occurs below conscious awareness. It explores how the mind protects itself from anxiety through mechanisms like repression, projection, and sublimation.
+- **[[Attachment Theory]]:** The foundational model of emotional bonding (Bowlby/Ainsworth). It explains how early interactions with caregivers create &quot;internal working models&quot; that dictate how we trust, love, and relate to others throughout adulthood (Secure, Anxious, Avoidant styles).
+- **[[The Big Five (OCEAN)]]:** The most empirically validated framework for Personality Psychology. It moves away from &quot;types&quot; (like MBTI) to measure individuals across five continuous dimensions: Openness, Conscientiousness, Extraversion, Agreeableness, and Neuroticism.
+- **[[Humanism &amp; Self-Actualization]]:** A counter-weight to the &quot;biological machine&quot; view. Pioneered by Maslow and Rogers, it focuses on the inherent human drive toward growth, meaning, and reaching full potential (Self-Actualization) once basic survival needs are met.
+
+### 📚 Foundational Texts
+* [[How the Mind Works]] by **[[Steven Pinker]]** (The Computational Theory of Mind).
+- [[Thinking, Fast and Slow]] by **[[Daniel Kahneman]]** (The heuristics and biases framework).
+- [[The Principles of Psychology]] by **[[William James]]** (The classic functionalist perspective).
+- [[Behave]] by **[[Robert Sapolsky]]** (The synthesis of neurobiology and psychology).
+
+### 🧪 Unresolved Questions
+* The &quot;[[Hard Problem]]&quot; of Consciousness: How does subjective experience (qualia) arise from physical neural processing?_
+- _The interface of Nature vs. Nurture: How exactly does epigenetic expression modulate psychological traits in real-time?_
+- _The limits of Plasticity: To what extent can cognitive architectures be rewritten vs. merely managed?_</div>
+<div id="note-2" class="hidden"># 📅 [[2025-12-21]]
 
 ---
 
@@ -891,7 +977,7 @@
 * **LESSON:** &quot; &quot;
 * [x] **Inbox Zero:** (Drag new files from Inbox -&gt; Atlas/Sources)
 * [x] **Context Cleared:** `/CLEARTASK`</div>
-<div id="note-2" class="hidden"># 📅 [[2025-12-22]]
+<div id="note-3" class="hidden"># 📅 [[2025-12-22]]
 
 ---
 
@@ -908,7 +994,7 @@
 **SOURCE:** [[The Selfish Gene]]
 
 **⚛️ ATOMIC EXTRACTION (Cues -&gt; Links):**
-* **Concept:** [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]]
+* **Concept:** [[Natural Selection]]
 * **Concept:** [[Gene]]
 * **Concept:** [[Non-Teleological Process]]
 
@@ -921,7 +1007,7 @@
 * **LESSON:** &quot; &quot;
 * [x] **Inbox Zero:** (Drag new files from Inbox -&gt; Atlas/Sources)
 * [x] **Context Cleared:** `/CLEARTASK`</div>
-<div id="note-3" class="hidden"># 📅 [[2025-12-27]]
+<div id="note-4" class="hidden"># 📅 [[2025-12-27]]
 
 ---
 
@@ -954,7 +1040,7 @@
 * **LESSON:** &quot; &quot;
 * [x] **Inbox Zero:** (Drag new files from Inbox -&gt; Atlas/Sources)
 * [x] **Context Cleared:** `/CLEARTASK`</div>
-<div id="note-4" class="hidden"># 📅 [[2025-12-30]]
+<div id="note-5" class="hidden"># 📅 [[2025-12-30]]
 
 ---
 
@@ -983,7 +1069,7 @@
 * **LESSON:** &quot; &quot;
 * [x] **Inbox Zero:** (Drag new files from Inbox -&gt; Atlas/Sources)
 * [x] **Context Cleared:** `/CLEARTASK`</div>
-<div id="note-5" class="hidden"># ⚛️ Algorithm
+<div id="note-6" class="hidden"># ⚛️ Algorithm
 
 **🔗 Related:** [[Computation]], [[Evolutionary Logic]], [[Turing Machine]], [[Heuristic]], [[Substrate Neutrality]]
 
@@ -996,7 +1082,7 @@
 - **The Universal Acid:** As described by [[Daniel Dennett]], the most powerful insight is that **[[Natural Selection]] itself is an algorithm**. It is a process of [[variation]], Selection, and [[Heredity]] that generates design without a designer. This implies that intelligence, life, and consciousness are not &quot;magic&quot; ([[Skyhook]]s), but the result of massive, recursive algorithmic processes ([[Crane]]s) running over deep time. To understand the mind, we must reverse-engineer the algorithms of the brain.
 
 ---</div>
-<div id="note-6" class="hidden"># ⚛️ Coevolution
+<div id="note-7" class="hidden"># ⚛️ Coevolution
 
 **🔗 Related:** [[Evolution]]
 
@@ -1011,7 +1097,7 @@
 - Co-evolution explains increasing [[Complexity]] without centralized design.
 
 ---</div>
-<div id="note-7" class="hidden"># ⚛️ Crane
+<div id="note-8" class="hidden"># ⚛️ Crane
 
 **🔗 Related:**
 
@@ -1026,7 +1112,7 @@
 - Using cranes forces explanations to remain mechanistic, historical, and testable, disciplining intuition and preventing metaphysical shortcuts.
 
 ---</div>
-<div id="note-8" class="hidden"># ⚛️ DNA
+<div id="note-9" class="hidden"># ⚛️ DNA
 
 **🔗 Related:**
 
@@ -1040,7 +1126,7 @@
 - Information in DNA is **context-dependent**—[[Gene]] influence traits through interaction with developmental processes and environments, not as fixed blueprints.
 - The structure of DNA (double helix, complementary base pairing) explains both **stability** across generations and **[[variation]]**, the raw material of [[Evolution]].
 ---</div>
-<div id="note-9" class="hidden"># ⚛️ Evolution
+<div id="note-10" class="hidden"># ⚛️ Evolution
 
 **🔗 Related:** 
 - [[Genetic Variation]]
@@ -1064,7 +1150,7 @@
 - Multiple mechanisms operate simultaneously—**selection, drift, mutation, and gene flow**—with their relative influence varying by population size and environment.
 - Evolutionary explanations are **probabilistic, not deterministic**: they account for tendencies and distributions, not fixed outcomes for individuals.
 ---</div>
-<div id="note-10" class="hidden"># ⚛️ Feed Forward
+<div id="note-11" class="hidden"># ⚛️ Feed Forward
 
 **🔗 Related:** [[Negative Feedback]]
 
@@ -1079,7 +1165,7 @@
 - Biological [[Cognition]] often combines feedforward prediction with feedback correction.
 
 ---</div>
-<div id="note-11" class="hidden"># ⚛️ [[Feynman Technique]]
+<div id="note-12" class="hidden"># ⚛️ [[Feynman Technique]]
 
 **🔗 Related:** [[Thinking Tool]]
 
@@ -1094,7 +1180,7 @@
 - Iterating between explanation and revision strengthens long-term retention and transfer.
 
 ---</div>
-<div id="note-12" class="hidden"># ⚛️ Free-Floating Rationale
+<div id="note-13" class="hidden"># ⚛️ Free-Floating Rationale
 
 **🔗 Related:** [[Non-Teleological Process]]
 
@@ -1109,7 +1195,7 @@
 - Recognizing free-floating rationales helps dissolve the intuition that purpose always requires a purposeful mind. 
 
 ---</div>
-<div id="note-13" class="hidden"># ⚛️ Gene
+<div id="note-14" class="hidden"># ⚛️ Gene
 
 **🔗 Related:** [[Natural Selection]], [[Richard Dawkins]] [[Survival Machines]], [[Replicator]] ,[[Evolution]], [[The Selfish Gene]]
 
@@ -1123,7 +1209,19 @@
 * **Information vs. Hardware:** A gene is not just the physical molecule; it is the *information* contained in the sequence. The physical DNA strand in your body will rot, but the &quot;Gene&quot; (the sequence) survives in your offspring.
 
 ---</div>
-<div id="note-14" class="hidden"># ⚛️ Natural Selection
+<div id="note-15" class="hidden"># ⚛️ Heuristic
+
+**🔗 Related:** [[Algorithm]], [[Bounded Rationality]], [[Satisficing]], [[Cognitive Bias]], [[System 1 vs System 2]], [[Ecological Rationality]]
+
+---
+
+### 💡 Definition
+&gt; A mental shortcut or &quot;rule of thumb&quot; used to solve problems and make judgments quickly and efficiently. Unlike an **algorithm**, which follows a strict step-by-step procedure to guarantee a correct solution, a heuristic is a loose strategy that trades optimality for speed. In cognitive science, heuristics are the operating software of **System 1** thinking—fast, automatic, and computationally cheap methods evolved to navigate a complex environment with limited brainpower.
+
+### 📝 Key Insight
+* **Feature, Not a Bug:** While often discussed in the context of &quot;biases&quot; and &quot;errors&quot; (e.g., Kahneman &amp; Tversky), heuristics are actually adaptations for **Ecological Rationality**. Evolution does not optimize for &quot;truth&quot; or &quot;perfect logic&quot;; it optimizes for survival and energy efficiency. Heuristics allow an organism to make life-saving decisions under conditions of uncertainty and time pressure where a full algorithmic calculation would be too slow or metabolically expensive (e.g., the &quot;Gaze Heuristic&quot; used to catch a ball or prey).
+---</div>
+<div id="note-16" class="hidden"># ⚛️ Natural Selection
 
 **🔗 Related:** 
 [[Non-Teleological Process]]
@@ -1141,7 +1239,7 @@
 * Context is King: No trait is inherently &quot;superior.&quot; A trait (like heavy fur) is only advantageous relative to a specific environment (cold weather). If the environment changes, the &quot;best&quot; traits change immediately.
 
 ---</div>
-<div id="note-15" class="hidden"># ⚛️ Non-Teleological Process
+<div id="note-17" class="hidden"># ⚛️ Non-Teleological Process
 
 **🔗 Related:** [[Natural Selection]]
 
@@ -1156,7 +1254,7 @@
 * The &quot;Why&quot; Fallacy: Asking &quot;what is the purpose of a mosquito?&quot; is a category error. There is no purpose, only the mechanical result of ancestral survival.
 
 ---</div>
-<div id="note-16" class="hidden"># ⚛️ Replicator
+<div id="note-18" class="hidden"># ⚛️ Replicator
 
 **🔗 Related:** 
 
@@ -1171,7 +1269,7 @@
 - Viewing [[Gene]] as replicators clarifies how complex adaptations and even cooperative behaviors can evolve without foresight or intention.
 
 ---</div>
-<div id="note-17" class="hidden"># ⚛️ Skyhook
+<div id="note-19" class="hidden"># ⚛️ Skyhook
 
 **🔗 Related:**
 
@@ -1186,7 +1284,7 @@
 - Replacing skyhooks with [[Crane]] is central to [[Daniel Dennett]]&#x27;s naturalistic method of explanation.
 
 ---</div>
-<div id="note-18" class="hidden"># ⚛️ Survival Machines
+<div id="note-20" class="hidden"># ⚛️ Survival Machines
 
 **🔗 Related:**
 
@@ -1201,7 +1299,7 @@
 - This framing encourages [[Non-Teleological Process]] thinking by explaining apparent purpose in biology as the outcome of cumulative, blind selection rather than intention ([[Crane]]).
 
 ---</div>
-<div id="note-19" class="hidden"># ⚛️ Transistor
+<div id="note-21" class="hidden"># ⚛️ Transistor
 
 **🔗 Related:** [[ ]]
 
@@ -1216,7 +1314,7 @@
 - Their ability to act as [[Binary Switch]] underlies [[Logic Gate]] and [[Algorithm]]s.
 - They exemplify how simple components can generate complex behavior when scaled and networked.
 ---</div>
-<div id="note-20" class="hidden"># 👤 Daniel Dennett
+<div id="note-22" class="hidden"># 👤 Daniel Dennett
 
 ### 📝 Profile &amp; Context
 &gt; Dennett is a central architect of modern naturalistic thinking about mind, [[Evolution]], and meaning, offering mechanistic explanations that align closely with your interests in cognition, evolutionary theory, and demystifying complex phenomena.
@@ -1236,7 +1334,7 @@
 - **[[Meme]]tics** — Cultural evolution via idea replication. ([[Replicator]])
 - **Breaking the Spell** — Naturalistic analysis of religion.
 - **Narrative Self** — The self as a constructed center of gravity.</div>
-<div id="note-21" class="hidden"># 👤 Richard Dawkins
+<div id="note-23" class="hidden"># 👤 Richard Dawkins
 ---
 
 ### 📝 Profile &amp; Context
@@ -1260,7 +1358,7 @@
 - **Reciprocal Altruism** — Cooperation emerging through repeated interactions.
 - **Cumulative Selection** — Small changes accumulating into complexity.
 - **[[Memes]]** — Cultural analogs of genes.</div>
-<div id="note-22" class="hidden"># 👤 Steven Pinker
+<div id="note-24" class="hidden"># 👤 Steven Pinker
 
 ### 📝 Profile &amp; Context
 &gt; Pinker is a central figure in modern cognitive science who integrates [[Psychology]], [[Linguistics]], and evolutionary theory to explain language, [[Mind]], and human behavior in ways that align closely with my interests in [[Cognition]], [[Evolution]], and clear scientific thinking. ([[Rationality]])
@@ -1285,7 +1383,7 @@
 - Violence Decline Thesis — Argument that violence has decreased over historical time.
 - Cognitive Biases — Systematic deviations from [[Rationality]] rooted in mental architecture.
 - Scientific Humanism — Defense of reason, science, and Enlightenment values.</div>
-<div id="note-23" class="hidden"># 📖 Darwin&#x27;s Dangerous Idea
+<div id="note-25" class="hidden"># 📖 Darwin&#x27;s Dangerous Idea
 
 **👤 Author:** [[Daniel Dennett]]
 **🔑 Zotero Key:** 
@@ -1294,7 +1392,7 @@
 ---
 
 ### 💡 The Core Argument (Thesis)
-&gt;Dennett argues that Darwin’s theory of [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design without foresight, and that taking this idea seriously “eats through” traditional views about [[Mind]], [[meaning]], [[morality]], and [[human exceptionalism]].
+&gt;Dennett argues that Darwin’s theory of [[Natural Selection]] is a powerful, universal [[Algorithm]] that explains the emergence of complex design without foresight, and that taking this idea seriously “eats through” traditional views about [[Mind]], [[meaning]], [[morality]], and [[human exceptionalism]].
 
 ---
 
@@ -1310,7 +1408,7 @@
 - **[[Memetics]]** — Cultural evolution via idea replication and selection. ([[Memes]])
 - **Anti-Essentialism** — Rejection of fixed natures in favor of historical, population-based thinking.
 - **Dangerous Idea** — Darwinism’s capacity to undermine comforting but unsupported beliefs.</div>
-<div id="note-24" class="hidden"># 📖 [[Intuition Pumps and Other Tools for Thinking]]
+<div id="note-26" class="hidden"># 📖 [[Intuition Pumps and Other Tools for Thinking]]
 
 **👤 Author:** [[Daniel Dennett]]
 **🔑 Zotero Key:** 
@@ -1351,7 +1449,7 @@
 ### 🧠 Concepts Extracted
 *(Concepts linked here will show in Graph View)*
 * [[ ]]</div>
-<div id="note-25" class="hidden"># 📖 The Blank Slate
+<div id="note-27" class="hidden"># 📖 The Blank Slate
 
 **👤 Author:** [[Steven Pinker]]
 **🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
@@ -1375,7 +1473,7 @@
 - Biological Constraints — Limits on cultural and social engineering imposed by human nature.
 - Fear of [[Biology]] — Resistance to evolutionary explanations due to moral and political concerns.
 - Scientific [[Humanism]] — Reconciling a biological view of mind with dignity, rights, and progress.</div>
-<div id="note-26" class="hidden"># 📖 The Selfish Gene
+<div id="note-28" class="hidden"># 📖 The Selfish Gene
 
 **👤 Author:** [[Richard Dawkins]]
 **📍 Full Notes:** On reMarkable
@@ -1399,7 +1497,7 @@
 - **Blind Watchmaker** — Natural selection as a non-intentional designer producing apparent purpose. ([[Non-Teleological Process]])
 - **Anti-Teleology** — Rejection of purpose-driven or goal-directed explanations in biology.
 - **[[Meme]]** — Cultural replicators subject to selection-like processes.</div>
-<div id="note-27" class="hidden"># 🧠 Evolutionary Biology
+<div id="note-29" class="hidden"># 🧠 Evolutionary Biology
 
 ### 🧐 Definition (The Scope)
 &gt; Evolutionary biology is the scientific study of how heritable variation in populations changes over time through mechanisms such as natural selection, mutation, genetic drift, and gene flow. It explains the origin of biological diversity, adaptation, and complexity using historical, population-level, and mechanistic accounts. The field excludes teleological, supernatural, or purpose-driven explanations and rejects essentialist views of fixed species types.
@@ -1407,7 +1505,7 @@
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-* [[10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection|Natural Selection]]
+* [[Natural Selection|Natural Selection]]
 - [[Genetic Variation]]
 - [[Inheritance]]
 - [[Fitness]]
