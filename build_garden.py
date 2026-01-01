@@ -52,9 +52,11 @@ def extract_specifics(content, note_type, title):
         tags_html = ""
         for c in concepts[:3]: 
             c_name = c.split("|")[0] 
-            tags_html += f'<span class="text-[9px] font-mono px-1.5 py-0.5 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">{c_name}</span>'
+            # UPGRADED: text-xs, brighter text, slightly larger padding
+            tags_html += f'<span class="text-xs font-mono px-2 py-1 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">{c_name}</span>'
         
-        extra_html = f'<div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">{tags_html}</div><span class="text-[9px] font-mono text-gray-600 group-hover:text-aurelia-orange">OPEN_FILE -></span></div>'
+        # UPGRADED: text-xs, text-gray-400
+        extra_html = f'<div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">{tags_html}</div><span class="text-xs font-mono text-gray-400 group-hover:text-aurelia-orange transition-colors">OPEN_FILE -></span></div>'
 
     elif "type/concept" in note_type:
         icon = "⚛️"
@@ -71,9 +73,11 @@ def extract_specifics(content, note_type, title):
             links = re.findall(r'\[\[(.*?)\]\]', raw_links)
             for l in links[:3]:
                 l_name = l.split("|")[0]
+                # UPGRADED: text-xs, brighter hover
                 links_html += f'<span class="hover:text-white transition-colors">→ {l_name}</span>'
         
-        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-cyan font-mono mb-2 opacity-70">LINKED_TO:</div><div class="flex gap-3 text-[10px] text-gray-500 font-mono flex-wrap">{links_html}</div></div>'
+        # UPGRADED: text-xs, text-gray-300
+        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-cyan font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap">{links_html}</div></div>'
 
     elif "type/author" in note_type:
         icon = "👤"
@@ -95,7 +99,8 @@ def extract_specifics(content, note_type, title):
                         works_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {work_name}</li>'
                         count += 1
         
-        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] font-mono text-gray-500 mb-1">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-500 space-y-1">{works_html}</ul></div>'
+        # UPGRADED: text-xs, text-gray-300
+        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs font-mono text-gray-400 mb-1">KEY WORKS:</div><ul class="text-xs font-mono text-gray-300 space-y-1">{works_html}</ul></div>'
 
     elif "type/source" in note_type:
         icon = "📖"
@@ -109,7 +114,8 @@ def extract_specifics(content, note_type, title):
         auth_match = re.search(r'\*\*👤 Author:\*\*\s*\[\[(.*?)\]\]', content)
         if auth_match: auth_name = auth_match.group(1).upper()
         
-        extra_html = f'<div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-800/50"><div class="text-[9px] font-mono text-gray-500">AUTH: {auth_name}</div><span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-[9px] font-mono border border-yellow-500/20">READING</span></div>'
+        # UPGRADED: text-xs, text-gray-400
+        extra_html = f'<div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-800/50"><div class="text-xs font-mono text-gray-400">AUTH: {auth_name}</div><span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span></div>'
 
     elif "type/discipline" in note_type:
         icon = "🧠"
@@ -131,7 +137,8 @@ def extract_specifics(content, note_type, title):
                         bricks_html += f'<span class="px-2 py-1 bg-white/5 rounded border border-white/5">{brick_name}</span>'
                         count += 1
         
-        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-[9px] text-aurelia-green font-mono mb-2 opacity-70">CORE_BRICKS:</div><div class="flex gap-2 text-[10px] text-gray-500 font-mono flex-wrap">{bricks_html}</div></div>'
+        # UPGRADED: text-xs, text-gray-300
+        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-green font-mono mb-2 opacity-90">CORE_BRICKS:</div><div class="flex gap-2 text-xs text-gray-300 font-mono flex-wrap">{bricks_html}</div></div>'
 
     else:
         extra_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"></div>'
@@ -162,7 +169,8 @@ def build_garden():
     file_count = 0
     
     for root, dirs, files in os.walk(VAULT_PATH):
-        for filename in files:
+        # FORCE ALPHABETICAL SORT HERE
+        for filename in sorted(files): 
             if filename.endswith(".md"):
                 filepath = os.path.join(root, filename)
                 with open(filepath, 'r', encoding='utf-8') as f:
@@ -198,7 +206,7 @@ def build_garden():
                                 <span class="w-1.5 h-1.5 {color.replace('border-l-', 'bg-')} rounded-full"></span>
                                 <span class="text-[16px] font-mono {color.replace('border-l-', 'text-')} uppercase tracking-widest">{label}</span>
                             </div>
-                            <h3 class="text-5xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
+                            <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
                         </div>
                         <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">{icon}</div>
                     </div>
