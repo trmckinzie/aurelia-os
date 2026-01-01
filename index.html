@@ -42,6 +42,7 @@
         opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
       }
       .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+      
       /* --- HOLO-CAROUSEL 3D ENGINE --- */
       .carousel-scene {
         perspective: 1000px; /* The "Vanishing Point" for depth */
@@ -53,6 +54,7 @@
         position: relative;
         margin-top: 4rem;
         mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); /* Fades edges */
+        -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
       }
 
       .carousel {
@@ -82,6 +84,15 @@
         padding: 24px;
         backface-visibility: hidden; /* Hides back of card when rotating */
         opacity: 0.9;
+        transition: all 0.3s ease;
+      }
+
+      /* Active State / Hover Effects */
+      .carousel-card:hover {
+        border-color: #00f2ff;
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+        z-index: 10;
+        transform: scale(1.05); /* Slight pop */
       }
 
       /* The Info Panel (Typewriter container) */
@@ -231,7 +242,7 @@
 
     </main>
 <script>
-        /* --- AURELIA TECH STACK MANIFEST --- */
+        /* --- AURELIA TECH STACK MANIFEST (RESTORED TO EMOJIS) --- */
         const techStack = [
             // --- HARDWARE ---
             {
@@ -323,15 +334,15 @@
         function initCarousel() {
             techStack.forEach((tech, i) => {
                 const card = document.createElement('div');
-                card.className = 'carousel-card';
+                card.className = 'carousel-card group'; 
                 
                 // 3D Math: Rotate Y, then push out Z
                 const angle = theta * i;
                 card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 60}px)`; // Added +60px buffer for larger ring
                 
-                // Card Content
+                // Card Content (RESTORED ICON INJECTION)
                 card.innerHTML = `
-                    <div class="text-5xl mb-6 opacity-80 filter drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">${tech.icon}</div>
+                    <div class="text-6xl mb-6 opacity-90 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.4)] transform group-hover:scale-110 transition-transform">${tech.icon}</div>
                     <h3 class="text-xl font-bold text-white font-mono text-center tracking-tighter">${tech.name}</h3>
                     <div class="w-10 h-0.5 bg-gray-700 my-4"></div>
                     <span class="text-[9px] text-aurelia-cyan font-mono tracking-widest uppercase border border-aurelia-cyan/30 px-2 py-1 rounded">${tech.type}</span>
@@ -365,5 +376,3 @@
     </script>
 </body>
 </html>
-
-
