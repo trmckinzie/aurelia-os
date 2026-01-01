@@ -42,6 +42,56 @@
         opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
       }
       .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+      /* --- HOLO-CAROUSEL 3D ENGINE --- */
+      .carousel-scene {
+        perspective: 1000px; /* The "Vanishing Point" for depth */
+        overflow: hidden;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-top: 4rem;
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); /* Fades edges */
+      }
+
+      .carousel {
+        width: 300px;
+        height: 400px;
+        position: absolute;
+        transform-style: preserve-3d; /* Tells browser: "Don't flatten this" */
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); /* Sci-fi movement ease */
+      }
+
+      .carousel-card {
+        position: absolute;
+        width: 300px;
+        height: 400px;
+        left: 0;
+        top: 0;
+        /* Glassmorphism High-Contrast */
+        background: rgba(10, 10, 11, 0.9);
+        border: 1px solid rgba(0, 242, 255, 0.3);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
+        backdrop-filter: blur(8px);
+        border-radius: 4px; /* Sharper corners for Cyberpunk feel */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        backface-visibility: hidden; /* Hides back of card when rotating */
+        opacity: 0.9;
+      }
+
+      /* The Info Panel (Typewriter container) */
+      .tech-readout {
+        min-height: 100px;
+        border-left: 2px solid #00f2ff;
+        padding-left: 1.5rem;
+        background: linear-gradient(90deg, rgba(0,242,255,0.05) 0%, transparent 100%);
+        margin-bottom: 4rem;
+      }
     </style>
 </head>
 <body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
@@ -141,115 +191,179 @@
             </a>
 
         </div>
+
+        <section class="w-full max-w-6xl mx-auto mt-32 relative">
+            
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-mono font-bold text-white tracking-widest border-b border-gray-800 pb-4 inline-block">NEURAL_LOADOUT // TECH_STACK</h2>
+                <p class="text-aurelia-cyan font-mono text-[10px] mt-4 tracking-[0.2em] opacity-70">SELECT MODULE TO INSPECT SPECS</p>
+            </div>
+
+            <div class="carousel-scene mb-12">
+                <div class="carousel" id="tech-carousel">
+                    </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-8 z-20 relative">
+                
+                <div class="flex gap-12 items-center">
+                    <button onclick="rotateCarousel(-1)" class="w-14 h-14 rounded-full border border-gray-700 text-aurelia-cyan hover:bg-aurelia-cyan hover:text-black hover:scale-110 transition-all flex items-center justify-center text-2xl font-bold font-mono active:scale-95">
+                        &lt;
+                    </button>
+                    
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></div>
+                        <span class="text-[8px] font-mono text-gray-600 tracking-widest">ONLINE</span>
+                    </div>
+
+                    <button onclick="rotateCarousel(1)" class="w-14 h-14 rounded-full border border-gray-700 text-aurelia-cyan hover:bg-aurelia-cyan hover:text-black hover:scale-110 transition-all flex items-center justify-center text-2xl font-bold font-mono active:scale-95">
+                        &gt;
+                    </button>
+                </div>
+
+                <div class="max-w-2xl w-full tech-readout mt-8">
+                    <h3 id="readout-title" class="text-xl text-white font-mono font-bold mb-2 tracking-tight">SYSTEM_INITIALIZING...</h3>
+                    <p id="readout-desc" class="text-sm text-gray-400 font-sans leading-relaxed">Awaiting selection.</p>
+                </div>
+
+            </div>
+        </section>
+
     </main>
+<script>
+        /* --- AURELIA TECH STACK MANIFEST --- */
+        const techStack = [
+            // --- HARDWARE ---
+            {
+                name: "ThinkPad T495",
+                type: "HARDWARE // MOBILE",
+                desc: "Tactical Mobile Unit. The ruggedized daily driver for on-site operations and business logic execution.",
+                icon: "💻" 
+            },
+            {
+                name: "Alienware Core i7",
+                type: "HARDWARE // COMPUTE",
+                desc: "High-Performance Workstation. Heavy compute node for rendering, compilation, and multi-threaded processing tasks.",
+                icon: "🖥️"
+            },
+            {
+                name: "reMarkable 2",
+                type: "HARDWARE // INPUT",
+                desc: "E-Ink Buffer w/ Type Folio. Distraction-free environment for conceptual drafting, low-latency handwriting, and deep reading.",
+                icon: "📝"
+            },
+            {
+                name: "iPhone 14",
+                type: "HARDWARE // COMMS",
+                desc: "Primary Uplink. Mobile interface for communication, quick capture, and ecosystem synchronization.",
+                icon: "📱"
+            },
+            {
+                name: "Meta Ray-Ban",
+                type: "HARDWARE // VISION",
+                desc: "Augmented Input Node. First-person visual/audio capture device for seamless reality logging.",
+                icon: "🕶️"
+            },
+
+            // --- SOFTWARE ---
+            {
+                name: "Gemini Advanced",
+                type: "AI // CO-PROCESSOR",
+                desc: "Primary Intelligence Engine. Utilizing 1.5 Pro for complex reasoning, code generation, and 'Think' models for strategic analysis.",
+                icon: "✨"
+            },
+            {
+                name: "Obsidian",
+                type: "SOFTWARE // VAULT",
+                desc: "The Neural Core. Local-first markdown database. This Vault is directly hard-linked to the Aurelia Digital Garden.",
+                icon: "💎"
+            },
+            {
+                name: "NotebookLM",
+                type: "AI // SYNTHESIS",
+                desc: "Grounded Analysis Studio. Used for high-level synthesis of source documents and generating audio-learning artifacts.",
+                icon: "📓"
+            },
+            {
+                name: "Zotero",
+                type: "SOFTWARE // ARCHIVE",
+                desc: "Reference Library. The digital filing cabinet for PDF management, citation tracking, and long-term document storage.",
+                icon: "📚"
+            },
+            {
+                name: "VS Code",
+                type: "SOFTWARE // IDE",
+                desc: "The Construct. The Integrated Development Environment where the Aurelia System is architected and deployed.",
+                icon: "🛠️"
+            },
+            {
+                name: "GitHub",
+                type: "SOFTWARE // REPO",
+                desc: "Version Control. Distributed source code management and off-site backup protocol for system integrity.",
+                icon: "🐙"
+            },
+            {
+                name: "Google Scholar",
+                type: "WEB // QUERY",
+                desc: "Academic Query Engine. The primary interface for retrieving peer-reviewed literature and foundational data.",
+                icon: "🎓"
+            }
+        ];
+
+        /* --- CAROUSEL ENGINE --- */
+        const carousel = document.getElementById('tech-carousel');
+        const titleEl = document.getElementById('readout-title');
+        const descEl = document.getElementById('readout-desc');
+        
+        let currIndex = 0;
+        const cardCount = techStack.length;
+        const theta = 360 / cardCount; // Degrees per card
+        const radius = Math.round((300 / 2) / Math.tan(Math.PI / cardCount)); // Radius calculation
+
+        function initCarousel() {
+            techStack.forEach((tech, i) => {
+                const card = document.createElement('div');
+                card.className = 'carousel-card';
+                
+                // 3D Math: Rotate Y, then push out Z
+                const angle = theta * i;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 60}px)`; // Added +60px buffer for larger ring
+                
+                // Card Content
+                card.innerHTML = `
+                    <div class="text-5xl mb-6 opacity-80 filter drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">${tech.icon}</div>
+                    <h3 class="text-xl font-bold text-white font-mono text-center tracking-tighter">${tech.name}</h3>
+                    <div class="w-10 h-0.5 bg-gray-700 my-4"></div>
+                    <span class="text-[9px] text-aurelia-cyan font-mono tracking-widest uppercase border border-aurelia-cyan/30 px-2 py-1 rounded">${tech.type}</span>
+                `;
+                carousel.appendChild(card);
+            });
+            updateReadout();
+        }
+
+        function rotateCarousel(direction) {
+            currIndex += direction;
+            const angle = theta * currIndex * -1;
+            carousel.style.transform = `rotateY(${angle}deg)`;
+            updateReadout();
+        }
+
+        function updateReadout() {
+            // Infinite loop math
+            let virtualIndex = currIndex % cardCount;
+            if (virtualIndex < 0) virtualIndex += cardCount;
+            
+            const activeTech = techStack[virtualIndex];
+            
+            // Text Injection
+            titleEl.innerText = activeTech.name + " //";
+            descEl.innerText = activeTech.desc;
+        }
+
+        // Initialize System
+        initCarousel();
+    </script>
 </body>
 </html>
 
 
-<section class="mt-8">
-    <h3 class="text-2xl font-bold text-white mb-8 border-b border-gray-700 pb-4">MY TECH STACK</h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/remarkable-2.jpg" 
-                 alt="Remarkable 2 e-ink tablet" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">REMARKABLE 2</div>
-                <p class="font-mono text-base text-gray-300">Paper-like note-taking for longform capture.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/meta-ai-glasses.jpg" 
-                 alt="Ray-Ban Meta AI Glasses" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">META AI GLASSES</div>
-                <p class="font-mono text-base text-gray-300">AR assistant for contextual insights.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/zotero.jpg" 
-                 alt="Zotero Interface" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">ZOTERO</div>
-                <p class="font-mono text-base text-gray-300">Reference management and citation library.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/obsidian.jpg" 
-                 alt="Obsidian Knowledge Graph" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">OBSIDIAN</div>
-                <p class="font-mono text-base text-gray-300">Personal knowledge base and linking notes.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/google-gemini-pro.jpg" 
-                 alt="Google Gemini Pro Logo" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">GOOGLE GEMINI PRO</div>
-                <p class="font-mono text-base text-gray-300">AI integration for composition and query.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/google-scholar.jpg" 
-                 alt="Google Scholar Interface" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">GOOGLE SCHOLAR</div>
-                <p class="font-mono text-base text-gray-300">Broad-spectrum academic query engine.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/notebook-lm.jpg" 
-                 alt="Google NotebookLM" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">NOTEBOOK LM</div>
-                <p class="font-mono text-base text-gray-300">AI-synthesized research assistant and audio generator.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/vscode.jpg" 
-                 alt="VS Code Editor" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">VS CODE</div>
-                <p class="font-mono text-base text-gray-300">Integrated development environment (IDE).</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/physical-book.jpg" 
-                 alt="A hardcover book" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">PHYSICAL BOOK</div>
-                <p class="font-mono text-base text-gray-300">Analog interface for deep focus and retention.</p>
-            </div>
-        </div>
-
-        <div class="glass p-6 rounded-xl">
-            <img src="assets/images/human-brain.jpg" 
-                 alt="Anatomy of human brain" 
-                 class="w-full h-72 object-cover rounded-lg mb-6 hover:opacity-90 transition-opacity shadow-lg">
-            <div>
-                <div class="font-mono text-xs text-aurelia-cyan tracking-widest mb-2 font-bold">HUMAN BRAIN</div>
-                <p class="font-mono text-base text-gray-300">Biological neural net. The primary processor.</p>
-            </div>
-        </div>
-
-    </div>
-</section>
