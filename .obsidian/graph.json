@@ -1,6 +1,6 @@
 {
   "collapse-filter": false,
-  "search": "-path:90_SYSTEM  ",
+  "search": "-path:vault/90_SYSTEM/92_Templates  ",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
@@ -53,6 +53,6 @@
   "repelStrength": 20,
   "linkStrength": 1,
   "linkDistance": 500,
-  "scale": 0.4505081176757797,
-  "close": true
+  "scale": 0.11660891579457215,
+  "close": false
 }
