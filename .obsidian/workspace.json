@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "4df36d1a45e37744",
+        "id": "e68441a7123cfc48",
         "type": "tabs",
         "children": [
           {
-            "id": "561d7e87e885dee6",
+            "id": "ec589bdafddb386a",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -219,7 +219,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "561d7e87e885dee6",
+  "active": "ec589bdafddb386a",
   "lastOpenFiles": [
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",

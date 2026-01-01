@@ -180,27 +180,32 @@ def build_garden():
                 search_string = f"{title} {blurb} {type_clean}".lower()
                 hover_border = color.replace("border-l-", "hover:border-r-") + "/50" if "white" not in color else "hover:border-r-white/50"
 
+# --- MODIFIED LOGIC FOR FULL BORDERS ---
+                # 1. Convert "border-l-color" to just "border-color" for the full box
+                full_border_color = color.replace("border-l-", "border-")
+                
+                # 2. Update the HTML structure
                 card = f"""
                 <article 
                     onclick="openNote('{note_id}')" 
                     data-type="{type_clean}"
                     data-search="{search_string}"
-                    class="searchable-item glass p-6 rounded-sm border-l-2 {color} hover:border-r {hover_border} cursor-pointer flex flex-col gap-4 transition-all duration-300 group min-h-[320px]">
+                    class="searchable-item glass p-6 rounded-sm border-2 {full_border_color} border-opacity-60 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:scale-[1.12] hover:z-10 group min-h-[320px]">
                     
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="flex items-center gap-2 mb-2">
                                 <span class="w-1.5 h-1.5 {color.replace('border-l-', 'bg-')} rounded-full"></span>
-                                <span class="text-[10px] font-mono {color.replace('border-l-', 'text-')} uppercase tracking-widest">{label}</span>
+                                <span class="text-[16px] font-mono {color.replace('border-l-', 'text-')} uppercase tracking-widest">{label}</span>
                             </div>
-                            <h3 class="text-3xl font-bold text-white font-mono group-hover:text-white transition-colors">{title}</h3>
+                            <h3 class="text-5xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
                         </div>
-                        <div class="text-3xl opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">{icon}</div>
+                        <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">{icon}</div>
                     </div>
 
                     <div class="w-full h-px bg-gray-800/50"></div>
 
-                   <p class="text-sm text-gray-100 leading-relaxed font-normal line-clamp-5">
+                   <p class="text-large text-gray-100 leading-relaxed font-normal line-clamp-5">
     {blurb}
 </p>
 
