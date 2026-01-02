@@ -185,7 +185,12 @@ def build_garden():
                 
                 title, blurb, extra, body, icon, color, label = extract_specifics(content, meta["type"], filename)
                 type_clean = meta['type'].replace('type/', '')
-                search_string = f"{title} {blurb} {type_clean}".lower()
+                
+                # --- SEARCH INDEX UPGRADE ---
+                # We add the FULL body text to the search string, but we must remove 
+                # quotes and newlines so it doesn't break the HTML attribute.
+                search_body = body.replace('"', '').replace("'", "").replace('\n', ' ')
+                search_string = f"{title} {search_body} {type_clean}".lower()
                 hover_border = color.replace("border-l-", "hover:border-r-") + "/50" if "white" not in color else "hover:border-r-white/50"
 
 # --- MODIFIED LOGIC FOR FULL BORDERS ---
