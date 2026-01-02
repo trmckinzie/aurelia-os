@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "e68441a7123cfc48",
+        "id": "4409bd030611722d",
         "type": "tabs",
         "children": [
           {
-            "id": "ec589bdafddb386a",
+            "id": "56da38888da0d4b6",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -219,8 +219,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ec589bdafddb386a",
+  "active": "56da38888da0d4b6",
   "lastOpenFiles": [
+    "vault/90_SYSTEM/92_Templates/TPL_Concept.md",
+    "vault/20_MUSEUM/22_Library/22.1_Authors/Jordan Peterson.md",
+    "Jordan Peterson.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Author.md",
+    "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
@@ -235,14 +240,12 @@
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-31.md",
     "vault/00_INBOX/Credit Assignment Problem.md",
     "vault/00_INBOX/Associative Learning.md",
-    "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-22.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-30.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Steven Pinker.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Robert Sapolsky.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Richard Dawkins.md",
-    "vault/20_MUSEUM/22_Library/22.1_Authors/Jordan Peterson.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
     "vault/20_MUSEUM/22_Library/22.2_Materials/Behave.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
@@ -253,8 +256,6 @@
     "vault/00_INBOX/Sense Organ.md",
     "vault/00_INBOX/Test Note.md",
     "vault/00_INBOX/Negative Feedback.md",
-    "vault/20_MUSEUM/23_Disciplines/Psychology.md",
-    "vault/20_MUSEUM/22_Library/22.2_Materials/12 Rules for Life.md",
     "00_INBOX/10_GARDEN/12_Seeds/12.2_Ideas",
     "Untitled.base",
     "Untitled.canvas",
