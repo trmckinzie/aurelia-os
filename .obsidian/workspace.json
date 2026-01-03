@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "ff721e688521c744",
+        "id": "a5435e243b47acb1",
         "type": "tabs",
         "children": [
           {
-            "id": "ed3967ae7574ee1a",
+            "id": "08113b1166ed0826",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Sam Harris.md",
+                "file": "vault/20_MUSEUM/22_Library/22.1_Authors/Sam Harris.md",
                 "mode": "source",
                 "source": false
               },
@@ -220,10 +220,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ed3967ae7574ee1a",
+  "active": "08113b1166ed0826",
   "lastOpenFiles": [
+    "vault/20_MUSEUM/22_Library/22.1_Authors/Sam Harris.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Robert Sapolsky.md",
-    "Sam Harris.md",
     "vault/20_MUSEUM/22_Library/22.2_Materials/Waking Up.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
     "vault/20_MUSEUM/22_Library/22.4_Gemini_Synthesis/Lit Review Pipeline.md",
