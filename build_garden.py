@@ -88,18 +88,30 @@ def extract_specifics(content, note_type, title):
         if prof_match: blurb = prof_match.group(1)[:180] + "..."
         
         works_html = ""
+        # 1. We search for the section, handling potential variations in the header
         if "### 📚 Key Works" in content:
-            parts = content.split("### 📚 Key Works (In Vault)")
+            # Split content to isolate the "Key Works" section
+            # We split by the main part of the header to be safe
+            parts = content.split("### 📚 Key Works")
             if len(parts) > 1:
+                # Take the second part (the list)
                 lines = parts[1].strip().split('\n')
                 count = 0
                 for line in lines:
-                    if line.strip().startswith("*") and count < 2:
-                        work_name = line.replace("*", "").replace("[[", "").replace("]]", "").strip()
-                        works_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {work_name}</li>'
-                        count += 1
+                    safe_line = line.strip()
+                    # Stop if we hit the next header (like "### ⚛️ Core Concepts")
+                    if safe_line.startswith("#"): 
+                        break
+                    
+                    # 2. CHECK FOR BOTH * AND - BULLETS
+                    if (safe_line.startswith("*") or safe_line.startswith("-")) and count < 3:
+                        # 3. Clean the string (remove bullets, brackets, whitespace)
+                        work_name = safe_line.lstrip("*- ").replace("[[", "").replace("]]", "").strip()
+                        
+                        if work_name: # Only add if there's text
+                            works_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {work_name}</li>'
+                            count += 1
         
-        # UPGRADED: text-xs, text-gray-300
         extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs font-mono text-gray-400 mb-1">KEY WORKS:</div><ul class="text-xs font-mono text-gray-300 space-y-1">{works_html}</ul></div>'
 
     elif "type/source" in note_type:
