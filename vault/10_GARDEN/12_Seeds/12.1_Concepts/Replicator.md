@@ -10,7 +10,7 @@ publish: true
 ---
 # ⚛️ Replicator
 
-**🔗 Related:** 
+**🔗 Related:** [[Evolution]], [[Survival Machines]], [[Gene]]
 
 ---
 

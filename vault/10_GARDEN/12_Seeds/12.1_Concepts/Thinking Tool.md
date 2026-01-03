@@ -5,10 +5,11 @@ tags:
   - status/seed
   - topic/phil-mind
   - topic/cognitive-science
+publish: true
 ---
 # ⚛️ Thinking Tool
 
-**🔗 Related:**
+**🔗 Related:**[[Heuristic]], [[Intuition Pump]], [[Intuition Pumps and Other Tools for Thinking]]
 
 ---
 

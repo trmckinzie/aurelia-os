@@ -11,14 +11,7 @@ publish: true
 ---
 # ⚛️ Evolution
 
-**🔗 Related:** 
-- [[Genetic Variation]]
-- [[Inheritance]]
-- [[Fitness]]
-- [[Adaptation]]
-- [[Population Thinking]]
-- [[Evolutionary Biology]]
-- [[Natural Selection]]
+**🔗 Related:**[[Genetic Variation]], [[Inheritance]], [[Fitness]][[, Adaptation]], [[Population Thinking]], [[Evolutionary Biology]], [[Natural Selection]]
 
 ---
 

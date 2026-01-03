@@ -9,7 +9,7 @@ publish: true
 ---
 # ⚛️ Crane
 
-**🔗 Related:**
+**🔗 Related:**[[Skyhook]], [[Non-Teleological Process]], [[Natural Selection]], [[Daniel Dennett]]
 
 ---
 

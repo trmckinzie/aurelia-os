@@ -9,7 +9,7 @@ publish: true
 ---
 # ⚛️ Survival Machines
 
-**🔗 Related:**
+**🔗 Related:**[[Evolution]], [[Organism]], [[Gene]], [[Replicator]]
 
 ---
 
@@ -19,6 +19,5 @@ publish: true
 ### 📝 Key Insight
 * Organisms are not the ultimate beneficiaries of [[Evolution]]; they are expendable structures that genes use to persist across generations.
 - The design of a survival machine reflects historical selection pressures, producing adaptations that increase a gene’s chances of replication, not conscious goals.
-- This framing encourages [[Non-Teleological Process]] thinking by explaining apparent purpose in biology as the outcome of cumulative, blind selection rather than intention ([[Crane]]).
-
+- This framing encourages [[Non-Teleological Process]] thinking by explaining apparent purpose in biology as the outcome of cumulative, blind selection rather than intention ([[Crane]]) > ([[Skyhook]])
 ---

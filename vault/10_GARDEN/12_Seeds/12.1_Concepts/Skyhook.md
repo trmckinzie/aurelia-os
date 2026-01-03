@@ -9,7 +9,7 @@ publish: true
 ---
 # ⚛️ Skyhook
 
-**🔗 Related:**
+**🔗 Related:**[[Crane]], [[Daniel Dennett]], [[Mysticism]], [[Superstition]]
 
 ---
 

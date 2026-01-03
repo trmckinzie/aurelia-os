@@ -19,7 +19,8 @@ def parse_frontmatter(content):
         yaml_text = parts[1]
         
         # STRICT GATEKEEPER CHECK: Publish ONLY if "publish: true" is explicit
-        if "publish: true" in yaml_text.lower():
+        # We use regex to ensure it starts at the beginning of a line (ignoring comments)
+        if re.search(r'^publish:\s*true', yaml_text, re.MULTILINE | re.IGNORECASE):
              meta["publish"] = True
         
         meta["tags"] = re.findall(r'[\s-](type/[\w-]+|status/[\w-]+)', yaml_text)
@@ -48,15 +49,14 @@ def extract_specifics(content, note_type, title):
         summary_match = re.search(r'\*\*📝 BRIEF SUMMARY:\*\*\s*\n>\s*(.*)', content)
         if summary_match: blurb = summary_match.group(1)[:180] + "..."
         
-        concepts = re.findall(r'\*\s*\*\*Concept:\*\*\s*\[\[(.*?)\]\]', content)
+        # UPGRADE: Regex now accepts [*] OR [-] for bullet points
+        concepts = re.findall(r'[\*\-]\s*\*\*Concept:\*\*\s*\[\[(.*?)\]\]', content)
         tags_html = ""
         for c in concepts[:3]: 
             c_name = c.split("|")[0] 
-            # UPGRADED: text-xs, brighter text, slightly larger padding
             tags_html += f'<span class="text-xs font-mono px-2 py-1 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">{c_name}</span>'
         
-        # UPGRADED: text-xs, text-gray-400
-        extra_html = f'<div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">{tags_html}</div><span class="text-xs font-mono text-gray-400 group-hover:text-aurelia-orange transition-colors">OPEN_FILE -></span></div>'
+        extra_html = f'<div class="mt-auto pt-4 flex items-center justify-start border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">{tags_html}</div></div>'
 
     elif "type/concept" in note_type:
         icon = "⚛️"
@@ -73,10 +73,8 @@ def extract_specifics(content, note_type, title):
             links = re.findall(r'\[\[(.*?)\]\]', raw_links)
             for l in links[:3]:
                 l_name = l.split("|")[0]
-                # UPGRADED: text-xs, brighter hover
                 links_html += f'<span class="hover:text-white transition-colors">→ {l_name}</span>'
         
-        # UPGRADED: text-xs, text-gray-300
         extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-cyan font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap">{links_html}</div></div>'
 
     elif "type/author" in note_type:
@@ -88,27 +86,18 @@ def extract_specifics(content, note_type, title):
         if prof_match: blurb = prof_match.group(1)[:180] + "..."
         
         works_html = ""
-        # 1. We search for the section, handling potential variations in the header
         if "### 📚 Key Works" in content:
-            # Split content to isolate the "Key Works" section
-            # We split by the main part of the header to be safe
             parts = content.split("### 📚 Key Works")
             if len(parts) > 1:
-                # Take the second part (the list)
                 lines = parts[1].strip().split('\n')
                 count = 0
                 for line in lines:
                     safe_line = line.strip()
-                    # Stop if we hit the next header (like "### ⚛️ Core Concepts")
-                    if safe_line.startswith("#"): 
-                        break
-                    
-                    # 2. CHECK FOR BOTH * AND - BULLETS
+                    if safe_line.startswith("#"): break
+                    # UPGRADE: Checks for * OR -
                     if (safe_line.startswith("*") or safe_line.startswith("-")) and count < 3:
-                        # 3. Clean the string (remove bullets, brackets, whitespace)
                         work_name = safe_line.lstrip("*- ").replace("[[", "").replace("]]", "").strip()
-                        
-                        if work_name: # Only add if there's text
+                        if work_name:
                             works_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {work_name}</li>'
                             count += 1
         
@@ -126,7 +115,6 @@ def extract_specifics(content, note_type, title):
         auth_match = re.search(r'\*\*👤 Author:\*\*\s*\[\[(.*?)\]\]', content)
         if auth_match: auth_name = auth_match.group(1).upper()
         
-        # UPGRADED: text-xs, text-gray-400
         extra_html = f'<div class="mt-auto pt-4 flex justify-between items-center border-t border-gray-800/50"><div class="text-xs font-mono text-gray-400">AUTH: {auth_name}</div><span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span></div>'
 
     elif "type/discipline" in note_type:
@@ -139,18 +127,22 @@ def extract_specifics(content, note_type, title):
         
         bricks_html = ""
         if "### 🔑 Core Concepts" in content:
-            parts = content.split("### 🔑 Core Concepts (The Bricks)")
+            parts = content.split("### 🔑 Core Concepts")
             if len(parts) > 1:
                 lines = parts[1].strip().split('\n')
                 count = 0
                 for line in lines:
-                    if line.strip().startswith("*") and count < 3:
-                        brick_name = line.replace("*", "").replace("[[", "").replace("]]", "").strip()
-                        bricks_html += f'<span class="px-2 py-1 bg-white/5 rounded border border-white/5">{brick_name}</span>'
-                        count += 1
+                    safe_line = line.strip()
+                    if safe_line.startswith("#"): break
+                    # UPGRADE: Checks for * OR -
+                    if (safe_line.startswith("*") or safe_line.startswith("-")) and count < 3:
+                        link_match = re.search(r'\[\[(.*?)\]\]', safe_line)
+                        if link_match:
+                            concept_name = link_match.group(1).split("|")[0]
+                            bricks_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {concept_name}</li>'
+                            count += 1
         
-        # UPGRADED: text-xs, text-gray-300
-        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-green font-mono mb-2 opacity-90">CORE_BRICKS:</div><div class="flex gap-2 text-xs text-gray-300 font-mono flex-wrap">{bricks_html}</div></div>'
+        extra_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs font-mono text-gray-400 mb-1">CORE CONCEPTS:</div><ul class="text-xs font-mono text-gray-300 space-y-1">{bricks_html}</ul></div>'
 
     else:
         extra_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"></div>'
@@ -203,7 +195,7 @@ def build_garden():
                 # quotes and newlines so it doesn't break the HTML attribute.
                 search_body = body.replace('"', '').replace("'", "").replace('\n', ' ')
                 search_string = f"{title} {search_body} {type_clean}".lower()
-                hover_border = color.replace("border-l-", "hover:border-r-") + "/50" if "white" not in color else "hover:border-r-white/50"
+                
 
 # --- MODIFIED LOGIC FOR FULL BORDERS ---
                 # 1. Convert "border-l-color" to just "border-color" for the full box
@@ -230,7 +222,7 @@ def build_garden():
 
                     <div class="w-full h-px bg-gray-800/50"></div>
 
-                   <p class="text-large text-gray-100 leading-relaxed font-normal line-clamp-5">
+                   <p class="text-lg text-gray-100 leading-relaxed font-normal line-clamp-5">
     {blurb}
 </p>
 

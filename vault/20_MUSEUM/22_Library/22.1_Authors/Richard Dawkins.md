@@ -15,14 +15,14 @@ publish: true
 
 ### 📚 Key Works (In Vault)
 * [[The Selfish Gene]]
-* _The Extended Phenotype_
-- _The Blind Watchmaker_
-- _Climbing Mount Improbable_
-- _River out of Eden_
-- _The God Delusion_
+* The Extended Phenotype
+- The Blind Watchmaker
+- Climbing Mount Improbable
+- River out of Eden
+- The God Delusion
 
 ### ⚛️ Core Concepts
-* - **Gene-Centered View of [[Evolution]]** — Selection understood at the level of replicators.
+- Gene-Centered View of [[Evolution]]** — Selection understood at the level of replicators.
 - **[[Replicator]]** — Entities that make copies of themselves across generations.
 - **[[Survival Machines]]** — Organisms as vehicles for genes.
 - **Extended Phenotype** — Gene effects extending beyond the body.

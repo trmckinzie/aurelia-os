@@ -7,10 +7,11 @@ tags:
   - topic/systems
   - topic/learning
   - status/seed
+publish: true
 ---
 # ⚛️ Information Retrieval
 
-**🔗 Related:** [[Memory]]
+**🔗 Related:** [[Memory]], [[Cognition]], [[Computation]]
 
 ---
 

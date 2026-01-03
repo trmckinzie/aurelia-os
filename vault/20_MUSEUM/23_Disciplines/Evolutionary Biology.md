@@ -14,7 +14,7 @@ publish: true
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-* [[Natural Selection|Natural Selection]]
+- [[Natural Selection|Natural Selection]]
 - [[Genetic Variation]]
 - [[Inheritance]]
 - [[Fitness]]
@@ -23,7 +23,7 @@ publish: true
 - [[Evolutionary Biology]]
 - [[Coevolution]]
 ### 📚 Foundational Texts
-*  [[On the Origin of Species — Charles Darwin]]
+- [[On the Origin of Species]]
 - [[The Selfish Gene]] — [[Richard Dawkins]]
 - [[Evolutionary Analysis — Freeman & Herron]]
 - [[Darwin's Dangerous Idea]] - [[Daniel Dennett]]

@@ -11,7 +11,7 @@ aliases:
 ---
 # ⚛️ Non-Teleological Process
 
-**🔗 Related:** [[Natural Selection]]
+**🔗 Related:** [[Natural Selection]], [[Crane]], [[Evolution]]
 
 ---
 

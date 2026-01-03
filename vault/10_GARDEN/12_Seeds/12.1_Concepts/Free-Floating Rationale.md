@@ -10,7 +10,7 @@ publish: true
 ---
 # ⚛️ Free-Floating Rationale
 
-**🔗 Related:** [[Non-Teleological Process]]
+**🔗 Related:** [[Non-Teleological Process]], [[Algorithm]], [[Non-Teleological Process]]
 
 ---
 

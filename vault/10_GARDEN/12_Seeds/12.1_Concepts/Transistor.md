@@ -10,7 +10,7 @@ publish: true
 ---
 # ⚛️ Transistor
 
-**🔗 Related:** [[ ]]
+**🔗 Related:** [[Semiconductor]], [[Systems]], [[Algorithm]]
 
 ---
 

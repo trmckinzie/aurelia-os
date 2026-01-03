@@ -9,7 +9,7 @@ publish: true
 ---
 # ⚛️ [[Feynman Technique]]
 
-**🔗 Related:** [[Thinking Tool]]
+**🔗 Related:** [[Thinking Tool]], [[Analogy]]
 
 ---
 

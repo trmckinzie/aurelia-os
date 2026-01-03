@@ -12,7 +12,7 @@ publish: true
 ---
 # ⚛️ Coevolution
 
-**🔗 Related:** [[Evolution]]
+**🔗 Related:** [[Evolution]], [[Biology]], [[Systems]]
 
 ---
 

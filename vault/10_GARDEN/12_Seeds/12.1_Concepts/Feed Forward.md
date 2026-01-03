@@ -9,7 +9,7 @@ publish: true
 ---
 # ⚛️ Feed Forward
 
-**🔗 Related:** [[Negative Feedback]]
+**🔗 Related:** [[Negative Feedback]], [[Systems]], [[Cognition]]
 
 ---
 

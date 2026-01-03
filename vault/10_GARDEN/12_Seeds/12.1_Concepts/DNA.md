@@ -8,7 +8,7 @@ tags:
 ---
 # ⚛️ DNA
 
-**🔗 Related:**
+**🔗 Related:**[[Gene]], [[Replicator]], [[Evolution]], [[Natural Selection]]
 
 ---
 

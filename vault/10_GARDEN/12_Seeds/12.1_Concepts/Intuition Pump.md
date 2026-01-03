@@ -6,10 +6,11 @@ tags:
   - topic/cognitive-science
   - topic/phil-mind
   - topic/learning
+publish: true
 ---
 # ⚛️ Intuition Pump
 
-**🔗 Related:**[[Feynman Technique]] [[Thinking Tool]] [[Intuition Pumps and Other Tools for Thinking]]
+**🔗 Related:**[[Feynman Technique]], [[Thinking Tool]], [[Intuition Pumps and Other Tools for Thinking]]
 
 ---
 

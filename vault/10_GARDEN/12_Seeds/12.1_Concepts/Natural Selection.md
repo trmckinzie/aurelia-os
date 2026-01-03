@@ -10,11 +10,7 @@ publish: true
 ---
 # ⚛️ Natural Selection
 
-**🔗 Related:** 
-[[Non-Teleological Process]]
-[[Gene]]
-[[Evolution]]
-[[Evolutionary Biology]]
+**🔗 Related:**[[Non-Teleological Process]], [[Gene]], [[Evolution]], [[Algorithm]], [[Crane]], [[Charles Darwin]]
 
 ---
 
