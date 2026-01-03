@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "99de433ed81b4960",
+        "id": "d60b938c8c0f8fa9",
         "type": "tabs",
         "children": [
           {
-            "id": "caaa04f40bc175c1",
+            "id": "ab638b01dc8a9bf6",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -216,8 +216,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "ab638b01dc8a9bf6",
   "lastOpenFiles": [
+    "TPL_Project.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Project.md",
     "vault/00_INBOX/The Moral Landscape.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Sam Harris.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
@@ -228,7 +230,6 @@
     "vault/20_MUSEUM/22_Library/22.4_Gemini_Synthesis/Lit Review Pipeline.md",
     "vault/10_GARDEN/11_Daily_Bridge/2026-01-01.md",
     "vault/00_INBOX/Nervous System.md",
-    "vault/90_SYSTEM/92_Templates/TPL_Project.md",
     "vault/00_INBOX/Rationality.md",
     "2026-2-1.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-31.md",
@@ -243,7 +244,6 @@
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Skyhook.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Replicator.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Intuition Pump.md",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
