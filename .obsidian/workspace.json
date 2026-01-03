@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "8326e09a0c7c6553",
+        "id": "f51d8042411abcff",
         "type": "tabs",
         "children": [
           {
-            "id": "d74a32a23955c94a",
+            "id": "18a8600e1267ac78",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -90,7 +90,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +99,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Non-Teleological Process"
+              "title": "Backlinks"
             }
           },
           {
@@ -109,12 +108,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Non-Teleological Process"
+              "title": "Outgoing links"
             }
           },
           {
@@ -138,13 +136,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "10_GARDEN/12_Seeds/12.1_Concepts/Non-Teleological Process.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Non-Teleological Process"
+              "title": "Outline"
             }
           },
           {
@@ -202,7 +199,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 559.5
+    "width": 278.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -219,14 +216,19 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d74a32a23955c94a",
+  "active": "e65373cadd01ed0f",
   "lastOpenFiles": [
+    "vault/00_INBOX/Nervous System.md",
+    "vault/20_MUSEUM/22_Library/22.4_Gemini_Synthesis/Lit Review Pipeline.md",
+    "vault/10_GARDEN/11_Daily_Bridge/2026-01-01.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Project.md",
+    "vault/00_INBOX/Rationality.md",
+    "2026-2-1.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-31.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Feed Forward.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-30.md",
     "Atom.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
-    "2026-2-1.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Valence.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Transistor.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Thinking Tool.md",
@@ -242,11 +244,6 @@
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Information Retrieval.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Heuristic.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Free-Floating Rationale.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Feynman Technique.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Coevolution.md",
-    "vault/00_INBOX/Adaptation.md",
-    "vault/00_INBOX/Analogy.md",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
