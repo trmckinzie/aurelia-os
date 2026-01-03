@@ -39,14 +39,11 @@
       /* --- CUSTOM AURELIA CURSOR SYSTEM --- */
       body { 
         background-color: #0a0a0b;
-        
         /* DEFAULT STATE: Cyan Tactical Arrow */
-        /* This is an SVG encoded directly into the code */
         cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2 2l8.8 20.4 2.8-8.4 8.4-2.8L2 2z' fill='rgba(10, 10, 11, 0.5)' stroke='%2300f2ff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
       }
 
       /* INTERACTIVE STATE: Green Target Reticle */
-      /* Activates when hovering links, buttons, or cards */
       a, button, .carousel-card, .searchable-item {
         cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3Cpath d='M12 2v4M12 18v4M2 12h4M18 12h4' stroke='%2339ff14' stroke-width='1.5'/%3E%3C/svg%3E") 12 12, pointer !important;
       }
@@ -59,7 +56,7 @@
       
       /* --- HOLO-CAROUSEL 3D ENGINE --- */
       .carousel-scene {
-        perspective: 1000px; /* The "Vanishing Point" for depth */
+        perspective: 1000px;
         overflow: hidden;
         height: 500px;
         display: flex;
@@ -67,7 +64,7 @@
         justify-content: center;
         position: relative;
         margin-top: 4rem;
-        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent); /* Fades edges */
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
         -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
       }
 
@@ -75,8 +72,8 @@
         width: 300px;
         height: 400px;
         position: absolute;
-        transform-style: preserve-3d; /* Tells browser: "Don't flatten this" */
-        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); /* Sci-fi movement ease */
+        transform-style: preserve-3d;
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
       }
 
       .carousel-card {
@@ -85,31 +82,28 @@
         height: 400px;
         left: 0;
         top: 0;
-        /* Glassmorphism High-Contrast */
         background: rgba(10, 10, 11, 0.9);
         border: 1px solid rgba(0, 242, 255, 0.3);
         box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
         backdrop-filter: blur(8px);
-        border-radius: 4px; /* Sharper corners for Cyberpunk feel */
+        border-radius: 4px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 24px;
-        backface-visibility: hidden; /* Hides back of card when rotating */
+        backface-visibility: hidden;
         opacity: 0.9;
         transition: all 0.3s ease;
       }
 
-      /* Active State / Hover Effects */
       .carousel-card:hover {
         border-color: #00f2ff;
         box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
         z-index: 10;
-        transform: scale(1.05); /* Slight pop */
+        transform: scale(1.05);
       }
 
-      /* The Info Panel (Typewriter container) */
       .tech-readout {
         min-height: 100px;
         border-left: 2px solid #00f2ff;
@@ -140,21 +134,26 @@
 
     <main class="flex-grow pt-32 pb-20 max-w-7xl mx-auto px-6 w-full">
         <header class="mb-24 relative">
-            <div class="font-mono text-[10px] text-aurelia-cyan mb-4 flex items-center gap-2">
-                <span class="opacity-50">[ STATUS: ]</span>
-                <span class="text-aurelia-cyan">COGNITIVE_CITADEL_ONLINE</span>
+            <div class="font-mono text-[14px] text-aurelia-cyan mb-4 flex items-center gap-2">
+                <span class="opacity-100">[ STATUS: ]</span>
+                <span class="text-aurelia-cyan">OBDSIDIAN_VAULT_ONLINE</span>
             </div>
             <h1 class="text-6xl md:text-9xl font-bold text-white tracking-tighter mb-8 uppercase leading-[0.8]">
                 Aurelia <span class="text-aurelia-dim">/</span> OS
                  </h1>
-                 <p class="font-mono text-[26px] text-aurelia-green transition-colors mt-2">by Travis R McKinzie</p>
-            <div class="border-l border-aurelia-dim pl-6 max-w-xl">
-                <p class="font-mono text-sm text-gray-500 leading-relaxed">
+                 <p class="font-mono text-[26px] text-aurelia-green transition-colors mt-2">A Digital Architecture Experience by Travis R McKinzie</p>
+        <div class="border-l border-aurelia-dim pl-6 max-w-xl mt-6">
+                <p class="font-mono text-md text-white leading-relaxed mb-6">
                     > SYSTEM_READY<br>
                     > Evolutionary Theory meets Cognitive Science.<br>
-                    <span class="text-white">A Digital Architecture Experience.</span>
+                    > My Second Brain<br>
                 </p>
-            </div>
+                
+                <button onclick="openManifesto()" class="mt-10 group flex items-center gap-3 text-md font-mono text-aurelia-cyan border border-aurelia-cyan/30 bg-aurelia-cyan/5 px-8 py-4 hover:bg-aurelia-cyan hover:text-black transition-all">
+                    <span> WHAT IS AURELIA? </span>
+                    <span class="group-hover:translate-x-1 transition-transform">-></span>
+                </button>
+            </div>    
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -220,8 +219,8 @@
         <section class="w-full max-w-6xl mx-auto mt-32 relative">
             
             <div class="text-center mb-10">
-                <h2 class="text-3xl font-mono font-bold text-white tracking-widest border-b border-gray-800 pb-4 inline-block">NEURAL_LOADOUT // MY_TECH_STACK</h2>
-                <p class="text-aurelia-cyan font-mono text-[10px] mt-4 tracking-[0.2em] opacity-70">SELECT MODULE TO INSPECT SPECS</p>
+                <h2 class="text-4xl font-mono font-bold text-white tracking-widest border-b border-gray-800 pb-4 inline-block">NEURAL_LOADOUT // MY_TECH_STACK</h2>
+                <p class="text-aurelia-cyan font-mono text-[18px] mt-4 tracking-[0.2em] opacity-70">SELECT MODULE TO INSPECT SPECS</p>
             </div>
 
             <div class="carousel-scene mb-12">
@@ -255,7 +254,148 @@
         </section>
 
     </main>
-<script>
+<div id="manifesto-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeManifesto()">
+        <div id="manifesto-panel" class="bg-[#0a0a0b] border border-aurelia-cyan/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(0,242,255,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            
+            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-aurelia-cyan rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-mono text-aurelia-cyan uppercase tracking-widest">SYSTEM_MANIFESTO_V3.0</span>
+                </div>
+                <button onclick="closeManifesto()" class="text-gray-500 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-gray-300 space-y-6">
+                
+                <div class="border-l-2 border-aurelia-cyan pl-4">
+                    <h2 class="text-2xl font-bold text-white mb-1">AURELIA OS</h2>
+                    <p class="font-mono text-xs text-aurelia-cyan tracking-wider">Augmented Understanding via Recursive Evolutionary Logic & Intelligent Analysis</p>
+                </div>
+
+                <div>
+                    <h3 class="font-mono text-sm text-white font-bold mb-2 uppercase border-b border-gray-800 pb-1 w-max">Mission Parameters</h3>
+                    <p class="text-sm text-gray-400">
+                        AURELIA is an <strong>Externalized Cortex</strong>. It is a cybernetic extension of the biological mind, designed to solve the limits of human memory and processing power. It operates on the principle that knowledge is not static data to be stored, but living "assets" that must be recursively analyzed and evolved.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="font-mono text-sm text-white font-bold mb-4 uppercase border-b border-gray-800 pb-1 w-max">System Definitions</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[A]</span>
+                            <div>
+                                <strong class="text-white">AUGMENTED:</strong>
+                                <span class="text-gray-400 block mt-1">The use of digital prosthetics (AI, Databases, Search Algorithms) to extend biological cognitive limits.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[U]</span>
+                            <div>
+                                <strong class="text-white">UNDERSTANDING:</strong>
+                                <span class="text-gray-400 block mt-1">The shift from raw "Data" to synthesized "Wisdom" by linking disparate concepts into a causal network.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[R]</span>
+                            <div>
+                                <strong class="text-white">RECURSIVE:</strong>
+                                <span class="text-gray-400 block mt-1">The logic of loops. The output of one learning cycle (a note) becomes the input for the next, creating compound interest on knowledge.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[E]</span>
+                            <div>
+                                <strong class="text-white">EVOLUTIONARY:</strong>
+                                <span class="text-gray-400 block mt-1">The application of Darwinian selection to ideas. Only the strongest arguments ("Cranes") survive; weak ones are discarded.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[L]</span>
+                            <div>
+                                <strong class="text-white">LOGIC:</strong>
+                                <span class="text-gray-400 block mt-1">The rigorous operating system of the mind. Validity is prioritized over intuition.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[I]</span>
+                            <div>
+                                <strong class="text-white">INTELLIGENT:</strong>
+                                <span class="text-gray-400 block mt-1">The integration of active agents (LLMs) to retrieve and process information dynamically.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="font-mono text-aurelia-cyan font-bold min-w-[20px]">[A]</span>
+                            <div>
+                                <strong class="text-white">ANALYSIS:</strong>
+                                <span class="text-gray-400 block mt-1">The atomic deconstruction of complex systems into their fundamental "bricks" (First Principles).</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
+                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE // END_TRANSMISSION</span>
+            </div>
+        </div>
+    </div>
+    <footer class="border-t border-aurelia-dim bg-black/80 backdrop-blur py-6 mt-20 relative z-30">
+        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[15px] font-mono tracking-widest text-gray-100">
+            
+            <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
+                <span class="text-aurelia-cyan">A.U.R.E.L.I.A. SYSTEM</span>
+            </div>
+
+            <div class="hidden md:block opacity-100">
+                // AUGMENTED UNDERSTANDING via RECURSIVE EVOLUTIONARY LOGIC & INTELLIGENT ANALYSIS
+            </div>
+
+            <div class="flex gap-6 uppercase">
+                <span>v3.0.1</span>
+                <span>LATENCY: 12ms</span>
+                <span>SECURE</span>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        /* --- MANIFESTO MODAL LOGIC --- */
+        const mBackdrop = document.getElementById('manifesto-backdrop');
+        const mPanel = document.getElementById('manifesto-panel');
+
+        function openManifesto() {
+            mBackdrop.classList.remove('hidden');
+            // Small delay to allow browser to register display:block before fading in
+            setTimeout(() => {
+                mBackdrop.classList.remove('opacity-0');
+                mPanel.classList.remove('scale-95');
+                mPanel.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevents background scrolling
+        }
+
+        function closeManifesto() {
+            mBackdrop.classList.add('opacity-0');
+            mPanel.classList.remove('scale-100');
+            mPanel.classList.add('scale-95');
+            setTimeout(() => {
+                mBackdrop.classList.add('hidden');
+            }, 300); // Wait for animation to finish before hiding
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') closeManifesto(); 
+        });
         /* --- AURELIA TECH STACK MANIFEST (RESTORED TO EMOJIS) --- */
         const techStack = [
             // --- HARDWARE ---
