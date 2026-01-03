@@ -17,9 +17,9 @@ publish: true
 >Beyond his biological synthesis, Peterson acts as a modern existentialist and cultural critic, advocating for the **sovereignty of the individual** against the encroachment of group identity and ideology. Grounded in the psychoanalytic tradition of Carl Jung and the political warnings of Aleksandr Solzhenitsyn, he frames life as an inherent tragedy often marred by malevolence. His core clinical thesis is that **voluntary responsibility** is the only reliable antidote to nihilism; by bearing the heaviest burden they can conceive, individuals find the psychological stability to withstand suffering. This work positions him as a defender of "Logos" (truthful speech) and the negotiated competence of the individual as the primary mechanism for resolving social conflict and maintaining order.
 
 ### 📚 Key Works (In Vault)
-* [[Maps of Meaning]] (The Architecture of Belief - His foundational academic text).
-- [[12 Rules for Life]] (The application of his philosophy to personal responsibility).
-- [[Beyond Order]] (The balance to the previous rules).
+* [[Maps of Meaning]] 
+* [[12 Rules for Life]] 
+- [[Beyond Order]] 
 
 ### ⚛️ Core Concepts
 * **[[Dominance Hierarchy]]:** The observation that social stratification is older than trees (350 million years). It is a biological constant regulating access to resources and mates, mediated by **Serotonin**.
