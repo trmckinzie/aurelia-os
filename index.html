@@ -111,6 +111,68 @@
         background: linear-gradient(90deg, rgba(0,242,255,0.05) 0%, transparent 100%);
         margin-bottom: 4rem;
       }
+      /* === GLITCH PROTOCOL === */
+      .glitch-wrapper { position: relative; display: inline-block; }
+      
+      .glitch { position: relative; color: white; mix-blend-mode: lighten; }
+      
+      .glitch::before, .glitch::after {
+        content: attr(data-text); position: absolute; top: 0; width: 100%; height: 100%; background: #0a0a0b; overflow: hidden; clip: rect(0, 0, 0, 0);
+      }
+      
+      .glitch::before {
+        left: -3px; text-shadow: 2px 0 #00f2ff; /* Cyan Shift */
+        animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+      }
+      
+      .glitch::after {
+        left: 3px; text-shadow: -2px 0 #ff003c; /* Red Shift */
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim-1 {
+        0% { clip: rect(20px, 9999px, 15px, 0); }
+        20% { clip: rect(60px, 9999px, 80px, 0); }
+        40% { clip: rect(10px, 9999px, 50px, 0); }
+        60% { clip: rect(80px, 9999px, 10px, 0); }
+        80% { clip: rect(30px, 9999px, 60px, 0); }
+        100% { clip: rect(50px, 9999px, 30px, 0); }
+      }
+      @keyframes glitch-anim-2 {
+        0% { clip: rect(10px, 9999px, 80px, 0); }
+        20% { clip: rect(80px, 9999px, 10px, 0); }
+        40% { clip: rect(30px, 9999px, 60px, 0); }
+        60% { clip: rect(60px, 9999px, 20px, 0); }
+        80% { clip: rect(10px, 9999px, 50px, 0); }
+        100% { clip: rect(50px, 9999px, 30px, 0); }
+      }
+      /* === HYBRID PROTOCOL: DECRYPT + BIOLUMINESCENCE === */
+      .decrypt-effect {
+          font-family: 'JetBrains Mono', monospace;
+          cursor: pointer;
+          
+          /* The Bioluminescent Skin */
+          background: linear-gradient(to bottom, #ffffff 0%, #00f2ff 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+          
+          /* The Living Glow */
+          filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
+          animation: bio-pulse 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes bio-pulse {
+          0% {
+              filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.2));
+              opacity: 0.8;
+          }
+          100% {
+              filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.8));
+              opacity: 1;
+          }
+      }
     </style>
 </head>
 <body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
@@ -139,11 +201,11 @@
                 <span class="text-aurelia-cyan">OBDSIDIAN_VAULT_ONLINE</span>
             </div>
             <h1 class="text-6xl md:text-9xl font-bold text-white tracking-tighter mb-8 uppercase leading-[0.8]">
-                Aurelia <span class="text-aurelia-dim">/</span> OS
-                 </h1>
-                 <p class="font-mono text-[26px] text-aurelia-green transition-colors mt-2">A Digital Architecture Experience by Travis R McKinzie</p>
+                <span class="decrypt-effect" data-value="AURELIA / OS">AURELIA / OS</span>
+            </h1>
+                 <p class="font-mono text-[26px] text-white transition-colors mt-2">A Digital Architecture Experience by Travis R McKinzie</p>
         <div class="border-l border-aurelia-dim pl-6 max-w-xl mt-6">
-                <p class="font-mono text-md text-aurelia-orange leading-relaxed mb-6">
+                <p class="font-mono text-md text-grey-800 leading-relaxed mb-6">
                     > SYSTEM_READY<br>
                     > Evolutionary Theory meets Cognitive Science.<br>
                     > My Second Brain<br>
@@ -247,7 +309,7 @@
 
                 <div class="max-w-2xl w-full tech-readout mt-8">
                     <h3 id="readout-title" class="text-xl text-white font-mono font-bold mb-2 tracking-tight">SYSTEM_INITIALIZING...</h3>
-                    <p id="readout-desc" class="text-sm text-gray-400 font-sans leading-relaxed">Awaiting selection.</p>
+                    <p id="readout-desc" class="text-lg text-gray-100 font-sans leading-relaxed">Awaiting selection.</p>
                 </div>
 
             </div>
@@ -367,6 +429,40 @@
     </footer>
 
     <script>
+        /* --- DECRYPTION EFFECT ENGINE --- */
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+";
+
+        document.querySelector(".decrypt-effect").onmouseover = event => {
+            let iterations = 0;
+            const interval = setInterval(() => {
+                event.target.innerText = event.target.innerText
+                    .split("")
+                    .map((letter, index) => {
+                        // If the iteration has passed this index, show the REAL letter
+                        if(index < iterations) {
+                            return event.target.dataset.value[index];
+                        }
+                        // Otherwise, show a RANDOM letter
+                        return letters[Math.floor(Math.random() * 26)];
+                    })
+                    .join("");
+                
+                // Stop when all letters are revealed
+                if(iterations >= event.target.dataset.value.length){ 
+                    clearInterval(interval);
+                }
+                
+                // Speed of decryption (1/3 of a letter per frame)
+                iterations += 1 / 8; 
+            }, 30); // 30ms per frame
+        }
+        
+        // OPTIONAL: Trigger once on page load for immediate effect
+        window.onload = () => {
+             // Create a fake event to trigger the effect
+             const title = document.querySelector(".decrypt-effect");
+             if(title) title.onmouseover({target: title});
+        };
         /* --- MANIFESTO MODAL LOGIC --- */
         const mBackdrop = document.getElementById('manifesto-backdrop');
         const mPanel = document.getElementById('manifesto-panel');
