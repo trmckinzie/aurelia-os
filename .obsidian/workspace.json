@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "f51d8042411abcff",
+        "id": "ff721e688521c744",
         "type": "tabs",
         "children": [
           {
-            "id": "18a8600e1267ac78",
+            "id": "ed3967ae7574ee1a",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Sam Harris.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Sam Harris"
             }
           }
         ]
@@ -49,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#Research",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -216,11 +220,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "ed3967ae7574ee1a",
   "lastOpenFiles": [
-    "vault/00_INBOX/Nervous System.md",
+    "vault/20_MUSEUM/22_Library/22.1_Authors/Robert Sapolsky.md",
+    "Sam Harris.md",
+    "vault/20_MUSEUM/22_Library/22.2_Materials/Waking Up.md",
+    "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
     "vault/20_MUSEUM/22_Library/22.4_Gemini_Synthesis/Lit Review Pipeline.md",
+    "vault/20_MUSEUM/22_Library/22.1_Authors/Jordan Peterson.md",
     "vault/10_GARDEN/11_Daily_Bridge/2026-01-01.md",
+    "vault/00_INBOX/Nervous System.md",
     "vault/90_SYSTEM/92_Templates/TPL_Project.md",
     "vault/00_INBOX/Rationality.md",
     "2026-2-1.md",
@@ -239,11 +248,6 @@
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Intuition Pump.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/DNA.md",
     "vault/10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Natural Selection.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Evolution.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Information Retrieval.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Heuristic.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Gene.md",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
