@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "071b14f11f525609",
+        "id": "35e3af6d09c30435",
         "type": "tabs",
         "children": [
           {
-            "id": "1f49913507538e12",
+            "id": "ada1d753c2e7beb3",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -216,12 +216,19 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "ada1d753c2e7beb3",
   "lastOpenFiles": [
-    "vault/20_MUSEUM/22_Library/22.2_Materials/The Moral Landscape.md",
-    "vault/20_MUSEUM/22_Library/22.2_Materials/Meditations.md",
-    "vault/20_MUSEUM/22_Library/22.1_Authors/Marcus Aurelius.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Rationality.md",
+    "vault/10_GARDEN/12_Concepts/Nervous System.md",
+    "vault/00_INBOX/Action Potential.md",
+    "vault/00_INBOX/Neuron.md",
+    "vault/10_GARDEN/16_Gemini_Synthesis/Lit Review Pipeline.md",
+    "vault/10_GARDEN/16_Gemini_Synthesis",
+    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
+    "vault/10_GARDEN/12_Concepts/Associative Learning.md",
+    "vault/10_GARDEN/13_Authors/Marcus Aurelius.md",
+    "vault/10_GARDEN/15_Sources/The Moral Landscape.md",
+    "vault/10_GARDEN/15_Sources/Meditations.md",
+    "vault/10_GARDEN/12_Concepts/Rationality.md",
     "vault/00_INBOX/Population Thinking.md",
     "vault/00_INBOX/Systems.md",
     "vault/00_INBOX/Sense Organ.md",
@@ -229,27 +236,21 @@
     "vault/00_INBOX/Genetic Variation.md",
     "vault/00_INBOX/Computation.md",
     "vault/00_INBOX/Cognition.md",
-    "vault/00_INBOX/Associative Learning.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Analogy.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Adaptation.md",
-    "vault/20_MUSEUM/22_Library/22.2_Materials/Darwin's Dangerous Idea.md",
-    "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Crane.md",
+    "vault/10_GARDEN/12_Concepts/Analogy.md",
+    "vault/10_GARDEN/12_Concepts/Adaptation.md",
+    "vault/10_GARDEN/15_Sources/Darwin's Dangerous Idea.md",
+    "vault/10_GARDEN/13_Authors/Daniel Dennett.md",
+    "vault/10_GARDEN/12_Concepts/Crane.md",
     "vault/00_INBOX/EEA.md",
-    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
-    "vault/20_MUSEUM/22_Library/22.2_Materials/Intuition Pumps and Other Tools for Thinking.md",
-    "vault/20_MUSEUM/22_Library/22.3_Disciplines/Psychology.md",
-    "vault/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
-    "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "vault/10_GARDEN/15_Sources/Intuition Pumps and Other Tools for Thinking.md",
+    "vault/10_GARDEN/14_Disciplines/Psychology.md",
+    "vault/10_GARDEN/12_Concepts/Algorithm.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
     "system/templates/pages/museumtemplate.html",
     "system/templates/pages/indextemplate.html",
     "system/templates/pages/gardentemplate.html",
     "system/templates/pages/garden.html",
-    "vault/90_SYSTEM/92_Templates/TPL_Project.md",
-    "vault/90_SYSTEM/92_Templates/TPL_Source.md",
-    "vault/20_MUSEUM/22_Library/22.1_Authors/Sam Harris.md",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
@@ -262,7 +263,6 @@
     "00_INBOX/10_GARDEN/12_Seeds/12.2_Ideas",
     "Untitled.base",
     "Untitled.canvas",
-    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis",
-    "Untitled"
+    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis"
   ]
 }
