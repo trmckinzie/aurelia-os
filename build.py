@@ -8,6 +8,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
+PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
 OUTPUT_DIR = ROOT_DIR 
 
 print(f"🔧 CONFIG: Root={ROOT_DIR}")
@@ -577,12 +578,43 @@ def build_all():
     print(f"   + Loaded {len(garden_cards)} Garden Nodes")
     print(f"   + Loaded {len(portfolio_cards)} Projects")
 
+# --- PROCESS: PROTOCOL (Green) ---
+    protocol_cards = []
+    if os.path.exists(PROTOCOL_PATH):
+        for filename in os.listdir(PROTOCOL_PATH):
+            if filename.endswith(".md"):
+                filepath = os.path.join(PROTOCOL_PATH, filename)
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    
+                meta = parse_frontmatter(content)
+                # Skip if publish is false
+                if not meta.get("publish", False):
+                    continue
+
+                # Extract content (everything after frontmatter)
+                parts = content.split("---", 2)
+                body = parts[2] if len(parts) > 2 else content
+                
+                # Logic: We simply pass the raw markdown body. 
+                # The Template will handle the "Checklist" rendering via Javascript/CSS.
+                
+                protocol_cards.append({
+                    "title": meta.get("title", filename.replace(".md", "")),
+                    "desc": meta.get("description", "System Protocol"),
+                    "tags": meta.get("tags", []),
+                    "body": body,  # Contains the checklist and code blocks
+                    "id": meta.get("id", "PROT_" + filename[:3].upper())
+                })
+                
+    print(f"   + Loaded {len(protocol_cards)} Protocols")
+
     pages = [
         ("pages/indextemplate.html", "index.html", {}),
         ("pages/gardentemplate.html", "garden.html", {"cards": garden_cards}),
         ("pages/portfoliotemplate.html", "portfolio.html", {"projects": portfolio_cards}),
         ("pages/servicestemplate.html", "services.html", {}),
-        ("pages/museumtemplate.html", "museum.html", {})
+        ("pages/protocoltemplate.html", "protocol.html", {"protocols": protocol_cards}) 
     ]
 
     for template_name, output_name, context in pages:

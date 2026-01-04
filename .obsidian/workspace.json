@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+                "file": "vault/90_SYSTEM/92_Templates/TPL_Protocol.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "AI_Augmented_Lit_Review"
+              "title": "TPL_Protocol"
             }
           }
         ]
@@ -223,9 +223,12 @@
   },
   "active": "0f9ab4d0f6cf8a9b",
   "lastOpenFiles": [
+    "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Protocol.md",
+    "protocol.html",
     "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
-    "assets/audio/SRL_Metacognition_LLMs.m4a",
     "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+    "assets/audio/SRL_Metacognition_LLMs.m4a",
     "LINK_TO_YOUR_AUDIO_FILE_OR_URL_HERE.md",
     "assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf",
     "assets/audio/SRL_Metacognition_LLMs_Overview.m4a",
@@ -234,7 +237,7 @@
     "assets/New folder",
     "vault/10_GARDEN/11_Daily_Bridge/2026-01-03.md",
     "vault/10_GARDEN/15_Sources/A Brief History of Intelligence.md",
-    "Steering.md",
+    "vault/00_INBOX/Steering.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
     "vault/10_GARDEN/13_Authors/Marcus Aurelius.md",
@@ -253,11 +256,8 @@
     "vault/00_INBOX/Sense Organ.md",
     "vault/00_INBOX/On the Origin of Species.md",
     "vault/00_INBOX/Genetic Variation.md",
-    "vault/00_INBOX/Computation.md",
-    "vault/00_INBOX/Cognition.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
-    "system/templates/pages/museumtemplate.html",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
