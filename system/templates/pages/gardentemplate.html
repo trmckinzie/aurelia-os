@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% set active_page = "garden" %}
+{% block nav_title %}GARDEN_DECK{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* 1. SEARCH HIGHLIGHTING (Fixed: White Text) */
+    .highlight {
+        background-color: rgba(238, 241, 30, 0.966);
+        color: white; 
+        font-weight: bold;
+        border-radius: 2px;
+        padding: 0 2px;
+    }
+
+    /* 2. THE AURELIA ATMOSPHERE (SCANLINE) */
+    .scanline {
+        width: 100%; height: 100px; z-index: 40;
+        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0) 100%);
+        opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
+    }
+
+    /* 3. CARD PHYSICS */
+    .glass { 
+        background: rgba(10, 10, 11, 0.6); 
+        backdrop-filter: blur(12px); 
+        border: 1px solid rgba(255,255,255,0.05); 
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+    }
+    .glass:hover {
+        background: rgba(255, 255, 255, 0.03); 
+        border-color: rgba(255,255,255,0.1);
+    }
+
+    /* 4. ACTIVE BUTTON STATE */
+    .filter-btn.active {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+        color: white;
+        box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    /* 5. MODAL TYPOGRAPHY */
+    .prose h1 { color: white; font-size: 1.8em; font-weight: 700; margin-bottom: 0.5em; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
+    .prose h2 { color: #e5e7eb; font-size: 1.4em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
+    .prose h3 { color: #00f2ff; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
+    .prose p { color: #e5e7eb; line-height: 1.6; margin-bottom: 1em; }
+    .prose ul { list-style: disc; padding-left: 1.5em; color: #e5e7eb; margin-bottom: 1em; }
+    .prose blockquote { border-left: 3px solid #00f2ff; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(0,242,255,0.05); padding: 1em; border-radius: 4px; }
+    .prose a { color: #00f2ff; text-decoration: none; border-bottom: 1px dotted #00f2ff; }
+
+    /* 6. SCROLLBARS */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0b; }
+    ::-webkit-scrollbar-thumb { background: #1e1e20; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00f2ff; }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="scanline"></div>
+
+    <div class="fixed top-14 left-0 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-wrap gap-2" id="filter-controls">
+                <button onclick="setFilter('all')" class="filter-btn active px-5 py-2 text-xs font-mono border border-aurelia-cyan bg-aurelia-cyan/10 text-aurelia-cyan rounded uppercase tracking-wider transition-all">All_Systems</button>
+                <button onclick="setFilter('daily-bridge')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-orange hover:border-aurelia-orange rounded transition-colors uppercase tracking-wider">Logs</button>
+                <button onclick="setFilter('concept')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-cyan hover:border-aurelia-cyan rounded transition-colors uppercase tracking-wider">Concepts</button>
+                <button onclick="setFilter('source')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 rounded transition-colors uppercase tracking-wider">Library</button>
+                <button onclick="setFilter('author')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white rounded transition-colors uppercase tracking-wider">Authors</button>
+                <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-green hover:border-aurelia-green rounded transition-colors uppercase tracking-wider">Disciplines</button>
+            </div>
+            
+            <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
+                <span class="text-xs opacity-50 font-mono">CMD://</span>
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-cyan focus:outline-none w-full placeholder-gray-200">
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-grow pt-44 pb-20 px-6 w-full max-w-[1600px] mx-auto">
+        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-800">
+            <img src="assets/images/garden_banner.jpg" 
+                 alt="System Header" 
+                 class="w-full h-48 object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-in-out">
+            <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif')] opacity-5 pointer-events-none mix-blend-overlay"></div>
+            <div class="absolute bottom-4 left-6">
+                <h1 class="text-4xl font-bold text-white font-mono tracking-tighter">COGNITIVE_ATLAS</h1>
+                <p class="text-xs text-aurelia-cyan font-mono mt-1 tracking-widest">SYSTEM STATUS: ONLINE // MOUNTED</p>
+            </div>
+        </div>
+
+        <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
+            <p class="text-xs font-mono text-gray-500 tracking-widest">
+                // TOTAL_NODES: <span id="node-count" class="text-white">{{ cards|length }}</span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cardGrid">
+            {% for card in cards %}
+                {{ card.html | safe }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="data-storage" style="display: none;">
+        {% for card in cards %}
+            <div id="{{ card.id }}" class="hidden">{{ card.body | safe }}</div>
+        {% endfor %}
+    </div>
+
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
+        <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-6xl h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            
+            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-aurelia-cyan rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">READING_MODE</span>
+                </div>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none text-sm font-sans leading-relaxed">
+            </div>
+
+            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
+                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // STATE MANAGEMENT
+    let currentType = 'all';
+    let currentQuery = '';
+
+    // UI REFERENCES
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalPanel = document.getElementById('modal-panel');
+    const modalContent = document.getElementById('modal-content');
+
+    // 1. FILTER LOGIC
+    function setFilter(type) {
+        currentType = type;
+        // Reset all buttons to default state
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.classList.remove('bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
+            btn.classList.add('border-gray-800', 'text-gray-500');
+        });
+        // Activate clicked button
+        event.target.classList.remove('border-gray-800', 'text-gray-500');
+        event.target.classList.add('active', 'bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
+        
+        updateGrid();
+    }
+
+    // 2. SEARCH LOGIC (With Highlighting)
+    function handleSearch() {
+        const input = document.getElementById('searchInput');
+        currentQuery = input.value.toLowerCase().trim();
+        updateGrid();
+    }
+
+    // 3. ADDITIVE EVALUATION & HIGHLIGHTING
+    function updateGrid() {
+        const items = document.querySelectorAll('.searchable-item');
+        let visibleCount = 0;
+        
+        items.forEach(item => {
+            // A. FILTERING LOGIC
+            const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
+            const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
+            
+            const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
+            const searchMatch = itemSearch.includes(currentQuery);
+
+            if (typeMatch && searchMatch) {
+                item.style.display = 'flex';
+                visibleCount++;
+                // B. HIGHLIGHTING LOGIC
+                if (currentQuery.length > 0) {
+                    highlightText(item, currentQuery);
+                } else {
+                    clearHighlights(item);
+                }
+            } else {
+                item.style.display = 'none';
+                clearHighlights(item);
+            }
+        });
+        
+        // Update counter if it exists
+        const counter = document.getElementById('node-count');
+        if (counter) counter.innerText = visibleCount;
+    }
+
+    // HELPER: Wraps matching text in <span class="highlight">
+    function highlightText(card, term) {
+        const targets = card.querySelectorAll('h3, p');
+        targets.forEach(element => {
+            if (!element.dataset.original) {
+                element.dataset.original = element.innerHTML;
+            }
+            const originalText = element.dataset.original;
+            const regex = new RegExp(`(${term})`, 'gi');
+            
+            if (originalText.toLowerCase().includes(term)) {
+                element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+            } else {
+                element.innerHTML = originalText;
+            }
+        });
+    }
+
+    // HELPER: Removes highlights
+    function clearHighlights(card) {
+        const targets = card.querySelectorAll('h3, p');
+        targets.forEach(element => {
+            if (element.dataset.original) {
+                element.innerHTML = element.dataset.original;
+            }
+        });
+    }
+
+    // 4. MODAL LOGIC
+    function openNote(noteId) {
+        const rawEl = document.getElementById(noteId);
+        if (!rawEl) return;
+        
+        // Create a temporary textarea to decode HTML entities (e.g., &gt; -> >)
+        const txt = document.createElement("textarea");
+        txt.innerHTML = rawEl.innerHTML;
+        
+        // Parse markdown
+        modalContent.innerHTML = marked.parse(txt.value);
+        
+        modalBackdrop.classList.remove('hidden');
+        setTimeout(() => {
+            modalBackdrop.classList.remove('opacity-0');
+            modalPanel.classList.remove('scale-95');
+            modalPanel.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.add('opacity-0');
+        modalPanel.classList.remove('scale-100');
+        modalPanel.classList.add('scale-95');
+        setTimeout(() => {
+            modalBackdrop.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') closeModal(); 
+    });
+</script>
+{% endblock %}
