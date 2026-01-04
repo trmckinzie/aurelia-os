@@ -18,6 +18,7 @@
               'aurelia-green': '#39ff14',
               'aurelia-orange': '#ff8c00',
               'aurelia-dim': '#1e1e20',
+              'aurelia-purple': '#8a2be2',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
@@ -60,10 +61,10 @@
                 <span class="text-white font-bold">AURELIA_OS // {% block nav_title %}HUB{% endblock %}</span>
             </a>   
             <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="{% if active_page == 'index' %}text-aurelia-cyan border-b border-aurelia-cyan pb-1{% else %}hover:text-aurelia-cyan transition-colors{% endif %}">00_LOBBY</a>
+                <a href="index.html" class="{% if active_page == 'index' %}text-white border-b border-white pb-1{% else %}hover:text-white transition-colors{% endif %}">00_LOBBY</a>
                 <a href="garden.html" class="{% if active_page == 'garden' %}text-aurelia-cyan border-b border-aurelia-cyan pb-1{% else %}hover:text-aurelia-cyan transition-colors{% endif %}">01_GARDEN</a>
                 <a href="museum.html" class="{% if active_page == 'museum' %}text-aurelia-green border-b border-aurelia-green pb-1{% else %}hover:text-aurelia-green transition-colors{% endif %}">02_MUSEUM</a>
-                <a href="portfolio.html" class="{% if active_page == 'portfolio' %}text-white border-b border-white pb-1{% else %}hover:text-white transition-colors{% endif %}">03_PORTFOLIO</a>
+                <a href="portfolio.html" class="{% if active_page == 'portfolio' %}text-aurelia-purple border-b border-aurelia-purple pb-1{% else %}hover:text-aurelia-purple transition-colors{% endif %}">03_PORTFOLIO</a>
                 <a href="services.html" class="{% if active_page == 'services' %}text-aurelia-orange border-b border-aurelia-orange pb-1{% else %}hover:text-aurelia-orange transition-colors{% endif %}">04_SERVICES</a>
             </div>
         </div>
@@ -74,14 +75,14 @@
     </main>
 
     <footer class="border-t border-aurelia-dim bg-black/80 backdrop-blur py-6 mt-20 relative z-30">
-        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono tracking-widest text-gray-600">
+        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-gray-600">
             <div class="flex items-center gap-2">
                 <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
                 <span class="text-aurelia-cyan">A.U.R.E.L.I.A. SYSTEM</span>
             </div>
-            <div class="hidden md:block opacity-50">// AUGMENTED UNDERSTANDING via RECURSIVE EVOLUTIONARY LOGIC & INTELLIGENT ANALYSIS</div>
+            <div class="hidden md:block opacity-100">// AUGMENTED UNDERSTANDING via RECURSIVE EVOLUTIONARY LOGIC & INTELLIGENT ANALYSIS</div>
             <div class="flex gap-6 uppercase">
-                <span>v3.2.0 (JINJA_CORE)</span>
+                <span class="text-aurelia-cyan">v3.2.0 (JINJA_CORE)</span>
                 <span>SECURE</span>
             </div>
         </div>
