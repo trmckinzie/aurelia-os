@@ -3,13 +3,16 @@ import re
 from jinja2 import Environment, FileSystemLoader
 
 # --- CONFIGURATION ---
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+# Correct pathing: Sets the Root to the folder where build.py lives
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 OUTPUT_DIR = ROOT_DIR 
 
 print(f"🔧 CONFIG: Root={ROOT_DIR}")
 print(f"🔧 CONFIG: Vault={VAULT_PATH}")
+print(f"🔧 CONFIG: Templates={TEMPLATE_DIR}")
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
