@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "15ce6f1e7d56e6de",
+        "id": "d2964ee52d241290",
         "type": "tabs",
         "children": [
           {
-            "id": "7f9d9b0a43cceb38",
+            "id": "0f9ab4d0f6cf8a9b",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -221,10 +221,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7f9d9b0a43cceb38",
+  "active": "0f9ab4d0f6cf8a9b",
   "lastOpenFiles": [
-    "LINK_TO_YOUR_AUDIO_FILE_OR_URL_HERE.md",
+    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
+    "assets/audio/SRL_Metacognition_LLMs.m4a",
     "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+    "LINK_TO_YOUR_AUDIO_FILE_OR_URL_HERE.md",
     "assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf",
     "assets/audio/SRL_Metacognition_LLMs_Overview.m4a",
     "assets/audio/AI_Boosts_Grades_But_Kills_Learning.m4a",
@@ -242,7 +244,6 @@
     "vault/00_INBOX/Action Potential.md",
     "vault/00_INBOX/Neuron.md",
     "vault/10_GARDEN/16_Gemini_Synthesis",
-    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
     "vault/10_GARDEN/12_Concepts/Associative Learning.md",
     "vault/10_GARDEN/15_Sources/The Moral Landscape.md",
     "vault/10_GARDEN/15_Sources/Meditations.md",
@@ -254,11 +255,9 @@
     "vault/00_INBOX/Genetic Variation.md",
     "vault/00_INBOX/Computation.md",
     "vault/00_INBOX/Cognition.md",
-    "vault/10_GARDEN/12_Concepts/Analogy.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
     "system/templates/pages/museumtemplate.html",
-    "system/templates/pages/indextemplate.html",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",

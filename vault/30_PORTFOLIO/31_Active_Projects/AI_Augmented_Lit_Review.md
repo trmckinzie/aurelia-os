@@ -37,5 +37,5 @@ stats:
 
 # 📡 System Artifacts (Deliverables) 
 Access the generated outputs from this workflow: 
-* **🎙️ Neural Audio Overview:** ![[SRL_Metacognition_LLMs.m4a]]
-*  **📄 Synthesis Brief:** ![[SRL_Metacognition_LLMs_Brief_Overview.pdf]]
+* **🎙️ Neural Audio Overview:** [▶️ Initiate Audio Stream](assets/audio/SRL_Metacognition_LLMs.m4a)(Notebook LM - Deep Dive)
+* **📄 Synthesis Brief:** [⬇️ Download Synthesis PDF](assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf)(No Citations, full manuscript is in progress)
