@@ -1,54 +1,49 @@
 name: Deploy Aurelia OS
+
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # 1. Check out your code
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # 2. Set up Python
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 3. Run Your Engine (Creates garden.html)
-      - name: Build Garden Module
-        run: python build_garden.py
+      - name: Install Dependencies
+        run: pip install Jinja2
 
-      # 4. Assemble Site (Prepare the clean folder)
-      - name: Assemble Site
-        run: |
-          mkdir public_site
-          
-          # Copy the core HTML files
-          cp index.html public_site/
-          cp garden.html public_site/
-          cp museum.html public_site/
-          cp portfolio.html public_site/
-          cp services.html public_site/
-          
-          # Copy the Assets folder (Recursively)
-          # IMPORTANT: Ensure your local folder is named exactly 'assets' (lowercase)
-          if [ -d "assets" ]; then cp -r assets public_site/; fi
-          
-          # Copy the Vault (Optional: only if you link to images inside the vault)
-          if [ -d "vault" ]; then cp -r vault public_site/; fi
+      - name: Run Build Script
+        run: python build.py
 
-      # 5. Deploy to GitHub Pages
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public_site
+          path: '.'
 
-
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
