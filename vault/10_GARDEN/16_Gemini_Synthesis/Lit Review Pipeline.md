@@ -1,4 +1,4 @@
-# [[System Architecture: High-Efficiency Literature Review Pipeline]]
+# [[System Architecture High-Efficiency Literature Review Pipeline]]
 
 Tags: #Research #SystemsEngineering #EvolutionaryNaturalism #Workflow #Zotero #NotebookLM
 

@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "35e3af6d09c30435",
+        "id": "4dd17d5527d9de69",
         "type": "tabs",
         "children": [
           {
-            "id": "ada1d753c2e7beb3",
+            "id": "8445422d12402954",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -216,16 +216,22 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ada1d753c2e7beb3",
+  "active": "e65373cadd01ed0f",
   "lastOpenFiles": [
+    "vault/10_GARDEN/11_Daily_Bridge/2026-01-03.md",
+    "vault/10_GARDEN/15_Sources/A Brief History of Intelligence.md",
+    "Steering.md",
+    "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "vault/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
+    "vault/10_GARDEN/13_Authors/Marcus Aurelius.md",
+    "vault/10_GARDEN/13_Authors/Steven Pinker.md",
+    "vault/10_GARDEN/16_Gemini_Synthesis/Lit Review Pipeline.md",
     "vault/10_GARDEN/12_Concepts/Nervous System.md",
     "vault/00_INBOX/Action Potential.md",
     "vault/00_INBOX/Neuron.md",
-    "vault/10_GARDEN/16_Gemini_Synthesis/Lit Review Pipeline.md",
     "vault/10_GARDEN/16_Gemini_Synthesis",
     "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
     "vault/10_GARDEN/12_Concepts/Associative Learning.md",
-    "vault/10_GARDEN/13_Authors/Marcus Aurelius.md",
     "vault/10_GARDEN/15_Sources/The Moral Landscape.md",
     "vault/10_GARDEN/15_Sources/Meditations.md",
     "vault/10_GARDEN/12_Concepts/Rationality.md",
@@ -239,12 +245,6 @@
     "vault/10_GARDEN/12_Concepts/Analogy.md",
     "vault/10_GARDEN/12_Concepts/Adaptation.md",
     "vault/10_GARDEN/15_Sources/Darwin's Dangerous Idea.md",
-    "vault/10_GARDEN/13_Authors/Daniel Dennett.md",
-    "vault/10_GARDEN/12_Concepts/Crane.md",
-    "vault/00_INBOX/EEA.md",
-    "vault/10_GARDEN/15_Sources/Intuition Pumps and Other Tools for Thinking.md",
-    "vault/10_GARDEN/14_Disciplines/Psychology.md",
-    "vault/10_GARDEN/12_Concepts/Algorithm.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
     "system/templates/pages/museumtemplate.html",

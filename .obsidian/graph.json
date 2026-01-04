@@ -1,58 +1,58 @@
 {
   "collapse-filter": false,
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
-  "showTags": false,
+  "showTags": true,
   "showAttachments": false,
   "hideUnresolved": true,
-  "showOrphans": false,
+  "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:10_GARDEN/11_Daily_Bridge  ",
+      "query": "path:vault/10_GARDEN/11_Daily_Bridge  ",
       "color": {
         "a": 1,
-        "rgb": 197379
+        "rgb": 15790063
       }
     },
     {
-      "query": "path:10_GARDEN/12_Seeds/12.1_Concepts  ",
+      "query": "path:vault/10_GARDEN/13_Authors  ",
       "color": {
         "a": 1,
-        "rgb": 464877
+        "rgb": 15864322
       }
     },
     {
-      "query": "path:20_MUSEUM/22_Library/22.1_Authors  ",
+      "query": "path:vault/10_GARDEN/12_Concepts",
       "color": {
         "a": 1,
-        "rgb": 15795204
+        "rgb": 506634
       }
     },
     {
-      "query": "path:20_MUSEUM/23_Disciplines  ",
+      "query": "path:vault/10_GARDEN/14_Disciplines path:",
       "color": {
         "a": 1,
-        "rgb": 391685
+        "rgb": 591349
       }
     },
     {
-      "query": "path:20_MUSEUM/22_Library/22.2_Materials  ",
+      "query": "path:vault/10_GARDEN/14_Disciplines  ",
       "color": {
         "a": 1,
-        "rgb": 15794421
+        "rgb": 15791110
       }
     }
   ],
-  "collapse-display": false,
+  "collapse-display": true,
   "showArrow": false,
-  "textFadeMultiplier": -0.4,
-  "nodeSizeMultiplier": 2.51171875,
-  "lineSizeMultiplier": 1.784375,
-  "collapse-forces": false,
+  "textFadeMultiplier": -3,
+  "nodeSizeMultiplier": 2.81796875,
+  "lineSizeMultiplier": 1.69505208333333,
+  "collapse-forces": true,
   "centerStrength": 0,
   "repelStrength": 20,
   "linkStrength": 1,
   "linkDistance": 500,
-  "scale": 0.05932617187499903,
+  "scale": 0.2292013594174926,
   "close": false
 }
