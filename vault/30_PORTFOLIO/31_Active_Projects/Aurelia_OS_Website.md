@@ -6,10 +6,13 @@ date: 2026-01-03
 tags: []
 cover_image: ""
 role: Lead Architect
-# CHANGED: Now uses brackets so the script can capture it
-tech_stack: [Python, HTML5, Tailwind, Obsidian]
+tech_stack:
+  - Python
+  - HTML5
+  - Tailwind
+  - Obsidian
 link_repo: ""
-link_live: ""
+link_live: https://trmckinize24-gif.github.io/aurelia-os/
 link_demo: ""
 stats:
   - "Latency: <50ms"

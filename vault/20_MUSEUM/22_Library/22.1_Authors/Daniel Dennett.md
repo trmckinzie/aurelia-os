@@ -18,7 +18,7 @@ publish: true
 
 ### ⚛️ Core Concepts
 - Intentional Stance — Predicting systems by treating them as if they have beliefs and desires.
-- **[[Intuition Pump]]** — Thought experiments that train intuition rather than prove arguments. )[[Thinking Tool]]
+- **[[Intuition Pump]]** — Thought experiments that train intuition rather than prove arguments. )
 - **[[Crane]] vs. [[Skyhook]]** — Mechanistic explanations versus illegitimate shortcuts.
 - **Universal Darwinism** — Evolutionary algorithms applying beyond biology.
 - **Multiple Drafts Model** — Distributed, non-Cartesian view of consciousness.

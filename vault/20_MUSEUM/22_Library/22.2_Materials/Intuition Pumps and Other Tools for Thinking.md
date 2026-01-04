@@ -24,7 +24,7 @@ publish: true
 
 ### 🧠 Concepts Extracted
 *(Concepts linked here will show in Graph View)*
-*  [[Intuition Pump]]— Thought experiments engineered to train intuition rather than prove conclusions.
+ - [[Intuition Pump]]— Thought experiments engineered to train intuition rather than prove conclusions.
 - **[[Thinking Tool]]** — Conceptual devices (heuristics, distinctions, questions) that improve reasoning quality.
 - **[[Skyhook]] vs. [[Crane]]** — Illegitimate “magic” explanations versus stepwise, mechanistic ones.
 - [[Competence Without Comprehension]] — Systems can perform intelligently without understanding (key to mind/AI debates).
@@ -35,18 +35,3 @@ publish: true
 - **Illusion of the [[Cartesian Theater]]** — Critique of the idea of a single inner observer in consciousness.
 - **[[Philosophical Hygiene]]** — Actively cleaning up language and concepts to prevent confusion.
 
-# 📖 Intuition Pumps and Other Tools for Thinking
-
-**👤 Author:** [[ ]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
-
----
-
-### 💡 The Core Argument (Thesis)
->
-
----
-
-### 🧠 Concepts Extracted
-*(Concepts linked here will show in Graph View)*
-* [[ ]]

@@ -5,7 +5,7 @@
 
 {% block head_extra %}
 <style>
-    /* 1. SEARCH HIGHLIGHTING (Fixed: White Text) */
+    /* 1. SEARCH HIGHLIGHTING */
     .highlight {
         background-color: rgba(238, 241, 30, 0.966);
         color: white; 
@@ -61,15 +61,38 @@
 {% block content %}
     <div class="scanline"></div>
 
-    <div class="fixed top-14 left-0 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+    <div class="fixed top-14 left-0 w-full z-50 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-wrap gap-2" id="filter-controls">
-                <button onclick="setFilter('all')" class="filter-btn active px-5 py-2 text-xs font-mono border border-aurelia-cyan bg-aurelia-cyan/10 text-aurelia-cyan rounded uppercase tracking-wider transition-all">All_Systems</button>
-                <button onclick="setFilter('daily-bridge')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-orange hover:border-aurelia-orange rounded transition-colors uppercase tracking-wider">Logs</button>
-                <button onclick="setFilter('concept')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-cyan hover:border-aurelia-cyan rounded transition-colors uppercase tracking-wider">Concepts</button>
-                <button onclick="setFilter('source')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 rounded transition-colors uppercase tracking-wider">Library</button>
-                <button onclick="setFilter('author')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white rounded transition-colors uppercase tracking-wider">Authors</button>
-                <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-xs font-mono border border-gray-800 text-gray-500 hover:text-aurelia-green hover:border-aurelia-green rounded transition-colors uppercase tracking-wider">Disciplines</button>
+                <button onclick="setFilter('all')" 
+            class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-cyan bg-aurelia-cyan/10 text-aurelia-cyan rounded uppercase tracking-wider transition-all">
+        All_Systems
+    </button>
+
+    <button onclick="setFilter('daily-bridge')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-orange hover:border-aurelia-orange hover:bg-aurelia-orange/5 rounded transition-all uppercase tracking-wider">
+        Logs
+    </button>
+
+    <button onclick="setFilter('concept')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-cyan hover:border-aurelia-cyan hover:bg-aurelia-cyan/5 rounded transition-all uppercase tracking-wider">
+        Concepts
+    </button>
+
+    <button onclick="setFilter('source')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider">
+        Library
+    </button>
+
+    <button onclick="setFilter('author')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
+        Authors
+    </button>
+
+    <button onclick="setFilter('discipline')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-green hover:border-aurelia-green hover:bg-aurelia-green/5 rounded transition-all uppercase tracking-wider">
+        Disciplines
+    </button>
             </div>
             
             <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
@@ -79,20 +102,27 @@
         </div>
     </div>
 
-    <div class="flex-grow pt-44 pb-20 px-6 w-full max-w-[1600px] mx-auto">
-        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-800">
-            <img src="assets/images/garden_banner.jpg" 
-                 alt="System Header" 
-                 class="w-full h-48 object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-in-out">
-            <div class="absolute inset-0 bg-[url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif')] opacity-5 pointer-events-none mix-blend-overlay"></div>
-            <div class="absolute bottom-4 left-6">
-                <h1 class="text-4xl font-bold text-white font-mono tracking-tighter">COGNITIVE_ATLAS</h1>
-                <p class="text-xs text-aurelia-cyan font-mono mt-1 tracking-widest">SYSTEM STATUS: ONLINE // MOUNTED</p>
+    <div class="flex-grow pt-24 pb-20 px-6 w-full max-w-[1600px] mx-auto">
+        
+        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-400 bg-black h-64">
+            
+            <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
+            
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
+            
+            <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
+
+            <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
+                <h1 class="text-5xl font-black text-white font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
+                <p class="text-xs text-aurelia-cyan font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
+                    <span class="w-2 h-2 bg-aurelia-cyan rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
+                    SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
+                </p>
             </div>
         </div>
 
         <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
-            <p class="text-xs font-mono text-gray-500 tracking-widest">
+            <p class="text-md font-mono text-gray-100 tracking-widest">
                 // TOTAL_NODES: <span id="node-count" class="text-white">{{ cards|length }}</span>
             </p>
         </div>
@@ -137,55 +167,158 @@
 
 {% block scripts %}
 <script>
-    // STATE MANAGEMENT
+    // --- 1. NEURAL ANIMATION ENGINE ---
+    (function() {
+        const canvas = document.getElementById('neural-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        // Configuration
+        const particleCount = 60; // Density
+        const connectionDistance = 150; // Reach
+        const mouseDistance = 200; // Interaction radius
+
+        // Resize Handling
+        function resize() {
+            width = canvas.width = canvas.parentElement.offsetWidth;
+            height = canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Mouse Tracking
+        const mouse = { x: null, y: null };
+        canvas.parentElement.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        canvas.parentElement.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Particle Class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                // CHANGED: Reduced multiplier from 0.5 to 0.15 for very slow, deep-thought drift
+                this.vx = (Math.random() - 0.5) * 0.20; 
+                this.vy = (Math.random() - 0.5) * 0.20;
+                this.size = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse Repulsion/Attraction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouseDistance) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouseDistance - distance) / mouseDistance;
+                        const directionX = forceDirectionX * force * 0.5; // Push strength
+                        const directionY = forceDirectionY * force * 0.5;
+                        this.vx -= directionX;
+                        this.vy -= directionY;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; // Aurelia Cyan
+                ctx.fill();
+            }
+        }
+
+        // Initialize
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Update and Draw Particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw Connections
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        let opacity = 1 - (distance / connectionDistance);
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 1.0})`; // Aurelia Cyan
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
+    // --- 2. STANDARD LOGIC (Filter/Search/Modal) ---
     let currentType = 'all';
     let currentQuery = '';
 
-    // UI REFERENCES
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalPanel = document.getElementById('modal-panel');
     const modalContent = document.getElementById('modal-content');
 
-    // 1. FILTER LOGIC
     function setFilter(type) {
         currentType = type;
-        // Reset all buttons to default state
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
             btn.classList.remove('bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
             btn.classList.add('border-gray-800', 'text-gray-500');
         });
-        // Activate clicked button
         event.target.classList.remove('border-gray-800', 'text-gray-500');
         event.target.classList.add('active', 'bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
-        
         updateGrid();
     }
 
-    // 2. SEARCH LOGIC (With Highlighting)
     function handleSearch() {
         const input = document.getElementById('searchInput');
         currentQuery = input.value.toLowerCase().trim();
         updateGrid();
     }
 
-    // 3. ADDITIVE EVALUATION & HIGHLIGHTING
     function updateGrid() {
         const items = document.querySelectorAll('.searchable-item');
         let visibleCount = 0;
         
         items.forEach(item => {
-            // A. FILTERING LOGIC
             const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
             const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
-            
             const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
             const searchMatch = itemSearch.includes(currentQuery);
 
             if (typeMatch && searchMatch) {
                 item.style.display = 'flex';
                 visibleCount++;
-                // B. HIGHLIGHTING LOGIC
                 if (currentQuery.length > 0) {
                     highlightText(item, currentQuery);
                 } else {
@@ -197,12 +330,10 @@
             }
         });
         
-        // Update counter if it exists
         const counter = document.getElementById('node-count');
         if (counter) counter.innerText = visibleCount;
     }
 
-    // HELPER: Wraps matching text in <span class="highlight">
     function highlightText(card, term) {
         const targets = card.querySelectorAll('h3, p');
         targets.forEach(element => {
@@ -220,7 +351,6 @@
         });
     }
 
-    // HELPER: Removes highlights
     function clearHighlights(card) {
         const targets = card.querySelectorAll('h3, p');
         targets.forEach(element => {
@@ -230,18 +360,12 @@
         });
     }
 
-    // 4. MODAL LOGIC
     function openNote(noteId) {
         const rawEl = document.getElementById(noteId);
         if (!rawEl) return;
-        
-        // Create a temporary textarea to decode HTML entities (e.g., &gt; -> >)
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
-        
-        // Parse markdown
         modalContent.innerHTML = marked.parse(txt.value);
-        
         modalBackdrop.classList.remove('hidden');
         setTimeout(() => {
             modalBackdrop.classList.remove('opacity-0');
