@@ -1,11 +1,11 @@
 ---
 created: <% tp.date.now("YYYY-MM-DD") %>
 type: protocol
-publish: true
+publish: false
 id: PROT_<% tp.date.now("MMDD") %>
 tags:
   - type/protocol
-description: "Brief executive summary. No markdown allowed here."
+description: Brief executive summary. No markdown allowed here.
 ---
 # ⚙️ <% tp.file.title %>
 
