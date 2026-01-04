@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "vault/90_SYSTEM/92_Templates/TPL_Project.md",
+                "file": "vault/10_GARDEN/12_Seeds/12.1_Concepts/Algorithm.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "TPL_Project"
+              "title": "Algorithm"
             }
           }
         ]
@@ -222,10 +222,11 @@
   },
   "active": "a6430f421daa01fc",
   "lastOpenFiles": [
-    "vault/90_SYSTEM/92_Templates/TPL_Source.md",
+    "system/templates/pages/gardentemplate.html",
+    "system/templates/pages/garden.html",
+    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
     "vault/90_SYSTEM/92_Templates/TPL_Project.md",
-    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
-    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Source.md",
     "vault/00_INBOX/The Moral Landscape.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Sam Harris.md",
     "vault/20_MUSEUM/22_Library/22.1_Authors/Daniel Dennett.md",
@@ -266,7 +267,6 @@
     "40_SERVICES/42_Business_Logic",
     "40_SERVICES/41_Clients",
     "30_PORTFOLIO/32_Archive",
-    "30_PORTFOLIO/31_Active_Projects",
-    "20_MUSEUM/23_Disciplines"
+    "30_PORTFOLIO/31_Active_Projects"
   ]
 }

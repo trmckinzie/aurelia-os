@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% set active_page = "portfolio" %}
+{% block nav_title %}MISSION_CONTROL{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* PAGE SPECIFIC ANIMATIONS */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <section class="w-full mb-24 animate-fade-in-up">
+        <div class="border border-aurelia-dim bg-aurelia-dark/50 p-1 relative rounded-lg overflow-hidden group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aurelia-cyan to-transparent opacity-50 animate-scanline z-20 pointer-events-none"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-px bg-aurelia-dim border border-aurelia-dim">
+                
+                <div class="md:col-span-4 bg-aurelia-dark p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                    <div class="w-32 h-32 rounded-full border-2 border-aurelia-cyan/30 p-1 mb-6 relative">
+                        <img src="https://ui-avatars.com/api/?name=Travis+M&background=0a0a0b&color=00f2ff&bold=true" alt="Operator" class="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
+                        <div class="absolute inset-0 border-t-2 border-aurelia-cyan rounded-full animate-spin duration-[3s]"></div>
+                    </div>
+                    <h2 class="text-2xl text-white font-bold font-mono tracking-tighter">TRAVIS R. MCKINZIE</h2>
+                    <div class="text-[10px] text-aurelia-cyan font-mono tracking-widest mt-2 uppercase">Systems Architect // Polymath</div>
+                    
+                    <a href="assets/docs/Travis_McKinzie_CV.pdf" target="_blank" class="mt-8 px-6 py-3 border border-gray-700 hover:border-aurelia-cyan hover:bg-aurelia-cyan/10 text-gray-400 hover:text-white transition-all font-mono text-xs tracking-widest uppercase flex items-center gap-2 group/btn">
+                        <span>Extract_Dossier.pdf</span>
+                        <svg class="w-4 h-4 group-hover/btn:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    </a>
+                </div>
+
+                <div class="md:col-span-4 bg-aurelia-dark p-8 relative">
+                    <div class="absolute top-4 right-4 text-gray-700 text-[10px] font-mono">SYS_CORE</div>
+                    <h3 class="text-white font-mono font-bold mb-6 border-b border-gray-800 pb-2 inline-block">CORE_ARCHITECTURE</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="group/edu hover:bg-white/5 p-2 rounded -mx-2 transition-colors">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <span class="text-aurelia-orange font-bold font-mono">BS_BUSINESS</span>
+                                <span class="text-[10px] text-gray-500">Dual Degree</span>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed">Strategic logic, resource management, and systems optimization. The backbone of execution.</p>
+                        </div>
+                        
+                        <div class="group/edu hover:bg-white/5 p-2 rounded -mx-2 transition-colors">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <span class="text-aurelia-green font-bold font-mono">BA_PSYCHOLOGY</span>
+                                <span class="text-[10px] text-gray-500">Dual Degree</span>
+                            </div>
+                            <p class="text-xs text-gray-400 leading-relaxed">Human-Computer Interaction (HCI), cognitive biases, and behavioral heuristics. The user interface logic.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-4 bg-aurelia-dark p-8 relative">
+                    <div class="absolute top-4 right-4 text-gray-700 text-[10px] font-mono">SYS_MODS</div>
+                    <h3 class="text-white font-mono font-bold mb-6 border-b border-gray-800 pb-2 inline-block">INSTALLED_MODULES</h3>
+                    
+                    <div class="mb-6">
+                        <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Hard_Skills</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">Python</span>
+                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">HTML/CSS</span>
+                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">LLM Engineering</span>
+                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">Obsidian</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Social_Protocols</span>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
+                                <span class="text-xs text-gray-300 font-mono">Digital Literacy (High)</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
+                                <span class="text-xs text-gray-300 font-mono">Strategic Synthesis</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
+                                <span class="text-xs text-gray-300 font-mono">Complex Problem Solving</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="w-full">
+        <div class="flex items-center gap-4 mb-8">
+            <h2 class="text-xl font-mono font-bold text-white tracking-widest">ACTIVE_DEPLOYMENTS</h2>
+            <div class="h-px bg-gray-800 flex-grow"></div>
+            <div class="flex gap-2">
+                <span class="text-[10px] text-aurelia-green font-mono tracking-widest bg-aurelia-green/10 px-2 py-1 rounded border border-aurelia-green/20">LIVE_SYSTEMS</span>
+                <span class="text-[10px] text-gray-600 font-mono tracking-widest border border-gray-800 px-2 py-1 rounded">ARCHIVE</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6">
+            {% for project in projects %}
+                {{ project | safe }}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
