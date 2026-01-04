@@ -57,6 +57,16 @@
     .animate-fade-in-up {
         animation: fadeInUp 0.8s ease-out forwards;
     }
+    
+    /* MODAL TYPOGRAPHY OVERRIDES (Purple Theme) */
+    .prose h1 { color: white; font-size: 1.8em; font-weight: 700; margin-bottom: 0.5em; border-bottom: 1px solid #a855f7; padding-bottom: 0.2em; }
+    .prose h2 { color: #e9d5ff; font-size: 1.4em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
+    .prose h3 { color: #d8b4fe; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
+    .prose p { color: #d1d5db; line-height: 1.6; margin-bottom: 1em; }
+    .prose ul { list-style: disc; padding-left: 1.5em; color: #d1d5db; margin-bottom: 1em; }
+    .prose strong { color: #c084fc; font-weight: 700; }
+    .prose blockquote { border-left: 3px solid #a855f7; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(168,85,247,0.05); padding: 1em; border-radius: 4px; }
+    .prose a { color: #a855f7; text-decoration: none; border-bottom: 1px dotted #a855f7; }
 </style>
 
 </head>
@@ -82,83 +92,158 @@
 
     <main class="flex-grow pt-32 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
-    <section class="w-full mb-24 animate-fade-in-up">
-        <div class="border border-aurelia-dim bg-aurelia-dark/50 p-1 relative rounded-lg overflow-hidden group">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aurelia-cyan to-transparent opacity-50 animate-scanline z-20 pointer-events-none"></div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-0 md:gap-px bg-aurelia-dim border border-aurelia-dim">
-                
-                <div class="md:col-span-4 bg-aurelia-dark p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
-                    <div class="w-32 h-32 rounded-full border-2 border-aurelia-cyan/30 p-1 mb-6 relative">
-                        <img src="https://ui-avatars.com/api/?name=Travis+M&background=0a0a0b&color=00f2ff&bold=true" alt="Operator" class="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500">
-                        <div class="absolute inset-0 border-t-2 border-aurelia-cyan rounded-full animate-spin duration-[3s]"></div>
-                    </div>
-                    <h2 class="text-2xl text-white font-bold font-mono tracking-tighter">TRAVIS R. MCKINZIE</h2>
-                    <div class="text-[10px] text-aurelia-cyan font-mono tracking-widest mt-2 uppercase">Systems Architect // Polymath</div>
-                    
-                    <a href="assets/docs/Travis_McKinzie_CV.pdf" target="_blank" class="mt-8 px-6 py-3 border border-gray-700 hover:border-aurelia-cyan hover:bg-aurelia-cyan/10 text-gray-400 hover:text-white transition-all font-mono text-xs tracking-widest uppercase flex items-center gap-2 group/btn">
-                        <span>Extract_Dossier.pdf</span>
-                        <svg class="w-4 h-4 group-hover/btn:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    </a>
-                </div>
-
-                <div class="md:col-span-4 bg-aurelia-dark p-8 relative">
-                    <div class="absolute top-4 right-4 text-gray-700 text-[10px] font-mono">SYS_CORE</div>
-                    <h3 class="text-white font-mono font-bold mb-6 border-b border-gray-800 pb-2 inline-block">CORE_ARCHITECTURE</h3>
-                    
-                    <div class="space-y-6">
-                        <div class="group/edu hover:bg-white/5 p-2 rounded -mx-2 transition-colors">
-                            <div class="flex justify-between items-baseline mb-1">
-                                <span class="text-aurelia-orange font-bold font-mono">BS_BUSINESS</span>
-                                <span class="text-[10px] text-gray-500">Dual Degree</span>
-                            </div>
-                            <p class="text-xs text-gray-400 leading-relaxed">Strategic logic, resource management, and systems optimization. The backbone of execution.</p>
-                        </div>
-                        
-                        <div class="group/edu hover:bg-white/5 p-2 rounded -mx-2 transition-colors">
-                            <div class="flex justify-between items-baseline mb-1">
-                                <span class="text-aurelia-green font-bold font-mono">BA_PSYCHOLOGY</span>
-                                <span class="text-[10px] text-gray-500">Dual Degree</span>
-                            </div>
-                            <p class="text-xs text-gray-400 leading-relaxed">Human-Computer Interaction (HCI), cognitive biases, and behavioral heuristics. The user interface logic.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="md:col-span-4 bg-aurelia-dark p-8 relative">
-                    <div class="absolute top-4 right-4 text-gray-700 text-[10px] font-mono">SYS_MODS</div>
-                    <h3 class="text-white font-mono font-bold mb-6 border-b border-gray-800 pb-2 inline-block">INSTALLED_MODULES</h3>
-                    
-                    <div class="mb-6">
-                        <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Hard_Skills</span>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">Python</span>
-                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">HTML/CSS</span>
-                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">LLM Engineering</span>
-                            <span class="px-2 py-1 bg-gray-800/50 border border-gray-700 text-xs text-gray-300 font-mono rounded hover:border-white transition-colors">Obsidian</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-2 block">Social_Protocols</span>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-2">
-                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
-                                <span class="text-xs text-gray-300 font-mono">Digital Literacy (High)</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
-                                <span class="text-xs text-gray-300 font-mono">Strategic Synthesis</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-1 h-1 bg-aurelia-cyan rounded-full"></div>
-                                <span class="text-xs text-gray-300 font-mono">Complex Problem Solving</span>
-                            </div>
-                        </div>
-                    </div>
-
+    
+    <section class="w-full mb-20 animate-fade-in-up pt-12">
+        
+        <div class="flex justify-between items-end mb-6 border-b border-purple-500/20 pb-2">
+            <div>
+                <h1 class="text-4xl font-black text-white font-mono tracking-tighter">OPERATOR_PROFILE</h1>
+                <p class="text-xs text-purple-400 font-mono tracking-widest uppercase">ID: TRM-2026 // CLEARANCE: LEVEL 5</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-gray-500 font-mono uppercase">System_Integrity: 100%</p>
+                <div class="flex gap-1 justify-end mt-1">
+                    <span class="w-1 h-3 bg-purple-500/20"></span>
+                    <span class="w-1 h-3 bg-purple-500/40"></span>
+                    <span class="w-1 h-3 bg-purple-500/60"></span>
+                    <span class="w-1 h-3 bg-purple-500/80"></span>
+                    <span class="w-1 h-3 bg-purple-500 animate-pulse"></span>
                 </div>
             </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto">
+            
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="glass p-6 border border-purple-500/30 relative overflow-hidden group rounded-sm">
+                    <div class="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="flex items-center gap-6">
+                        <div class="relative w-24 h-24 shrink-0">
+                            <div class="absolute inset-0 rounded-full border-2 border-purple-500/50 border-dashed animate-[spin_10s_linear_infinite]"></div>
+                            <img src="assets/images/profile.jpg" class="w-full h-full object-cover rounded-full p-1 grayscale group-hover:grayscale-0 transition-all duration-500">
+                            <div class="absolute bottom-1 right-1 w-3 h-3 bg-aurelia-green rounded-full border-2 border-black animate-pulse"></div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white font-sans tracking-tight">Travis R. McKinzie</h2>
+                            <div class="h-px w-full bg-purple-500/30 my-2"></div>
+                            <p class="text-xs text-purple-300 font-mono mb-1">> DIGITAL ARCHITECT</p>
+                            <p class="text-xs text-gray-400 font-mono">> RESEARCHER</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-gray-800">
+                        <p class="text-xs text-gray-400 leading-relaxed font-mono">
+                            <span class="text-purple-500">BIO_LOAD:</span>
+                            Synthesizing evolutionary biology, cognitive science, and software engineering to build resilient digital systems.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass p-6 border border-gray-800 relative rounded-sm hover:border-purple-500/30 transition-colors">
+                    <div class="absolute top-2 right-2 text-[9px] text-gray-600 font-mono uppercase">Firmware_Updates</div>
+                    <h3 class="text-sm font-bold text-white font-mono mb-4 flex items-center gap-2">
+                        <span class="text-purple-500">🎓</span> ACADEMIC_LOGS
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="relative pl-4 border-l border-purple-500/50">
+                            <div class="absolute -left-[3px] top-1.5 w-1.5 h-1.5 bg-purple-500 rounded-full shadow-[0_0_5px_#a855f7]"></div>
+                            <h4 class="text-xs text-white font-bold">M.S. Industrial Psychology</h4>
+                            <p class="text-[10px] text-gray-500 font-mono mt-0.5">Colorado State University // 2023</p>
+                        </div>
+                        <div class="relative pl-4 border-l border-gray-700">
+                            <div class="absolute -left-[3px] top-1.5 w-1.5 h-1.5 bg-gray-500 rounded-full"></div>
+                            <h4 class="text-xs text-gray-300 font-bold">B.S. Psychology</h4>
+                            <p class="text-[10px] text-gray-500 font-mono mt-0.5">Minor in Sociology // 2020</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col h-full">
+                <div class="glass p-6 border border-purple-500/20 h-full flex flex-col relative rounded-sm">
+                    <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-purple-500/50"></div>
+                    <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-purple-500/50"></div>
+                    
+                    <h3 class="text-sm font-bold text-white font-mono mb-6 uppercase tracking-widest">
+                        // NEURAL_COMPETENCIES
+                    </h3>
+
+                    <div class="space-y-8 flex-grow justify-center flex flex-col">
+                        <div>
+                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-2">
+                                <span>ARCHITECTURE & CODE</span>
+                                <span class="text-purple-400">92%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-900 to-purple-500 w-[92%] shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="px-2 py-0.5 bg-purple-500/10 text-purple-300 text-[9px] border border-purple-500/20 rounded">Python</span>
+                                <span class="px-2 py-0.5 bg-purple-500/10 text-purple-300 text-[9px] border border-purple-500/20 rounded">Jinja2</span>
+                                <span class="px-2 py-0.5 bg-purple-500/10 text-purple-300 text-[9px] border border-purple-500/20 rounded">Tailwind</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-2">
+                                <span>RESEARCH & SYNTHESIS</span>
+                                <span class="text-aurelia-cyan">88%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-cyan-900 to-aurelia-cyan w-[88%] shadow-[0_0_10px_rgba(0,242,255,0.5)]"></div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="px-2 py-0.5 bg-aurelia-cyan/10 text-aurelia-cyan text-[9px] border border-aurelia-cyan/20 rounded">Cognitive Sci</span>
+                                <span class="px-2 py-0.5 bg-aurelia-cyan/10 text-aurelia-cyan text-[9px] border border-aurelia-cyan/20 rounded">Evolutionary Bio</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-2">
+                                <span>SYSTEMS DESIGN</span>
+                                <span class="text-green-400">95%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-green-900 to-green-500 w-[95%] shadow-[0_0_10px_rgba(57,255,20,0.5)]"></div>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="px-2 py-0.5 bg-green-500/10 text-green-400 text-[9px] border border-green-500/20 rounded">Workflows</span>
+                                <span class="px-2 py-0.5 bg-green-500/10 text-green-400 text-[9px] border border-green-500/20 rounded">Automation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 flex flex-col gap-6">
+                <div class="glass p-4 border border-gray-800 h-40 font-mono text-[10px] text-green-400 overflow-hidden relative rounded-sm bg-black/80">
+                    <div class="absolute top-0 left-0 w-full h-full bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.1)_0px,rgba(0,0,0,0.1)_1px,transparent_1px,transparent_2px)] pointer-events-none opacity-50"></div>
+                    <div class="relative z-10 flex flex-col justify-end h-full">
+                        <p class="opacity-50">root@aurelia:~$ init sequence</p>
+                        <p>> Loading modules...</p>
+                        <p>> [OK] Cognitive_Engine</p>
+                        <p>> [OK] Design_System</p>
+                        <p>> [OK] Portfolio_Link</p>
+                        <p class="animate-pulse">> Awaiting input_<span class="inline-block w-2 h-4 bg-green-400 align-middle ml-1"></span></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 flex-grow">
+                    <div class="bg-purple-900/10 border border-purple-500/20 p-4 flex justify-between items-center rounded-sm">
+                        <span class="text-[9px] text-gray-400 font-mono tracking-widest">DEPLOYMENTS</span>
+                        <span class="text-xl text-white font-bold font-mono">1</span>
+                    </div>
+                    <div class="bg-purple-900/10 border border-purple-500/20 p-4 flex justify-between items-center rounded-sm">
+                        <span class="text-[9px] text-gray-400 font-mono tracking-widest">YEARS_EXP</span>
+                        <span class="text-xl text-white font-bold font-mono">4+</span>
+                    </div>
+                    <div class="bg-purple-900/10 border border-purple-500/20 p-4 flex justify-between items-center rounded-sm">
+                        <span class="text-[9px] text-gray-400 font-mono tracking-widest">UPTIME</span>
+                        <span class="text-xl text-aurelia-green font-bold font-mono">99.9%</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -172,29 +257,111 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projectGrid">
             
                 
-    <div class="searchable-item border border-aurelia-dim bg-black/40 p-6 rounded relative group hover:border-aurelia-cyan/50 transition-all duration-300 flex flex-col h-full" data-type="project" data-search="aurelia_os_website.md project # 🚨 mission brief (the problem) **system failure:** needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. also wanted to design an efficient workflow that allowed my local obsidian notes to become automatically published to a personal site that acts as headquarters for my academic and professional portfolio.  **resource gap:** traditional sites such as wix do not allow for the kind of customization i was looking for and obsidian publish (and equivalent options for publishing notes) was too expensive for my liking.  **objective:** engineer a 'digital garden' pipeline that automatically compiles raw markdown notes into a high-performance, cybernetic web interface without manual formatting. create a personal multi-modal website that houses my digital garden but also reflects my competency as a budding academic, productivity expert, and digital architect. this site must be visually stunning but also highly functional.   # 🛠️ architecture (the solution) **core logic:** designed a custom **python etl script** (`build_garden.py`) acting as the compiler. * **ingestion module:** scans the local obsidian vault for notes tagged `#publish`. * **transformation engine:** parses frontmatter metadata (type, status, tags) and converts markdown syntax to semantic html. * **ui layer:** utilizes **tailwind css** for a responsive, 'glassmorphism' aesthetic and **vanilla js** for high-speed, client-side filtering (no database queries required). * **integration:** the system is 'headless'—the content lives in obsidian, the code lives in vs code, and they merge only at build time. using a plugin on obsidian i am able to publish updated versions of the site to github, without opening vs code or github itself!   # ⚡ operational impact (the results) - **velocity:** reduced deployment time from hours to seconds (1-click build process). - **performance:** achieved perfect lighthouse scores (100/100) due to static html architecture. - **cohesion:** successfully merged 'portfolio' (proof of work) with 'garden' (proof of knowledge) into a single, unified operating system. i am currently building the services, and museum portions of the site as well. it will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by automation, digital gardening, and synthesis across ideas and concepts.">
-        <div class="flex justify-between items-start mb-6">
-            <div class="flex items-center gap-3">
-                <div class="w-2 h-2 rounded-full bg-aurelia-green shadow-[0_0_10px_#39ff14] animate-pulse"></div>
-                <div>
-                    <h3 class="text-lg font-bold text-white font-mono tracking-tight">Aurelia OS Website</h3>
-                    <p class="text-[10px] text-gray-500 font-mono mt-1 uppercase">Lead Architect</p>
+    <div class="searchable-item glass p-8 rounded-sm border-2 border-purple-500/20 hover:border-purple-500/60 cursor-pointer flex flex-col gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] group min-h-[450px]"
+         data-type="project" 
+         data-search="aurelia_os_website.md project system failure: needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. also wanted to design an efficient workflow that allowed my loc... designed a custom python etl script (`build_garden.py`) acting as the compiler."
+         onclick="openNote('project-0')">
+        
+        <div class="flex justify-between items-start">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="w-1.5 h-1.5 bg-aurelia-green shadow-[0_0_10px_#39ff14] rounded-full"></span>
+                    <span class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">PROJECT_NODE</span>
                 </div>
+                <h3 class="text-3xl font-bold text-white font-mono leading-tight group-hover:text-purple-200 transition-colors">Aurelia OS Website</h3>
+                <p class="text-[10px] text-gray-500 font-mono mt-1 uppercase">ROLE: Lead Architect</p>
             </div>
-            <div class="flex gap-6 text-right"></div>
+            <div class="text-4xl opacity-30 group-hover:opacity-80 transition-opacity filter drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">🚀</div>
         </div>
-        <div class="text-sm text-gray-400 font-sans leading-relaxed mb-6 flex-grow">
-             # 🚨 Mission Brief (The Problem)
-**System Failure:** Needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. Also wanted to design an ef...
+
+        <div class="w-full h-px bg-purple-500/20"></div>
+
+        <div class="flex flex-col gap-2">
+            <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">MISSION_BRIEF:</span>
+            <p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3 opacity-90">
+                System Failure: Needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. Also wanted to design an efficient workflow that allowed my loc...
+            </p>
         </div>
+
+        <div class="flex flex-col gap-2 flex-grow">
+            <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">CORE_LOGIC:</span>
+            <p class="text-xs text-gray-400 font-mono border-l-2 border-purple-500/30 pl-3 italic">
+                "Designed a custom Python ETL Script (`build_garden.py`) acting as the compiler."
+            </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-2">
+            <span class="text-[10px] font-mono border border-purple-500/20 bg-purple-500/5 text-purple-300 px-2 py-1 rounded">Velocity:</span><span class="text-[10px] font-mono border border-purple-500/20 bg-purple-500/5 text-purple-300 px-2 py-1 rounded">Performance:</span><span class="text-[10px] font-mono border border-purple-500/20 bg-purple-500/5 text-purple-300 px-2 py-1 rounded">Cohesion:</span>
+        </div>
+
+        <div class="flex items-center gap-3 pt-6 mt-auto border-t border-purple-500/20">
+        <a href="https://trmckinize24-gif.github.io/aurelia-os/" target="_blank" onclick="event.stopPropagation()" 
+           class="group flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-purple-300 border border-purple-500/50 hover:bg-purple-500/10 hover:text-white hover:border-purple-400 transition-all rounded uppercase tracking-wider">
+           <span class="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:animate-pulse"></span>
+           LIVE_SYSTEM
+        </a>
+        
+    <button onclick="openNote('project-0'); event.stopPropagation()" 
+            class="ml-auto flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-gray-500 border border-gray-800 hover:border-purple-500/50 hover:text-white transition-all rounded uppercase tracking-wider group">
+        <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+        EXTRACT_DATA
+    </button>
+    </div>
+    
     </div>
     
             
         </div>
     </section>
+
+    <div id="data-storage" style="display: none;">
+        
+            <div id="project-0" class="hidden"># 🚨 Mission Brief (The Problem)
+**System Failure:** Needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. Also wanted to design an efficient workflow that allowed my local obsidian notes to become automatically published to a personal site that acts as headquarters for my academic and professional portfolio. 
+**Resource Gap:** Traditional sites such as Wix do not allow for the kind of customization I was looking for and Obsidian publish (and equivalent options for publishing notes) was too expensive for my liking. 
+**Objective:** Engineer a "Digital Garden" pipeline that automatically compiles raw markdown notes into a high-performance, cybernetic web interface without manual formatting. Create a personal multi-modal website that houses my digital garden but also reflects my competency as a budding academic, productivity expert, and digital architect. This site must be visually stunning but also highly functional. 
+
+# 🛠️ Architecture (The Solution)
+**Core Logic:** Designed a custom **Python ETL Script** (`build_garden.py`) acting as the compiler.
+* **Ingestion Module:** Scans the local Obsidian vault for notes tagged `#publish`.
+* **Transformation Engine:** Parses Frontmatter metadata (Type, Status, Tags) and converts Markdown syntax to semantic HTML.
+* **UI Layer:** Utilizes **Tailwind CSS** for a responsive, "Glassmorphism" aesthetic and **Vanilla JS** for high-speed, client-side filtering (no database queries required).
+* **Integration:** The system is "Headless"—the content lives in Obsidian, the code lives in VS Code, and they merge only at build time. Using a plugin on Obsidian I am able to publish updated versions of the site to Github, without opening VS code or Github itself! 
+
+# ⚡ Operational Impact (The Results)
+- **Velocity:** Reduced deployment time from hours to seconds (1-click build process).
+- **Performance:** Achieved perfect Lighthouse scores (100/100) due to static HTML architecture.
+- **Cohesion:** Successfully merged "Portfolio" (Proof of Work) with "Garden" (Proof of Knowledge) into a single, unified Operating System. I am currently building the services, and museum portions of the site as well. It will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by automation, digital gardening, and synthesis across ideas and concepts.</div>
+        
+    </div>
+
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
+        <div id="modal-panel" class="bg-[#0a0a0b] border border-purple-500/30 w-full max-w-6xl h-[90vh] rounded-lg shadow-[0_0_50px_rgba(168,85,247,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            
+            <div class="flex justify-between items-center p-4 border-b border-purple-500/20 bg-black/50">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-mono text-purple-400 uppercase tracking-widest">PROJECT_DEBRIEF_MODE</span>
+                </div>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none text-sm font-sans leading-relaxed selection:bg-purple-500/30 selection:text-white">
+                </div>
+
+            <div class="p-2 border-t border-purple-500/20 bg-black/50 text-center">
+                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE // AURELIA_OS</span>
+            </div>
+        </div>
+    </div>
+
 
     </main>
 
@@ -213,5 +380,50 @@
     </footer>
 
     
+<script>
+    // MODAL LOGIC
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalPanel = document.getElementById('modal-panel');
+    const modalContent = document.getElementById('modal-content');
+
+    function openNote(noteId) {
+        const rawEl = document.getElementById(noteId);
+        if (!rawEl) {
+            console.error("Note data not found for ID:", noteId);
+            return;
+        }
+        
+        // Decode HTML entities
+        const txt = document.createElement("textarea");
+        txt.innerHTML = rawEl.innerHTML;
+        
+        // Parse markdown using marked.js
+        modalContent.innerHTML = marked.parse(txt.value);
+        
+        // Show Modal
+        modalBackdrop.classList.remove('hidden');
+        setTimeout(() => {
+            modalBackdrop.classList.remove('opacity-0');
+            modalPanel.classList.remove('scale-95');
+            modalPanel.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.add('opacity-0');
+        modalPanel.classList.remove('scale-100');
+        modalPanel.classList.add('scale-95');
+        setTimeout(() => {
+            modalBackdrop.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') closeModal(); 
+    });
+</script>
+
 </body>
 </html>
