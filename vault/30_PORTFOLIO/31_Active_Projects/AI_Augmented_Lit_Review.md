@@ -28,7 +28,7 @@ stats:
 - **Discovery Layer:** utilized **Perplexity AI** and **Google Scholar** for semantic search and retrieval of recent peer reviewed papers. 
 - **Management Layer:** Aggregated metadata and PDFs into **Zotero** for standardized citation management. 
 - **Synthesis Engine:** Ingested source material into **Google NotebookLM** to generate "Audio Overviews" and query specific data points across the corpus. 
-- * **Drafting Layer:** Exported synthesized insights to **reMarkable 2 Type Folio** for distraction-free, linear editing and final manuscript composition.
+- **Drafting Layer:** Exported synthesized insights to **reMarkable 2 Type Folio** for distraction-free, linear editing and final manuscript composition.
 
 # ⚡ Operational Impact (The Results)
 **Velocity:** Reduced "Time-to-First-Draft" compared to traditional manual review methods. 
