@@ -97,11 +97,12 @@
 
 {% block content %}
 
+<div class="hidden text-aurelia-cyan text-aurelia-green text-aurelia-orange text-aurelia-purple text-gray-400 text-gray-500 text-gray-700 bg-aurelia-cyan bg-aurelia-green bg-aurelia-orange bg-aurelia-purple bg-gray-400 bg-gray-500 bg-gray-700 animate-pulse"></div>
 <div class="mb-12 border-b border-gray-800 pb-8 flex flex-col md:flex-row justify-between items-end">
     <div>
         <div class="flex items-center gap-3 mb-2">
-            <div id="live-status-indicator" class="w-2 h-2 rounded-full bg-gray-500"></div>
-            <span class="text-xs font-mono text-gray-500 tracking-widest">CURRENT_OPERATOR_STATUS:</span>
+            <div id="live-status-indicator" class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+            <span class="text-xs font-mono text-white tracking-widest">CURRENT_OPERATOR_STATUS: Travis is currently engaging in...</span>
         </div>
         <h1 id="live-status-text" class="text-3xl md:text-5xl font-black text-gray-600 font-mono tracking-tighter uppercase">
             SYSTEM_CALCULATING...
@@ -167,6 +168,8 @@
         const day = now.getDay(); 
         const time = now.getHours() * 100 + now.getMinutes();
         
+        console.log(`[SYSTEM_CHECK] Day: ${day} | Time: ${time}`); // Open Console (F12) to see this
+
         let status = "SYSTEM_IDLE";
         let color = "text-gray-500";
         let pulse = false;
@@ -210,19 +213,24 @@
             if (time >= 930 && time < 1100) { status = "ADMIN_OVERRIDE // FINANCE"; color = "text-aurelia-orange"; }
             else if (time >= 1700 && time < 1900) { status = "LOGISTICS // MEAL_PREP"; color = "text-aurelia-cyan"; }
             else if (time >= 2300) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
-            else { status = "SYSTEM_RESET"; color = "text-gray-500"; }
+            else { status = "WEEKLY_RESET"; color = "text-aurelia-green"; }
         }
 
-        // DOM Update
+      // DOM Update
         const statusEl = document.getElementById('live-status-text');
         const indicatorEl = document.getElementById('live-status-indicator');
+        
         if (statusEl) {
+            console.log(`[UPDATING_UI] New Status: ${status}`);
             statusEl.innerText = status;
             statusEl.className = `text-3xl md:text-5xl font-black font-mono tracking-tighter uppercase ${color}`;
+            
             const bgClass = color.replace('text-', 'bg-');
             indicatorEl.className = `w-2 h-2 rounded-full ${bgClass} ${pulse ? 'animate-pulse' : ''}`;
+        } else {
+            console.error("ERROR: Could not find element 'live-status-text'");
         }
-    }
+    }  
 
     // --- 2. DRAWER & DOWNLOAD LOGIC ---
     const drawer = document.getElementById('protocol-drawer');
