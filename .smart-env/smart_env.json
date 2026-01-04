@@ -25,7 +25,10 @@
     }
   },
   "smart_notices": {
-    "muted": {}
+    "muted": {
+      "embedding_complete": true,
+      "done_import": true
+    }
   },
   "smart_view_filter": {
     "expanded_view": false,
