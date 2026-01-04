@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "4dd17d5527d9de69",
+        "id": "15ce6f1e7d56e6de",
         "type": "tabs",
         "children": [
           {
-            "id": "8445422d12402954",
+            "id": "7f9d9b0a43cceb38",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "AI_Augmented_Lit_Review"
             }
           }
         ]
@@ -179,7 +183,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       },
       {
         "id": "14d3c84de7ea7f9e",
@@ -199,7 +203,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 278.5
+    "width": 278.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -216,8 +221,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "7f9d9b0a43cceb38",
   "lastOpenFiles": [
+    "LINK_TO_YOUR_AUDIO_FILE_OR_URL_HERE.md",
+    "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+    "assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf",
+    "assets/audio/SRL_Metacognition_LLMs_Overview.m4a",
+    "assets/audio/AI_Boosts_Grades_But_Kills_Learning.m4a",
+    "assets/audio",
+    "assets/New folder",
     "vault/10_GARDEN/11_Daily_Bridge/2026-01-03.md",
     "vault/10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "Steering.md",
@@ -243,14 +255,10 @@
     "vault/00_INBOX/Computation.md",
     "vault/00_INBOX/Cognition.md",
     "vault/10_GARDEN/12_Concepts/Analogy.md",
-    "vault/10_GARDEN/12_Concepts/Adaptation.md",
-    "vault/10_GARDEN/15_Sources/Darwin's Dangerous Idea.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
     "system/templates/pages/museumtemplate.html",
     "system/templates/pages/indextemplate.html",
-    "system/templates/pages/gardentemplate.html",
-    "system/templates/pages/garden.html",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",
@@ -260,9 +268,6 @@
     "assets/images/tech/gemini.png",
     "assets/images/tech/alienware.png",
     "assets/images/garden_banner.jpg",
-    "00_INBOX/10_GARDEN/12_Seeds/12.2_Ideas",
-    "Untitled.base",
-    "Untitled.canvas",
-    "20_MUSEUM/22_Library/22.3_Gemini_Synthesis"
+    "Untitled.canvas"
   ]
 }
