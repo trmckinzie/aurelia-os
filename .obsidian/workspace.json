@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "b790c5573d3fed5d",
+        "id": "fc77f1b00172779c",
         "type": "tabs",
         "children": [
           {
-            "id": "c804889d74406734",
+            "id": "045de8eb04298ceb",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "2026-04-01"
+              "title": "New tab"
             }
           }
         ]
@@ -221,10 +217,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c804889d74406734",
+  "active": "e65373cadd01ed0f",
   "lastOpenFiles": [
-    "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
     "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
+    "vault/20_PROTOCOL/02_DAILY_LOG.md",
+    "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
     "vault/10_GARDEN/14_Disciplines/Cognitive Science.md",
     "vault/10_GARDEN/14_Disciplines/Stoicism.md",
     "vault/10_GARDEN/14_Disciplines/Psychology.md",
@@ -251,7 +248,6 @@
     "vault/90_SYSTEM/92_Templates/TPL_Synthesis_Note.md",
     "vault/90_SYSTEM/92_Templates/TPL_Protocol.md",
     "protocol.html",
-    "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
     "assets/audio/SRL_Metacognition_LLMs.m4a",
     "assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf",
     "assets/audio/SRL_Metacognition_LLMs_Overview.m4a",
