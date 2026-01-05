@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>AURELIA // {% block title %}OS{% endblock %}</title>
+    <title>AURELIA // SYSTEM_FAILURE</title>
     <meta name="description" content="Aurelia OS: A recursive digital garden and second brain architecture.">
     <meta name="author" content="Travis R. McKinzie">
     
@@ -26,22 +26,22 @@
         theme: {
           extend: {
             colors: {
-              'aurelia-dark': {{ theme.colors.dark }},
-              'aurelia-cyan': {{ theme.colors.cyan }},
-              'aurelia-green': {{ theme.colors.green }},
-              'aurelia-orange': {{ theme.colors.orange }},
-              'aurelia-dim': {{ theme.colors.dim }},
-              'aurelia-purple': {{ theme.colors.purple }},
+              'aurelia-dark': '#0a0a0b',
+              'aurelia-cyan': '#00f2ff',
+              'aurelia-green': '#39ff14',
+              'aurelia-orange': '#ff8c00',
+              'aurelia-dim': '#1e1e20',
+              'aurelia-purple': '#8a2be2',
             },
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-              mono: [{{ theme.font_mono }}],
+              mono: ['JetBrains Mono', 'monospace'],
             },
-            {% if theme.bg_scanline == 'true' %}
+            
             animation: {
                 'scanline': 'scanline 8s linear infinite',
             },
-            {% endif %}
+            
           }
         }
       }
@@ -49,27 +49,25 @@
     <style>
       /* FIX: We strip the quotes for CSS compatibility */
       body { 
-        background-color: {{ theme.colors.dark|replace("'", "") }}; 
+        background-color: #0a0a0b; 
         color: #d1d5db; /* Default text color */
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2 2l8.8 20.4 2.8-8.4 8.4-2.8L2 2z' fill='rgba(128, 128, 128, 0.5)' stroke='{{ theme.colors.cyan|replace("'", "")|replace("#", "%23") }}' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2 2l8.8 20.4 2.8-8.4 8.4-2.8L2 2z' fill='rgba(128, 128, 128, 0.5)' stroke='%2300f2ff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
       }
       
       /* Dynamic Link Cursor */
       a, button, .clickable {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='{{ theme.colors.green|replace("'", "")|replace("#", "%23") }}' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='{{ theme.colors.green|replace("'", "")|replace("#", "%23") }}'/%3E%3C/svg%3E") 12 12, pointer !important;
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3C/svg%3E") 12 12, pointer !important;
       }
 
-      {% if theme.bg_scanline == 'true' %}
+      
       .scanline {
         width: 100%; height: 100px; z-index: 50;
         background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0) 100%);
         opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
       }
-      {% else %}
-      .scanline { display: none; }
-      {% endif %}
+      
     </style>
-    {% block head_extra %}{% endblock %}
+    
 </head>
 <body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
     
@@ -78,21 +76,40 @@
     <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-dark/95 backdrop-blur-xl h-14">
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
             <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div class="w-2 h-2 {% block nav_dot_color %}bg-aurelia-cyan{% endblock %} rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-white font-bold">AURELIA_OS // {% block nav_title %}HUB{% endblock %}</span>
+                <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
+                <span class="text-white font-bold">AURELIA_OS // ERROR_404</span>
             </a>   
             <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="{% if active_page == 'index' %}text-white border-b border-white pb-1{% else %}hover:text-white transition-colors{% endif %}">00_LOBBY</a>
-                <a href="garden.html" class="{% if active_page == 'garden' %}text-aurelia-cyan border-b border-aurelia-cyan pb-1{% else %}hover:text-aurelia-cyan transition-colors{% endif %}">01_GARDEN</a>
-                <a href="protocol.html" class="{% if active_page == 'protocol' %}text-aurelia-green border-b border-aurelia-green pb-1{% else %}hover:text-aurelia-green transition-colors{% endif %}">02_PROTOCOLS</a>
-                <a href="portfolio.html" class="{% if active_page == 'portfolio' %}text-aurelia-purple border-b border-aurelia-purple pb-1{% else %}hover:text-aurelia-purple transition-colors{% endif %}">03_PORTFOLIO</a>
-                <a href="services.html" class="{% if active_page == 'services' %}text-aurelia-orange border-b border-aurelia-orange pb-1{% else %}hover:text-aurelia-orange transition-colors{% endif %}">04_SERVICES</a>
+                <a href="index.html" class="hover:text-white transition-colors">00_LOBBY</a>
+                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">01_GARDEN</a>
+                <a href="protocol.html" class="hover:text-aurelia-green transition-colors">02_PROTOCOLS</a>
+                <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
+                <a href="services.html" class="hover:text-aurelia-orange transition-colors">04_SERVICES</a>
             </div>
         </div>
     </nav>
 
     <main class="flex-grow pt-32 pb-20 px-6 w-full max-w-[1600px] mx-auto">
-        {% block content %}{% endblock %}
+        
+<div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+    <div class="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none"></div>
+    
+    <h1 class="text-9xl font-black text-red-500 font-mono tracking-tighter opacity-80 glitch-text">404</h1>
+    
+    <div class="border-l-2 border-red-500 pl-6 my-8 text-left max-w-md">
+        <h2 class="text-xl text-white font-mono font-bold mb-2">CRITICAL_SYSTEM_ERROR</h2>
+        <p class="text-sm text-gray-400 font-mono leading-relaxed">
+            > TARGET_NOT_FOUND<br>
+            > The requested node does not exist in the Aurelia file system.<br>
+            > Please reroute to a valid active page.
+        </p>
+    </div>
+
+    <a href="index.html" class="px-8 py-3 bg-red-500/10 border border-red-500 text-red-500 font-mono text-sm tracking-widest hover:bg-red-500 hover:text-white transition-all">
+        INITIATE_SYSTEM_REBOOT
+    </a>
+</div>
+
     </main>
 
     <footer class="border-t border-aurelia-dim bg-black/80 backdrop-blur py-6 mt-20 relative z-30">
@@ -109,6 +126,6 @@
         </div>
     </footer>
 
-    {% block scripts %}{% endblock %}
+    
 </body>
 </html>
