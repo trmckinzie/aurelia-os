@@ -9,7 +9,60 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
-OUTPUT_DIR = ROOT_DIR 
+OUTPUT_DIR = ROOT_DIR
+ # --- THEME ENGINE ---
+# This allows you to swap the entire site's aesthetic instantly.
+# --- THEME ENGINE ---
+THEME_CONFIG = {
+    # 1. THE ORIGINAL (Neon Green/Cyan/Scanlines)
+    "CYBER_PRIME": {
+        "name": "CYBER_PRIME",
+        "colors": {
+            "dark": "'#0a0a0b'",
+            "cyan": "'#00f2ff'",   
+            "green": "'#39ff14'",  
+            "orange": "'#ff8c00'", 
+            "purple": "'#8a2be2'", 
+            "dim": "'#1e1e20'"
+        },
+        "font_mono": "'JetBrains Mono', 'monospace'",
+        "bg_scanline": "true"
+    },
+    
+    # 2. THE PORTFOLIO MATCH (Deep Purple/Black/Clean)
+    "ROYAL_VOID": {
+        "name": "ROYAL_VOID",
+        "colors": {
+            "dark": "'#050505'",   
+            "cyan": "'#a855f7'",   # Replaces Cyan with Purple
+            "green": "'#10b981'",  
+            "orange": "'#f59e0b'", 
+            "purple": "'#d8b4fe'", 
+            "dim": "'#18181b'"     
+        },
+        "font_mono": "'JetBrains Mono', 'monospace'",
+        "bg_scanline": "false"
+    },
+
+    # 3. THE PROFESSIONAL (Dark Grey/Soft Colors)
+    "OBSIDIAN_CLEAN": {
+        "name": "OBSIDIAN_CLEAN",
+        "colors": {
+            "dark": "'#1e1e1e'",   
+            "cyan": "'#61afef'",   
+            "green": "'#98c379'",  
+            "orange": "'#e5c07b'", 
+            "purple": "'#c678dd'", 
+            "dim": "'#282c34'"     
+        },
+        "font_mono": "'Inter', 'sans-serif'",
+        "bg_scanline": "false"
+    },
+}
+
+# ⚡ ACTIVE THEME SELECTOR ⚡
+# Change to THEME_CONFIG["CYBER_PRIME"] to go back to original
+CURRENT_THEME = THEME_CONFIG["CYBER_PRIME"]
 
 print(f"🔧 CONFIG: Root={ROOT_DIR}")
 print(f"🔧 CONFIG: Vault={VAULT_PATH}")
@@ -614,11 +667,17 @@ def build_all():
         ("pages/gardentemplate.html", "garden.html", {"cards": garden_cards}),
         ("pages/portfoliotemplate.html", "portfolio.html", {"projects": portfolio_cards}),
         ("pages/servicestemplate.html", "services.html", {}),
-        ("pages/protocoltemplate.html", "protocol.html", {"protocols": protocol_cards}) 
+        ("pages/protocoltemplate.html", "protocol.html", {"protocols": protocol_cards}), 
+        ("404.html", "404.html", {}),
     ]
 
     for template_name, output_name, context in pages:
         try:
+            # INJECT GLOBAL THEME DATA
+            context["theme"] = CURRENT_THEME 
+            
+            template = env.get_template(template_name)
+            # ... rest of code
             template = env.get_template(template_name)
             rendered_html = template.render(**context)
             out_path = os.path.join(OUTPUT_DIR, output_name)
