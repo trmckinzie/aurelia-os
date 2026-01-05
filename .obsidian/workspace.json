@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "4bc443f5dd1e2a70",
+        "id": "279e42490f9ba4df",
         "type": "tabs",
         "children": [
           {
-            "id": "b6eda63de16f6d66",
+            "id": "51084024962d0f0c",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -217,8 +217,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "51084024962d0f0c",
   "lastOpenFiles": [
+    "vault/10_GARDEN/14_Disciplines/Stoicism.md",
+    "vault/10_GARDEN/14_Disciplines/Psychology.md",
+    "vault/10_GARDEN/14_Disciplines/Cognitive Science.md",
+    "vault/10_GARDEN/14_Disciplines/Evolutionary Biology.md",
+    "vault/10_GARDEN/13_Authors/Steven Pinker.md",
+    "Vision.md",
+    "vault/90_SYSTEM/93_Assets/93.1_images/neuron-image.png",
     "vault/90_SYSTEM/93_Assets/93.1_images",
     "vault/10_GARDEN/13_Authors/Robert Sapolsky.md",
     "vault/10_GARDEN/13_Authors/Richard Dawkins.md",
@@ -231,7 +238,6 @@
     "vault/00_INBOX/Cognition.md",
     "vault/10_GARDEN/12_Concepts/Credit Assignment Problem.md",
     "vault/10_GARDEN/12_Concepts/Neuron.md",
-    "vault/90_SYSTEM/93_Assets/93.1_images/neuron-image.png",
     "vault/10_GARDEN/12_Concepts/Action Potential.md",
     "vault/10_GARDEN/12_Concepts/Adaptation.md",
     "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
@@ -248,14 +254,8 @@
     "assets/audio/AI_Boosts_Grades_But_Kills_Learning.m4a",
     "assets/audio",
     "assets/New folder",
-    "vault/10_GARDEN/11_Daily_Bridge/2026-01-03.md",
-    "vault/10_GARDEN/15_Sources/A Brief History of Intelligence.md",
-    "vault/00_INBOX/Steering.md",
-    "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
-    "vault/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
     "vault/10_GARDEN/16_Gemini_Synthesis",
     "system/templates/pages/servicestemplate.html",
-    "system/templates/pages/portfoliotemplate.html",
     "assets/images/tech/obsidian.png",
     "assets/images/tech/rayban.png",
     "assets/images/tech/remarkable.png",

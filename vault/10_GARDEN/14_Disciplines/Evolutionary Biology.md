@@ -6,7 +6,7 @@ tags:
   - status/evergreen
 publish: true
 ---
-# 🧠 Evolutionary Biology
+# 🧬 Evolutionary Biology
 
 ### 🧐 Definition (The Scope)
 > Evolutionary biology is the scientific study of how heritable variation in populations changes over time through mechanisms such as natural selection, mutation, genetic drift, and gene flow. It explains the origin of biological diversity, adaptation, and complexity using historical, population-level, and mechanistic accounts. The field excludes teleological, supernatural, or purpose-driven explanations and rejects essentialist views of fixed species types.
