@@ -25,12 +25,17 @@
     .glass { 
         background: rgba(10, 10, 11, 0.6); 
         backdrop-filter: blur(12px); 
-        border: 1px solid rgba(255,255,255,0.05); 
-        box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+        /* REMOVED: border: 1px solid rgba(255,255,255,0.05); */
+        /* REPLACED WITH: Separation of concerns */
+        border-style: solid;
+        /* We let the utility class (border-2) set the width */
+        /* We let the utility class (border-aurelia-cyan) set the color */
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.5); /* Inner shadow for depth */
     }
     .glass:hover {
         background: rgba(255, 255, 255, 0.03); 
-        border-color: rgba(255,255,255,0.1);
+        /* REMOVED: border-color: rgba(255,255,255,0.1); */
+        /* The utility class (hover:border-opacity-100) handles the hover effect now */
     }
 
     /* 4. ACTIVE BUTTON STATE */

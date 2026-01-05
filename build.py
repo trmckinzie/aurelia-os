@@ -19,6 +19,7 @@ THEME_CONFIG = {
         "name": "CYBER_PRIME",
         "colors": {
             "dark": "'#0a0a0b'",
+            "text": "'#ffffff'",   # UPDATED: Pure White Text
             "cyan": "'#00f2ff'",   
             "green": "'#39ff14'",  
             "orange": "'#ff8c00'", 
@@ -28,32 +29,17 @@ THEME_CONFIG = {
         "font_mono": "'JetBrains Mono', 'monospace'",
         "bg_scanline": "true"
     },
-    
-    # 2. THE PORTFOLIO MATCH (Deep Purple/Black/Clean)
-    "ROYAL_VOID": {
-        "name": "ROYAL_VOID",
+    # 2. THE PATRIOT (Light Mode - Red/White/Blue)
+    "THE_PATRIOT": {
+        "name": "THE_PATRIOT",
         "colors": {
-            "dark": "'#050505'",   
-            "cyan": "'#a855f7'",   # Replaces Cyan with Purple
-            "green": "'#10b981'",  
-            "orange": "'#f59e0b'", 
-            "purple": "'#d8b4fe'", 
-            "dim": "'#18181b'"     
-        },
-        "font_mono": "'JetBrains Mono', 'monospace'",
-        "bg_scanline": "false"
-    },
-
-    # 3. THE PROFESSIONAL (Dark Grey/Soft Colors)
-    "OBSIDIAN_CLEAN": {
-        "name": "OBSIDIAN_CLEAN",
-        "colors": {
-            "dark": "'#1e1e1e'",   
-            "cyan": "'#61afef'",   
-            "green": "'#98c379'",  
-            "orange": "'#e5c07b'", 
-            "purple": "'#c678dd'", 
-            "dim": "'#282c34'"     
+            "dark": "'#ffffff'",   # White Background
+            "text": "'#111827'",   # Black Text
+            "cyan": "'#dc2626'",   # Red
+            "green": "'#2563eb'",  # Blue
+            "orange": "'#d97706'", # Gold
+            "purple": "'#1e3a8a'", # Navy
+            "dim": "'#e5e7eb'"     # Light Gray
         },
         "font_mono": "'Inter', 'sans-serif'",
         "bg_scanline": "false"
