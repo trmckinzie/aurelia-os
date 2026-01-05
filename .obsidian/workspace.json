@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "a5a126353985d339",
+        "id": "f3c5dc5211d95b39",
         "type": "tabs",
         "children": [
           {
-            "id": "b90c7c2d0b736aa8",
+            "id": "cb6c0f2f36520124",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -217,10 +217,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "cb6c0f2f36520124",
   "lastOpenFiles": [
-    "vault/10_GARDEN/12_Concepts/Reductio ad Absurdum.md",
     "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
+    "vault/10_GARDEN/12_Concepts/Reductio ad Absurdum.md",
     "vault/20_PROTOCOL/02_DAILY_LOG.md",
     "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
     "vault/10_GARDEN/14_Disciplines/Cognitive Science.md",
