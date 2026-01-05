@@ -4,17 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "fc77f1b00172779c",
+        "id": "646e7c6a9046fc84",
         "type": "tabs",
         "children": [
           {
-            "id": "045de8eb04298ceb",
+            "id": "d6158ee8d84c4037",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-04-01"
             }
           }
         ]
@@ -217,10 +221,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e65373cadd01ed0f",
+  "active": "d6158ee8d84c4037",
   "lastOpenFiles": [
-    "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
     "vault/20_PROTOCOL/02_DAILY_LOG.md",
+    "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
     "vault/10_GARDEN/11_Daily_Bridge/2026-04-01.md",
     "vault/10_GARDEN/14_Disciplines/Cognitive Science.md",
     "vault/10_GARDEN/14_Disciplines/Stoicism.md",

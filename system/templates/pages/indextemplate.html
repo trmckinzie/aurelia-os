@@ -110,17 +110,25 @@
 {% endblock %}
 
 {% block content %}
-    <header class="mb-24 relative">
+   <header class="mb-24 relative">
         <div class="font-mono text-[14px] text-aurelia-cyan mb-4 flex items-center gap-2">
             <span class="opacity-100">[ STATUS: ]</span>
             <span class="text-aurelia-cyan">OBDSIDIAN_VAULT_ONLINE</span>
         </div>
+
         <h1 class="text-6xl md:text-9xl font-bold text-white tracking-tighter mb-8 uppercase leading-[0.8] glitch-wrapper">
             <span class="decrypt-effect" data-value="AURELIA / OS">AURELIA / OS</span>
         </h1>
-        <p class="font-mono text-[26px] text-white transition-colors mt-2">A Digital Architecture Experience by Travis R McKinzie</p>
+
+        <p class="font-mono text-[26px] text-white transition-colors mt-2">
+            A Digital Architecture Experience by 
+            <button onclick="openAbout()" class="text-white hover:text-aurelia-green hover:underline decoration-aurelia-green underline-offset-8 transition-all duration-300 cursor-pointer font-bold animate-pulse hover:animate-none">
+                Travis R McKinzie
+            </button>
+        </p>
+
         <div class="border-l border-aurelia-dim pl-6 max-w-xl mt-6">
-            <p class="font-mono text-md text-grey-800 leading-relaxed mb-6">
+            <p class="font-mono text-md text-gray-500 leading-relaxed mb-6">
                 > SYSTEM_READY<br>
                 > Evolutionary Theory meets Cognitive Science.<br>
                 > My Second Brain<br>
@@ -134,62 +142,62 @@
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        
-        <a href="garden.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 hover:border-aurelia-cyan/50 hover:bg-aurelia-cyan/5">
+
+        <a href="garden.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-cyan/60 hover:bg-aurelia-cyan/10 hover:shadow-[0_0_30px_rgba(0,242,255,0.2)]">
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
                     <div class="font-mono text-[10px] text-aurelia-cyan tracking-widest mb-2 border border-aurelia-cyan/20 w-fit px-2 py-1">MOD_01 // INPUT</div>
                     <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-cyan transition-colors">The Garden</h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-500 group-hover:text-aurelia-cyan/70">
+                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-cyan/70">
                     > STATUS: VOLATILE<br>
                     > NOTES / SEEDS / RAW
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-cyan/10 rounded-full blur-[80px] group-hover:bg-aurelia-cyan/20 transition-all"></div>
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-cyan/20 rounded-full blur-[80px] group-hover:bg-aurelia-cyan/40 transition-all duration-500"></div>
         </a>
 
-        <a href="protocol.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 hover:border-aurelia-green/50 hover:bg-aurelia-green/5">
+        <a href="protocol.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-green/60 hover:bg-aurelia-green/10 hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]">
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-aurelia-green tracking-widest mb-2 border border-aurelia-green/20 w-fit px-2 py-1">MOD_02 // EXECUTION</div>
+                    <div class="font-mono text-[10px] text-aurelia-green tracking-widest mb-2 border border-aurelia-green/20 w-fit px-2 py-1">MOD_02 // KERNEL</div>
                     <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-green transition-colors">System Protocols</h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-500 group-hover:text-aurelia-green/70">
+                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-green/70">
                     > STATUS: EXECUTING<br>
                     > ROUTINES / ALGORITHMS / LOGIC
                 </div>
             </div>
             <div class="absolute right-8 top-8 w-2 h-2 bg-aurelia-green rounded-full animate-pulse shadow-[0_0_10px_#39ff14]"></div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-green/10 rounded-full blur-[80px] group-hover:bg-aurelia-green/20 transition-all"></div>
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-green/20 rounded-full blur-[80px] group-hover:bg-aurelia-green/40 transition-all duration-500"></div>
         </a>
 
-        <a href="portfolio.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 hover:border-white/50 hover:bg-white/5">
+        <a href="portfolio.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-purple/60 hover:bg-aurelia-purple/10 hover:shadow-[0_0_30px_rgba(138,43,226,0.2)]">
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-white tracking-widest mb-2 border border-white/20 w-fit px-2 py-1">MOD_03 // PROOF</div>
-                    <h2 class="text-4xl font-bold text-white group-hover:text-gray-300 transition-colors">Portfolio</h2>
+                    <div class="font-mono text-[10px] text-aurelia-purple tracking-widest mb-2 border border-aurelia-purple/20 w-fit px-2 py-1">MOD_03 // PROOF</div>
+                    <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-purple transition-colors">Portfolio</h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-500 group-hover:text-white/70">
+                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-purple/70">
                     > STATUS: PUBLISHED<br>
                     > CASE STUDIES / DEPLOYMENTS
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full blur-[80px] group-hover:bg-white/10 transition-all"></div>
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-purple/20 rounded-full blur-[80px] group-hover:bg-aurelia-purple/40 transition-all duration-500"></div>
         </a>
 
-        <a href="services.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 hover:border-aurelia-orange/50 hover:bg-aurelia-orange/5">
+        <a href="services.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-orange/60 hover:bg-aurelia-orange/10 hover:shadow-[0_0_30px_rgba(255,140,0,0.2)]">
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
                     <div class="font-mono text-[10px] text-aurelia-orange tracking-widest mb-2 border border-aurelia-orange/20 w-fit px-2 py-1">MOD_04 // COMMERCE</div>
                     <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-orange transition-colors">Services</h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-500 group-hover:text-aurelia-orange/70">
+                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-orange/70">
                     > STATUS: ACTIVE<br>
                     > SYSTEMS / ARCHITECTURE / BUILD
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-orange/10 rounded-full blur-[80px] group-hover:bg-aurelia-orange/20 transition-all"></div>
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-orange/20 rounded-full blur-[80px] group-hover:bg-aurelia-orange/40 transition-all duration-500"></div>
         </a>
 
     </div>
@@ -266,6 +274,62 @@
             </div>
         </div>
     </div>
+
+    <div id="about-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeAbout()">
+        <div id="about-panel" class="bg-[#0a0a0b] border border-aurelia-green/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(57,255,20,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            
+            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></div>
+                    <span class="text-[10px] font-mono text-aurelia-green uppercase tracking-widest">OPERATOR_PROFILE // T.R.M.</span>
+                </div>
+                <button onclick="closeAbout()" class="text-gray-500 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-gray-300 space-y-6">
+                <div class="border-l-2 border-aurelia-green pl-4">
+                    <h2 class="text-2xl font-bold text-white mb-1">TRAVIS R. MCKINZIE</h2>
+                    <p class="font-mono text-sm text-aurelia-green tracking-wider">System Architect & Full-Stack Engineer</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                        <div class="text-aurelia-green font-mono text-xs mb-2">LOCATION</div>
+                        <div class="text-white font-bold">Colorado, USA</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                        <div class="text-aurelia-green font-mono text-xs mb-2">SPECIALTY</div>
+                        <div class="text-white font-bold">System Architecture</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                        <div class="text-aurelia-green font-mono text-xs mb-2">STATUS</div>
+                        <div class="text-white font-bold flex items-center gap-2">
+                            <span class="w-2 h-2 bg-aurelia-green rounded-full animate-pulse"></span>
+                            ONLINE
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-mono text-sm text-white font-bold mb-2 uppercase border-b border-gray-800 pb-1 w-max">Mission Statement</h3>
+                    <p class="text-sm text-gray-200">
+                        I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on creating 
+                        <strong class="text-aurelia-green">recursive systems</strong>—software that improves itself the more it is used.
+                        <br><br>
+                        Through Aurelia OS, I am exploring the future of the "Second Brain," moving beyond static note-taking into active, algorithmic knowledge management.
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
+                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE // END_PROFILE</span>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -308,6 +372,36 @@
         document.body.style.overflow = 'auto';
     }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeManifesto(); });
+
+/* --- OPERATOR BIO LOGIC (GREEN) --- */
+    const aBackdrop = document.getElementById('about-backdrop');
+    const aPanel = document.getElementById('about-panel');
+
+    function openAbout() {
+        aBackdrop.classList.remove('hidden');
+        setTimeout(() => {
+            aBackdrop.classList.remove('opacity-0');
+            aPanel.classList.remove('scale-95');
+            aPanel.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAbout() {
+        aBackdrop.classList.add('opacity-0');
+        aPanel.classList.remove('scale-100');
+        aPanel.classList.add('scale-95');
+        setTimeout(() => { aBackdrop.classList.add('hidden'); }, 300);
+        document.body.style.overflow = 'auto';
+    }
+
+    // UPDATE ESCAPE KEY TO CLOSE BOTH
+    document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') {
+            closeManifesto();
+            closeAbout();
+        }
+    });
 
     /* --- AURELIA TECH STACK MANIFEST --- */
     const techStack = [

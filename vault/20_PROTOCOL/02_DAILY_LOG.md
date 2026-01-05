@@ -20,5 +20,6 @@ description: Brief executive summary. No markdown allowed here.
 ## 🧠 System Logic
 > This protocol was designed with my erratic reading habits in mind. I consistently consume information across various interrelated disciplines such as cognitive science, evolutionary, biology, philosophy of mind, and psychology. The problem is that I enjoy jumping from book to book, concept to concept, and across disciplines. To help me extract value from this chaos, I started taking atomic notes and that led me to the discovery of Obsidian for wiki linked notetaking. Since then I have integrated my Obsidian workflow for note taking with the entirety of the AURELIA OS website, and I am now able to grow my digital garden and portfolio right from Obsidian seamlessly and extremely fast. If you are interested in purchasing a customized website such as AURELIA OS, that is tailored to your personal style and needs with full Obsidian integration, consider checking out the SERVICES page in the navigation menu! Contact me for more info and pricing. 
 
+
 ## 📦 Assets
 Download this protocol by clicking below!
