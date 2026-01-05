@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "693bcf7540b4112a",
+        "id": "4bc443f5dd1e2a70",
         "type": "tabs",
         "children": [
           {
-            "id": "3be18751ea3246e8",
+            "id": "b6eda63de16f6d66",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "01_MORNING_LAUNCH"
+              "title": "New tab"
             }
           }
         ]
@@ -53,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:topic/",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -221,15 +217,30 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3be18751ea3246e8",
+  "active": "e65373cadd01ed0f",
   "lastOpenFiles": [
+    "vault/90_SYSTEM/93_Assets/93.1_images",
+    "vault/10_GARDEN/13_Authors/Robert Sapolsky.md",
+    "vault/10_GARDEN/13_Authors/Richard Dawkins.md",
+    "vault/10_GARDEN/13_Authors/Charles Darwin.md",
+    "vault/10_GARDEN/15_Sources/On the Origin of Species.md",
+    "vault/10_GARDEN/12_Concepts/EEA.md",
+    "vault/90_SYSTEM/92_Templates/TPL_Concept.md",
+    "vault/00_INBOX/The Principles of Psychology.md",
+    "vault/00_INBOX/Computation.md",
+    "vault/00_INBOX/Cognition.md",
+    "vault/10_GARDEN/12_Concepts/Credit Assignment Problem.md",
+    "vault/10_GARDEN/12_Concepts/Neuron.md",
+    "vault/90_SYSTEM/93_Assets/93.1_images/neuron-image.png",
+    "vault/10_GARDEN/12_Concepts/Action Potential.md",
+    "vault/10_GARDEN/12_Concepts/Adaptation.md",
+    "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
+    "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
     "vault/90_SYSTEM/91_Manual/Master Operating Manual.md",
     "vault/90_SYSTEM/92_Templates/TPL_Synthesis_Note.md",
     "vault/90_SYSTEM/92_Templates/TPL_Protocol.md",
-    "vault/20_PROTOCOL/01_MORNING_LAUNCH.md",
     "protocol.html",
     "vault/30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
-    "vault/30_PORTFOLIO/31_Active_Projects/AI_Augmented_Lit_Review.md",
     "assets/audio/SRL_Metacognition_LLMs.m4a",
     "LINK_TO_YOUR_AUDIO_FILE_OR_URL_HERE.md",
     "assets/docs/SRL_Metacognition_LLMs_Brief_Overview.pdf",
@@ -242,21 +253,7 @@
     "vault/00_INBOX/Steering.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "vault/10_GARDEN/11_Daily_Bridge/2025-12-27.md",
-    "vault/10_GARDEN/13_Authors/Marcus Aurelius.md",
-    "vault/10_GARDEN/13_Authors/Steven Pinker.md",
-    "vault/10_GARDEN/16_Gemini_Synthesis/Lit Review Pipeline.md",
-    "vault/10_GARDEN/12_Concepts/Nervous System.md",
-    "vault/00_INBOX/Action Potential.md",
-    "vault/00_INBOX/Neuron.md",
     "vault/10_GARDEN/16_Gemini_Synthesis",
-    "vault/10_GARDEN/12_Concepts/Associative Learning.md",
-    "vault/10_GARDEN/15_Sources/The Moral Landscape.md",
-    "vault/10_GARDEN/15_Sources/Meditations.md",
-    "vault/10_GARDEN/12_Concepts/Rationality.md",
-    "vault/00_INBOX/Population Thinking.md",
-    "vault/00_INBOX/Systems.md",
-    "vault/00_INBOX/Sense Organ.md",
-    "vault/00_INBOX/On the Origin of Species.md",
     "system/templates/pages/servicestemplate.html",
     "system/templates/pages/portfoliotemplate.html",
     "assets/images/tech/obsidian.png",

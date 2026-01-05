@@ -4,6 +4,7 @@ tags:
   - type/concept
   - topic/
   - status/seed
+publish:
 ---
 # ⚛️ <% tp.file.title %>
 
