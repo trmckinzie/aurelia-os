@@ -1,5 +1,6 @@
 import os
 import re
+import json
 from jinja2 import Environment, FileSystemLoader
 
 # --- CONFIGURATION ---
@@ -568,9 +569,13 @@ def generate_project_card(meta, sections, title, note_id):
 
 def build_all():
     print("\n🧬 AURELIA SYSTEM: INITIALIZING JINJA CORE...")
+    
+    # 1. LOAD DATA CONTAINERS
     garden_cards = []
     portfolio_cards = []
-    
+    protocol_cards = []
+
+    # 2. SCAN VAULT (Garden & Portfolio)
     for root, dirs, files in os.walk(VAULT_PATH):
         for filename in sorted(files):
             if filename.endswith(".md"):
@@ -583,71 +588,112 @@ def build_all():
 
                 body = parse_body(content)
                 note_type = meta.get("type", "unknown").lower()
-                if (note_type == "unknown" or not note_type) and meta.get("tags"):
-                    for tag in meta["tags"]:
-                        if tag.startswith("type/"):
-                            note_type = tag.split("/")[1]
-                            break
+                tags = meta.get("tags", [])  # <--- CAPTURE TAGS
                 
-                # BRANCH LOGIC
+                # Logic to separate Projects from Notes
                 if "project" in note_type:
                     project_id = f"project-{len(portfolio_cards)}"
                     sections = {"brief": body}
-                    # Pass ID to generator
                     card_html = generate_project_card(meta, sections, filename, project_id)
-                    # Store OBJECT, not string
                     portfolio_cards.append({
-                        "html": card_html,
-                        "body": body,
+                        "html": card_html, 
+                        "body": body, 
                         "id": project_id,
-                        "title": filename.replace(".md", "")
+                        "title": filename.replace(".md", "").replace("_", " "),
+                        "link": f"portfolio.html#{project_id}", 
+                        "type": "PROJECT",
+                        "tags": tags,           # <--- SAVE TAGS
+                        "desc": extract_mission_brief(body) # <--- SAVE BRIEF
                     })
                 else:
                     note_id = f"note-{len(garden_cards)}"
                     card_html = generate_garden_card_html(meta, filename, note_id, body)
-                    # Store OBJECT
+                    
+                    # Extract a clean text blurb for searching
+                    clean_text = re.sub(r'[*#_`\[\]]', '', body)[:200]
+                    
                     garden_cards.append({
-                        "html": card_html,
-                        "body": body,
+                        "html": card_html, 
+                        "body": body, 
                         "id": note_id,
-                        "type": note_type,
-                        "title": filename.replace(".md", "")
+                        "title": filename.replace(".md", "").replace("_", " "),
+                        "link": f"garden.html#{note_id}", 
+                        "type": "NOTE",
+                        "tags": tags,          # <--- SAVE TAGS
+                        "desc": clean_text     # <--- SAVE PREVIEW
                     })
 
-    print(f"   + Loaded {len(garden_cards)} Garden Nodes")
-    print(f"   + Loaded {len(portfolio_cards)} Projects")
-
-# --- PROCESS: PROTOCOL (Green) ---
-    protocol_cards = []
+    # 3. SCAN PROTOCOLS
     if os.path.exists(PROTOCOL_PATH):
         for filename in os.listdir(PROTOCOL_PATH):
             if filename.endswith(".md"):
                 filepath = os.path.join(PROTOCOL_PATH, filename)
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
-                    
                 meta = parse_frontmatter(content)
-                # Skip if publish is false
-                if not meta.get("publish", False):
-                    continue
-
-                # Extract content (everything after frontmatter)
-                parts = content.split("---", 2)
-                body = parts[2] if len(parts) > 2 else content
+                if not meta.get("publish", False): continue
                 
-                # Logic: We simply pass the raw markdown body. 
-                # The Template will handle the "Checklist" rendering via Javascript/CSS.
+                # Use ID if present, else generate one
+                p_id = meta.get("id", "PROT_" + filename[:3].upper())
                 
                 protocol_cards.append({
                     "title": meta.get("title", filename.replace(".md", "")),
                     "desc": meta.get("description", "System Protocol"),
                     "tags": meta.get("tags", []),
-                    "body": body,  # Contains the checklist and code blocks
-                    "id": meta.get("id", "PROT_" + filename[:3].upper())
+                    "body": content.split("---", 2)[2] if len(content.split("---", 2)) > 2 else content,
+                    "id": p_id,
+                    "link": f"protocol.html", # Protocols are currently in a drawer, linking to page is safest
+                    "type": "PROTOCOL"
                 })
-                
-    print(f"   + Loaded {len(protocol_cards)} Protocols")
 
+    print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols")
+
+    # 4. BUILD MASTER SEARCH INDEX
+    master_index = []
+    
+    # Add System Pages
+    master_index.append({"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"})
+    master_index.append({"title": "The Garden // Input", "url": "garden.html", "type": "SYSTEM", "tags": ["notes", "writing"], "desc": "Digital Garden"})
+    master_index.append({"title": "Protocols // Logic", "url": "protocol.html", "type": "SYSTEM", "tags": ["sop", "routines"], "desc": "Operating Procedures"})
+    master_index.append({"title": "Portfolio // Output", "url": "portfolio.html", "type": "SYSTEM", "tags": ["work", "jobs"], "desc": "Case Studies"})
+    
+    # Add Content
+    for c in garden_cards: 
+        master_index.append({
+            "title": c['title'], 
+            "url": c['link'], 
+            "type": "GARDEN", 
+            "tags": c['tags'],     # <--- PASS TAGS TO FRONTEND
+            "desc": c['desc']      # <--- PASS DESC TO FRONTEND
+        })
+        
+    for p in portfolio_cards: 
+        master_index.append({
+            "title": p['title'], 
+            "url": p['link'], 
+            "type": "PROJECT", 
+            "tags": p['tags'], 
+            "desc": p['desc']
+        })
+        
+    for prot in protocol_cards: 
+        master_index.append({
+            "title": prot['title'], 
+            "url": prot['link'], 
+            "type": "PROTOCOL", 
+            "tags": prot['tags'], 
+            "desc": prot['desc']
+        })
+    
+    # Add Content Content
+    for c in garden_cards: master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN"})
+    for p in portfolio_cards: master_index.append({"title": p['title'], "url": p['link'], "type": "PROJECT"})
+    for prot in protocol_cards: master_index.append({"title": prot['title'], "url": prot['link'], "type": "PROTOCOL"})
+
+    # Serialize to JSON string
+    json_index = json.dumps(master_index)
+
+    # 5. RENDER PAGES
     pages = [
         ("pages/indextemplate.html", "index.html", {}),
         ("pages/gardentemplate.html", "garden.html", {"cards": garden_cards}),
@@ -659,21 +705,20 @@ def build_all():
 
     for template_name, output_name, context in pages:
         try:
-            # INJECT GLOBAL THEME DATA
             context["theme"] = CURRENT_THEME 
+            context["search_index"] = json_index  # <--- INJECT THE BRAIN
             
             template = env.get_template(template_name)
-            # ... rest of code
-            template = env.get_template(template_name)
-            rendered_html = template.render(**context)
-            out_path = os.path.join(OUTPUT_DIR, output_name)
-            with open(out_path, "w", encoding="utf-8") as f:
+            rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
+            
+            with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8") as f:
                 f.write(rendered_html)
-            print(f"   ✅ Deployed: {output_name} (from {template_name})")
+            print(f"   ✅ Deployed: {output_name}")
         except Exception as e:
             print(f"   ❌ Failed: {output_name} -> {e}")
 
     print("\n✅ SYSTEM SYNC COMPLETE.")
+ 
 
 if __name__ == "__main__":
     build_all()

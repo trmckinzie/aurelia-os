@@ -110,5 +110,131 @@
     </footer>
 
     {% block scripts %}{% endblock %}
+
+    <div id="cmd-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden transition-opacity duration-200 opacity-0">
+        <div id="cmd-panel" class="w-full max-w-2xl mx-auto mt-20 bg-[#0a0a0b] border border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden transform scale-95 transition-all duration-200">
+            
+            <div class="flex items-center px-4 border-b border-gray-800">
+                <span class="text-aurelia-cyan text-xl mr-3 font-mono">></span>
+                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-white font-mono text-lg focus:outline-none placeholder-gray-600">
+                <div class="hidden md:flex gap-1">
+                    <span class="text-[10px] font-mono text-gray-500 border border-gray-800 px-1 rounded">ESC</span>
+                </div>
+            </div>
+
+            <div id="cmd-results" class="max-h-[60vh] overflow-y-auto p-2">
+                </div>
+
+            <div class="px-4 py-2 bg-gray-900/50 border-t border-gray-800 flex justify-between items-center text-[10px] font-mono text-gray-500">
+                <span>AURELIA_INDEX_V3.2</span>
+                <span id="cmd-count">0 NODES CONNECTED</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- COMMAND PALETTE LOGIC --- */
+        // 1. Ingest the Python-generated Index (Safe injection)
+        const SYSTEM_INDEX = {{ search_index | safe }}; 
+        
+        const cmdBackdrop = document.getElementById('cmd-backdrop');
+        const cmdPanel = document.getElementById('cmd-panel');
+        const cmdInput = document.getElementById('cmd-input');
+        const cmdResults = document.getElementById('cmd-results');
+        const cmdCount = document.getElementById('cmd-count');
+        let isOpen = false;
+
+        // Update footer count
+        if(cmdCount) cmdCount.innerText = `${SYSTEM_INDEX.length} NODES CONNECTED`;
+
+        // 2. Open/Close Logic
+        function toggleCmd() {
+            isOpen = !isOpen;
+            if(isOpen) {
+                cmdBackdrop.classList.remove('hidden');
+                setTimeout(() => {
+                    cmdBackdrop.classList.remove('opacity-0');
+                    cmdPanel.classList.remove('scale-95');
+                    cmdPanel.classList.add('scale-100');
+                    cmdInput.focus();
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                cmdBackdrop.classList.add('opacity-0');
+                cmdPanel.classList.remove('scale-100');
+                cmdPanel.classList.add('scale-95');
+                setTimeout(() => {
+                    cmdBackdrop.classList.add('hidden');
+                    cmdInput.value = ''; // Clear input
+                    renderResults([]); // Clear results
+                }, 200);
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // 3. Event Listeners (CMD+K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleCmd();
+            }
+            if (e.key === 'Escape' && isOpen) toggleCmd();
+        });
+
+        // Close on click outside
+        cmdBackdrop.addEventListener('click', (e) => {
+            if(e.target === cmdBackdrop) toggleCmd();
+        });
+
+        // 4. Search Engine (UPDATED)
+        cmdInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if(query.length < 1) {
+                cmdResults.innerHTML = `<div class="text-center py-8 text-gray-600 font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
+                return;
+            }
+
+            // SMART FILTER: Checks Title, Type, AND Tags
+            const matches = SYSTEM_INDEX.filter(item => {
+                const titleMatch = item.title.toLowerCase().includes(query);
+                const typeMatch = item.type.toLowerCase().includes(query);
+                const tagMatch = item.tags && item.tags.some(t => t.toLowerCase().includes(query));
+                const descMatch = item.desc && item.desc.toLowerCase().includes(query);
+                
+                return titleMatch || typeMatch || tagMatch || descMatch;
+            }).slice(0, 8);
+
+            renderResults(matches);
+        });
+
+        function renderResults(results) {
+            if(results.length === 0 && cmdInput.value.length > 0) {
+                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-gray-500">> NO_MATCHES_FOUND_IN_VAULT</div>`;
+                return;
+            }
+
+            // Render List
+            cmdResults.innerHTML = results.map((item, index) => {
+                // Color coding based on type
+                let typeColor = "text-gray-500 border-gray-700";
+                if(item.type === "PROJECT") typeColor = "text-aurelia-purple border-aurelia-purple/50";
+                if(item.type === "GARDEN" || item.type === "NOTE") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
+                if(item.type === "PROTOCOL") typeColor = "text-aurelia-green border-aurelia-green/50";
+                
+                return `
+                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-white/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
+                            ${item.type}
+                        </span>
+                        <span class="font-bold text-gray-300 group-hover:text-white font-mono">${item.title}</span>
+                    </div>
+                    <span class="text-gray-600 text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
+                </a>
+                `;
+            }).join('');
+        }
+    </script>
 </body>
 </html>
