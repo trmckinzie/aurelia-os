@@ -8,7 +8,7 @@
     <meta name="description" content="Evolutionary Theory meets Cognitive Science.">
     <meta name="author" content="Travis R. McKinzie">
     
-    <meta property="og:title" content="AURELIA / OS">
+    <meta property="og:title" content="AURELIA // OS">
     <meta property="og:description" content="Evolutionary Theory meets Cognitive Science.">
     <meta property="og:image" content="assets/images/social-preview.jpg"> 
     <meta property="og:type" content="website">
@@ -272,7 +272,7 @@
         </div>
 
         <h1 class="text-6xl md:text-9xl font-bold text-aurelia-text tracking-tighter mb-8 uppercase leading-[0.8] glitch-wrapper">
-            <span class="decrypt-effect" data-value="AURELIA / OS">AURELIA / OS</span>
+            <span class="decrypt-effect" data-value="AURELIA // OS">AURELIA // OS</span>
         </h1>
 
         <p class="font-mono text-[26px] text-aurelia-text transition-colors mt-2">
@@ -541,7 +541,7 @@
                 <div>
                     <h3 class="font-mono text-sm text-aurelia-text font-bold mb-2 uppercase border-b border-gray-800 pb-1 w-max">Mission Statement</h3>
                     <p class="text-sm text-gray-200">
-                        I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on creating recursive systems—software that improves itself the more it is used.
+                        I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence.
                     </p>
                 </div>
             </div>
@@ -558,7 +558,7 @@
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-aurelia-muted">
             <div class="flex items-center gap-2">
                 <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
-                <span class="text-aurelia-cyan">AURELIA / OS SYSTEM</span>
+                <span class="text-aurelia-cyan">AURELIA // OS SYSTEM</span>
             </div>
             <div class="text-aurelia-text">// Evolutionary Theory meets Cognitive Science.</div>
             <div class="flex gap-6 uppercase">
@@ -651,28 +651,115 @@
         }
 
         // DATA MATRIX (STANDARDIZED)
+
+        // DATA MATRIX (DYNAMIC FROM CONFIG)
         const techStack = [
-            // --- HARDWARE LAYER ---
-            { name: "ThinkPad T495", type: "HARDWARE // MOBILE", desc: "Tactical Mobile Unit. Ruggedized daily driver for on-site operations.", icon: "💻" },
-            { name: "Alienware Core i7", type: "HARDWARE // COMPUTE", desc: "High-Performance Workstation. Heavy compute node for rendering and compilation.", icon: "🖥️" },
-            { name: "reMarkable 2", type: "HARDWARE // INPUT", desc: "E-Ink Buffer. Distraction-free environment for conceptual drafting.", icon: "📝" },
-            { name: "iPhone 14", type: "HARDWARE // COMMS", desc: "Primary Uplink. Mobile interface for communication and quick capture.", icon: "📱" },
-            { name: "Meta Ray-Ban", type: "HARDWARE // VISION", desc: "Augmented Input Node. First-person visual/audio capture device.", icon: "🕶️" },
             
-            // --- INTELLIGENCE LAYER ---
-            { name: "Gemini Advanced", type: "AI // CO-PROCESSOR", desc: "Primary Intelligence Engine. Utilizing 1.5 Pro for complex reasoning.", icon: "✨" },
-            { name: "NotebookLM", type: "AI // SYNTHESIS", desc: "Grounded Analysis Studio. Used for high-level synthesis of source documents.", icon: "📓" },
+            { 
+                name: "ThinkPad T495", 
+                type: "HARDWARE // MOBILE", 
+                desc: "Tactical Mobile Unit. Ruggedized daily driver.", 
+                icon: "💻" 
+            },
             
-            // --- SOFTWARE LAYER ---
-            { name: "Obsidian", type: "SOFTWARE // VAULT", desc: "The Neural Core. Local-first markdown database hard-linked to the Digital Garden.", icon: "💎" },
-            { name: "Zotero", type: "SOFTWARE // ARCHIVE", desc: "Reference Library. The digital filing cabinet for citation tracking.", icon: "📚" },
-            { name: "VS Code", type: "SOFTWARE // IDE", desc: "The Construct. The Integrated Development Environment.", icon: "🛠️" },
-            { name: "GitHub", type: "SOFTWARE // REPO", desc: "Version Control. Distributed source code management and off-site backup.", icon: "🐙" },
-            { name: "Tailwind CSS", type: "SOFTWARE // VISUAL", desc: "Visual Layer. Utility-first framework for high-fidelity cyberpunk aesthetics.", icon: "🎨" },
-            { name: "Python", type: "SOFTWARE // LOGIC", desc: "Automation Backbone. Handles static site generation and data parsing.", icon: "🐍" },
+            { 
+                name: "Alienware i7", 
+                type: "HARDWARE // COMPUTE", 
+                desc: "High-Performance Workstation. Heavy compute.", 
+                icon: "🖥️" 
+            },
             
-            // --- WEB LAYER ---
-            { name: "Google Scholar", type: "WEB // QUERY", desc: "Academic Query Engine. Retrieval of peer-reviewed literature.", icon: "🎓" }
+            { 
+                name: "reMarkable 2", 
+                type: "HARDWARE // INPUT", 
+                desc: "E-Ink Buffer. Distraction-free drafting.", 
+                icon: "📝" 
+            },
+            
+            { 
+                name: "iPhone 14", 
+                type: "HARDWARE // COMMS", 
+                desc: "Primary Uplink. Mobile interface.", 
+                icon: "📱" 
+            },
+            
+            { 
+                name: "Meta Ray-Ban", 
+                type: "HARDWARE // VISION", 
+                desc: "Augmented Input Node. First-person capture.", 
+                icon: "🕶️" 
+            },
+            
+            { 
+                name: "Gemini Adv.", 
+                type: "AI // CO-PROCESSOR", 
+                desc: "Primary Intelligence Engine (1.5 Pro).", 
+                icon: "✨" 
+            },
+            
+            { 
+                name: "NotebookLM", 
+                type: "AI // SYNTHESIS", 
+                desc: "Grounded Analysis Studio.", 
+                icon: "📓" 
+            },
+            
+            { 
+                name: "Obsidian", 
+                type: "SOFTWARE // VAULT", 
+                desc: "The Neural Core. Local-first database.", 
+                icon: "💎" 
+            },
+            
+            { 
+                name: "Zotero", 
+                type: "SOFTWARE // ARCHIVE", 
+                desc: "Reference Library & Citation Tracking.", 
+                icon: "📚" 
+            },
+            
+            { 
+                name: "VS Code", 
+                type: "SOFTWARE // IDE", 
+                desc: "The Construct. Development Environment.", 
+                icon: "🛠️" 
+            },
+            
+            { 
+                name: "GitHub", 
+                type: "VERSION // CONTROL", 
+                desc: "Distributed Memory & Backup.", 
+                icon: "🐙" 
+            },
+            
+            { 
+                name: "Google Scholar", 
+                type: "WEB // QUERY", 
+                desc: "Academic Query Engine.", 
+                icon: "🎓" 
+            },
+            
+            { 
+                name: "Python", 
+                type: "BACKEND // LOGIC", 
+                desc: "Automation Backbone.", 
+                icon: "🐍" 
+            },
+            
+            { 
+                name: "Tailwind", 
+                type: "VISUAL // STYLE", 
+                desc: "Cyberpunk Aesthetics.", 
+                icon: "🎨" 
+            },
+            
+            { 
+                name: "Netlify", 
+                type: "DEPLOY // NODE", 
+                desc: "Global Distribution CDN.", 
+                icon: "🚀" 
+            },
+            
         ];
 
         // PHYSICS CONFIG
