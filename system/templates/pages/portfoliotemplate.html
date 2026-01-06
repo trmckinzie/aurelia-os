@@ -14,69 +14,87 @@
         animation: fadeInUp 0.8s ease-out forwards;
     }
     
-    /* === MODAL TYPOGRAPHY (THEME AWARE & VALIDATED) === */
-    
-    /* 1. Base Text: Inherit from the body */
-    .prose h1, .prose h2, .prose h3, .prose p, .prose ul, .prose li { 
-        color: inherit; 
+    /* === OBSIDIAN READER ENGINE (PROJECT EDITION) === */
+    .obsidian-reader {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #e5e7eb; /* Light Gray text */
+        line-height: 1.8; /* Increased line-height for readability */
+        font-size: 1.125rem; /* 18px base size */
     }
 
-    /* 2. Headings & Structure */
-    .prose h1 { 
-        font-size: 1.8em; 
-        font-weight: 700; 
-        margin-bottom: 0.5em; 
-        border-bottom: 1px solid {{ theme.colors.secondary|replace("'", "") }}; 
-        padding-bottom: 0.2em; 
+    /* --- HEADERS (The Spacing Fix) --- */
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3 {
+        color: {{ theme.colors.text_main|replace("'", "") }};
+        font-weight: 700;
+        line-height: 1.3;
+        scroll-margin-top: 2em;
     }
-    .prose h2 { 
-        font-size: 1.4em; 
-        font-weight: 600; 
-        margin-top: 1.5em; 
-        margin-bottom: 0.5em; 
+
+    /* H1: The Major Section Divider */
+    .obsidian-reader h1 {
+        font-size: 2.2em;
+        margin-top: 2.5em; /* Huge space above to separate sections */
+        margin-bottom: 1em; /* Space below to let title breathe */
+        padding-bottom: 0.5em;
+        border-bottom: 2px solid {{ theme.colors.secondary|replace("'", "") }}; /* Theme Accent Border */
+    }
+    /* First H1 shouldn't have huge top margin */
+    .obsidian-reader h1:first-child { margin-top: 0; }
+
+    .obsidian-reader h2 {
+        font-size: 1.5em;
+        margin-top: 2em;
+        margin-bottom: 0.75em;
+        color: {{ theme.colors.secondary|replace("'", "") }}; /* Colored Subheaders */
+    }
+
+    /* --- BODY CONTENT --- */
+    .obsidian-reader p {
+        margin-bottom: 1.5em; /* clear separation between paragraphs */
         opacity: 0.9;
     }
-    .prose h3 { 
-        font-size: 1.1em; 
-        font-weight: 600; 
-        margin-top: 1em; 
-        opacity: 0.9;
+
+    /* Make **Bold Keys** Pop with Theme Color */
+    .obsidian-reader strong {
+        color: {{ theme.colors.secondary|replace("'", "") }};
+        font-weight: 700;
     }
 
-    /* 3. Body Content */
-    .prose p { 
-        line-height: 1.6; 
-        margin-bottom: 1em; 
-        opacity: 0.8; 
-    }
-    .prose ul { 
-        list-style: disc; 
-        padding-left: 1.5em; 
-        margin-bottom: 1em; 
-        opacity: 0.8; 
-    }
-
-    /* 4. Accents */
-    .prose strong { 
-        color: {{ theme.colors.secondary|replace("'", "") }}; 
-        font-weight: 700; 
-    }
-    .prose a { 
-        color: {{ theme.colors.secondary|replace("'", "") }}; 
-        text-decoration: none; 
-        border-bottom: 1px dotted {{ theme.colors.secondary|replace("'", "") }}; 
+    /* --- LISTS (Fixing the dense bullet points) --- */
+    .obsidian-reader ul, .obsidian-reader ol {
+        margin-bottom: 2em;
+        padding-left: 1.5em;
     }
     
-    /* 5. Quotes */
-    .prose blockquote { 
-        border-left: 3px solid {{ theme.colors.secondary|replace("'", "") }}; 
-        padding-left: 1em; 
-        color: inherit; 
-        opacity: 0.7;
-        font-style: italic; 
-        background: {{ theme.colors.secondary|replace("'", "") }}10; /* Adds 10 (hex alpha) for transparency */
-        padding: 1em; 
-        border-radius: 4px; 
+    .obsidian-reader li {
+        margin-bottom: 0.8em; /* Space between individual list items */
+        padding-left: 0.5em;
+    }
+    
+    .obsidian-reader li::marker {
+        color: {{ theme.colors.secondary|replace("'", "") }}; /* Colored bullets */
+    }
+
+    /* --- LINKS --- */
+    .obsidian-reader a {
+        color: {{ theme.colors.secondary|replace("'", "") }};
+        text-decoration: none;
+        border-bottom: 1px dotted {{ theme.colors.secondary|replace("'", "") }};
+        transition: all 0.2s;
+    }
+    .obsidian-reader a:hover {
+        background: {{ theme.colors.secondary|replace("'", "") }}20; /* 20 = low opacity hex */
+        border-bottom-style: solid;
+    }
+
+    /* --- CODE BLOCKS --- */
+    .obsidian-reader pre {
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 1.5em;
+        margin: 2em 0;
+        overflow-x: auto;
     }
 </style>
 {% endblock %}

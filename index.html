@@ -61,12 +61,33 @@
 </script>
 
 <style>
+    /* NAV BAR GLOW UTILITIES */
+    .text-shadow-cyan { text-shadow: 0 0 10px #00f2ff80; }
+    .text-shadow-green { text-shadow: 0 0 10px #39ff1480; }
+    .text-shadow-purple { text-shadow: 0 0 10px #8a2be280; }
+    .text-shadow-orange { text-shadow: 0 0 10px #ff8c0080; }
+    .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
     /* GLOBAL RESET */
     body { 
         background-color: #0a0a0b; 
         color: #ffffff;
     }
     
+/* GLOBAL SELECTION HIGHLIGHTER */
+    ::selection {
+        background: #00f2ff; /* Cyan in Cyber Prime */
+        color: #0a0a0b;      /* Black Text for contrast */
+        text-shadow: none; /* Removes glow for cleaner reading */
+    }
+
+    /* Firefox Support */
+    ::-moz-selection {
+        background: #00f2ff;
+        color: #0a0a0b;
+        text-shadow: none;
+    }
+
     /* UNIVERSAL GLASS CLASS */
     .glass {
         background: rgba(10, 10, 11, 0.6);
@@ -117,6 +138,7 @@
         justify-content: center;
         position: relative;
         margin-top: 4rem;
+        /* FADE MASKS */
         mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
         -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
     }
@@ -127,37 +149,15 @@
         transform-style: preserve-3d;
         transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    .carousel-card {
-        position: absolute;
-        width: 300px;
-        height: 400px;
-        left: 0;
-        top: 0;
-        background: rgba(10, 10, 11, 0.9);
-        border: 1px solid rgba(0, 242, 255, 0.3);
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1);
-        backdrop-filter: blur(8px);
-        border-radius: 4px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        backface-visibility: hidden;
-        opacity: 0.9;
-        transition: all 0.3s ease;
-    }
-    .carousel-card:hover {
-        border-color: #00f2ff;
-        box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-        z-index: 10;
-        transform: scale(1.05);
-    }
+    
+    /* NOTE: We removed the .carousel-card CSS block here to allow 
+       the JavaScript to control the styling dynamically. */
+
     .tech-readout {
         min-height: 100px;
         border-left: 2px solid #00f2ff;
         padding-left: 1.5rem;
-        background: linear-gradient(90deg, rgba(0,242,255,0.05) 0%, transparent 100%);
+        background: linear-gradient(90deg, #00f2ff0D 0%, transparent 100%);
         margin-bottom: 4rem;
     }
 
@@ -168,11 +168,11 @@
         content: attr(data-text); position: absolute; top: 0; width: 100%; height: 100%; background: #0a0a0b; overflow: hidden; clip: rect(0, 0, 0, 0);
     }
     .glitch::before {
-        left: -3px; text-shadow: 2px 0 #00f2ff; /* Cyan Shift */
+        left: -3px; text-shadow: 2px 0 #00f2ff;
         animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
     }
     .glitch::after {
-        left: 3px; text-shadow: -2px 0 #ff003c; /* Red Shift */
+        left: 3px; text-shadow: -2px 0 #8a2be2;
         animation: glitch-anim-2 3s infinite linear alternate-reverse;
     }
     @keyframes glitch-anim-1 {
@@ -201,12 +201,12 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         color: transparent;
-        filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
+        filter: drop-shadow(0 0 15px #00f2ff66);
         animation: bio-pulse 4s ease-in-out infinite alternate;
     }
     @keyframes bio-pulse {
-        0% { filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.2)); opacity: 0.8; }
-        100% { filter: drop-shadow(0 0 25px rgba(0, 242, 255, 0.8)); opacity: 1; }
+        0% { filter: drop-shadow(0 0 10px #00f2ff33); opacity: 0.8; }
+        100% { filter: drop-shadow(0 0 25px #00f2ffCC); opacity: 1; }
     }
 </style>
 
@@ -215,19 +215,51 @@
     
     <div class="scanline"></div>
 
-    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-dark/95 backdrop-blur-xl h-14">
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-border/40 bg-aurelia-bg/90 backdrop-blur-md h-16 transition-all duration-300">
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-aurelia-text font-bold">AURELIA_OS // MAIN_HUB</span>
+            
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="relative flex items-center justify-center">
+                    <div class="absolute w-3 h-3 border border-aurelia-primary/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full shadow-[0_0_10px_rgba(0,242,255,0.8)] animate-pulse"></div>
+                </div>
+                <span class="text-aurelia-text font-bold group-hover:text-aurelia-primary transition-colors duration-300">
+                    AURELIA_OS // <span class="opacity-50">MAIN_HUB</span>
+                </span>
             </a>   
-            <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="text-aurelia-text border-b border-white pb-1">00_LOBBY</a>
-                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">01_GARDEN</a>
-                <a href="protocol.html" class="hover:text-aurelia-green transition-colors">02_PROTOCOLS</a>
-                <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
-                <a href="services.html" class="hover:text-aurelia-orange transition-colors">04_SERVICES</a>
+
+            <div class="hidden md:flex items-center gap-10">
+                
+                <a href="index.html" class="relative group py-2">
+                    <span class="text-aurelia-text text-shadow-white transition-all duration-300">00_LOBBY</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-text transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left scale-x-100"></span>
+                </a>
+
+                <a href="garden.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-primary hover:text-shadow-cyan transition-all duration-300">01_GARDEN</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="protocol.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-accent hover:text-shadow-green transition-all duration-300">02_PROTOCOLS</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="portfolio.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-secondary hover:text-shadow-purple transition-all duration-300">03_PORTFOLIO</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="services.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-tertiary hover:text-shadow-orange transition-all duration-300">04_SERVICES</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-tertiary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
             </div>
+            
+            <button class="md:hidden text-aurelia-text">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
         </div>
     </nav>
 
@@ -251,7 +283,7 @@
         </p>
 
         <div class="border-l border-aurelia-dim pl-6 max-w-xl mt-6">
-            <p class="font-mono text-md text-aurelia-muted-500 leading-relaxed mb-6">
+            <p class="font-mono text-md text-aurelia-muted leading-relaxed mb-6">
                 > SYSTEM_READY<br>
                 > Evolutionary Theory meets Cognitive Science.<br>
                 > System Architect<br>
@@ -264,93 +296,164 @@
         </div>    
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <a href="garden.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-primary/60 hover:bg-aurelia-primary/10 hover:shadow-[0_0_30px_rgba(0,242,255,0.2)]">
+        <a href="garden.html" class="group relative h-80 bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
+            
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-aurelia-primary tracking-widest mb-2 border border-aurelia-primary/20 w-fit px-2 py-1">MOD_01 // INPUT</div>
-                    <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-primary transition-colors">The Garden</h2>
+                    <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-primary px-2 py-1 mb-4 tracking-widest rounded-sm">
+                        MOD_01 // INPUT
+                    </div>
+                    <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-primary transition-colors tracking-tight">
+                        The Garden
+                    </h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-primary/70">
-                    > STATUS: VOLATILE<br>
-                    > NOTES / SEEDS / RAW
+                
+                <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
+                    <span class="text-aurelia-primary">></span> STATUS: VOLATILE<br>
+                    <span class="text-aurelia-primary">></span> NOTES / SEEDS / RAW
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-primary/20 rounded-full blur-[80px] group-hover:bg-aurelia-primary/40 transition-all duration-500"></div>
+            
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-primary/20 transition-all"></div>
         </a>
 
-        <a href="protocol.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-accent/60 hover:bg-aurelia-accent/10 hover:shadow-[0_0_30px_rgba(57,255,20,0.2)]">
+        <a href="protocol.html" class="group relative h-80 bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-accent p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(57,255,20,0.15)] hover:border-aurelia-accent/50">
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-accent transition-colors duration-300 rounded-tr-sm"></div>
+            
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-aurelia-accent tracking-widest mb-2 border border-aurelia-accent/20 w-fit px-2 py-1">MOD_02 // KERNEL</div>
-                    <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-accent transition-colors">System Protocols</h2>
+                    <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm">
+                        MOD_02 // KERNEL
+                    </div>
+                    <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-accent transition-colors tracking-tight">
+                        System Protocols
+                    </h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-accent/70">
-                    > STATUS: EXECUTING<br>
-                    > ROUTINES / ALGORITHMS / LOGIC
+                
+                <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
+                    <span class="text-aurelia-accent">></span> STATUS: EXECUTING<br>
+                    <span class="text-aurelia-accent">></span> ROUTINES / LOGIC
                 </div>
             </div>
-            <div class="absolute right-8 top-8 w-2 h-2 bg-aurelia-accent rounded-full animate-pulse shadow-[0_0_10px_#39ff14]"></div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-accent/20 rounded-full blur-[80px] group-hover:bg-aurelia-accent/40 transition-all duration-500"></div>
+            
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-accent/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-accent/20 transition-all"></div>
         </a>
 
-        <a href="portfolio.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-secondary/60 hover:bg-aurelia-secondary/10 hover:shadow-[0_0_30px_rgba(138,43,226,0.2)]">
+        <a href="portfolio.html" class="group relative h-80 bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-secondary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(138,43,226,0.15)] hover:border-aurelia-secondary/50">
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-secondary transition-colors duration-300 rounded-tr-sm"></div>
+            
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-aurelia-secondary tracking-widest mb-2 border border-aurelia-secondary/20 w-fit px-2 py-1">MOD_03 // PROOF</div>
-                    <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-secondary transition-colors">Portfolio</h2>
+                    <div class="inline-block font-mono text-[10px] font-bold text-white bg-aurelia-secondary px-2 py-1 mb-4 tracking-widest rounded-sm">
+                        MOD_03 // PROOF
+                    </div>
+                    <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-secondary transition-colors tracking-tight">
+                        Portfolio
+                    </h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-secondary/70">
-                    > STATUS: PUBLISHED<br>
-                    > CASE STUDIES / DEPLOYMENTS
+                
+                <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
+                    <span class="text-aurelia-secondary">></span> STATUS: PUBLISHED<br>
+                    <span class="text-aurelia-secondary">></span> CASE STUDIES
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-secondary/20 rounded-full blur-[80px] group-hover:bg-aurelia-secondary/40 transition-all duration-500"></div>
+            
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-secondary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-secondary/20 transition-all"></div>
         </a>
 
-        <a href="services.html" class="group relative h-80 glass p-8 overflow-hidden transition-all duration-500 transform hover:scale-[1.02] hover:border-aurelia-tertiary/60 hover:bg-aurelia-tertiary/10 hover:shadow-[0_0_30px_rgba(255,140,0,0.2)]">
+        <a href="services.html" class="group relative h-80 bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-tertiary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(255,140,0,0.15)] hover:border-aurelia-tertiary/50">
+            <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-tertiary transition-colors duration-300 rounded-tr-sm"></div>
+            
             <div class="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <div class="font-mono text-[10px] text-aurelia-tertiary tracking-widest mb-2 border border-aurelia-tertiary/20 w-fit px-2 py-1">MOD_04 // COMMERCE</div>
-                    <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-tertiary transition-colors">Services</h2>
+                    <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-tertiary px-2 py-1 mb-4 tracking-widest rounded-sm">
+                        MOD_04 // COMMERCE
+                    </div>
+                    <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-tertiary transition-colors tracking-tight">
+                        Services
+                    </h2>
                 </div>
-                <div class="font-mono text-[10px] text-gray-100 group-hover:text-aurelia-tertiary/70">
-                    > STATUS: ACTIVE<br>
-                    > SYSTEMS / ARCHITECTURE / BUILD
+                
+                <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
+                    <span class="text-aurelia-tertiary">></span> STATUS: ACTIVE<br>
+                    <span class="text-aurelia-tertiary">></span> ARCHITECTURE / BUILD
                 </div>
             </div>
-            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-aurelia-tertiary/20 rounded-full blur-[80px] group-hover:bg-aurelia-tertiary/40 transition-all duration-500"></div>
+            
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-tertiary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-tertiary/20 transition-all"></div>
         </a>
 
     </div>
 
-    <section class="w-full max-w-6xl mx-auto mt-32 relative">
-        <div class="text-center mb-10">
-            <h2 class="text-4xl font-mono font-bold text-aurelia-text tracking-widest border-b border-gray-800 pb-4 inline-block">NEURAL_LOADOUT // MY_TECH_STACK</h2>
-            <p class="text-aurelia-primary font-mono text-[18px] mt-4 tracking-[0.2em] opacity-70">SELECT MODULE TO INSPECT SPECS</p>
+    <section class="w-full max-w-[1400px] mx-auto mt-40 relative px-6">
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(0,242,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,242,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+
+        <div class="text-center mb-20 relative z-10">
+            <div class="inline-flex items-center gap-4">
+                <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
+                <h2 class="text-3xl md:text-5xl font-mono font-black text-white tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">
+                    NEURAL_LOADOUT
+                </h2>
+                <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
+            </div>
+            <div class="mt-4 flex justify-center items-center gap-2 text-aurelia-primary font-mono text-xs tracking-[0.3em] opacity-80">
+                <span>[ SYSTEM_ARCHITECTURE ]</span>
+                <span class="animate-pulse">_</span>
+            </div>
         </div>
 
-        <div class="carousel-scene mb-12">
+        <div class="carousel-scene mb-16 h-[500px]">
             <div class="carousel" id="tech-carousel"></div>
         </div>
 
-        <div class="flex flex-col items-center gap-8 z-20 relative">
-            <div class="flex gap-12 items-center">
-                <button onclick="rotateCarousel(-1)" class="w-14 h-14 rounded-full border border-gray-700 text-aurelia-primary hover:bg-aurelia-primary hover:text-black hover:scale-110 transition-all flex items-center justify-center text-2xl font-bold font-mono active:scale-95">
-                    &lt;
+        <div class="max-w-4xl mx-auto relative z-20">
+            
+            <div class="flex items-center justify-between mb-8 px-4 md:px-12">
+                 <button onclick="rotateCarousel(-1)" class="group flex items-center gap-3 text-gray-500 hover:text-aurelia-primary transition-colors">
+                    <div class="w-12 h-12 border border-gray-800 group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                        <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-current"></div>
+                        <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current"></div>
+                        <span class="font-mono text-2xl">&lt;</span>
+                    </div>
+                    <span class="hidden md:block font-mono text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">PREV_MOD</span>
                 </button>
-                <div class="flex flex-col items-center gap-1">
-                    <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></div>
-                    <span class="text-[8px] font-mono text-gray-600 tracking-widest">ONLINE</span>
+
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-24 h-px bg-gray-800 relative">
+                        <div class="absolute inset-0 bg-aurelia-primary w-full animate-pulse shadow-[0_0_8px_#00f2ff]"></div>
+                    </div>
+                    <span class="text-[8px] font-mono text-aurelia-primary tracking-[0.2em] uppercase">System_Online</span>
                 </div>
-                <button onclick="rotateCarousel(1)" class="w-14 h-14 rounded-full border border-gray-700 text-aurelia-primary hover:bg-aurelia-primary hover:text-black hover:scale-110 transition-all flex items-center justify-center text-2xl font-bold font-mono active:scale-95">
-                    &gt;
+
+                <button onclick="rotateCarousel(1)" class="group flex items-center gap-3 text-gray-500 hover:text-aurelia-primary transition-colors flex-row-reverse">
+                    <div class="w-12 h-12 border border-gray-800 group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                        <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-current"></div>
+                        <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current"></div>
+                        <span class="font-mono text-2xl">&gt;</span>
+                    </div>
+                    <span class="hidden md:block font-mono text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">NEXT_MOD</span>
                 </button>
             </div>
-            <div class="max-w-2xl w-full tech-readout mt-8">
-                <h3 id="readout-title" class="text-xl text-aurelia-text font-mono font-bold mb-2 tracking-tight">SYSTEM_INITIALIZING...</h3>
-                <p id="readout-desc" class="text-lg text-gray-100 font-sans leading-relaxed">Awaiting selection.</p>
+
+            <div class="bg-[#050505] border border-gray-800 p-1 relative group">
+                <div class="absolute inset-0 border border-aurelia-primary/30 opacity-50"></div>
+                <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
+                
+                <div class="bg-[#0a0a0b] p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[linear-gradient(rgba(18,18,18,0.5)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
+                    
+                    <h3 id="readout-title" class="text-2xl text-white font-mono font-bold mb-4 tracking-tight relative z-10 text-shadow-cyan">
+                        SYSTEM_READY
+                    </h3>
+                    <p id="readout-desc" class="text-sm md:text-base text-gray-400 font-mono leading-relaxed max-w-2xl relative z-10">
+                        Initiate rotation to inspect technical specifications.
+                    </p>
+                    
+                    <div class="absolute bottom-2 right-2 text-[8px] font-mono text-gray-700">TERM_v3.0</div>
+                </div>
             </div>
         </div>
     </section>
@@ -504,9 +607,8 @@
         setTimeout(() => { mBackdrop.classList.add('hidden'); }, 300);
         document.body.style.overflow = 'auto';
     }
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeManifesto(); });
 
-/* --- OPERATOR BIO LOGIC (GREEN) --- */
+    /* --- OPERATOR BIO LOGIC (GREEN) --- */
     const aBackdrop = document.getElementById('about-backdrop');
     const aPanel = document.getElementById('about-panel');
 
@@ -528,7 +630,7 @@
         document.body.style.overflow = 'auto';
     }
 
-    // UPDATE ESCAPE KEY TO CLOSE BOTH
+    // GLOBAL ESCAPE KEY HANDLER
     document.addEventListener('keydown', (e) => { 
         if (e.key === 'Escape') {
             closeManifesto();
@@ -536,61 +638,126 @@
         }
     });
 
-    /* --- AURELIA TECH STACK MANIFEST --- */
-    const techStack = [
-        { name: "ThinkPad T495", type: "HARDWARE // MOBILE", desc: "Tactical Mobile Unit. Ruggedized daily driver for on-site operations.", icon: "💻" },
-        { name: "Alienware Core i7", type: "HARDWARE // COMPUTE", desc: "High-Performance Workstation. Heavy compute node for rendering and compilation.", icon: "🖥️" },
-        { name: "reMarkable 2", type: "HARDWARE // INPUT", desc: "E-Ink Buffer. Distraction-free environment for conceptual drafting.", icon: "📝" },
-        { name: "iPhone 14", type: "HARDWARE // COMMS", desc: "Primary Uplink. Mobile interface for communication and quick capture.", icon: "📱" },
-        { name: "Meta Ray-Ban", type: "HARDWARE // VISION", desc: "Augmented Input Node. First-person visual/audio capture device.", icon: "🕶️" },
-        { name: "Gemini Advanced", type: "AI // CO-PROCESSOR", desc: "Primary Intelligence Engine. Utilizing 1.5 Pro for complex reasoning.", icon: "✨" },
-        { name: "Obsidian", type: "SOFTWARE // VAULT", desc: "The Neural Core. Local-first markdown database hard-linked to the Digital Garden.", icon: "💎" },
-        { name: "NotebookLM", type: "AI // SYNTHESIS", desc: "Grounded Analysis Studio. Used for high-level synthesis of source documents.", icon: "📓" },
-        { name: "Zotero", type: "SOFTWARE // ARCHIVE", desc: "Reference Library. The digital filing cabinet for citation tracking.", icon: "📚" },
-        { name: "VS Code", type: "SOFTWARE // IDE", desc: "The Construct. The Integrated Development Environment.", icon: "🛠️" },
-        { name: "GitHub", type: "SOFTWARE // REPO", desc: "Version Control. Distributed source code management and off-site backup.", icon: "🐙" },
-        { name: "Google Scholar", type: "WEB // QUERY", desc: "Academic Query Engine. Retrieval of peer-reviewed literature.", icon: "🎓" }
-    ];
+    /* --- 3D CAROUSEL ENGINE (HIGH-CONTRAST EDITION) --- */
+    document.addEventListener('DOMContentLoaded', () => {
+        const carousel = document.getElementById('tech-carousel');
+        const titleEl = document.getElementById('readout-title');
+        const descEl = document.getElementById('readout-desc');
 
-    /* --- CAROUSEL ENGINE --- */
-    const carousel = document.getElementById('tech-carousel');
-    const titleEl = document.getElementById('readout-title');
-    const descEl = document.getElementById('readout-desc');
-    let currIndex = 0;
-    const cardCount = techStack.length;
-    const theta = 360 / cardCount;
-    const radius = Math.round((300 / 2) / Math.tan(Math.PI / cardCount)); 
+        // SAFETY CHECK: Abort if elements are missing
+        if (!carousel || !titleEl || !descEl) {
+            console.warn("System Alert: Carousel elements not detected. Skipping initialization.");
+            return;
+        }
 
-    function initCarousel() {
-        techStack.forEach((tech, i) => {
-            const card = document.createElement('div');
-            card.className = 'carousel-card group'; 
-            const angle = theta * i;
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius + 60}px)`;
-            card.innerHTML = `
-                <div class="text-6xl mb-6 opacity-90 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.4)] transform group-hover:scale-110 transition-transform">${tech.icon}</div>
-                <h3 class="text-xl font-bold text-aurelia-text font-mono text-center tracking-tighter">${tech.name}</h3>
-                <div class="w-10 h-0.5 bg-gray-700 my-4"></div>
-                <span class="text-[9px] text-aurelia-primary font-mono tracking-widest uppercase border border-aurelia-primary/30 px-2 py-1 rounded">${tech.type}</span>
-            `;
-            carousel.appendChild(card);
-        });
-        updateReadout();
-    }
-    function rotateCarousel(direction) {
-        currIndex += direction;
-        const angle = theta * currIndex * -1;
-        carousel.style.transform = `rotateY(${angle}deg)`;
-        updateReadout();
-    }
-    function updateReadout() {
-        let virtualIndex = currIndex % cardCount;
-        if (virtualIndex < 0) virtualIndex += cardCount;
-        const activeTech = techStack[virtualIndex];
-        titleEl.innerText = activeTech.name + " //";
-        descEl.innerText = activeTech.desc;
-    }
-    initCarousel();
+        // DATA MATRIX (STANDARDIZED)
+        const techStack = [
+            // --- HARDWARE LAYER ---
+            { name: "ThinkPad T495", type: "HARDWARE // MOBILE", desc: "Tactical Mobile Unit. Ruggedized daily driver for on-site operations.", icon: "💻" },
+            { name: "Alienware Core i7", type: "HARDWARE // COMPUTE", desc: "High-Performance Workstation. Heavy compute node for rendering and compilation.", icon: "🖥️" },
+            { name: "reMarkable 2", type: "HARDWARE // INPUT", desc: "E-Ink Buffer. Distraction-free environment for conceptual drafting.", icon: "📝" },
+            { name: "iPhone 14", type: "HARDWARE // COMMS", desc: "Primary Uplink. Mobile interface for communication and quick capture.", icon: "📱" },
+            { name: "Meta Ray-Ban", type: "HARDWARE // VISION", desc: "Augmented Input Node. First-person visual/audio capture device.", icon: "🕶️" },
+            
+            // --- INTELLIGENCE LAYER ---
+            { name: "Gemini Advanced", type: "AI // CO-PROCESSOR", desc: "Primary Intelligence Engine. Utilizing 1.5 Pro for complex reasoning.", icon: "✨" },
+            { name: "NotebookLM", type: "AI // SYNTHESIS", desc: "Grounded Analysis Studio. Used for high-level synthesis of source documents.", icon: "📓" },
+            
+            // --- SOFTWARE LAYER ---
+            { name: "Obsidian", type: "SOFTWARE // VAULT", desc: "The Neural Core. Local-first markdown database hard-linked to the Digital Garden.", icon: "💎" },
+            { name: "Zotero", type: "SOFTWARE // ARCHIVE", desc: "Reference Library. The digital filing cabinet for citation tracking.", icon: "📚" },
+            { name: "VS Code", type: "SOFTWARE // IDE", desc: "The Construct. The Integrated Development Environment.", icon: "🛠️" },
+            { name: "GitHub", type: "SOFTWARE // REPO", desc: "Version Control. Distributed source code management and off-site backup.", icon: "🐙" },
+            { name: "Tailwind CSS", type: "SOFTWARE // VISUAL", desc: "Visual Layer. Utility-first framework for high-fidelity cyberpunk aesthetics.", icon: "🎨" },
+            { name: "Python", type: "SOFTWARE // LOGIC", desc: "Automation Backbone. Handles static site generation and data parsing.", icon: "🐍" },
+            
+            // --- WEB LAYER ---
+            { name: "Google Scholar", type: "WEB // QUERY", desc: "Academic Query Engine. Retrieval of peer-reviewed literature.", icon: "🎓" }
+        ];
+
+        // PHYSICS CONFIG
+        const cardCount = techStack.length;
+        const radius = 300; // Distance from center
+        const theta = 360 / cardCount;
+        let currIndex = 0;
+
+        // GLOBAL EXPOSURE (CRITICAL FIX)
+        // We define this function here so it closes over variables, but assign it to window
+        // so HTML buttons can access it.
+        window.rotateCarousel = function(direction) {
+            currIndex += direction;
+            const angle = theta * currIndex * -1;
+            carousel.style.transform = `rotateY(${angle}deg)`;
+            updateReadout();
+        };
+
+        function updateReadout() {
+            // Calculate valid index even with negative numbers
+            let virtualIndex = currIndex % cardCount;
+            if (virtualIndex < 0) virtualIndex += cardCount;
+            
+            const activeTech = techStack[virtualIndex];
+            
+            // TYPEWRITER EFFECT SIMULATION
+            titleEl.style.opacity = '0.5';
+            descEl.style.opacity = '0.5';
+            
+            setTimeout(() => {
+                titleEl.innerText = activeTech.name + " //";
+                descEl.innerText = activeTech.desc;
+                
+                titleEl.style.opacity = '1';
+                descEl.style.opacity = '1';
+            }, 150);
+        }
+
+        function initCarousel() {
+            techStack.forEach((tech, i) => {
+                const card = document.createElement('div');
+                
+                // HIGH-CONTRAST CARD CONTAINER
+                card.className = 'carousel-card group bg-[#0a0a0b] border border-gray-800 hover:border-aurelia-primary/50 transition-all duration-500 cursor-pointer'; 
+                
+                // 3D POSITIONING
+                const angle = theta * i;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                
+                // INNER HTML (The "Monolith" Design)
+                card.innerHTML = `
+                    <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <div class="h-full flex flex-col items-center justify-center p-6 relative z-10">
+                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.2)] transform group-hover:scale-110 group-hover:drop-shadow-[0_0_30px_rgba(0,242,255,0.6)] transition-all duration-500">
+                            ${tech.icon}
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold text-white font-mono tracking-tighter mb-4 group-hover:text-aurelia-primary transition-colors">${tech.name}</h3>
+                        
+                        <span class="text-[9px] font-mono text-aurelia-primary tracking-[0.2em] uppercase border border-aurelia-primary/20 px-3 py-1 bg-aurelia-primary/5 rounded-sm">
+                            ${tech.type}
+                        </span>
+                    </div>
+                    
+                    <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
+                    <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
+                `;
+                
+                // Interaction: Click to snap to this card
+                // Uses the global function we defined above
+                card.onclick = () => {
+                    const diff = i - (currIndex % cardCount);
+                    window.rotateCarousel(diff);
+                };
+
+                carousel.appendChild(card);
+            });
+            
+            updateReadout();
+        }
+
+        // LAUNCH
+        initCarousel();
+    });
 </script>
 
 
