@@ -1,0 +1,16 @@
+# --- IGNORE OBSIDIAN CONFIGS (Crucial for Sync) ---
+# We ignore the workspace (scroll position) but KEEP plugins/settings
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+
+# --- IGNORE SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+
+# --- IGNORE PYTHON/DEV FILES ---
+.venv/
+__pycache__/
+*.pyc
+.env
