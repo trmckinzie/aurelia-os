@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>AURELIA // {% block title %}OS{% endblock %}</title>
-    <meta name="description" content="Aurelia OS: A recursive digital garden and second brain architecture.">
-    <meta name="author" content="Travis R. McKinzie">
+    <title>{% block title %}Aurelia OS{% endblock %}</title>
+    <meta name="description" content="{{ config.author.bio_short }}">
+    <meta name="author" content="{{ config.author.name }}">
     
-    <meta property="og:title" content="AURELIA // OS">
-    <meta property="og:description" content="Augmented Understanding via Recursive Evolutionary Logic.">
-    <meta property="og:image" content="assets/images/social-preview.jpg"> <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ config.system_name }}">
+    <meta property="og:description" content="{{ config.author.bio_short }}">
+    <meta property="og:image" content="assets/images/social-preview.jpg"> 
+    <meta property="og:type" content="website">
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
-
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     ```
 
@@ -99,11 +100,11 @@
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-gray-600">
             <div class="flex items-center gap-2">
                 <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
-                <span class="text-aurelia-cyan">A.U.R.E.L.I.A. SYSTEM</span>
+                <span class="text-aurelia-cyan">{{ config.system_name }} SYSTEM</span>
             </div>
-            <div class="text-gray-300">// AUGMENTED UNDERSTANDING via RECURSIVE EVOLUTIONARY LOGIC & INTELLIGENT ANALYSIS</div>
+            <div class="text-gray-300">// {{ config.author.bio_short }}</div>
             <div class="flex gap-6 uppercase">
-                <span class="text-aurelia-cyan">v3.2.0 (JINJA_CORE)</span>
+                <span class="text-aurelia-cyan">{{ config.system_version }}</span>
                 <span>SECURE</span>
             </div>
         </div>

@@ -55,11 +55,24 @@
     .prose blockquote { border-left: 3px solid #00f2ff; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(0,242,255,0.05); padding: 1em; border-radius: 4px; }
     .prose a { color: #00f2ff; text-decoration: none; border-bottom: 1px dotted #00f2ff; }
 
-    /* 6. SCROLLBARS */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0b; }
-    ::-webkit-scrollbar-thumb { background: #1e1e20; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #00f2ff; }
+    /* 6. SCROLLBARS (CYBER-GAUGE) */
+    ::-webkit-scrollbar { 
+        width: 14px; /* Wider target area */
+    }
+    ::-webkit-scrollbar-track { 
+        background: #050505; 
+        border-left: 1px solid #1e1e20; /* Mechanical track line */
+    }
+    ::-webkit-scrollbar-thumb { 
+        background: rgba(0, 242, 255, 0.15); /* Passive Glow */
+        border: 1px solid rgba(0, 242, 255, 0.3); /* Tech Border */
+        border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+        background: rgba(0, 242, 255, 0.8); /* Active Glow */
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); /* Neon Bloom */
+        cursor: grab;
+    }
 </style>
 {% endblock %}
 
