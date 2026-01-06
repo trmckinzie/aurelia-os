@@ -4,7 +4,7 @@ tags:
   - type/concept
   - topic/
   - status/seed
-publish: true
+publish: false
 ---
 # ⚛️ Cognition
 
@@ -13,7 +13,7 @@ publish: true
 ---
 
 ### 💡 Definition
-> TEST NOTE
+> TEST NOTE TESTER 2
 
 ### 📝 Key Insight
 * TEST NOTE```
