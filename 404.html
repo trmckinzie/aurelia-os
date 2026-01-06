@@ -61,12 +61,33 @@
 </script>
 
 <style>
+    /* NAV BAR GLOW UTILITIES */
+    .text-shadow-cyan { text-shadow: 0 0 10px #00f2ff80; }
+    .text-shadow-green { text-shadow: 0 0 10px #39ff1480; }
+    .text-shadow-purple { text-shadow: 0 0 10px #8a2be280; }
+    .text-shadow-orange { text-shadow: 0 0 10px #ff8c0080; }
+    .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
     /* GLOBAL RESET */
     body { 
         background-color: #0a0a0b; 
         color: #ffffff;
     }
     
+/* GLOBAL SELECTION HIGHLIGHTER */
+    ::selection {
+        background: #00f2ff; /* Cyan in Cyber Prime */
+        color: #0a0a0b;      /* Black Text for contrast */
+        text-shadow: none; /* Removes glow for cleaner reading */
+    }
+
+    /* Firefox Support */
+    ::-moz-selection {
+        background: #00f2ff;
+        color: #0a0a0b;
+        text-shadow: none;
+    }
+
     /* UNIVERSAL GLASS CLASS */
     .glass {
         background: rgba(10, 10, 11, 0.6);
@@ -111,19 +132,51 @@
     
     <div class="scanline"></div>
 
-    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-dark/95 backdrop-blur-xl h-14">
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-border/40 bg-aurelia-bg/90 backdrop-blur-md h-16 transition-all duration-300">
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-aurelia-text font-bold">AURELIA_OS // ERROR_404</span>
+            
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="relative flex items-center justify-center">
+                    <div class="absolute w-3 h-3 border border-aurelia-primary/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full shadow-[0_0_10px_rgba(0,242,255,0.8)] animate-pulse"></div>
+                </div>
+                <span class="text-aurelia-text font-bold group-hover:text-aurelia-primary transition-colors duration-300">
+                    AURELIA_OS // <span class="opacity-50">ERROR_404</span>
+                </span>
             </a>   
-            <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="hover:text-aurelia-text transition-colors">00_LOBBY</a>
-                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">01_GARDEN</a>
-                <a href="protocol.html" class="hover:text-aurelia-green transition-colors">02_PROTOCOLS</a>
-                <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
-                <a href="services.html" class="hover:text-aurelia-orange transition-colors">04_SERVICES</a>
+
+            <div class="hidden md:flex items-center gap-10">
+                
+                <a href="index.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-text transition-all duration-300">00_LOBBY</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-text transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="garden.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-primary hover:text-shadow-cyan transition-all duration-300">01_GARDEN</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="protocol.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-accent hover:text-shadow-green transition-all duration-300">02_PROTOCOLS</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="portfolio.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-secondary hover:text-shadow-purple transition-all duration-300">03_PORTFOLIO</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="services.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-tertiary hover:text-shadow-orange transition-all duration-300">04_SERVICES</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-tertiary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
             </div>
+            
+            <button class="md:hidden text-aurelia-text">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
         </div>
     </nav>
 

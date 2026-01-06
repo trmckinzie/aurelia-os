@@ -520,72 +520,89 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
     return html_card
 
 def generate_project_card(meta, sections, title, note_id):
-    status_dot = "bg-aurelia-accent shadow-[0_0_10px_#39ff14]" if meta.get("status") == "active" else "bg-gray-500"
+    # 1. Status Logic
+    is_active = meta.get("status") == "active"
+    status_color = "bg-aurelia-accent shadow-[0_0_10px_#39ff14]" if is_active else "bg-gray-500"
+    status_text = "ONLINE" if is_active else "ARCHIVED"
+    
     role = meta.get('role', 'Architect')
     body = sections.get('brief', '')
     
+    # 2. Extract Data
     mission = extract_mission_brief(body)
     logic = extract_core_logic(body)
     impacts = extract_impact_metrics(body)
-    
     live_link = meta.get('link_live')
     
-    action_buttons = '<div class="flex items-center gap-3 pt-6 mt-auto border-t border-purple-500/20">'
+    # 3. Build Action Buttons
+    action_buttons = '<div class="flex items-center gap-3 mt-auto pt-4 border-t border-gray-800">'
     if live_link:
         action_buttons += f'''
         <a href="{live_link}" target="_blank" onclick="event.stopPropagation()" 
-           class="group flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-purple-300 border border-purple-500/50 hover:bg-purple-500/10 hover:text-aurelia-text hover:border-purple-400 transition-all rounded uppercase tracking-wider">
-           <span class="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:animate-pulse"></span>
-           LIVE_SYSTEM
+           class="flex items-center gap-2 px-3 py-2 text-[10px] font-mono font-bold text-black bg-aurelia-secondary hover:bg-white transition-colors rounded-sm uppercase tracking-wider">
+           🚀 LAUNCH_SYSTEM
         </a>
         '''
     action_buttons += f'''
     <button onclick="openNote('{note_id}'); event.stopPropagation()" 
-            class="ml-auto flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-gray-500 border border-gray-800 hover:border-purple-500/50 hover:text-aurelia-text transition-all rounded uppercase tracking-wider group">
-        <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-        EXTRACT_DATA
+            class="ml-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono text-gray-400 border border-gray-700 hover:border-aurelia-text hover:text-aurelia-text transition-all rounded-sm uppercase tracking-wider">
+        <span>ACCESS_DATA</span>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
     </button>
     </div>
     '''
 
+    # 4. Search Meta
     search_text = f"{title} project {mission} {logic}".lower().replace('\n', ' ').replace('"', "'")
 
+    # 5. GENERATE HTML (The "Terminal Block" Design)
     html = f"""
-    <div class="searchable-item glass p-8 rounded-sm border-2 border-purple-500/20 hover:border-purple-500/60 cursor-pointer flex flex-col gap-6 transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(168,85,247,0.1)] group min-h-[450px]"
+    <div class="searchable-item group relative flex flex-col gap-5 p-6 min-h-[480px]
+                bg-[#0a0a0b]/80 backdrop-blur-md border border-gray-800 
+                hover:border-aurelia-secondary/50 hover:shadow-[0_0_30px_rgba(138,43,226,0.15)] 
+                transition-all duration-300 rounded-sm cursor-pointer overflow-hidden"
          data-type="project" 
          data-search="{search_text}"
          onclick="openNote('{note_id}')">
         
-        <div class="flex justify-between items-start">
+        <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
+        <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
+
+        <div class="flex justify-between items-start z-10">
             <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <span class="w-1.5 h-1.5 {status_dot} rounded-full"></span>
-                    <span class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">PROJECT_NODE</span>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="px-2 py-0.5 rounded text-[9px] font-bold font-mono bg-aurelia-secondary/10 text-aurelia-secondary border border-aurelia-secondary/20 uppercase">
+                        {role}
+                    </span>
+                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-gray-800 bg-black/50">
+                        <span class="w-1.5 h-1.5 {status_color} rounded-full"></span>
+                        <span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">{status_text}</span>
+                    </div>
                 </div>
-                <h3 class="text-3xl font-bold text-aurelia-text font-mono leading-tight group-hover:text-purple-200 transition-colors">{title.replace('_', ' ').replace('.md', '')}</h3>
-                <p class="text-[10px] text-aurelia-muted-500 font-mono mt-1 uppercase">ROLE: {role}</p>
+                <h3 class="text-2xl font-bold text-gray-100 font-sans tracking-tight leading-none group-hover:text-aurelia-secondary transition-colors">
+                    {title.replace('_', ' ').replace('.md', '')}
+                </h3>
             </div>
-            <div class="text-4xl opacity-30 group-hover:opacity-80 transition-opacity filter drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">🚀</div>
         </div>
 
-        <div class="w-full h-px bg-purple-500/20"></div>
-
-        <div class="flex flex-col gap-2">
-            <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">MISSION_BRIEF:</span>
-            <p class="text-sm text-aurelia-muted-300 font-sans leading-relaxed line-clamp-3 opacity-90">
+        <div class="flex flex-col gap-2 z-10">
+            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">MISSION_PARAMETER</span>
+            <p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3">
                 {mission}
             </p>
         </div>
 
-        <div class="flex flex-col gap-2 flex-grow">
-            <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">CORE_LOGIC:</span>
-            <p class="text-xs text-aurelia-muted-400 font-mono border-l-2 border-purple-500/30 pl-3 italic">
-                "{logic}"
-            </p>
+        <div class="flex flex-col gap-2 flex-grow z-10">
+            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SYSTEM_LOGIC</span>
+            <div class="bg-black/60 border-l-2 border-aurelia-secondary p-3 rounded-r-sm h-full">
+                <p class="text-xs text-aurelia-muted font-mono leading-relaxed italic opacity-90">
+                    <span class="text-aurelia-secondary opacity-50">>></span> {logic}
+                </p>
+            </div>
         </div>
 
-        <div class="flex flex-wrap gap-2 mb-2">
-            { "".join([f'<span class="text-[10px] font-mono border border-purple-500/20 bg-purple-500/5 text-purple-300 px-2 py-1 rounded">{m}</span>' for m in impacts]) }
+        <div class="flex flex-wrap gap-2 z-10">
+            { "".join([f'<span class="text-[10px] font-mono text-gray-400 bg-gray-900 border border-gray-800 px-2 py-1 rounded-sm">{m}</span>' for m in impacts]) }
         </div>
 
         {action_buttons}

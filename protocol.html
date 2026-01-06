@@ -61,12 +61,33 @@
 </script>
 
 <style>
+    /* NAV BAR GLOW UTILITIES */
+    .text-shadow-cyan { text-shadow: 0 0 10px #00f2ff80; }
+    .text-shadow-green { text-shadow: 0 0 10px #39ff1480; }
+    .text-shadow-purple { text-shadow: 0 0 10px #8a2be280; }
+    .text-shadow-orange { text-shadow: 0 0 10px #ff8c0080; }
+    .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
     /* GLOBAL RESET */
     body { 
         background-color: #0a0a0b; 
         color: #ffffff;
     }
     
+/* GLOBAL SELECTION HIGHLIGHTER */
+    ::selection {
+        background: #00f2ff; /* Cyan in Cyber Prime */
+        color: #0a0a0b;      /* Black Text for contrast */
+        text-shadow: none; /* Removes glow for cleaner reading */
+    }
+
+    /* Firefox Support */
+    ::-moz-selection {
+        background: #00f2ff;
+        color: #0a0a0b;
+        text-shadow: none;
+    }
+
     /* UNIVERSAL GLASS CLASS */
     .glass {
         background: rgba(10, 10, 11, 0.6);
@@ -109,9 +130,7 @@
 <style>
     /* === PROTOCOL CARD (THE GRID) === */
     .protocol-card {
-/* NEW (Use the variable) */
-background: var(--card-bg, rgba(10, 10, 11, 0.6)); 
-/* OR better yet, just add the class "glass" to the HTML element and remove this background line entirely. */
+        background: rgba(10, 10, 11, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.08);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
@@ -120,82 +139,111 @@ background: var(--card-bg, rgba(10, 10, 11, 0.6));
     }
     .protocol-card:hover {
         background: rgba(10, 10, 11, 0.9);
-        border-color: rgba(57, 255, 20, 0.5);
+        border-color: #39ff14;
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px -10px rgba(57, 255, 20, 0.15);
+        box-shadow: 0 10px 30px -10px #39ff1430;
     }
 
-    /* === SLIDE-OVER DRAWER === */
+    /* === SLIDE-OVER DRAWER (MISSION HUD) === */
     #protocol-drawer {
         transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: transform;
+        box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+        border-left: 1px solid #27272a;
     }
     
-    /* === INTERACTIVE CHECKLIST (INSIDE DRAWER) === */
-    .task-item { 
-        display: flex; align-items: flex-start; padding: 8px 12px; 
-        margin-bottom: 8px; border-radius: 4px;
-        background: rgba(255,255,255,0.03); border: 1px solid transparent;
-        transition: all 0.2s; cursor: pointer;
+    /* === PROTOCOL TYPOGRAPHY ENGINE === */
+    .protocol-reader {
+        font-family: 'Inter', sans-serif;
+        color: ;
+        line-height: 1.6;
     }
-    .task-item:hover { background: rgba(57, 255, 20, 0.05); border-color: rgba(57, 255, 20, 0.2); }
-    
-    .task-box { 
-        min-width: 18px; height: 18px; 
-        border: 1px solid #39ff14; margin-right: 14px; margin-top: 3px;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 0 5px rgba(57,255,20,0.2);
-    }
-    .task-check { width: 10px; height: 10px; background: #39ff14; opacity: 0; transition: opacity 0.2s; }
-    
-    .task-done .task-check { opacity: 1; }
-    .task-done { opacity: 0.6; }
-    .task-done .task-text { text-decoration: line-through; color: #666; }
 
-    /* === CODE BLOCK TERMINALS === */
-    .prose pre {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 6px;
-        position: relative;
-        padding-top: 36px;
-        margin-top: 1.5rem;
-    }
-    .prose pre::before {
-        content: "/// SYSTEM_PAYLOAD";
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 28px;
-        background: #1a1a1a;
-        border-bottom: 1px solid #333;
-        color: #555;
+    /* HEADERS */
+    .protocol-reader h1 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        border-bottom: 2px solid #39ff14;
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+        margin-top: 1rem;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
+        letter-spacing: -0.05em;
+    }
+    .protocol-reader h2 {
+        font-size: 0.85rem;
+        color: #39ff14;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        font-family: 'JetBrains Mono', monospace;
+        border-left: 2px solid #39ff14;
+        padding-left: 0.8rem;
+    }
+
+    /* BLOCKQUOTES (Logic/Philosophy) */
+    .protocol-reader blockquote {
+        background: #18181b;
+        border: 1px solid #27272a;
+        border-left: 3px solid #ff8c00;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 4px;
+        font-style: italic;
+        color: #9ca3af;
+        font-size: 0.95rem;
+    }
+
+    /* === INTERACTIVE TASK ITEMS (The Checklists) === */
+    .task-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid transparent;
+        border-radius: 4px;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .task-item:hover {
+        background: rgba(255,255,255,0.05);
+        border-color: #27272a;
+    }
+    
+    .task-box {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #9ca3af;
+        border-radius: 3px;
+        flex-shrink: 0;
+        margin-top: 2px;
         display: flex;
         align-items: center;
-        padding-left: 12px;
-        border-radius: 5px 5px 0 0;
-    }
-    .copy-btn {
-        position: absolute;
-        top: 3px; right: 6px;
-        background: transparent;
-        border: 1px solid #444;
-        color: #888;
-        font-size: 10px;
-        padding: 2px 8px;
-        border-radius: 3px;
-        cursor: pointer;
+        justify-content: center;
         transition: all 0.2s;
-        z-index: 10;
     }
-    .copy-btn:hover { border-color: #39ff14; color: #39ff14; background: rgba(57, 255, 20, 0.1); }
-
-    /* Custom Scrollbar for Drawer */
-    .drawer-scroll::-webkit-scrollbar { width: 6px; }
-    .drawer-scroll::-webkit-scrollbar-track { background: #0a0a0b; }
-    .drawer-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-    .drawer-scroll::-webkit-scrollbar-thumb:hover { background: #39ff14; }
+    
+    /* COMPLETED STATE */
+    .task-item.task-done { opacity: 0.5; }
+    .task-item.task-done .task-box {
+        background: #39ff14;
+        border-color: #39ff14;
+    }
+    .task-item.task-done .task-text {
+        text-decoration: line-through;
+        color: #9ca3af;
+    }
+    
+    .task-check::after {
+        content: ''; display: none; width: 4px; height: 8px;
+        border: solid black; border-width: 0 2px 2px 0;
+        transform: rotate(45deg); margin-top: -2px;
+    }
+    .task-item.task-done .task-check::after { display: block; }
 </style>
 
 </head>
@@ -203,31 +251,62 @@ background: var(--card-bg, rgba(10, 10, 11, 0.6));
     
     <div class="scanline"></div>
 
-    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-dim bg-aurelia-dark/95 backdrop-blur-xl h-14">
+    <nav class="fixed top-0 w-full z-50 border-b border-aurelia-border/40 bg-aurelia-bg/90 backdrop-blur-md h-16 transition-all duration-300">
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
-            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-aurelia-text font-bold">AURELIA_OS // SYSTEM_PROTOCOL</span>
+            
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="relative flex items-center justify-center">
+                    <div class="absolute w-3 h-3 border border-aurelia-primary/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full shadow-[0_0_10px_rgba(0,242,255,0.8)] animate-pulse"></div>
+                </div>
+                <span class="text-aurelia-text font-bold group-hover:text-aurelia-primary transition-colors duration-300">
+                    AURELIA_OS // <span class="opacity-50">SYSTEM_PROTOCOL</span>
+                </span>
             </a>   
-            <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="hover:text-aurelia-text transition-colors">00_LOBBY</a>
-                <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">01_GARDEN</a>
-                <a href="protocol.html" class="text-aurelia-green border-b border-aurelia-green pb-1">02_PROTOCOLS</a>
-                <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
-                <a href="services.html" class="hover:text-aurelia-orange transition-colors">04_SERVICES</a>
+
+            <div class="hidden md:flex items-center gap-10">
+                
+                <a href="index.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-text transition-all duration-300">00_LOBBY</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-text transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="garden.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-primary hover:text-shadow-cyan transition-all duration-300">01_GARDEN</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="protocol.html" class="relative group py-2">
+                    <span class="text-aurelia-accent text-shadow-green transition-all duration-300">02_PROTOCOLS</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-accent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left scale-x-100"></span>
+                </a>
+
+                <a href="portfolio.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-secondary hover:text-shadow-purple transition-all duration-300">03_PORTFOLIO</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
+                <a href="services.html" class="relative group py-2">
+                    <span class="text-aurelia-muted hover:text-aurelia-tertiary hover:text-shadow-orange transition-all duration-300">04_SERVICES</span>
+                    <span class="absolute -bottom-1 left-0 w-full h-[1px] bg-aurelia-tertiary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left "></span>
+                </a>
+
             </div>
+            
+            <button class="md:hidden text-aurelia-text">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
         </div>
     </nav>
 
     <main class="flex-grow pt-32 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
 
-<div class="hidden text-aurelia-primary text-aurelia-accent text-aurelia-tertiary text-aurelia-secondary text-gray-400 text-gray-500 text-gray-700 bg-aurelia-primary bg-aurelia-accent bg-aurelia-tertiary bg-aurelia-secondary bg-gray-400 bg-gray-500 bg-gray-700 animate-pulse"></div>
 <div class="mb-12 border-b border-gray-800 pb-8 flex flex-col md:flex-row justify-between items-end">
     <div>
         <div class="flex items-center gap-3 mb-2">
             <div id="live-status-indicator" class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-            <span class="text-xs font-mono text-aurelia-text tracking-widest">CURRENT_OPERATOR_STATUS: T.R.M. is engaging in...</span>
+            <span class="text-xs font-mono text-aurelia-text tracking-widest">CURRENT_OPERATOR_STATUS: T.R.M.</span>
         </div>
         <h1 id="live-status-text" class="text-3xl md:text-5xl font-black text-gray-600 font-mono tracking-tighter uppercase">
             SYSTEM_CALCULATING...
@@ -241,7 +320,7 @@ background: var(--card-bg, rgba(10, 10, 11, 0.6));
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     
-    <div onclick="openDrawer('PROT_01_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
+    <div onclick="openProtocol('PROT_01_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center mb-4 opacity-60 group-hover:opacity-100 transition-opacity">
                 <span class="text-[10px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded">PROT_01_</span>
@@ -252,11 +331,13 @@ background: var(--card-bg, rgba(10, 10, 11, 0.6));
                 </div>
             </div>
             <h2 class="text-xl font-bold text-aurelia-text mb-3 group-hover:text-aurelia-accent transition-colors">01_MORNING_LAUNCH</h2>
-            <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
+            <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100 line-clamp-3">System Protocol</p>
         </div>
-        <div id="data-PROT_01_" class="hidden">
-            <div class="raw-title">01_MORNING_LAUNCH</div>
-            <div class="raw-body">
+        
+        <div id="store-PROT_01_" class="hidden" 
+             data-title="01_MORNING_LAUNCH" 
+             data-tags="['type/protocol']">
+            
 # ⚙️ 01_MORNING_LAUNCH
 
 ## 📋 The Sequence
@@ -272,15 +353,16 @@ background: var(--card-bg, rgba(10, 10, 11, 0.6));
 
 
 ## 📦 Assets
-Download this AM routine template for yourself below!</div>
+Download this AM routine template for yourself below!
         </div>
+
         <div class="mt-6 flex items-center text-aurelia-accent text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
             <span>[ INITIATE_SEQUENCE ]</span>
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
     </div>
     
-    <div onclick="openDrawer('PROT_02_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
+    <div onclick="openProtocol('PROT_02_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center mb-4 opacity-60 group-hover:opacity-100 transition-opacity">
                 <span class="text-[10px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded">PROT_02_</span>
@@ -291,11 +373,13 @@ Download this AM routine template for yourself below!</div>
                 </div>
             </div>
             <h2 class="text-xl font-bold text-aurelia-text mb-3 group-hover:text-aurelia-accent transition-colors">02_DAILY_LOG</h2>
-            <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
+            <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100 line-clamp-3">System Protocol</p>
         </div>
-        <div id="data-PROT_02_" class="hidden">
-            <div class="raw-title">02_DAILY_LOG</div>
-            <div class="raw-body">
+        
+        <div id="store-PROT_02_" class="hidden" 
+             data-title="02_DAILY_LOG" 
+             data-tags="['type/protocol']">
+            
 # ⚙️ 02_Daily_Log
 
 ## 📋 The Sequence
@@ -311,8 +395,9 @@ Download this AM routine template for yourself below!</div>
 
 
 ## 📦 Assets
-Download this protocol by clicking below!</div>
+Download this protocol by clicking below!
         </div>
+
         <div class="mt-6 flex items-center text-aurelia-accent text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
             <span>[ INITIATE_SEQUENCE ]</span>
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
@@ -321,23 +406,40 @@ Download this protocol by clicking below!</div>
     
 </div>
 
-<div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
+<div id="drawer-backdrop" onclick="closeProtocol()" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden opacity-0 transition-opacity duration-300"></div>
 
-<div id="protocol-drawer" class="fixed top-0 right-0 h-full w-full md:w-[600px] bg-[#0a0a0b] border-l border-gray-800 z-50 transform translate-x-full shadow-2xl flex flex-col">
-    <div class="p-6 border-b border-gray-800 flex justify-between items-start bg-black/50">
+<div id="protocol-drawer" class="fixed top-0 right-0 w-full md:w-[600px] h-full bg-[#0a0a0b] z-[60] transform translate-x-full flex flex-col shadow-2xl">
+    
+    <div class="flex items-center justify-between p-6 border-b border-gray-800 bg-[#0f0f10]">
         <div>
-            <span id="drawer-id" class="text-xs font-mono text-aurelia-accent tracking-widest mb-1 block"></span>
-            <h2 id="drawer-title" class="text-2xl font-bold text-aurelia-text"></h2>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse shadow-[0_0_8px_#39ff14]"></span>
+                <span class="text-[10px] font-mono text-aurelia-accent uppercase tracking-widest">ACTIVE_PROTOCOL</span>
+            </div>
+            <h2 id="drawer-title" class="text-lg font-bold text-white font-mono tracking-tight">LOADING...</h2>
         </div>
-        <button onclick="closeDrawer()" class="text-gray-500 hover:text-aurelia-text transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <button onclick="closeProtocol()" class="group p-2 hover:bg-white/10 rounded transition-colors">
+            <svg class="w-5 h-5 text-gray-500 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
         </button>
     </div>
-    <div id="drawer-content" class="p-6 overflow-y-auto flex-grow drawer-scroll prose prose-invert prose-p:text-gray-300 prose-headings:text-white max-w-none"></div>
-    <div class="p-6 border-t border-gray-800 bg-black/50">
-        <button onclick="downloadAsset()" class="w-full py-3 bg-aurelia-accent/10 hover:bg-aurelia-accent/20 text-aurelia-accent border border-aurelia-accent/30 rounded font-mono text-sm tracking-widest transition-all hover:shadow-[0_0_15px_rgba(57,255,20,0.2)]">
-            DOWNLOAD_ASSETS_PACKAGE
-        </button>
+
+    <div class="flex-grow overflow-y-auto custom-scrollbar bg-[#0a0a0b]">
+        <div class="p-8 pb-32">
+            <div class="flex flex-wrap gap-2 mb-8" id="drawer-tags"></div>
+            
+            <div id="drawer-content" class="protocol-reader"></div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800 flex gap-4">
+                <button onclick="downloadAsset()" class="flex-1 py-4 border border-gray-700 text-gray-400 hover:text-white hover:border-white font-mono font-bold tracking-widest transition-all uppercase text-xs">
+                    DOWNLOAD_ASSET
+                </button>
+                <button onclick="closeProtocol()" class="flex-[2] py-4 border border-aurelia-accent/30 text-aurelia-accent hover:bg-aurelia-accent hover:text-black font-mono font-bold tracking-widest transition-all uppercase text-xs">
+                    COMPLETE_MISSION
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -347,9 +449,6 @@ Download this protocol by clicking below!</div>
         const now = new Date();
         const day = now.getDay(); 
         const time = now.getHours() * 100 + now.getMinutes();
-        
-        console.log(`[SYSTEM_CHECK] Day: ${day} | Time: ${time}`); // Open Console (F12) to see this
-
         let status = "SYSTEM_IDLE";
         let color = "text-gray-500";
         let pulse = false;
@@ -360,83 +459,84 @@ Download this protocol by clicking below!</div>
             else if (day !== 3 && time >= 715 && time < 800) { status = "SYSTEM_BOOT"; color = "text-aurelia-primary"; }
             else if ((day === 1 || day === 5) && time >= 800 && time < 840) { status = "KINETIC_OPS // LIFT"; color = "text-aurelia-tertiary"; }
             else if (time >= 900 && time < 1200) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-secondary"; }
-            else if (time >= 1200 && time < 1300) { status = "FUELING_CYCLE"; color = "text-gray-400"; }
-            else if (time >= 1300 && time < 1400) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-secondary"; }
-            else if (time >= 1400 && time < 1500) { status = "PRE_COMBAT_PREP"; color = "text-gray-400"; }
             else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-accent"; pulse = true; }
-            else if (time >= 1730 && time < 1900) { status = "SYSTEM_MAINTENANCE"; color = "text-gray-400"; }
             else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-accent"; pulse = true; }
-            else if (time >= 2300 || time < 615) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
-            else { status = "SOCIAL_SYNC"; color = "text-gray-400"; }
+            else { status = "SYSTEM_IDLE"; color = "text-gray-400"; }
         }
         // Tue(2), Thu(4)
         else if (day === 2 || day === 4) {
             if (time >= 715 && time < 930) { status = "SYSTEM_BOOT // REVIEW"; color = "text-aurelia-primary"; }
-            else if (time >= 930 && time < 1045) { status = "NEURAL_UPLINK"; color = "text-aurelia-secondary"; }
-            else if (time >= 1100 && time < 1145) { status = "KINETIC_OPS // DRILLS"; color = "text-aurelia-tertiary"; }
-            else if (time >= 1200 && time < 1400) { status = "DEEP_WORK // STUDY_HALL"; color = "text-aurelia-accent"; }
             else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-accent"; pulse = true; }
-            else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-accent"; pulse = true; }
-            else if (time >= 2300 || time < 715) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
             else { status = "SYSTEM_MAINTENANCE"; color = "text-gray-400"; }
-        }
-        // Sat(6)
-        else if (day === 6) {
-            if (time >= 830 && time < 1030) { status = "CREATIVE_BUILD // PROJECT"; color = "text-aurelia-primary"; pulse = true; }
-            else if (time >= 1030 && time < 1130) { status = "NEURAL_EXPANSION"; color = "text-aurelia-accent"; }
-            else if (time >= 1330 && time < 1730) { status = "RECHARGE_CYCLE"; color = "text-gray-500"; }
-            else if (time >= 2300) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
-            else { status = "SOCIAL_SYNC"; color = "text-gray-400"; }
-        }
-        // Sun(0)
-        else if (day === 0) {
-            if (time >= 930 && time < 1100) { status = "ADMIN_OVERRIDE // FINANCE"; color = "text-aurelia-primary"; }
-            else if (time >= 1700 && time < 1900) { status = "LOGISTICS // MEAL_PREP"; color = "text-aurelia-primary"; }
-            else if (time >= 2300) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
-            else { status = "WEEKLY_RESET"; color = "text-aurelia-accent"; }
+        } else {
+             status = "WEEKEND_OPERATIONS"; color = "text-aurelia-text";
         }
 
-      // DOM Update
         const statusEl = document.getElementById('live-status-text');
         const indicatorEl = document.getElementById('live-status-indicator');
         
         if (statusEl) {
-            console.log(`[UPDATING_UI] New Status: ${status}`);
             statusEl.innerText = status;
             statusEl.className = `text-3xl md:text-5xl font-black font-mono tracking-tighter uppercase ${color}`;
-            
             const bgClass = color.replace('text-', 'bg-');
             indicatorEl.className = `w-2 h-2 rounded-full ${bgClass} ${pulse ? 'animate-pulse' : ''}`;
-        } else {
-            console.error("ERROR: Could not find element 'live-status-text'");
         }
     }  
 
-    // --- 2. DRAWER & DOWNLOAD LOGIC ---
+    // --- 2. DRAWER & LOGIC ENGINE ---
     const drawer = document.getElementById('protocol-drawer');
     const backdrop = document.getElementById('drawer-backdrop');
     const contentBox = document.getElementById('drawer-content');
     const titleBox = document.getElementById('drawer-title');
-    const idBox = document.getElementById('drawer-id');
+    const tagsBox = document.getElementById('drawer-tags');
+    
     let currentProtocol = { title: "", body: "" };
 
-    function openDrawer(id) {
-        const dataContainer = document.getElementById(`data-${id}`);
-        const rawBody = dataContainer.querySelector('.raw-body').innerText;
-        const title = dataContainer.querySelector('.raw-title').innerText;
+    function openProtocol(id) {
+        // LOOKUP: Find the hidden storage div by "store-ID"
+        const storageId = "store-" + id;
+        const rawEl = document.getElementById(storageId);
+        
+        if (!rawEl) { console.error("Protocol data missing for:", storageId); return; }
+
+        // EXTRACT: Use textarea hack to decode HTML entities safely
+        const txt = document.createElement("textarea");
+        txt.innerHTML = rawEl.innerHTML;
+        const rawBody = txt.value;
+        const title = rawEl.dataset.title;
+        const rawTags = rawEl.dataset.tags || "[]";
+
         currentProtocol = { title: title, body: rawBody };
 
+        // UI UPDATE
         titleBox.innerText = title;
-        idBox.innerText = id + " // ACTIVE";
+        
+        // Tag Parsing
+        if(tagsBox) {
+            tagsBox.innerHTML = ''; 
+            const tags = rawTags.replace(/[\[\]']/g, "").split(",").filter(t => t.trim().length > 0);
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = "text-[9px] font-mono border border-gray-700 text-gray-400 px-2 py-1 rounded uppercase tracking-wider";
+                span.innerText = tag.trim();
+                tagsBox.appendChild(span);
+            });
+        }
+
+        // RENDER CONTENT (Using HUD Parser)
         contentBox.innerHTML = parseProtocolMarkdown(rawBody);
         injectCopyButtons();
 
+        // ANIMATE
         backdrop.classList.remove('hidden');
-        setTimeout(() => { backdrop.classList.remove('opacity-0'); drawer.classList.remove('translate-x-full'); }, 10);
+        setTimeout(() => { 
+            backdrop.classList.remove('opacity-0'); 
+            drawer.classList.remove('translate-x-full'); 
+        }, 10);
         document.body.style.overflow = 'hidden';
     }
 
-    function closeDrawer() {
+    function closeProtocol() {
         drawer.classList.add('translate-x-full');
         backdrop.classList.add('opacity-0');
         setTimeout(() => { backdrop.classList.add('hidden'); }, 300);
@@ -456,34 +556,52 @@ Download this protocol by clicking below!</div>
         URL.revokeObjectURL(url);
     }
 
+    // --- 3. HUD PARSERS ---
+    
+    function parseProtocolMarkdown(text) {
+        // 1. Unchecked Tasks -> Interactive Divs
+        let html = text.replace(/- \[ \](.+)/g, 
+            `<div class="task-item" onclick="this.classList.toggle('task-done')">
+                <div class="task-box"><div class="task-check"></div></div>
+                <span class="task-text font-mono text-gray-300 text-sm leading-relaxed pt-0.5">$1</span>
+            </div>`
+        );
+        // 2. Checked Tasks -> Interactive Divs
+        html = html.replace(/- \[x\](.+)/g, 
+            `<div class="task-item task-done" onclick="this.classList.toggle('task-done')">
+                <div class="task-box"><div class="task-check"></div></div>
+                <span class="task-text font-mono text-gray-300 text-sm leading-relaxed pt-0.5">$1</span>
+            </div>`
+        );
+        return marked.parse(html);
+    }
+
     function injectCopyButtons() {
         contentBox.querySelectorAll('pre').forEach(pre => {
+            if(pre.querySelector('.copy-btn')) return;
             const btn = document.createElement('button');
-            btn.className = 'copy-btn font-mono';
-            btn.innerText = 'COPY_PAYLOAD';
+            btn.className = 'absolute top-2 right-2 text-[10px] font-mono border border-gray-700 text-gray-500 px-2 py-1 rounded hover:bg-white/10 transition-colors copy-btn';
+            btn.innerText = 'COPY';
+            pre.style.position = 'relative';
             btn.addEventListener('click', () => {
                 const code = pre.querySelector('code').innerText;
                 navigator.clipboard.writeText(code).then(() => {
-                    btn.innerText = 'COPIED_CONFIRMED';
-                    btn.style.color = '#39ff14';
-                    btn.style.borderColor = '#39ff14';
-                    setTimeout(() => { btn.innerText = 'COPY_PAYLOAD'; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+                    btn.innerText = 'DONE';
+                    btn.classList.add('text-aurelia-accent', 'border-aurelia-accent');
+                    setTimeout(() => { 
+                        btn.innerText = 'COPY'; 
+                        btn.classList.remove('text-aurelia-accent', 'border-aurelia-accent');
+                    }, 2000);
                 });
             });
             pre.appendChild(btn);
         });
     }
 
-    function parseProtocolMarkdown(text) {
-        let html = text.replace(/- \[ \](.+)/g, `<div class="task-item" onclick="this.classList.toggle('task-done')"><div class="task-box"><div class="task-check"></div></div><span class="task-text font-mono text-gray-200 text-sm leading-relaxed pt-0.5">$1</span></div>`);
-        html = html.replace(/- \[x\](.+)/g, `<div class="task-item task-done" onclick="this.classList.toggle('task-done')"><div class="task-box"><div class="task-check"></div></div><span class="task-text font-mono text-gray-200 text-sm leading-relaxed pt-0.5">$1</span></div>`);
-        return marked.parse(html);
-    }
-
-    // Init System
+    // Init
     updateSystemStatus();
-    setInterval(updateSystemStatus, 60000); // Check every minute
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+    setInterval(updateSystemStatus, 60000);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProtocol(); });
 </script>
 
     </main>
