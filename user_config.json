@@ -1,0 +1,28 @@
+{
+    "system_name": "AURELIA / OS",
+    "system_version": "v3.2.0",
+    "status_message": "SYSTEM_ONLINE",
+    
+    "author": {
+        "name": "Travis R. McKinzie",
+        "short_name": "T.R.M.",
+        "role": "System Architect",
+        "email": "trmckinzie24@gmail.com",
+        "location": "Colorado, USA",
+        "bio_short": "Evolutionary Theory meets Cognitive Science.",
+        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on creating recursive systems—software that improves itself the more it is used."
+    },
+
+    "links": {
+        "github": "https://github.com/yourusername",
+        "linkedin": "https://linkedin.com/in/yourusername",
+        "twitter": "https://twitter.com/yourusername"
+    },
+
+    "modules": {
+        "garden": { "title": "The Garden", "subtitle": "INPUT // RAW NOTES" },
+        "projects": { "title": "Portfolio", "subtitle": "OUTPUT // PROOF OF WORK" },
+        "protocols": { "title": "Protocols", "subtitle": "KERNEL // ROUTINES" },
+        "services": { "title": "Services", "subtitle": "COMMERCE // HIRE ME" }
+    }
+}

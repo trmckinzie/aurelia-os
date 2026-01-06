@@ -569,6 +569,18 @@ def generate_project_card(meta, sections, title, note_id):
 
 def build_all():
     print("\n🧬 AURELIA SYSTEM: INITIALIZING JINJA CORE...")
+
+    # --- 0. LOAD IDENTITY CHIP ---
+    config_path = os.path.join(ROOT_DIR, "user_config.json")
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            user_config = json.load(f)
+        print(f"   + Identity Loaded: {user_config['author']['name']}")
+    except Exception as e:
+        print(f"   ⚠️ WARNING: Could not load user_config.json. Using defaults. ({e})")
+        user_config = { "author": { "name": "Unknown User" } } # Fallback
+
+    # ... (Rest of your existing code: garden_cards = [], etc.)
     
     # 1. LOAD DATA CONTAINERS
     garden_cards = []
@@ -703,12 +715,16 @@ def build_all():
         ("404.html", "404.html", {}),
     ]
 
+    # ... inside the pages loop ...
     for template_name, output_name, context in pages:
         try:
+            # INJECT DATA
             context["theme"] = CURRENT_THEME 
-            context["search_index"] = json_index  # <--- INJECT THE BRAIN
+            context["search_index"] = json_index
+            context["config"] = user_config  # <--- THIS IS THE NEW LINE
             
             template = env.get_template(template_name)
+            # ... rest of render code
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
             
             with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8") as f:
