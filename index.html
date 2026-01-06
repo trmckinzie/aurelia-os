@@ -139,8 +139,8 @@
         position: relative;
         margin-top: 4rem;
         /* FADE MASKS */
-        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
-        -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+        mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
     }
     .carousel {
         width: 300px;
@@ -677,7 +677,7 @@
 
         // PHYSICS CONFIG
         const cardCount = techStack.length;
-        const radius = 300; // Distance from center
+        const radius = Math.round( (300 / 2) / Math.tan( Math.PI / cardCount ) ) + 50;
         const theta = 360 / cardCount;
         let currIndex = 0;
 
@@ -687,7 +687,7 @@
         window.rotateCarousel = function(direction) {
             currIndex += direction;
             const angle = theta * currIndex * -1;
-            carousel.style.transform = `rotateY(${angle}deg)`;
+            carousel.style.transform = `translateZ(-${radius}px) rotateY(${angle}deg)`;
             updateReadout();
         };
 
@@ -715,19 +715,22 @@
             techStack.forEach((tech, i) => {
                 const card = document.createElement('div');
                 
-                // HIGH-CONTRAST CARD CONTAINER
-                card.className = 'carousel-card group bg-[#0a0a0b] border border-gray-800 hover:border-aurelia-primary/50 transition-all duration-500 cursor-pointer'; 
+                // FIX 1: Added 'absolute top-0 left-0' to force them into a stack (so they can rotate)
+                // FIX 2: Added 'w-[300px] h-[400px]' to enforce size via Tailwind
+                card.className = 'absolute top-0 left-0 w-[300px] h-[400px] group bg-[#0a0a0b] border border-gray-800 hover:border-aurelia-primary/50 transition-colors duration-500 cursor-pointer rounded-sm'; 
                 
                 // 3D POSITIONING
                 const angle = theta * i;
                 card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
                 
-                // INNER HTML (The "Monolith" Design)
+                // INNER HTML (Fixed Hover Logic)
+                // We apply the scale to the INNER div so we don't break the outer 3D transform
                 card.innerHTML = `
-                    <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="w-full h-full transform transition-transform duration-500 group-hover:scale-105 relative z-10 flex flex-col items-center justify-center p-6">
+                        
+                        <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                    <div class="h-full flex flex-col items-center justify-center p-6 relative z-10">
-                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.2)] transform group-hover:scale-110 group-hover:drop-shadow-[0_0_30px_rgba(0,242,255,0.6)] transition-all duration-500">
+                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.2)] transform group-hover:drop-shadow-[0_0_30px_rgba(0,242,255,0.6)] transition-all duration-500">
                             ${tech.icon}
                         </div>
                         
@@ -736,14 +739,13 @@
                         <span class="text-[9px] font-mono text-aurelia-primary tracking-[0.2em] uppercase border border-aurelia-primary/20 px-3 py-1 bg-aurelia-primary/5 rounded-sm">
                             ${tech.type}
                         </span>
+                        
+                        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
+                        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
                     </div>
-                    
-                    <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
-                    <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
                 `;
                 
-                // Interaction: Click to snap to this card
-                // Uses the global function we defined above
+                // Interaction
                 card.onclick = () => {
                     const diff = i - (currIndex % cardCount);
                     window.rotateCarousel(diff);
@@ -751,6 +753,9 @@
 
                 carousel.appendChild(card);
             });
+
+            // --- NEW LINE: PUSH CAMERA BACK ON LOAD ---
+        carousel.style.transform = `translateZ(-${radius}px) rotateY(0deg)`;
             
             updateReadout();
         }
