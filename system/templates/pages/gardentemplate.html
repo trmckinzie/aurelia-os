@@ -22,16 +22,7 @@
     }
 
     /* 3. CARD PHYSICS */
-    .glass { 
-        background: rgba(10, 10, 11, 0.6); 
-        backdrop-filter: blur(12px); 
-        /* REMOVED: border: 1px solid rgba(255,255,255,0.05); */
-        /* REPLACED WITH: Separation of concerns */
-        border-style: solid;
-        /* We let the utility class (border-2) set the width */
-        /* We let the utility class (border-aurelia-primary) set the color */
-        box-shadow: 0 0 0 1px rgba(0,0,0,0.5); /* Inner shadow for depth */
-    }
+    
     .glass:hover {
         background: rgba(255, 255, 255, 0.03); 
         /* REMOVED: border-color: rgba(255,255,255,0.1); */
@@ -46,32 +37,89 @@
         box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
 
-    /* 5. MODAL TYPOGRAPHY */
-    .prose h1 { color: white; font-size: 1.8em; font-weight: 700; margin-bottom: 0.5em; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
-    .prose h2 { color: #e5e7eb; font-size: 1.4em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
-    .prose h3 { color: #00f2ff; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
-    .prose p { color: #e5e7eb; line-height: 1.6; margin-bottom: 1em; }
-    .prose ul { list-style: disc; padding-left: 1.5em; color: #e5e7eb; margin-bottom: 1em; }
-    .prose blockquote { border-left: 3px solid #00f2ff; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(0,242,255,0.05); padding: 1em; border-radius: 4px; }
-    .prose a { color: #00f2ff; text-decoration: none; border-bottom: 1px dotted #00f2ff; }
+    /* 5. === OBSIDIAN READER ENGINE === */
+    .obsidian-reader {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #dcddde; /* Obsidian Default Text */
+        line-height: 1.6;
+    }
 
-    /* 6. SCROLLBARS (CYBER-GAUGE) */
-    ::-webkit-scrollbar { 
-        width: 14px; /* Wider target area */
+    /* HEADERS */
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3, .obsidian-reader h4 {
+        color: {{ theme.colors.text_main|replace("'", "") }};
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.3;
     }
-    ::-webkit-scrollbar-track { 
-        background: #050505; 
-        border-left: 1px solid #1e1e20; /* Mechanical track line */
+    .obsidian-reader h1 { font-size: 2em; border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }}; pb-2; }
+    .obsidian-reader h2 { font-size: 1.6em; }
+    .obsidian-reader h3 { font-size: 1.3em; }
+
+    /* LINKS (Internal Wiki Style) */
+    .obsidian-reader a {
+        color: {{ theme.colors.primary|replace("'", "") }};
+        text-decoration: none;
+        transition: opacity 0.2s;
     }
-    ::-webkit-scrollbar-thumb { 
-        background: rgba(0, 242, 255, 0.15); /* Passive Glow */
-        border: 1px solid rgba(0, 242, 255, 0.3); /* Tech Border */
-        border-radius: 2px;
+    .obsidian-reader a:hover { opacity: 0.8; text-decoration: underline; }
+
+    /* CODE BLOCKS (Terminal Style) */
+    .obsidian-reader pre {
+        background-color: #121212; /* Darker than card */
+        border: 1px solid #2a2a2a;
+        border-radius: 4px;
+        padding: 16px;
+        overflow-x: auto;
+        margin: 1.5em 0;
     }
-    ::-webkit-scrollbar-thumb:hover { 
-        background: rgba(0, 242, 255, 0.8); /* Active Glow */
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); /* Neon Bloom */
-        cursor: grab;
+    .obsidian-reader code {
+        font-family: 'JetBrains Mono', monospace;
+        background-color: rgba(255,255,255,0.05);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: {{ theme.colors.accent|replace("'", "") }};
+    }
+    .obsidian-reader pre code {
+        background-color: transparent;
+        padding: 0;
+        color: #e3e3e3; /* Standard code color */
+        font-size: 0.9em;
+    }
+
+    /* CALLOUTS / BLOCKQUOTES */
+    .obsidian-reader blockquote {
+        margin: 1.5em 0;
+        padding: 12px 16px;
+        color: inherit;
+        border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }};
+        background-color: rgba(138, 43, 226, 0.05); /* Subtle Tint */
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* LISTS */
+    .obsidian-reader ul, .obsidian-reader ol {
+        padding-left: 2em;
+        margin: 1em 0;
+    }
+    .obsidian-reader li { margin-bottom: 0.25em; }
+    .obsidian-reader li::marker { color: {{ theme.colors.text_muted|replace("'", "") }}; }
+
+    /* IMAGES */
+    .obsidian-reader img {
+        border-radius: 4px;
+        max-width: 100%;
+        height: auto;
+        margin: 1.5em auto;
+        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+    }
+    
+    /* HORIZONTAL RULE */
+    .obsidian-reader hr {
+        border: 0;
+        border-top: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        margin: 2em 0;
     }
 </style>
 {% endblock %}
@@ -103,7 +151,7 @@
     </button>
 
     <button onclick="setFilter('author')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-text hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
         Authors
     </button>
 
@@ -131,7 +179,7 @@
             <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
 
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
-                <h1 class="text-5xl font-black text-white font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
+                <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
                 <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
                     <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
                     SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
@@ -141,7 +189,7 @@
 
         <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
             <p class="text-md font-mono text-gray-100 tracking-widest">
-                // TOTAL_NODES: <span id="node-count" class="text-white">{{ cards|length }}</span>
+                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text">{{ cards|length }}</span>
             </p>
         </div>
 
@@ -159,28 +207,32 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-6xl h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            
-            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
-                    <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">READING_MODE</span>
-                </div>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+    
+    <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        
+        <div class="flex justify-between items-center px-6 py-3 border-b border-gray-800 bg-[#111111]">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
             </div>
+            <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
+        </div>
 
-            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none text-sm font-sans leading-relaxed">
-            </div>
-
-            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
-                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE</span>
+        <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
+            <div class="max-w-5xl mx-auto px-8 py-12">
+                <div id="modal-content" class="obsidian-reader text-lg">
+                    </div>
             </div>
         </div>
+
+        <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
+            <span>MODE: READ_ONLY</span>
+            <span>AURELIA_OS V3.0</span>
+        </div>
     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

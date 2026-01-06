@@ -12,42 +12,64 @@ TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
 OUTPUT_DIR = ROOT_DIR
 
-# --- THEME ENGINE V2.0 (SEMANTIC) ---
+# --- THEME ENGINE V2.1 (FULL SEMANTIC) ---
 THEME_CONFIG = {
-    # 1. CYBER_PRIME (The Original)
+    # 1. CYBER_PRIME (Dark / Neon)
     "CYBER_PRIME": {
         "name": "CYBER_PRIME",
         "colors": {
-            "bg_main": "'#0a0a0b'",      # Was 'dark'
-            "bg_dim": "'#1e1e20'",       # Was 'dim'
-            "text_main": "'#ffffff'",    # Was 'text'
-            "text_dim": "'#d1d5db'",     # New: for paragraphs
+            # Base Layer
+            "bg_main": "'#0a0a0b'",       # Deepest Black
+            "bg_layer_1": "'#121214'",    # Slightly Lighter (Cards)
+            "bg_layer_2": "'#18181b'",    # Hovers / Modals
             
-            "primary": "'#00f2ff'",      # Was 'cyan' (Headers, Garden)
-            "secondary": "'#8a2be2'",    # Was 'purple' (Portfolio, Deep Accents)
-            "tertiary": "'#ff8c00'",     # Was 'orange' (Services, Alerts)
-            "accent": "'#39ff14'",       # Was 'green' (Links, Buttons, Status)
+            # Typography
+            "text_main": "'#ffffff'",     # White text
+            "text_muted": "'#9ca3af'",    # Gray text
+            "text_inverted": "'#000000'", # Black text (for buttons on bright bgs)
+
+            # Structure
+            "border_main": "'#27272a'",   # Dark Gray Borders
+            "border_focus": "'#00f2ff'",  # Cyan Focus
+            
+            # Roles
+            "primary": "'#00f2ff'",       # Cyan (Headings, Key Data)
+            "secondary": "'#8a2be2'",     # Purple (Creative, Portfolio)
+            "tertiary": "'#ff8c00'",      # Orange (Commerce, Alerts)
+            "accent": "'#39ff14'",        # Green (Success, Terminal)
         },
         "font_mono": "'JetBrains Mono', 'monospace'",
-        "bg_scanline": "true"
+        "rounded": "'2px'",               # Sharp corners
+        "glass_opacity": "'0.6'"          # Heavy glass
     },
     
-    # 2. THE_PATRIOT (Red/White/Blue)
+    # 2. THE_PATRIOT (Light / Academic / CIA Dossier Style)
     "THE_PATRIOT": {
         "name": "THE_PATRIOT",
         "colors": {
-            "bg_main": "'#ffffff'",      # White Background
-            "bg_dim": "'#f3f4f6'",       # Light Gray
-            "text_main": "'#111827'",    # Black Text
-            "text_dim": "'#374151'",     # Gray Text
+            # Base Layer
+            "bg_main": "'#fdfbf7'",       # Warm Paper White
+            "bg_layer_1": "'#ffffff'",    # Pure White (Cards)
+            "bg_layer_2": "'#f3f4f6'",    # Light Gray (Hovers)
             
-            "primary": "'#dc2626'",      # Red (Headers)
-            "secondary": "'#1e3a8a'",    # Navy Blue (Portfolio)
-            "tertiary": "'#b45309'",     # Amber/Gold (Services)
-            "accent": "'#2563eb'",       # Royal Blue (Links)
+            # Typography
+            "text_main": "'#111827'",     # Deep Black/Blue (Ink)
+            "text_muted": "'#4b5563'",    # Gray
+            "text_inverted": "'#ffffff'", # White text (for solid buttons)
+
+            # Structure
+            "border_main": "'#e5e7eb'",   # Light Gray Borders
+            "border_focus": "'#1d4ed8'",  # Navy Focus
+            
+            # Roles
+            "primary": "'#1e3a8a'",       # Navy Blue (Headings - Authority)
+            "secondary": "'#dc2626'",     # Crimson Red (Alerts - Action)
+            "tertiary": "'#b45309'",      # Amber/Gold (Highlights)
+            "accent": "'#2563eb'",        # Royal Blue (Links)
         },
-        "font_mono": "'Inter', 'sans-serif'",
-        "bg_scanline": "false"
+        "font_mono": "'Courier Prime', 'Courier New', monospace", # Typewriter style
+        "rounded": "'8px'",               # Softer corners
+        "glass_opacity": "'0.95'"         # Solid paper look (less glass)
     },
 }
 
@@ -388,10 +410,10 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         defin = extract_definition(body_content)
         blurb = defin if defin else blurb
         related = extract_related_links(body_content)[:3]
-        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap">'
+        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap">'
         if related:
             for link in related:
-                footer_html += f'<span class="hover:text-white transition-colors cursor-pointer">→ {link}</span>'
+                footer_html += f'<span class="hover:text-aurelia-text transition-colors cursor-pointer">→ {link}</span>'
         else:
             footer_html += '<span class="opacity-50">// ROOT</span>'
         footer_html += '</div></div>'
@@ -406,14 +428,14 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         concepts = extract_core_concepts(body_content)[:3]
         footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3">'
         if works:
-            footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
+            footer_html += '<div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1">'
             for work in works:
                 footer_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> {work}</li>'
             footer_html += '</ul></div>'
         if concepts:
-            footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2">'
+            footer_html += '<div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2">'
             for c in concepts:
-                footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">{c}</span>'
+                footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">{c}</span>'
             footer_html += '</div></div>'
         footer_html += '</div>'
 
@@ -440,7 +462,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         if concepts:
              footer_html += '<div class="flex flex-wrap gap-2">'
              for c in concepts:
-                 footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">{c}</span>'
+                 footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">{c}</span>'
              footer_html += '</div>'
         footer_html += '</div>'
 
@@ -481,7 +503,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
                     <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
                     <span class="text-[16px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">{icon}</div>
         </div>
@@ -512,14 +534,14 @@ def generate_project_card(meta, sections, title, note_id):
     if live_link:
         action_buttons += f'''
         <a href="{live_link}" target="_blank" onclick="event.stopPropagation()" 
-           class="group flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-purple-300 border border-purple-500/50 hover:bg-purple-500/10 hover:text-white hover:border-purple-400 transition-all rounded uppercase tracking-wider">
+           class="group flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-purple-300 border border-purple-500/50 hover:bg-purple-500/10 hover:text-aurelia-text hover:border-purple-400 transition-all rounded uppercase tracking-wider">
            <span class="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:animate-pulse"></span>
            LIVE_SYSTEM
         </a>
         '''
     action_buttons += f'''
     <button onclick="openNote('{note_id}'); event.stopPropagation()" 
-            class="ml-auto flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-gray-500 border border-gray-800 hover:border-purple-500/50 hover:text-white transition-all rounded uppercase tracking-wider group">
+            class="ml-auto flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono text-gray-500 border border-gray-800 hover:border-purple-500/50 hover:text-aurelia-text transition-all rounded uppercase tracking-wider group">
         <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
         EXTRACT_DATA
     </button>
@@ -540,8 +562,8 @@ def generate_project_card(meta, sections, title, note_id):
                     <span class="w-1.5 h-1.5 {status_dot} rounded-full"></span>
                     <span class="text-[11px] font-mono text-purple-400 uppercase tracking-widest">PROJECT_NODE</span>
                 </div>
-                <h3 class="text-3xl font-bold text-white font-mono leading-tight group-hover:text-purple-200 transition-colors">{title.replace('_', ' ').replace('.md', '')}</h3>
-                <p class="text-[10px] text-gray-500 font-mono mt-1 uppercase">ROLE: {role}</p>
+                <h3 class="text-3xl font-bold text-aurelia-text font-mono leading-tight group-hover:text-purple-200 transition-colors">{title.replace('_', ' ').replace('.md', '')}</h3>
+                <p class="text-[10px] text-aurelia-muted-500 font-mono mt-1 uppercase">ROLE: {role}</p>
             </div>
             <div class="text-4xl opacity-30 group-hover:opacity-80 transition-opacity filter drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]">🚀</div>
         </div>
@@ -550,14 +572,14 @@ def generate_project_card(meta, sections, title, note_id):
 
         <div class="flex flex-col gap-2">
             <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">MISSION_BRIEF:</span>
-            <p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3 opacity-90">
+            <p class="text-sm text-aurelia-muted-300 font-sans leading-relaxed line-clamp-3 opacity-90">
                 {mission}
             </p>
         </div>
 
         <div class="flex flex-col gap-2 flex-grow">
             <span class="text-[10px] font-mono text-purple-500/70 uppercase tracking-wider">CORE_LOGIC:</span>
-            <p class="text-xs text-gray-400 font-mono border-l-2 border-purple-500/30 pl-3 italic">
+            <p class="text-xs text-aurelia-muted-400 font-mono border-l-2 border-purple-500/30 pl-3 italic">
                 "{logic}"
             </p>
         </div>
