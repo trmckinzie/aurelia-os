@@ -9,8 +9,7 @@ publish: true
 ---
 # ⚛️ Flow State
 
-**🔗 Related:** [[Psychology]]
-
+**🔗 Related:** [[Psychology]] [[Cognition]]
 ---
 
 ### 💡 Definition
