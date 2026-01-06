@@ -29,7 +29,7 @@
         /* REPLACED WITH: Separation of concerns */
         border-style: solid;
         /* We let the utility class (border-2) set the width */
-        /* We let the utility class (border-aurelia-cyan) set the color */
+        /* We let the utility class (border-aurelia-primary) set the color */
         box-shadow: 0 0 0 1px rgba(0,0,0,0.5); /* Inner shadow for depth */
     }
     .glass:hover {
@@ -83,17 +83,17 @@
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex flex-wrap gap-2" id="filter-controls">
                 <button onclick="setFilter('all')" 
-            class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-cyan bg-aurelia-cyan/10 text-aurelia-cyan rounded uppercase tracking-wider transition-all">
+            class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all">
         All_Systems
     </button>
 
     <button onclick="setFilter('daily-bridge')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-orange hover:border-aurelia-orange hover:bg-aurelia-orange/5 rounded transition-all uppercase tracking-wider">
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider">
         Logs
     </button>
 
     <button onclick="setFilter('concept')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-cyan hover:border-aurelia-cyan hover:bg-aurelia-cyan/5 rounded transition-all uppercase tracking-wider">
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider">
         Concepts
     </button>
 
@@ -108,14 +108,14 @@
     </button>
 
     <button onclick="setFilter('discipline')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-green hover:border-aurelia-green hover:bg-aurelia-green/5 rounded transition-all uppercase tracking-wider">
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider">
         Disciplines
     </button>
             </div>
             
             <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
                 <span class="text-xs opacity-50 font-mono">CMD://</span>
-                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-cyan focus:outline-none w-full placeholder-gray-200">
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-gray-200">
             </div>
         </div>
     </div>
@@ -132,8 +132,8 @@
 
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
                 <h1 class="text-5xl font-black text-white font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
-                <p class="text-xs text-aurelia-cyan font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
-                    <span class="w-2 h-2 bg-aurelia-cyan rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
+                <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
+                    <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
                     SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
                 </p>
             </div>
@@ -163,7 +163,7 @@
             
             <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
                 <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aurelia-cyan rounded-full animate-pulse"></div>
+                    <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
                     <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">READING_MODE</span>
                 </div>
                 <button onclick="closeModal()" class="text-gray-500 hover:text-white transition-colors">
@@ -255,7 +255,7 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; // Aurelia Cyan
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; // Aurelia Primary
                 ctx.fill();
             }
         }
@@ -284,7 +284,7 @@
 
                     if (distance < connectionDistance) {
                         let opacity = 1 - (distance / connectionDistance);
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 1.0})`; // Aurelia Cyan
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 1.0})`; // Aurelia Primary
                         ctx.lineWidth = 1;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
@@ -310,11 +310,11 @@
         currentType = type;
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
-            btn.classList.remove('bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
+            btn.classList.remove('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
             btn.classList.add('border-gray-800', 'text-gray-500');
         });
         event.target.classList.remove('border-gray-800', 'text-gray-500');
-        event.target.classList.add('active', 'bg-aurelia-cyan/10', 'text-aurelia-cyan', 'border-aurelia-cyan');
+        event.target.classList.add('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
         updateGrid();
     }
 

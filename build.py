@@ -11,36 +11,40 @@ VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
 OUTPUT_DIR = ROOT_DIR
- # --- THEME ENGINE ---
-# This allows you to swap the entire site's aesthetic instantly.
-# --- THEME ENGINE ---
+
+# --- THEME ENGINE V2.0 (SEMANTIC) ---
 THEME_CONFIG = {
-    # 1. THE ORIGINAL (Neon Green/Cyan/Scanlines)
+    # 1. CYBER_PRIME (The Original)
     "CYBER_PRIME": {
         "name": "CYBER_PRIME",
         "colors": {
-            "dark": "'#0a0a0b'",
-            "text": "'#ffffff'",   # UPDATED: Pure White Text
-            "cyan": "'#00f2ff'",   
-            "green": "'#39ff14'",  
-            "orange": "'#ff8c00'", 
-            "purple": "'#8a2be2'", 
-            "dim": "'#1e1e20'"
+            "bg_main": "'#0a0a0b'",      # Was 'dark'
+            "bg_dim": "'#1e1e20'",       # Was 'dim'
+            "text_main": "'#ffffff'",    # Was 'text'
+            "text_dim": "'#d1d5db'",     # New: for paragraphs
+            
+            "primary": "'#00f2ff'",      # Was 'cyan' (Headers, Garden)
+            "secondary": "'#8a2be2'",    # Was 'purple' (Portfolio, Deep Accents)
+            "tertiary": "'#ff8c00'",     # Was 'orange' (Services, Alerts)
+            "accent": "'#39ff14'",       # Was 'green' (Links, Buttons, Status)
         },
         "font_mono": "'JetBrains Mono', 'monospace'",
         "bg_scanline": "true"
     },
-    # 2. THE PATRIOT (Light Mode - Red/White/Blue)
+    
+    # 2. THE_PATRIOT (Red/White/Blue)
     "THE_PATRIOT": {
         "name": "THE_PATRIOT",
         "colors": {
-            "dark": "'#ffffff'",   # White Background
-            "text": "'#111827'",   # Black Text
-            "cyan": "'#dc2626'",   # Red
-            "green": "'#2563eb'",  # Blue
-            "orange": "'#d97706'", # Gold
-            "purple": "'#1e3a8a'", # Navy
-            "dim": "'#e5e7eb'"     # Light Gray
+            "bg_main": "'#ffffff'",      # White Background
+            "bg_dim": "'#f3f4f6'",       # Light Gray
+            "text_main": "'#111827'",    # Black Text
+            "text_dim": "'#374151'",     # Gray Text
+            
+            "primary": "'#dc2626'",      # Red (Headers)
+            "secondary": "'#1e3a8a'",    # Navy Blue (Portfolio)
+            "tertiary": "'#b45309'",     # Amber/Gold (Services)
+            "accent": "'#2563eb'",       # Royal Blue (Links)
         },
         "font_mono": "'Inter', 'sans-serif'",
         "bg_scanline": "false"
@@ -366,7 +370,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
     search_text = raw_search.replace('\n', ' ').replace('"', "'").replace("  ", " ")
 
     if "daily" in note_type or "log" in note_type or "bridge" in note_type:
-        color = "border-aurelia-orange"
+        color = "border-aurelia-tertiary"
         icon = "📅"
         label = "Daily_Log"
         summary = extract_brief_summary(body_content)
@@ -374,17 +378,17 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         cues = extract_atomic_cues(body_content)
         footer_html = '<div class="mt-auto pt-4 flex items-center justify-start border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">'
         for cue in cues:
-             footer_html += f'<span class="text-xs font-mono px-2 py-1 bg-aurelia-orange/10 text-aurelia-orange border border-aurelia-orange/20 rounded">{cue}</span>'
+             footer_html += f'<span class="text-xs font-mono px-2 py-1 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/20 rounded">{cue}</span>'
         footer_html += '</div></div>'
         
     elif "concept" in note_type:
-        color = "border-aurelia-cyan"
+        color = "border-aurelia-primary"
         icon = "⚛️"
         label = "Concept_Node"
         defin = extract_definition(body_content)
         blurb = defin if defin else blurb
         related = extract_related_links(body_content)[:3]
-        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-cyan font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap">'
+        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap">'
         if related:
             for link in related:
                 footer_html += f'<span class="hover:text-white transition-colors cursor-pointer">→ {link}</span>'
@@ -404,7 +408,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         if works:
             footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
             for work in works:
-                footer_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-green">●</span> {work}</li>'
+                footer_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> {work}</li>'
             footer_html += '</ul></div>'
         if concepts:
             footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2">'
@@ -441,7 +445,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         footer_html += '</div>'
 
     elif "discipline" in note_type:
-        color = "border-aurelia-green"
+        color = "border-aurelia-accent"
         icon = "🧠"
         label = "Discipline"
         defin = extract_definition_scope(body_content)
@@ -451,11 +455,11 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50 grid grid-cols-2 gap-4">'
         footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
         for c in concepts:
-            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-green">●</span> {c}</li>'
+            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-accent">●</span> {c}</li>'
         footer_html += '</ul></div>'
         footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">TEXTS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
         for t in texts:
-            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-green">●</span> {t}</li>'
+            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-accent">●</span> {t}</li>'
         footer_html += '</ul></div></div>'
         
     else:
@@ -494,7 +498,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
     return html_card
 
 def generate_project_card(meta, sections, title, note_id):
-    status_dot = "bg-aurelia-green shadow-[0_0_10px_#39ff14]" if meta.get("status") == "active" else "bg-gray-500"
+    status_dot = "bg-aurelia-accent shadow-[0_0_10px_#39ff14]" if meta.get("status") == "active" else "bg-gray-500"
     role = meta.get('role', 'Architect')
     body = sections.get('brief', '')
     

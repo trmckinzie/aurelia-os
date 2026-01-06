@@ -19,9 +19,9 @@
     }
 
     /* TIER SPECIFIC GLOWS */
-    .glow-orange:hover { box-shadow: 0 0 30px rgba(255, 140, 0, 0.2); border-color: rgba(255, 140, 0, 0.6); }
-    .glow-cyan:hover { box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); border-color: rgba(0, 242, 255, 0.6); }
-    .glow-purple { animation: pulse-glow 4s infinite; }
+    .glow-aurelia-tertiary:hover { box-shadow: 0 0 30px rgba(255, 140, 0, 0.2); border-color: rgba(255, 140, 0, 0.6); }
+    .glow-aurelia-primary:hover { box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); border-color: rgba(0, 242, 255, 0.6); }
+    .glow-aurelia-secondary { animation: pulse-glow 4s infinite; }
     
     .check-icon { color: #39ff14; flex-shrink: 0; }
     .feature-text { color: #d1d5db; font-family: 'Inter', sans-serif; font-size: 0.9rem; }
@@ -40,7 +40,7 @@
 
     <section class="w-full mb-20 pt-0 text-center max-w-4xl mx-auto">
         <h1 class="text-5xl md:text-7xl font-black text-white font-mono tracking-tighter mb-6">
-            ACQUIRE_<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-aurelia-orange via-aurelia-cyan to-aurelia-purple">INFRASTRUCTURE</span>
+            ACQUIRE_<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-aurelia-tertiary via-aurelia-primary to-aurelia-secondary">INFRASTRUCTURE</span>
         </h1>
         <p class="text-lg text-gray-100 font-sans max-w-2xl mx-auto leading-relaxed">
             Stop renting your intellectual property to platforms that don't care about you. <br>
@@ -50,11 +50,11 @@
 
     <section class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1600px] mx-auto mb-32 relative z-10">
         
-        <div class="tier-card glass p-8 border-2 border-aurelia-orange/20 rounded-sm relative flex flex-col h-full glow-orange group">
-            <div class="absolute top-0 right-0 px-3 py-1 bg-aurelia-orange/10 border-l border-b border-aurelia-orange/30 text-[10px] font-mono text-aurelia-orange tracking-widest">DIY_KIT</div>
+        <div class="tier-card glass p-8 border-2 border-aurelia-tertiary/20 rounded-sm relative flex flex-col h-full glow-aurelia-tertiary group">
+            <div class="absolute top-0 right-0 px-3 py-1 bg-aurelia-tertiary/10 border-l border-b border-aurelia-tertiary/30 text-[10px] font-mono text-aurelia-tertiary tracking-widest">DIY_KIT</div>
             
             <div class="mb-8">
-                <div class="text-aurelia-orange text-4xl mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300">📦</div>
+                <div class="text-aurelia-tertiary text-4xl mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300">📦</div>
                 <h2 class="text-2xl font-bold text-white font-mono mb-2">THE SOURCE CODE</h2>
                 <p class="text-xs font-mono text-gray-100 uppercase tracking-widest">FOR ENGINEERS & HACKERS</p>
             </div>
@@ -76,16 +76,16 @@
                 <li class="flex gap-3"><span class="check-icon">✓</span><span class="feature-text"><strong>The Manual</strong> (Setup PDF Guide)</span></li>
             </ul>
 
-            <button class="w-full py-3 border border-aurelia-orange text-aurelia-orange hover:bg-aurelia-orange hover:text-black font-mono font-bold tracking-widest transition-all uppercase text-sm">
+            <button class="w-full py-3 border border-aurelia-tertiary text-aurelia-tertiary hover:bg-aurelia-tertiary hover:text-black font-mono font-bold tracking-widest transition-all uppercase text-sm">
                 INITIATE_DOWNLOAD
             </button>
         </div>
 
-        <div class="tier-card glass p-8 border-2 border-aurelia-cyan/20 rounded-sm relative flex flex-col h-full glow-cyan group">
-            <div class="absolute top-0 right-0 px-3 py-1 bg-aurelia-cyan/10 border-l border-b border-aurelia-cyan/30 text-[10px] font-mono text-aurelia-cyan tracking-widest">DONE_FOR_YOU</div>
-            
+        <div class="tier-card glass p-8 border-2 border-aurelia-primary/20 rounded-sm relative flex flex-col h-full glow-aurelia-primary group">
+            <div class="absolute top-0 right-0 px-3 py-1 bg-aurelia-primary/10 border-l border-b border-aurelia-primary/30 text-[10px] font-mono text-aurelia-primary tracking-widest">DONE_FOR_YOU</div>
+
             <div class="mb-8">
-                <div class="text-aurelia-cyan text-4xl mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300">⚙️</div>
+                <div class="text-aurelia-primary text-4xl mb-4 opacity-80 group-hover:scale-110 transition-transform duration-300">⚙️</div>
                 <h2 class="text-2xl font-bold text-white font-mono mb-2">THE DEPLOYMENT</h2>
                 <p class="text-xs font-mono text-gray-500 uppercase tracking-widest">FOR POWER USERS</p>
             </div>
@@ -107,18 +107,18 @@
                 <li class="flex gap-3"><span class="check-icon">✓</span><span class="feature-text"><strong>60-Min Training Call</strong> (Zoom)</span></li>
             </ul>
 
-            <button class="w-full py-3 border border-aurelia-cyan text-aurelia-cyan hover:bg-aurelia-cyan hover:text-black font-mono font-bold tracking-widest transition-all uppercase text-sm">
+            <button class="w-full py-3 border border-aurelia-primary text-aurelia-primary hover:bg-aurelia-primary hover:text-black font-mono font-bold tracking-widest transition-all uppercase text-sm">
                 BOOK_DEPLOYMENT
             </button>
         </div>
 
-        <div class="tier-card bg-[#0f0f11] p-8 border-2 border-purple-500/50 rounded-sm relative flex flex-col h-full transform scale-105 shadow-2xl glow-purple z-20">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-purple-600 text-white text-[10px] font-mono tracking-[0.2em] font-bold shadow-[0_0_15px_#a855f7]">LIMITED AVAILABILITY</div>
+        <div class="tier-card bg-[#0f0f11] p-8 border-2 border-aurelia-secondary/50 rounded-sm relative flex flex-col h-full transform scale-105 shadow-2xl glow-aurelia-secondary z-20">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-aurelia-secondary text-white text-[10px] font-mono tracking-[0.2em] font-bold shadow-[0_0_15px_#a855f7]">LIMITED AVAILABILITY</div>
             
             <div class="mb-8 text-center pt-2">
-                <div class="text-purple-500 text-5xl mb-4 animate-pulse">🏛️</div>
+                <div class="text-aurelia-secondary text-5xl mb-4 animate-pulse">🏛️</div>
                 <h2 class="text-3xl font-bold text-white font-mono mb-2">THE ARCHITECT</h2>
-                <p class="text-xs font-mono text-purple-400 uppercase tracking-widest">FULL DIGITAL ECOSYSTEM</p>
+                <p class="text-xs font-mono text-aurelia-secondary uppercase tracking-widest">FULL DIGITAL ECOSYSTEM</p>
             </div>
 
             <div class="mb-8 pb-8 border-b border-gray-800 text-center">
@@ -132,13 +132,13 @@
             </div>
 
             <ul class="space-y-4 mb-8 flex-grow px-2">
-                <li class="flex gap-3"><span class="text-purple-500">❖</span><span class="feature-text text-white"><strong>Bespoke Design & Migration</strong> (50+ Notes)</span></li>
-                <li class="flex gap-3"><span class="text-purple-500">❖</span><span class="feature-text text-white"><strong>Zotero -> Obsidian Pipeline</strong></span></li>
-                <li class="flex gap-3"><span class="text-purple-500">❖</span><span class="feature-text text-white"><strong>"The Scribe" Custom AI Agent</strong> (See Below)</span></li>
-                <li class="flex gap-3"><span class="text-purple-500">❖</span><span class="feature-text text-white"><strong>30-Day Concierge Support</strong> (Slack)</span></li>
+                <li class="flex gap-3"><span class="text-aurelia-secondary">❖</span><span class="feature-text text-white"><strong>Bespoke Design & Migration</strong> (50+ Notes)</span></li>
+                <li class="flex gap-3"><span class="text-aurelia-secondary">❖</span><span class="feature-text text-white"><strong>Zotero -> Obsidian Pipeline</strong></span></li>
+                <li class="flex gap-3"><span class="text-aurelia-secondary">❖</span><span class="feature-text text-white"><strong>"The Scribe" Custom AI Agent</strong> (See Below)</span></li>
+                <li class="flex gap-3"><span class="text-aurelia-secondary">❖</span><span class="feature-text text-white"><strong>30-Day Concierge Support</strong> (Slack)</span></li>
             </ul>
 
-            <button class="w-full py-4 bg-purple-600 hover:bg-purple-500 text-white font-mono font-bold tracking-widest transition-all uppercase text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+            <button class="w-full py-4 bg-aurelia-secondary hover:bg-aurelia-secondary text-white font-mono font-bold tracking-widest transition-all uppercase text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)]">
                 APPLY_FOR_ACCESS
             </button>
         </div>
@@ -146,25 +146,25 @@
     </section>
 
     <section class="w-full max-w-5xl mx-auto mb-32 relative">
-        <div class="absolute inset-0 bg-purple-900/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="absolute inset-0 bg-aurelia-secondary/10 blur-[100px] rounded-full pointer-events-none"></div>
         
-        <div class="glass border border-purple-500/30 p-8 md:p-12 rounded-sm relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+        <div class="glass border border-aurelia-secondary/30 p-8 md:p-12 rounded-sm relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-aurelia-secondary to-transparent"></div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></span>
-                        <span class="text-xs font-mono text-purple-400 uppercase tracking-widest">TIER 3 EXCLUSIVE FEATURE</span>
+                        <span class="w-2 h-2 bg-aurelia-secondary rounded-full animate-pulse"></span>
+                        <span class="text-xs font-mono text-aurelia-secondary uppercase tracking-widest">TIER 3 EXCLUSIVE FEATURE</span>
                     </div>
                     <h3 class="text-3xl font-bold text-white font-mono mb-4">"THE SCRIBE" <br> NEURAL AGENT</h3>
                     <p class="text-gray-300 leading-relaxed mb-6">
                         The biggest friction in Knowledge Management is formatting. Tier 3 clients receive a <strong>custom-trained LLM Agent</strong> tailored to their specific research field.
                     </p>
                     <ul class="space-y-2 text-sm text-gray-400 font-mono mb-8">
-                        <li class="flex gap-2"><span class="text-purple-500">></span> Trained on YOUR writing voice.</li>
-                        <li class="flex gap-2"><span class="text-purple-500">></span> Auto-tags concepts & authors.</li>
-                        <li class="flex gap-2"><span class="text-purple-500">></span> Outputs perfect Obsidian syntax.</li>
+                        <li class="flex gap-2"><span class="text-aurelia-secondary">></span> Trained on YOUR writing voice.</li>
+                        <li class="flex gap-2"><span class="text-aurelia-secondary">></span> Auto-tags concepts & authors.</li>
+                        <li class="flex gap-2"><span class="text-aurelia-secondary">></span> Outputs perfect Obsidian syntax.</li>
                     </ul>
                 </div>
 
@@ -172,17 +172,17 @@
                     <div class="flex gap-1.5 mb-4 border-b border-gray-800 pb-2">
                         <div class="w-2.5 h-2.5 rounded-full bg-red-500/20"></div>
                         <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/20"></div>
-                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/20"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-aurelia-accent-500/20"></div>
                     </div>
                     <div class="space-y-2">
                         <p class="text-gray-500">user@system:~$ ./scribe_agent --input "research_paper.pdf"</p>
-                        <p class="text-purple-400">> SCRIBE_AGENT: Analyzing document structure...</p>
-                        <p class="text-purple-400">> SCRIBE_AGENT: Extracting Core Arguments...</p>
-                        <p class="text-green-400">> SUCCESS: Note Generated.</p>
-                        <div class="mt-4 p-3 bg-white/5 border-l-2 border-purple-500 text-gray-300">
-                            <span class="text-purple-300"># 🧠 Cognitive Load Theory</span><br>
+                        <p class="text-aurelia-secondary">> SCRIBE_AGENT: Analyzing document structure...</p>
+                        <p class="text-aurelia-secondary">> SCRIBE_AGENT: Extracting Core Arguments...</p>
+                        <p class="text-aurelia-accent-400">> SUCCESS: Note Generated.</p>
+                        <div class="mt-4 p-3 bg-white/5 border-l-2 border-aurelia-secondary text-gray-300">
+                            <span class="text-aurelia-secondary"># 🧠 Cognitive Load Theory</span><br>
                             <span class="text-gray-500">**type:** concept | **status:** active</span><br><br>
-                            The total amount of mental effort being used in the working memory. <span class="bg-purple-500/20 text-white px-1">See: [[Sweller, 1988]]</span>
+                            The total amount of mental effort being used in the working memory. <span class="bg-aurelia-secondary-500/20 text-white px-1">See: [[Sweller, 1988]]</span>
                         </div>
                         <p class="mt-2 text-gray-500 typing-cursor">_</p>
                     </div>
@@ -195,15 +195,15 @@
         <h3 class="text-xl font-mono text-white mb-8 border-b border-gray-800 pb-2">OPERATIONAL_DETAILS</h3>
         <div class="space-y-8">
             <div>
-                <h4 class="text-aurelia-cyan font-bold mb-2">How long does deployment take?</h4>
+                <h4 class="text-aurelia-primary font-bold mb-2">How long does deployment take?</h4>
                 <p class="text-sm text-gray-400">Tier 1 is instant. Tier 2 takes 48 hours from our kickoff call. Tier 3 is a 2-4 week engagement depending on data volume.</p>
             </div>
             <div>
-                <h4 class="text-aurelia-orange font-bold mb-2">Do I need to know how to code?</h4>
+                <h4 class="text-aurelia-tertiary font-bold mb-2">Do I need to know how to code?</h4>
                 <p class="text-sm text-gray-400">For Tier 1, yes (Python/Git basics). For Tiers 2 & 3, absolutely not. You write in Obsidian; the system handles the rest.</p>
             </div>
             <div>
-                <h4 class="text-purple-400 font-bold mb-2">What happens if I cancel?</h4>
+                <h4 class="text-aurelia-secondary font-bold mb-2">What happens if I cancel?</h4>
                 <p class="text-sm text-gray-400">There is no "canceling" because you own the code. Unlike Wix or Squarespace, if I disappear tomorrow, your site stays online forever. It lives on your GitHub.</p>
             </div>
         </div>

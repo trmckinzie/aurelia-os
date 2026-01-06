@@ -23,51 +23,45 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'aurelia-dark': '#0a0a0b',
-              'aurelia-cyan': '#00f2ff',
-              'aurelia-green': '#39ff14',
-              'aurelia-orange': '#ff8c00',
-              'aurelia-dim': '#1e1e20',
-              'aurelia-purple': '#8a2be2',
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            
-            animation: {
-                'scanline': 'scanline 8s linear infinite',
-            },
-            
-          }
-        }
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          // MAPPED ROLES
+          'aurelia-bg': '#0a0a0b',
+          'aurelia-dim': '#1e1e20',
+          'aurelia-text': '#ffffff',
+          'aurelia-text-dim': '#d1d5db',
+          
+          'aurelia-primary': '#00f2ff',   // Replaces Cyan
+          'aurelia-secondary': '#8a2be2', // Replaces Purple
+          'aurelia-tertiary': '#ff8c00',  // Replaces Orange
+          'aurelia-accent': '#39ff14',      // Replaces Green
+        },
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        
+        animation: { 'scanline': 'scanline 8s linear infinite' },
+        
       }
-    </script>
-    <style>
-      /* FIX: We strip the quotes for CSS compatibility */
-      body { 
-        background-color: #0a0a0b; 
-        color: #d1d5db; /* Default text color */
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M2 2l8.8 20.4 2.8-8.4 8.4-2.8L2 2z' fill='rgba(128, 128, 128, 0.5)' stroke='%2300f2ff' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E"), auto;
-      }
-      
-      /* Dynamic Link Cursor */
-      a, button, .clickable {
-        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3C/svg%3E") 12 12, pointer !important;
-      }
+    }
+  }
+</script>
 
-      
-      .scanline {
-        width: 100%; height: 100px; z-index: 50;
-        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0) 100%);
-        opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
-      }
-      
-    </style>
+<style>
+  /* GLOBAL OVERRIDES */
+  body { 
+    background-color: #0a0a0b; 
+    color: #d1d5db;
+  }
+  
+  /* DYNAMIC CURSOR (Follows Accent Color) */
+  a, button, .clickable {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3C/svg%3E") 12 12, pointer !important;
+  }
+</style>
     
 <style>
     /* === PROTOCOL CARD (THE GRID) === */
@@ -183,7 +177,7 @@
     <main class="flex-grow pt-32 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
 
-<div class="hidden text-aurelia-cyan text-aurelia-green text-aurelia-orange text-aurelia-purple text-gray-400 text-gray-500 text-gray-700 bg-aurelia-cyan bg-aurelia-green bg-aurelia-orange bg-aurelia-purple bg-gray-400 bg-gray-500 bg-gray-700 animate-pulse"></div>
+<div class="hidden text-aurelia-primary text-aurelia-accent text-aurelia-tertiary text-aurelia-secondary text-gray-400 text-gray-500 text-gray-700 bg-aurelia-primary bg-aurelia-accent bg-aurelia-tertiary bg-aurelia-secondary bg-gray-400 bg-gray-500 bg-gray-700 animate-pulse"></div>
 <div class="mb-12 border-b border-gray-800 pb-8 flex flex-col md:flex-row justify-between items-end">
     <div>
         <div class="flex items-center gap-3 mb-2">
@@ -195,7 +189,7 @@
         </h1>
     </div>
     <div class="hidden md:block text-right">
-        <div class="text-xs font-mono text-aurelia-green opacity-80">AVAILABLE_PROTOCOLS: 2</div>
+        <div class="text-xs font-mono text-aurelia-accent opacity-80">AVAILABLE_PROTOCOLS: 2</div>
         <div class="text-xs font-mono text-gray-600">SYS_VER: 2.4.0</div>
     </div>
 </div>
@@ -205,14 +199,14 @@
     <div onclick="openDrawer('PROT_01_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center mb-4 opacity-60 group-hover:opacity-100 transition-opacity">
-                <span class="text-[10px] font-mono text-aurelia-green border border-aurelia-green/30 px-1.5 py-0.5 rounded">PROT_01_</span>
+                <span class="text-[10px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded">PROT_01_</span>
                 <div class="flex gap-2">
                     
                     <span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">#protocol</span>
                     
                 </div>
             </div>
-            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-green transition-colors">01_MORNING_LAUNCH</h2>
+            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-accent transition-colors">01_MORNING_LAUNCH</h2>
             <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
         </div>
         <div id="data-PROT_01_" class="hidden">
@@ -235,7 +229,7 @@
 ## 📦 Assets
 Download this AM routine template for yourself below!</div>
         </div>
-        <div class="mt-6 flex items-center text-aurelia-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+        <div class="mt-6 flex items-center text-aurelia-accent text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
             <span>[ INITIATE_SEQUENCE ]</span>
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
@@ -244,14 +238,14 @@ Download this AM routine template for yourself below!</div>
     <div onclick="openDrawer('PROT_02_')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
         <div>
             <div class="flex justify-between items-center mb-4 opacity-60 group-hover:opacity-100 transition-opacity">
-                <span class="text-[10px] font-mono text-aurelia-green border border-aurelia-green/30 px-1.5 py-0.5 rounded">PROT_02_</span>
+                <span class="text-[10px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded">PROT_02_</span>
                 <div class="flex gap-2">
                     
                     <span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">#protocol</span>
                     
                 </div>
             </div>
-            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-green transition-colors">02_DAILY_LOG</h2>
+            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-accent transition-colors">02_DAILY_LOG</h2>
             <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
         </div>
         <div id="data-PROT_02_" class="hidden">
@@ -274,7 +268,7 @@ Download this AM routine template for yourself below!</div>
 ## 📦 Assets
 Download this protocol by clicking below!</div>
         </div>
-        <div class="mt-6 flex items-center text-aurelia-green text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
+        <div class="mt-6 flex items-center text-aurelia-accent text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
             <span>[ INITIATE_SEQUENCE ]</span>
             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
@@ -287,7 +281,7 @@ Download this protocol by clicking below!</div>
 <div id="protocol-drawer" class="fixed top-0 right-0 h-full w-full md:w-[600px] bg-[#0a0a0b] border-l border-gray-800 z-50 transform translate-x-full shadow-2xl flex flex-col">
     <div class="p-6 border-b border-gray-800 flex justify-between items-start bg-black/50">
         <div>
-            <span id="drawer-id" class="text-xs font-mono text-aurelia-green tracking-widest mb-1 block"></span>
+            <span id="drawer-id" class="text-xs font-mono text-aurelia-accent tracking-widest mb-1 block"></span>
             <h2 id="drawer-title" class="text-2xl font-bold text-white"></h2>
         </div>
         <button onclick="closeDrawer()" class="text-gray-500 hover:text-white transition-colors">
@@ -296,7 +290,7 @@ Download this protocol by clicking below!</div>
     </div>
     <div id="drawer-content" class="p-6 overflow-y-auto flex-grow drawer-scroll prose prose-invert prose-p:text-gray-300 prose-headings:text-white max-w-none"></div>
     <div class="p-6 border-t border-gray-800 bg-black/50">
-        <button onclick="downloadAsset()" class="w-full py-3 bg-aurelia-green/10 hover:bg-aurelia-green/20 text-aurelia-green border border-aurelia-green/30 rounded font-mono text-sm tracking-widest transition-all hover:shadow-[0_0_15px_rgba(57,255,20,0.2)]">
+        <button onclick="downloadAsset()" class="w-full py-3 bg-aurelia-accent/10 hover:bg-aurelia-accent/20 text-aurelia-accent border border-aurelia-accent/30 rounded font-mono text-sm tracking-widest transition-all hover:shadow-[0_0_15px_rgba(57,255,20,0.2)]">
             DOWNLOAD_ASSETS_PACKAGE
         </button>
     </div>
@@ -317,44 +311,44 @@ Download this protocol by clicking below!</div>
 
         // Mon(1), Wed(3), Fri(5)
         if (day === 1 || day === 3 || day === 5) {
-            if (day === 3 && time >= 615 && time < 745) { status = "EARLY_GRIND // RUN"; color = "text-aurelia-orange"; }
-            else if (day !== 3 && time >= 715 && time < 800) { status = "SYSTEM_BOOT"; color = "text-aurelia-cyan"; }
-            else if ((day === 1 || day === 5) && time >= 800 && time < 840) { status = "KINETIC_OPS // LIFT"; color = "text-aurelia-orange"; }
-            else if (time >= 900 && time < 1200) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-purple"; }
+            if (day === 3 && time >= 615 && time < 745) { status = "EARLY_GRIND // RUN"; color = "text-aurelia-tertiary"; }
+            else if (day !== 3 && time >= 715 && time < 800) { status = "SYSTEM_BOOT"; color = "text-aurelia-primary"; }
+            else if ((day === 1 || day === 5) && time >= 800 && time < 840) { status = "KINETIC_OPS // LIFT"; color = "text-aurelia-tertiary"; }
+            else if (time >= 900 && time < 1200) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-secondary"; }
             else if (time >= 1200 && time < 1300) { status = "FUELING_CYCLE"; color = "text-gray-400"; }
-            else if (time >= 1300 && time < 1400) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-purple"; }
+            else if (time >= 1300 && time < 1400) { status = "NEURAL_UPLINK // ACADEMIC"; color = "text-aurelia-secondary"; }
             else if (time >= 1400 && time < 1500) { status = "PRE_COMBAT_PREP"; color = "text-gray-400"; }
-            else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-green"; pulse = true; }
+            else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-accent"; pulse = true; }
             else if (time >= 1730 && time < 1900) { status = "SYSTEM_MAINTENANCE"; color = "text-gray-400"; }
-            else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-green"; pulse = true; }
+            else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-accent"; pulse = true; }
             else if (time >= 2300 || time < 615) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
             else { status = "SOCIAL_SYNC"; color = "text-gray-400"; }
         }
         // Tue(2), Thu(4)
         else if (day === 2 || day === 4) {
-            if (time >= 715 && time < 930) { status = "SYSTEM_BOOT // REVIEW"; color = "text-aurelia-cyan"; }
-            else if (time >= 930 && time < 1045) { status = "NEURAL_UPLINK"; color = "text-aurelia-purple"; }
-            else if (time >= 1100 && time < 1145) { status = "KINETIC_OPS // DRILLS"; color = "text-aurelia-orange"; }
-            else if (time >= 1200 && time < 1400) { status = "DEEP_WORK // STUDY_HALL"; color = "text-aurelia-green"; }
-            else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-green"; pulse = true; }
-            else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-green"; pulse = true; }
+            if (time >= 715 && time < 930) { status = "SYSTEM_BOOT // REVIEW"; color = "text-aurelia-primary"; }
+            else if (time >= 930 && time < 1045) { status = "NEURAL_UPLINK"; color = "text-aurelia-secondary"; }
+            else if (time >= 1100 && time < 1145) { status = "KINETIC_OPS // DRILLS"; color = "text-aurelia-tertiary"; }
+            else if (time >= 1200 && time < 1400) { status = "DEEP_WORK // STUDY_HALL"; color = "text-aurelia-accent"; }
+            else if (time >= 1500 && time < 1730) { status = "COMBAT_OPERATIONS // WRESTLING"; color = "text-aurelia-accent"; pulse = true; }
+            else if (time >= 1900 && time < 2000) { status = "DEEP_WORK_PROTOCOL"; color = "text-aurelia-accent"; pulse = true; }
             else if (time >= 2300 || time < 715) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
             else { status = "SYSTEM_MAINTENANCE"; color = "text-gray-400"; }
         }
         // Sat(6)
         else if (day === 6) {
-            if (time >= 830 && time < 1030) { status = "CREATIVE_BUILD // PROJECT"; color = "text-aurelia-cyan"; pulse = true; }
-            else if (time >= 1030 && time < 1130) { status = "NEURAL_EXPANSION"; color = "text-aurelia-green"; }
+            if (time >= 830 && time < 1030) { status = "CREATIVE_BUILD // PROJECT"; color = "text-aurelia-primary"; pulse = true; }
+            else if (time >= 1030 && time < 1130) { status = "NEURAL_EXPANSION"; color = "text-aurelia-accent"; }
             else if (time >= 1330 && time < 1730) { status = "RECHARGE_CYCLE"; color = "text-gray-500"; }
             else if (time >= 2300) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
             else { status = "SOCIAL_SYNC"; color = "text-gray-400"; }
         }
         // Sun(0)
         else if (day === 0) {
-            if (time >= 930 && time < 1100) { status = "ADMIN_OVERRIDE // FINANCE"; color = "text-aurelia-orange"; }
-            else if (time >= 1700 && time < 1900) { status = "LOGISTICS // MEAL_PREP"; color = "text-aurelia-cyan"; }
+            if (time >= 930 && time < 1100) { status = "ADMIN_OVERRIDE // FINANCE"; color = "text-aurelia-primary"; }
+            else if (time >= 1700 && time < 1900) { status = "LOGISTICS // MEAL_PREP"; color = "text-aurelia-primary"; }
             else if (time >= 2300) { status = "SYSTEM_OFFLINE"; color = "text-gray-700"; }
-            else { status = "WEEKLY_RESET"; color = "text-aurelia-green"; }
+            else { status = "WEEKLY_RESET"; color = "text-aurelia-accent"; }
         }
 
       // DOM Update
