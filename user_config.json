@@ -33,7 +33,7 @@
         { "name": "GitHub", "type": "VERSION // CONTROL", "desc": "Distributed Memory & Backup.", "icon": "🐙" },
         { "name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓" },
         { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍" },
-        { "name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨" },
+        { "name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨" }
     ],
 
     "modules": {
