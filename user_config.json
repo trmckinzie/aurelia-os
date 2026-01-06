@@ -1,5 +1,5 @@
 {
-    "system_name": "AURELIA / OS",
+    "system_name": "AURELIA // OS",
     "system_version": "v3.2.0",
     "status_message": "SYSTEM_ONLINE",
     
@@ -10,14 +10,31 @@
         "email": "trmckinzie24@gmail.com",
         "location": "Colorado, USA",
         "bio_short": "Evolutionary Theory meets Cognitive Science.",
-        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on creating recursive systems—software that improves itself the more it is used."
+        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence."
     },
 
     "links": {
-        "github": "https://github.com/yourusername",
-        "linkedin": "https://linkedin.com/in/yourusername",
-        "twitter": "https://twitter.com/yourusername"
+        "github": "https://github.com",
+        "linkedin": "https://linkedin.com",
+        "twitter": "https://twitter.com"
     },
+
+    "tech_stack": [
+        { "name": "ThinkPad T495", "type": "HARDWARE // MOBILE", "desc": "Tactical Mobile Unit. Ruggedized daily driver.", "icon": "💻" },
+        { "name": "Alienware i7", "type": "HARDWARE // COMPUTE", "desc": "High-Performance Workstation. Heavy compute.", "icon": "🖥️" },
+        { "name": "reMarkable 2", "type": "HARDWARE // INPUT", "desc": "E-Ink Buffer. Distraction-free drafting.", "icon": "📝" },
+        { "name": "iPhone 14", "type": "HARDWARE // COMMS", "desc": "Primary Uplink. Mobile interface.", "icon": "📱" },
+        { "name": "Meta Ray-Ban", "type": "HARDWARE // VISION", "desc": "Augmented Input Node. First-person capture.", "icon": "🕶️" },
+        { "name": "Gemini Adv.", "type": "AI // CO-PROCESSOR", "desc": "Primary Intelligence Engine (1.5 Pro).", "icon": "✨" },
+        { "name": "NotebookLM", "type": "AI // SYNTHESIS", "desc": "Grounded Analysis Studio.", "icon": "📓" },
+        { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "The Neural Core. Local-first database.", "icon": "💎" },
+        { "name": "Zotero", "type": "SOFTWARE // ARCHIVE", "desc": "Reference Library & Citation Tracking.", "icon": "📚" },
+        { "name": "VS Code", "type": "SOFTWARE // IDE", "desc": "The Construct. Development Environment.", "icon": "🛠️" },
+        { "name": "GitHub", "type": "VERSION // CONTROL", "desc": "Distributed Memory & Backup.", "icon": "🐙" },
+        { "name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓" },
+        { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍" },
+        { "name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨" },
+    ],
 
     "modules": {
         "garden": { "title": "The Garden", "subtitle": "INPUT // RAW NOTES" },

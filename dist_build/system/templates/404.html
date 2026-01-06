@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}SYSTEM_FAILURE{% endblock %}
+{% block nav_title %}ERROR_404{% endblock %}
+
+{% block content %}
+<div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
+    <div class="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none"></div>
+    
+    <h1 class="text-9xl font-black text-red-500 font-mono tracking-tighter opacity-80 glitch-text">404</h1>
+    
+    <div class="border-l-2 border-red-500 pl-6 my-8 text-left max-w-md">
+        <h2 class="text-xl text-aurelia-text font-mono font-bold mb-2">CRITICAL_SYSTEM_ERROR</h2>
+        <p class="text-sm text-aurelia-muted font-mono leading-relaxed">
+            > TARGET_NOT_FOUND<br>
+            > The requested node does not exist in the Aurelia file system.<br>
+            > Please reroute to a valid active page.
+        </p>
+    </div>
+
+    <a href="index.html" class="px-8 py-3 bg-red-500/10 border border-red-500 text-red-500 font-mono text-sm tracking-widest hover:bg-red-500 hover:text-aurelia-text transition-all">
+        INITIATE_SYSTEM_REBOOT
+    </a>
+</div>
+{% endblock %}

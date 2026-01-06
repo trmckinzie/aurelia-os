@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+
+{% set active_page = "garden" %}
+{% block nav_title %}GARDEN_DECK{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* 1. SEARCH HIGHLIGHTING */
+    .highlight {
+        background-color: rgba(238, 241, 30, 0.966);
+        color: white; 
+        font-weight: bold;
+        border-radius: 2px;
+        padding: 0 2px;
+    }
+
+    /* 2. THE AURELIA ATMOSPHERE (SCANLINE) */
+    .scanline {
+        width: 100%; height: 100px; z-index: 40;
+        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0) 100%);
+        opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
+    }
+
+    /* 3. CARD PHYSICS */
+    
+    .glass:hover {
+        background: rgba(255, 255, 255, 0.03); 
+        /* REMOVED: border-color: rgba(255,255,255,0.1); */
+        /* The utility class (hover:border-opacity-100) handles the hover effect now */
+    }
+
+    /* 4. ACTIVE BUTTON STATE */
+    .filter-btn.active {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+        color: white;
+        box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    /* 5. === OBSIDIAN READER ENGINE === */
+    .obsidian-reader {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #dcddde; /* Obsidian Default Text */
+        line-height: 1.6;
+    }
+
+    /* HEADERS */
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3, .obsidian-reader h4 {
+        color: {{ theme.colors.text_main|replace("'", "") }};
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.3;
+    }
+    .obsidian-reader h1 { font-size: 2em; border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }}; pb-2; }
+    .obsidian-reader h2 { font-size: 1.6em; }
+    .obsidian-reader h3 { font-size: 1.3em; }
+
+    /* LINKS (Internal Wiki Style) */
+    .obsidian-reader a {
+        color: {{ theme.colors.primary|replace("'", "") }};
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .obsidian-reader a:hover { opacity: 0.8; text-decoration: underline; }
+
+    /* CODE BLOCKS (Terminal Style) */
+    .obsidian-reader pre {
+        background-color: #121212; /* Darker than card */
+        border: 1px solid #2a2a2a;
+        border-radius: 4px;
+        padding: 16px;
+        overflow-x: auto;
+        margin: 1.5em 0;
+    }
+    .obsidian-reader code {
+        font-family: 'JetBrains Mono', monospace;
+        background-color: rgba(255,255,255,0.05);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: {{ theme.colors.accent|replace("'", "") }};
+    }
+    .obsidian-reader pre code {
+        background-color: transparent;
+        padding: 0;
+        color: #e3e3e3; /* Standard code color */
+        font-size: 0.9em;
+    }
+
+    /* CALLOUTS / BLOCKQUOTES */
+    .obsidian-reader blockquote {
+        margin: 1.5em 0;
+        padding: 12px 16px;
+        color: inherit;
+        border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }};
+        background-color: rgba(138, 43, 226, 0.05); /* Subtle Tint */
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* LISTS */
+    .obsidian-reader ul, .obsidian-reader ol {
+        padding-left: 2em;
+        margin: 1em 0;
+    }
+    .obsidian-reader li { margin-bottom: 0.25em; }
+    .obsidian-reader li::marker { color: {{ theme.colors.text_muted|replace("'", "") }}; }
+
+    /* IMAGES */
+    .obsidian-reader img {
+        border-radius: 4px;
+        max-width: 100%;
+        height: auto;
+        margin: 1.5em auto;
+        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+    }
+    
+    /* HORIZONTAL RULE */
+    .obsidian-reader hr {
+        border: 0;
+        border-top: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        margin: 2em 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="scanline"></div>
+
+    <div class="fixed top-14 left-0 w-full z-50 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-wrap gap-2" id="filter-controls">
+                <button onclick="setFilter('all')" 
+            class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all">
+        All_Systems
+    </button>
+
+    <button onclick="setFilter('daily-bridge')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider">
+        Logs
+    </button>
+
+    <button onclick="setFilter('concept')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider">
+        Concepts
+    </button>
+
+    <button onclick="setFilter('source')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider">
+        Library
+    </button>
+
+    <button onclick="setFilter('author')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-text hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
+        Authors
+    </button>
+
+    <button onclick="setFilter('discipline')" 
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider">
+        Disciplines
+    </button>
+            </div>
+            
+            <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
+                <span class="text-xs opacity-50 font-mono">CMD://</span>
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-gray-200">
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-grow pt-12 pb-20 px-6 w-full max-w-[1600px] mx-auto">
+        
+        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-400 bg-black h-64">
+            
+            <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
+            
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
+            
+            <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
+
+            <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
+                <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
+                <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
+                    <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
+                    SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
+            <p class="text-md font-mono text-gray-100 tracking-widest">
+                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text">{{ cards|length }}</span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cardGrid">
+            {% for card in cards %}
+                {{ card.html | safe }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="data-storage" style="display: none;">
+        {% for card in cards %}
+            <div id="{{ card.id }}" class="hidden">{{ card.body | safe }}</div>
+        {% endfor %}
+    </div>
+
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
+    
+    <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        
+        <div class="flex justify-between items-center px-6 py-3 border-b border-gray-800 bg-[#111111]">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
+            </div>
+            <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
+        </div>
+
+        <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
+            <div class="max-w-5xl mx-auto px-8 py-12">
+                <div id="modal-content" class="obsidian-reader text-lg">
+                    </div>
+            </div>
+        </div>
+
+        <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
+            <span>MODE: READ_ONLY</span>
+            <span>AURELIA_OS V3.0</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // --- 1. NEURAL ANIMATION ENGINE ---
+    (function() {
+        const canvas = document.getElementById('neural-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        
+        // Configuration
+        const particleCount = 60; // Density
+        const connectionDistance = 150; // Reach
+        const mouseDistance = 200; // Interaction radius
+
+        // Resize Handling
+        function resize() {
+            width = canvas.width = canvas.parentElement.offsetWidth;
+            height = canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Mouse Tracking
+        const mouse = { x: null, y: null };
+        canvas.parentElement.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        canvas.parentElement.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Particle Class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                // CHANGED: Reduced multiplier from 0.5 to 0.15 for very slow, deep-thought drift
+                this.vx = (Math.random() - 0.5) * 0.20; 
+                this.vy = (Math.random() - 0.5) * 0.20;
+                this.size = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse Repulsion/Attraction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouseDistance) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouseDistance - distance) / mouseDistance;
+                        const directionX = forceDirectionX * force * 0.5; // Push strength
+                        const directionY = forceDirectionY * force * 0.5;
+                        this.vx -= directionX;
+                        this.vy -= directionY;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; // Aurelia Primary
+                ctx.fill();
+            }
+        }
+
+        // Initialize
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Update and Draw Particles
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw Connections
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        let opacity = 1 - (distance / connectionDistance);
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 1.0})`; // Aurelia Primary
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
+    // --- 2. STANDARD LOGIC (Filter/Search/Modal) ---
+    let currentType = 'all';
+    let currentQuery = '';
+
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalPanel = document.getElementById('modal-panel');
+    const modalContent = document.getElementById('modal-content');
+
+    function setFilter(type) {
+        currentType = type;
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.classList.remove('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+            btn.classList.add('border-gray-800', 'text-gray-500');
+        });
+        event.target.classList.remove('border-gray-800', 'text-gray-500');
+        event.target.classList.add('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+        updateGrid();
+    }
+
+    function handleSearch() {
+        const input = document.getElementById('searchInput');
+        currentQuery = input.value.toLowerCase().trim();
+        updateGrid();
+    }
+
+    function updateGrid() {
+        const items = document.querySelectorAll('.searchable-item');
+        let visibleCount = 0;
+        
+        items.forEach(item => {
+            const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
+            const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
+            const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
+            const searchMatch = itemSearch.includes(currentQuery);
+
+            if (typeMatch && searchMatch) {
+                item.style.display = 'flex';
+                visibleCount++;
+                if (currentQuery.length > 0) {
+                    highlightText(item, currentQuery);
+                } else {
+                    clearHighlights(item);
+                }
+            } else {
+                item.style.display = 'none';
+                clearHighlights(item);
+            }
+        });
+        
+        const counter = document.getElementById('node-count');
+        if (counter) counter.innerText = visibleCount;
+    }
+
+    function highlightText(card, term) {
+        const targets = card.querySelectorAll('h3, p');
+        targets.forEach(element => {
+            if (!element.dataset.original) {
+                element.dataset.original = element.innerHTML;
+            }
+            const originalText = element.dataset.original;
+            const regex = new RegExp(`(${term})`, 'gi');
+            
+            if (originalText.toLowerCase().includes(term)) {
+                element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+            } else {
+                element.innerHTML = originalText;
+            }
+        });
+    }
+
+    function clearHighlights(card) {
+        const targets = card.querySelectorAll('h3, p');
+        targets.forEach(element => {
+            if (element.dataset.original) {
+                element.innerHTML = element.dataset.original;
+            }
+        });
+    }
+
+    function openNote(noteId) {
+        const rawEl = document.getElementById(noteId);
+        if (!rawEl) return;
+        const txt = document.createElement("textarea");
+        txt.innerHTML = rawEl.innerHTML;
+        modalContent.innerHTML = marked.parse(txt.value);
+        modalBackdrop.classList.remove('hidden');
+        setTimeout(() => {
+            modalBackdrop.classList.remove('opacity-0');
+            modalPanel.classList.remove('scale-95');
+            modalPanel.classList.add('scale-100');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.add('opacity-0');
+        modalPanel.classList.remove('scale-100');
+        modalPanel.classList.add('scale-95');
+        setTimeout(() => {
+            modalBackdrop.classList.add('hidden');
+        }, 300);
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => { 
+        if (e.key === 'Escape') closeModal(); 
+    });
+</script>
+{% endblock %}
