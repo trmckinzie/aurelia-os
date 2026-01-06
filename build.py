@@ -625,7 +625,7 @@ def build_all():
 
     # ... (Rest of your existing code: garden_cards = [], etc.)
     
-    # 1. LOAD DATA CONTAINERS
+# 1. LOAD DATA CONTAINERS
     garden_cards = []
     portfolio_cards = []
     protocol_cards = []
@@ -673,7 +673,7 @@ def build_all():
                         "id": note_id,
                         "title": filename.replace(".md", "").replace("_", " "),
                         "link": f"garden.html#{note_id}", 
-                        "type": "NOTE",
+                        "type": "NOTE",  # NOTE: ensure generate_garden_card_html sets the specific type if needed
                         "tags": tags,          # <--- SAVE TAGS
                         "desc": clean_text     # <--- SAVE PREVIEW
                     })
@@ -697,12 +697,16 @@ def build_all():
                     "tags": meta.get("tags", []),
                     "body": content.split("---", 2)[2] if len(content.split("---", 2)) > 2 else content,
                     "id": p_id,
-                    "link": f"protocol.html", # Protocols are currently in a drawer, linking to page is safest
+                    "link": f"protocol.html", 
                     "type": "PROTOCOL"
                 })
 
-    print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols")
+    # ⚡ SORTING PROTOCOL (NEW) ⚡
+    # Groups by Type, then sorts Alphabetically by Title
+    garden_cards.sort(key=lambda x: (x.get('type', ''), x.get('title', '')))
 
+    print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols")
+    
     # 4. BUILD MASTER SEARCH INDEX
     master_index = []
     
