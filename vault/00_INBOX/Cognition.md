@@ -16,7 +16,7 @@ publish: true
 > TEST NOTE
 
 ### 📝 Key Insight
-* ```
+* TEST NOTE```
 
 ---
 
