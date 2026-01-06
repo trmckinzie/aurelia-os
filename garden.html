@@ -22,21 +22,31 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          // MAPPED ROLES
+          // SEMANTIC MAPPING
           'aurelia-bg': '#0a0a0b',
-          'aurelia-dim': '#1e1e20',
-          'aurelia-text': '#ffffff',
-          'aurelia-text-dim': '#d1d5db',
+          'aurelia-card': '#121214',
+          'aurelia-surface': '#18181b',
           
-          'aurelia-primary': '#00f2ff',   // Replaces Cyan
-          'aurelia-secondary': '#8a2be2', // Replaces Purple
-          'aurelia-tertiary': '#ff8c00',  // Replaces Orange
-          'aurelia-accent': '#39ff14',      // Replaces Green
+          'aurelia-text': '#ffffff',
+          'aurelia-muted': '#9ca3af',
+          'aurelia-inverted': '#000000',
+
+          'aurelia-border': '#27272a',
+          
+          // ROLES
+          'aurelia-primary': '#00f2ff',
+          'aurelia-secondary': '#8a2be2',
+          'aurelia-tertiary': '#ff8c00',
+          'aurelia-accent': '#39ff14',
+        },
+        borderRadius: {
+            'theme': '2px'
         },
         fontFamily: {
           sans: ['Inter', 'sans-serif'],
@@ -51,16 +61,49 @@
 </script>
 
 <style>
-  /* GLOBAL OVERRIDES */
-  body { 
-    background-color: #0a0a0b; 
-    color: #d1d5db;
-  }
-  
-  /* DYNAMIC CURSOR (Follows Accent Color) */
-  a, button, .clickable {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3C/svg%3E") 12 12, pointer !important;
-  }
+    /* GLOBAL RESET */
+    body { 
+        background-color: #0a0a0b; 
+        color: #ffffff;
+    }
+    
+    /* UNIVERSAL GLASS CLASS */
+    .glass {
+        background: rgba(10, 10, 11, 0.6);
+    }
+    
+    /* THE_PATRIOT SPECIFIC OVERRIDE FOR GLASS */
+    
+
+    /* --- [NEW] GLOBAL PROSE DEFAULTS --- */
+    /* This makes all Markdown content follow the active theme colors automatically */
+    .prose {
+        color: #9ca3af;
+        max-width: 65ch; /* Optimal reading width */
+    }
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose strong {
+        color: #ffffff;
+    }
+    .prose a {
+        color: #00f2ff;
+        text-decoration: none;
+        border-bottom: 1px dotted #00f2ff;
+    }
+    .prose a:hover {
+        color: #39ff14;
+        border-bottom-style: solid;
+    }
+    .prose code {
+        color: #39ff14;
+        background: #18181b;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .prose blockquote {
+        border-left-color: #00f2ff;
+        color: #9ca3af;
+    }
 </style>
     
 <style>
@@ -81,16 +124,7 @@
     }
 
     /* 3. CARD PHYSICS */
-    .glass { 
-        background: rgba(10, 10, 11, 0.6); 
-        backdrop-filter: blur(12px); 
-        /* REMOVED: border: 1px solid rgba(255,255,255,0.05); */
-        /* REPLACED WITH: Separation of concerns */
-        border-style: solid;
-        /* We let the utility class (border-2) set the width */
-        /* We let the utility class (border-aurelia-primary) set the color */
-        box-shadow: 0 0 0 1px rgba(0,0,0,0.5); /* Inner shadow for depth */
-    }
+    
     .glass:hover {
         background: rgba(255, 255, 255, 0.03); 
         /* REMOVED: border-color: rgba(255,255,255,0.1); */
@@ -105,37 +139,94 @@
         box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
 
-    /* 5. MODAL TYPOGRAPHY */
-    .prose h1 { color: white; font-size: 1.8em; font-weight: 700; margin-bottom: 0.5em; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
-    .prose h2 { color: #e5e7eb; font-size: 1.4em; font-weight: 600; margin-top: 1.5em; margin-bottom: 0.5em; }
-    .prose h3 { color: #00f2ff; font-size: 1.1em; font-weight: 600; margin-top: 1em; }
-    .prose p { color: #e5e7eb; line-height: 1.6; margin-bottom: 1em; }
-    .prose ul { list-style: disc; padding-left: 1.5em; color: #e5e7eb; margin-bottom: 1em; }
-    .prose blockquote { border-left: 3px solid #00f2ff; padding-left: 1em; color: #a1a1aa; font-style: italic; background: rgba(0,242,255,0.05); padding: 1em; border-radius: 4px; }
-    .prose a { color: #00f2ff; text-decoration: none; border-bottom: 1px dotted #00f2ff; }
+    /* 5. === OBSIDIAN READER ENGINE === */
+    .obsidian-reader {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #dcddde; /* Obsidian Default Text */
+        line-height: 1.6;
+    }
 
-    /* 6. SCROLLBARS (CYBER-GAUGE) */
-    ::-webkit-scrollbar { 
-        width: 14px; /* Wider target area */
+    /* HEADERS */
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3, .obsidian-reader h4 {
+        color: #ffffff;
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.3;
     }
-    ::-webkit-scrollbar-track { 
-        background: #050505; 
-        border-left: 1px solid #1e1e20; /* Mechanical track line */
+    .obsidian-reader h1 { font-size: 2em; border-bottom: 1px solid #27272a; pb-2; }
+    .obsidian-reader h2 { font-size: 1.6em; }
+    .obsidian-reader h3 { font-size: 1.3em; }
+
+    /* LINKS (Internal Wiki Style) */
+    .obsidian-reader a {
+        color: #00f2ff;
+        text-decoration: none;
+        transition: opacity 0.2s;
     }
-    ::-webkit-scrollbar-thumb { 
-        background: rgba(0, 242, 255, 0.15); /* Passive Glow */
-        border: 1px solid rgba(0, 242, 255, 0.3); /* Tech Border */
-        border-radius: 2px;
+    .obsidian-reader a:hover { opacity: 0.8; text-decoration: underline; }
+
+    /* CODE BLOCKS (Terminal Style) */
+    .obsidian-reader pre {
+        background-color: #121212; /* Darker than card */
+        border: 1px solid #2a2a2a;
+        border-radius: 4px;
+        padding: 16px;
+        overflow-x: auto;
+        margin: 1.5em 0;
     }
-    ::-webkit-scrollbar-thumb:hover { 
-        background: rgba(0, 242, 255, 0.8); /* Active Glow */
-        box-shadow: 0 0 15px rgba(0, 242, 255, 0.6); /* Neon Bloom */
-        cursor: grab;
+    .obsidian-reader code {
+        font-family: 'JetBrains Mono', monospace;
+        background-color: rgba(255,255,255,0.05);
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        color: #39ff14;
+    }
+    .obsidian-reader pre code {
+        background-color: transparent;
+        padding: 0;
+        color: #e3e3e3; /* Standard code color */
+        font-size: 0.9em;
+    }
+
+    /* CALLOUTS / BLOCKQUOTES */
+    .obsidian-reader blockquote {
+        margin: 1.5em 0;
+        padding: 12px 16px;
+        color: inherit;
+        border-left: 4px solid #8a2be2;
+        background-color: rgba(138, 43, 226, 0.05); /* Subtle Tint */
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* LISTS */
+    .obsidian-reader ul, .obsidian-reader ol {
+        padding-left: 2em;
+        margin: 1em 0;
+    }
+    .obsidian-reader li { margin-bottom: 0.25em; }
+    .obsidian-reader li::marker { color: #9ca3af; }
+
+    /* IMAGES */
+    .obsidian-reader img {
+        border-radius: 4px;
+        max-width: 100%;
+        height: auto;
+        margin: 1.5em auto;
+        border: 1px solid #27272a;
+    }
+    
+    /* HORIZONTAL RULE */
+    .obsidian-reader hr {
+        border: 0;
+        border-top: 1px solid #27272a;
+        margin: 2em 0;
     }
 </style>
 
 </head>
-<body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
+<body class="text-aurelia-text font-sans selection:bg-aurelia-cyan selection:text-aurelia-inverted overflow-x-hidden min-h-screen flex flex-col">
     
     <div class="scanline"></div>
 
@@ -143,10 +234,10 @@
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
             <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-white font-bold">AURELIA_OS // GARDEN_DECK</span>
+                <span class="text-aurelia-text font-bold">AURELIA_OS // GARDEN_DECK</span>
             </a>   
             <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="hover:text-white transition-colors">00_LOBBY</a>
+                <a href="index.html" class="hover:text-aurelia-text transition-colors">00_LOBBY</a>
                 <a href="garden.html" class="text-aurelia-cyan border-b border-aurelia-cyan pb-1">01_GARDEN</a>
                 <a href="protocol.html" class="hover:text-aurelia-green transition-colors">02_PROTOCOLS</a>
                 <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
@@ -183,7 +274,7 @@
     </button>
 
     <button onclick="setFilter('author')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-white hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
+            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-text hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
         Authors
     </button>
 
@@ -211,7 +302,7 @@
             <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
 
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
-                <h1 class="text-5xl font-black text-white font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
+                <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
                 <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
                     <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
                     SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
@@ -221,7 +312,7 @@
 
         <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
             <p class="text-md font-mono text-gray-100 tracking-widest">
-                // TOTAL_NODES: <span id="node-count" class="text-white">62</span>
+                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text">62</span>
             </p>
         </div>
 
@@ -240,7 +331,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2025-12-21</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2025-12-21</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -268,7 +359,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2025-12-22</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2025-12-22</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -296,7 +387,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2025-12-27</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2025-12-27</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -324,7 +415,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2025-12-30</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2025-12-30</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -352,7 +443,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2025-12-31</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2025-12-31</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -380,7 +471,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2026-01-01</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2026-01-01</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -408,7 +499,7 @@
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2026-01-03</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2026-01-03</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -438,7 +529,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-tertiary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-tertiary uppercase tracking-widest">Daily_Log</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">2026-04-01</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">2026-04-01</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📅</div>
         </div>
@@ -466,7 +557,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Action Potential</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Action Potential</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -477,7 +568,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The momentary reversal of electrical potential across a plasma membrane (from -70mV to +40mV) that occurs when a nerve cell is stimulated. It is the fundamental unit of neural communication—the "bit" of the brain. Mechanistically, it is caused by the rapid opening of Voltage-Gated Sodium Channels ($Na^+$ rushes in), followed by the opening of Potassium Channels ($K^+$ rushes out). This electrical spike travels down the axon like a burning fuse, triggering the release of neurotransmitters at the synapse.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Resting Potential</span><span class="hover:text-white transition-colors cursor-pointer">→ Voltage-Gated Ion Channels</span><span class="hover:text-white transition-colors cursor-pointer">→ All-or-None Law</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Resting Potential</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Voltage-Gated Ion Channels</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ All-or-None Law</span></div></div>
     </article>
     
             
@@ -494,7 +585,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Adaptation</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Adaptation</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -505,7 +596,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A functional trait (anatomical, physiological, or behavioral) that has evolved through Natural Selection because it contributed to an organism's survival and reproductive success in a specific ancestral environment. An adaptation is not a "perfect solution" but a "better-than-the-alternative" solution derived from random variation. It is the result of the blind algorithmic process of evolution solving a specific engineering problem (e.g., the eye solving for photon detection, or calluses solving for friction).
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-white transition-colors cursor-pointer">→ Fitness Landscape</span><span class="hover:text-white transition-colors cursor-pointer">→ Mismatch Theory</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Fitness Landscape</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Mismatch Theory</span></div></div>
     </article>
     
             
@@ -522,7 +613,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Algorithm</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Algorithm</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -533,7 +624,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A finite, deterministic sequence of well-defined instructions designed to perform a specific task or solve a class of problems. In the context of Evolutionary Naturalism, an algorithm is a "recipe that works without a chef"—a mindless process that, if followed faithfully, guarantees a result. It is substrate-neutral, meaning the logic of the algorithm remains valid whether it is executed on silicon chips, written on paper, or instantiated in biological neural networks.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Computation</span><span class="hover:text-white transition-colors cursor-pointer">→ Evolutionary Logic</span><span class="hover:text-white transition-colors cursor-pointer">→ Turing Machine</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Computation</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolutionary Logic</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Turing Machine</span></div></div>
     </article>
     
             
@@ -550,7 +641,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Analogy</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Analogy</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -561,7 +652,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A cognitive process of transferring information or meaning from a particular subject (the source) to another (the target). Structurally, it is the identification of a shared relational pattern between two otherwise dissimilar systems. In formal logic, it often takes the form $A : B :: C : D$ (A is to B as C is to D). In cognitive science, analogy is considered the core mechanism of thought—it is how the brain uses "old" knowledge (existing neural maps) to navigate "new" territory by recognizing structural similarities.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Metaphor</span><span class="hover:text-white transition-colors cursor-pointer">→ Isomorphism</span><span class="hover:text-white transition-colors cursor-pointer">→ Cognitive Mapping</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Metaphor</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Isomorphism</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Cognitive Mapping</span></div></div>
     </article>
     
             
@@ -578,7 +669,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Associative Learning</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Associative Learning</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -589,7 +680,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The fundamental cognitive process by which an organism learns that two events occur together. It is the mechanism the brain uses to map the causal structure of the environment. In Neuroscience, this is physically instantiated via Hebbian Learning: "Neurons that fire together, wire together." When the representation of Stimulus A repeatedly activates just before the representation of Stimulus B, the synaptic connection between them strengthens, allowing A to eventually trigger the anticipation of B without external input.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Classical Conditioning</span><span class="hover:text-white transition-colors cursor-pointer">→ Operant Conditioning</span><span class="hover:text-white transition-colors cursor-pointer">→ Hebbian Learning</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Classical Conditioning</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Operant Conditioning</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Hebbian Learning</span></div></div>
     </article>
     
             
@@ -606,7 +697,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Coevolution</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Coevolution</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -617,7 +708,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Co-evolution is a process in which two or more interacting Systems (biological, cognitive, or cultural) reciprocally influence each other’s evolutionary trajectories over time.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-white transition-colors cursor-pointer">→ Biology</span><span class="hover:text-white transition-colors cursor-pointer">→ Systems</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Biology</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Systems</span></div></div>
     </article>
     
             
@@ -634,7 +725,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Crane</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Crane</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -645,7 +736,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A crane is a legitimate, step-by-step explanatory mechanism that builds complexity from simpler components without invoking mystery, purpose, or supernatural intervention.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Skyhook</span><span class="hover:text-white transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-white transition-colors cursor-pointer">→ Natural Selection</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Skyhook</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Natural Selection</span></div></div>
     </article>
     
             
@@ -662,7 +753,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Credit Assignment Problem</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Credit Assignment Problem</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -673,7 +764,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The fundamental challenge in any adaptive system of determining _which_ past action or internal component is responsible for a specific outcome. When an agent receives a reward (e.g., winning a game of chess or finding food), it must calculate which of the thousands of previous decisions contributed to that success and which were irrelevant. In Machine Learning, this is the problem of distributing the error signal back through layers of the network to update weights. In Neuroscience, it is the "Distal Reward Problem": how does a synapse that fired seconds ago know it was useful, given the time delay before the dopamine arrives?
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Reinforcement Learning</span><span class="hover:text-white transition-colors cursor-pointer">→ Backpropagation</span><span class="hover:text-white transition-colors cursor-pointer">→ Dopamine</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Reinforcement Learning</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Backpropagation</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Dopamine</span></div></div>
     </article>
     
             
@@ -690,7 +781,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">DNA</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">DNA</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -701,7 +792,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             DNA is the molecular medium of heredity that stores, transmits, and enables the expression of genetic information through sequences of nucleotide bases.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Gene</span><span class="hover:text-white transition-colors cursor-pointer">→ Replicator</span><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Gene</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Replicator</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span></div></div>
     </article>
     
             
@@ -718,7 +809,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">EEA</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">EEA</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -729,7 +820,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The set of recurrent selection pressures and environmental problems that shaped a given adaptation over deep time. Coined by John Bowlby, the EEA is not a specific place (like "The African Savanna") or a specific time (like 50,000 BC), but a statistical composite of the conditions an organism's ancestors faced. For humans, the EEA roughly corresponds to the Pleistocene era—small, nomadic, kin-based groups navigating a natural world of scarcity, predation, and intense social interdependence. It is the "design specification" for the human mind.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Mismatch Theory</span><span class="hover:text-white transition-colors cursor-pointer">→ Pleistocene</span><span class="hover:text-white transition-colors cursor-pointer">→ Hunter-Gatherer</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Mismatch Theory</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Pleistocene</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Hunter-Gatherer</span></div></div>
     </article>
     
             
@@ -746,7 +837,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Evolution</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Evolution</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -757,7 +848,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Evolution is the process by which heritable variation in populations changes over generations through mechanisms such as natural selection, mutation, genetic drift, and gene flow.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Genetic Variation</span><span class="hover:text-white transition-colors cursor-pointer">→ Inheritance</span><span class="hover:text-white transition-colors cursor-pointer">→ Fitness</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Genetic Variation</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Inheritance</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Fitness</span></div></div>
     </article>
     
             
@@ -774,7 +865,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Feed Forward</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Feed Forward</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -785,7 +876,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Feedforward is a control strategy in which a Systems anticipates future states and adjusts Behavior in advance, without relying on error correction.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Negative Feedback</span><span class="hover:text-white transition-colors cursor-pointer">→ Systems</span><span class="hover:text-white transition-colors cursor-pointer">→ Cognition</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Negative Feedback</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Systems</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Cognition</span></div></div>
     </article>
     
             
@@ -802,7 +893,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Feynman Technique</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Feynman Technique</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -813,7 +904,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A learning method for achieving deep understanding by explaining a concept in simple, clear language as if teaching it to a novice, thereby revealing gaps in knowledge.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Thinking Tool</span><span class="hover:text-white transition-colors cursor-pointer">→ Analogy</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Thinking Tool</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Analogy</span></div></div>
     </article>
     
             
@@ -830,7 +921,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Free-Floating Rationale</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Free-Floating Rationale</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -841,7 +932,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A free-floating rationale is an apparent reason, purpose, or Function that emerges from evolutionary or Algorithmic processes without being represented, understood, or intended by any conscious agent.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-white transition-colors cursor-pointer">→ Algorithm</span><span class="hover:text-white transition-colors cursor-pointer">→ Non-Teleological Process</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Algorithm</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Non-Teleological Process</span></div></div>
     </article>
     
             
@@ -858,7 +949,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Gene</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Gene</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -869,7 +960,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The fundamental physical and functional unit of heredity. A specific sequence of nucleotides in DNA (or RNA) that encodes instructions for building proteins or regulating other genes.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-white transition-colors cursor-pointer">→ Richard Dawkins</span><span class="hover:text-white transition-colors cursor-pointer">→ Survival Machines</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Richard Dawkins</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Survival Machines</span></div></div>
     </article>
     
             
@@ -886,7 +977,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Heuristic</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Heuristic</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -897,7 +988,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A mental shortcut or "rule of thumb" used to solve problems and make judgments quickly and efficiently. Unlike an algorithm, which follows a strict step-by-step procedure to guarantee a correct solution, a heuristic is a loose strategy that trades optimality for speed. In cognitive science, heuristics are the operating software of System 1 thinking—fast, automatic, and computationally cheap methods evolved to navigate a complex environment with limited brainpower.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Algorithm</span><span class="hover:text-white transition-colors cursor-pointer">→ Bounded Rationality</span><span class="hover:text-white transition-colors cursor-pointer">→ Satisficing</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Algorithm</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Bounded Rationality</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Satisficing</span></div></div>
     </article>
     
             
@@ -914,7 +1005,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Information Retrieval</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Information Retrieval</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -925,7 +1016,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Information retrieval is the process of accessing stored representations to make them available for use in Cognition, Computation, or decision-making.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Memory</span><span class="hover:text-white transition-colors cursor-pointer">→ Cognition</span><span class="hover:text-white transition-colors cursor-pointer">→ Computation</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Memory</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Cognition</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Computation</span></div></div>
     </article>
     
             
@@ -942,7 +1033,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Intuition Pump</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Intuition Pump</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -953,7 +1044,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A deliberately crafted thought experiment designed to guide intuition toward a clearer understanding of a concept by stripping away confusion and highlighting the underlying mechanism.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Feynman Technique</span><span class="hover:text-white transition-colors cursor-pointer">→ Thinking Tool</span><span class="hover:text-white transition-colors cursor-pointer">→ Intuition Pumps and Other Tools for Thinking</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Feynman Technique</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Thinking Tool</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Intuition Pumps and Other Tools for Thinking</span></div></div>
     </article>
     
             
@@ -970,7 +1061,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Natural Selection</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Natural Selection</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -981,7 +1072,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The differential survival and reproduction of individuals due to differences in phenotype. It is the passive mechanical process where traits that enhance survival in a specific environment increase in frequency over generations.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-white transition-colors cursor-pointer">→ Gene</span><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Non-Teleological Process</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Gene</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span></div></div>
     </article>
     
             
@@ -998,7 +1089,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Nervous System</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Nervous System</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1009,7 +1100,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The high-speed, electrochemical communication network of the biological organism. It is the primary control system responsible for collecting sensory input, processing that information (integration), and triggering motor output.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Neuron</span><span class="hover:text-white transition-colors cursor-pointer">→ Central Nervous System</span><span class="hover:text-white transition-colors cursor-pointer">→ Peripheral Nervous System</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Neuron</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Central Nervous System</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Peripheral Nervous System</span></div></div>
     </article>
     
             
@@ -1026,7 +1117,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Neuron</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Neuron</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1037,7 +1128,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The electrically excitable cell that functions as the fundamental working unit of the brain and nervous system.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Action Potential</span><span class="hover:text-white transition-colors cursor-pointer">→ Synapse</span><span class="hover:text-white transition-colors cursor-pointer">→ Dendrite</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Action Potential</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Synapse</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Dendrite</span></div></div>
     </article>
     
             
@@ -1054,7 +1145,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Non-Teleological Process</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Non-Teleological Process</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1065,7 +1156,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A system or mechanism that generates complexity without a pre-existing goal, purpose, or blueprint. It operates blindly through immediate cause-and-effect rather than working toward a future "final state" (*telos*).
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-white transition-colors cursor-pointer">→ Crane</span><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Natural Selection</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Crane</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span></div></div>
     </article>
     
             
@@ -1082,7 +1173,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Reductio ad Absurdum</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Reductio ad Absurdum</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1093,7 +1184,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Latin for "reduction to absurdity." A form of argument which attempts to disprove a statement by showing that it inevitably leads to a ridiculous, absurd, or contradictory conclusion. In Formal Logic and Mathematics, it is known as _Proof by Contradiction_: to prove $P$, you assume $\neg P$ (not P) is true, then show that this assumption implies a mathematical impossibility (like $1 = 0$), thereby proving $P$ must be true. In Rhetoric, it is used to expose the hidden flaws in a general principle by applying it to an extreme case.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Proof by Contradiction</span><span class="hover:text-white transition-colors cursor-pointer">→ Modus Tollens</span><span class="hover:text-white transition-colors cursor-pointer">→ Socratic Method</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Proof by Contradiction</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Modus Tollens</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Socratic Method</span></div></div>
     </article>
     
             
@@ -1110,7 +1201,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Replicator</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Replicator</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1121,7 +1212,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Replicators are entities—most notably genes—that make copies of themselves with sufficient fidelity, longevity, and fecundity to persist through Evolutionary time.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-white transition-colors cursor-pointer">→ Survival Machines</span><span class="hover:text-white transition-colors cursor-pointer">→ Gene</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Survival Machines</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Gene</span></div></div>
     </article>
     
             
@@ -1138,7 +1229,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Skyhook</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Skyhook</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1149,7 +1240,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Skyhooks are illegitimate explanatory shortcuts that account for complexity by appealing to unexplained intelligence, purpose, or magic rather than to step-by-step mechanisms.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Crane</span><span class="hover:text-white transition-colors cursor-pointer">→ Daniel Dennett</span><span class="hover:text-white transition-colors cursor-pointer">→ Mysticism</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Crane</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Daniel Dennett</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Mysticism</span></div></div>
     </article>
     
             
@@ -1166,7 +1257,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Survival Machines</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Survival Machines</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1177,7 +1268,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Survival machines are organisms understood as temporary vehicles constructed by Genes to protect themselves and promote their replication in a given environment.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-white transition-colors cursor-pointer">→ Organism</span><span class="hover:text-white transition-colors cursor-pointer">→ Gene</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Evolution</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Organism</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Gene</span></div></div>
     </article>
     
             
@@ -1194,7 +1285,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Thinking Tool</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Thinking Tool</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1205,7 +1296,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A thinking tool is a deliberately designed conceptual device—such as a distinction, model, Heuristic, or thought experiment—used to improve reasoning, clarify concepts, and avoid systematic errors in understanding.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Heuristic</span><span class="hover:text-white transition-colors cursor-pointer">→ Intuition Pump</span><span class="hover:text-white transition-colors cursor-pointer">→ Intuition Pumps and Other Tools for Thinking</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Heuristic</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Intuition Pump</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Intuition Pumps and Other Tools for Thinking</span></div></div>
     </article>
     
             
@@ -1222,7 +1313,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Transistor</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Transistor</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1233,7 +1324,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A transistor is a Semiconductor device that controls the flow of electrical current, enabling amplification, switching, and digital computation.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Semiconductor</span><span class="hover:text-white transition-colors cursor-pointer">→ Systems</span><span class="hover:text-white transition-colors cursor-pointer">→ Algorithm</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Semiconductor</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Systems</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Algorithm</span></div></div>
     </article>
     
             
@@ -1250,7 +1341,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-primary rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-primary uppercase tracking-widest">Concept_Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Valence</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Valence</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">⚛️</div>
         </div>
@@ -1261,7 +1352,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The intrinsic "sign" or directional value assigned to a sensory state, categorizing it as attractive (positive) or aversive (negative). In Machine Learning, specifically Reinforcement Learning, valence is encoded as the scalar reward signal $R_t$ or the estimated Value Function $V(s)$ that the agent maximizes. In Biological Systems, valence is the subjective experience of pleasure or pain—the evolutionary shorthand that labels inputs as "fitness-enhancing" or "fitness-reducing" without requiring the organism to understand the underlying causality.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-gray-300 font-mono flex-wrap"><span class="hover:text-white transition-colors cursor-pointer">→ Reinforcement Learning</span><span class="hover:text-white transition-colors cursor-pointer">→ Reward Prediction Error</span><span class="hover:text-white transition-colors cursor-pointer">→ Homeostasis</span></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap"><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Reinforcement Learning</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Reward Prediction Error</span><span class="hover:text-aurelia-text transition-colors cursor-pointer">→ Homeostasis</span></div></div>
     </article>
     
             
@@ -1278,7 +1369,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Charles Darwin</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Charles Darwin</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1289,7 +1380,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The "Newton of Biology." Darwin is the central figure of Evolutionary Naturalism. He was a reluctant revolutionary who spent decades amassing mountains of empirical evidence (barnacles, pigeons, orchids) before publishing his theory, knowing it would topple the social order. His genius was not just in noticing evolution (which others had done), but in identifying the Mechanism (Natural Selection) that could drive it without divine intervention. He represents the triumph of Inductive Reasoning—building a theory from the ground up based on observation. Related to Evolution, Evolutionary Biology, Daniel Dennett, Darwin's Dangerous Idea, Richard Dawkins, The Selfish Gene
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> On the Origin of Species (The Foundation).</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Descent of Man (Applying the theory to human evolution and psychology).</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Expression of the Emotions in Man and Animals (The birth of Evolutionary Psychology).</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Population Thinking</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Sexual Selection</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Pangenesis</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> On the Origin of Species (The Foundation).</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Descent of Man (Applying the theory to human evolution and psychology).</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Expression of the Emotions in Man and Animals (The birth of Evolutionary Psychology).</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Population Thinking</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Sexual Selection</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Pangenesis</span></div></div></div>
     </article>
     
             
@@ -1306,7 +1397,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Daniel Dennett</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Daniel Dennett</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1317,7 +1408,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Dennett is a central architect of modern naturalistic thinking about mind, Evolution, and meaning, offering mechanistic explanations that align closely with your interests in cognition, evolutionary theory, and demystifying complex phenomena.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Darwin's Dangerous Idea</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Intuition Pumps and Other Tools for Thinking</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Intuition Pump</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Crane</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Skyhook</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Darwin's Dangerous Idea</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Intuition Pumps and Other Tools for Thinking</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Intuition Pump</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Crane</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Skyhook</span></div></div></div>
     </article>
     
             
@@ -1334,7 +1425,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Jordan Peterson</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Jordan Peterson</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1345,7 +1436,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A Clinical Psychologist (Psychology) and Professor whose work functions as a "Rosetta Stone" between Evolutionary Biology and Religious Mythology. Peterson argues that myths are not pre-scientific errors, but rather "encoded evolutionary wisdom"—narrative descriptions of how to survive and act in a complex social environment over deep time. He combines the mechanistic (neurochemistry of dominance hierarchies) with the phenomenological (the subjective experience of meaning) to argue that "Meaning" is a biological signal of optimal adaptation (the border of Order and Chaos).
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Maps of Meaning</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> 12 Rules for Life</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Beyond Order</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Dominance Hierarchy</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Order and Chaos</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Shadow</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Maps of Meaning</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> 12 Rules for Life</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Beyond Order</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Dominance Hierarchy</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Order and Chaos</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Shadow</span></div></div></div>
     </article>
     
             
@@ -1362,7 +1453,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Marcus Aurelius</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Marcus Aurelius</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1373,7 +1464,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             The last of the "Five Good Emperors" of Rome, Marcus Aurelius is the historical archetype of the Philosopher King. Unlike academic philosophers who theorized from the comfort of a school, Marcus practiced philosophy in the mud of the Danube frontier while commanding legions. He represents the pinnacle of Stoic Ethics applied to governance. In your Polymathic framework, he is the model for "High-Stakes Rationality"—demonstrating how to maintain empathy and reason when the environment (chaos/war) provides every incentive to default to aggression or despair.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Meditations</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Inner Citadel</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Sympatheia</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Systems Thinking</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Meditations</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Inner Citadel</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Sympatheia</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Systems Thinking</span></div></div></div>
     </article>
     
             
@@ -1390,7 +1481,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Richard Dawkins</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Richard Dawkins</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1401,7 +1492,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Dawkins clarified the logic of natural selection through a gene-centered lens, providing conceptual tools that strongly support my interest in evolutionary explanations of behavior, cognition, and cooperation.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Selfish Gene</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Extended Phenotype</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Blind Watchmaker</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Evolution</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Replicator</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Survival Machines</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Selfish Gene</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Extended Phenotype</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Blind Watchmaker</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Evolution</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Replicator</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Survival Machines</span></div></div></div>
     </article>
     
             
@@ -1418,7 +1509,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Robert Sapolsky</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Robert Sapolsky</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1429,7 +1520,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A Stanford neuroendocrinologist and primatologist who spent decades studying stress in baboons in Kenya. Sapolsky is the arch-determinist of modern biology. He argues that "Free Will" is largely (or entirely) an illusion created by our lack of understanding of the biological machinery driving us. He combines the rigor of hard neuroscience with a deep empathy for the human condition, arguing that understanding the mechanics of our behavior shouldn't dehumanize us, but rather make us more forgiving of ourselves and others. He is a primary source for the Evolutionary Naturalist worldview.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Behave</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Why Zebras Don't Get Ulcers</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Determined</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Stress Response</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Biological Determinism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Glucocorticoids</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Behave</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Why Zebras Don't Get Ulcers</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Determined</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Stress Response</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Biological Determinism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Glucocorticoids</span></div></div></div>
     </article>
     
             
@@ -1446,7 +1537,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Sam Harris</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Sam Harris</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1457,7 +1548,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             A neuroscientist, philosopher, and podcast host who operates at the bleeding edge of the "Culture Wars" and the "Science of Mind." Harris is the primary architect of Scientific Morality—the claim that questions of Good and Evil are actually questions about the well-being of conscious creatures, which can be studied empirically. He combines a ruthless commitment to Rationality and Intellectual Honesty with a deep interest in the mechanics of meditation. In a Naturalist framework, he serves as the "clean-up crew" for religion, stripping away the dogma to reveal the useful psychological software underneath (mindfulness/ethics) while discarding the supernatural hardware.
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Waking Up</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Free Will</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Moral Landscape</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Moral Landscape</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Determinism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Robert Sapolsky</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Waking Up</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> Free Will</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Moral Landscape</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Moral Landscape</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Determinism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Robert Sapolsky</span></div></div></div>
     </article>
     
             
@@ -1474,7 +1565,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
                     <span class="text-[16px] font-mono text-white uppercase tracking-widest">Author_Profile</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Steven Pinker</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Steven Pinker</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">👤</div>
         </div>
@@ -1485,7 +1576,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
             Pinker is a central figure in modern cognitive science who integrates Psychology, Linguistics, and evolutionary theory to explain language, Mind, and human behavior in ways that align closely with my interests in Cognition, Evolution, and clear scientific thinking. (Rationality)
         </p>
         
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Language Instinct</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> How the Mind Works</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Blank Slate</li></ul></div><div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer"> Language</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Evolutionary Psychology</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Cognition</span></div></div></div>
+        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3"><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1"><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Language Instinct</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> How the Mind Works</li><li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> The Blank Slate</li></ul></div><div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer"> Language</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Evolutionary Psychology</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Cognition</span></div></div></div>
     </article>
     
             
@@ -1502,7 +1593,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-accent rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-accent uppercase tracking-widest">Discipline</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Cognitive Science</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Cognitive Science</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">🧠</div>
         </div>
@@ -1530,7 +1621,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-accent rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-accent uppercase tracking-widest">Discipline</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Evolutionary Biology</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Evolutionary Biology</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">🧠</div>
         </div>
@@ -1558,7 +1649,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-accent rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-accent uppercase tracking-widest">Discipline</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Psychology</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Psychology</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">🧠</div>
         </div>
@@ -1586,7 +1677,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-aurelia-accent rounded-full"></span>
                     <span class="text-[16px] font-mono text-aurelia-accent uppercase tracking-widest">Discipline</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Stoicism</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Stoicism</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">🧠</div>
         </div>
@@ -1614,7 +1705,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">12 Rules for Life</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">12 Rules for Life</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1631,7 +1722,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: JORDAN PETERSON</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">ARCHIVE</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Dominance Hierarchy</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Self-Preservation</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Social Selection</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Dominance Hierarchy</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Self-Preservation</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Social Selection</span></div></div>
     </article>
     
             
@@ -1648,7 +1739,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">A Brief History of Intelligence</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">A Brief History of Intelligence</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1665,7 +1756,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: MAX BENNETT</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Steering</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Reinforcement Learning</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Simulation</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Steering</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Reinforcement Learning</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Simulation</span></div></div>
     </article>
     
             
@@ -1682,7 +1773,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Behave</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Behave</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1699,7 +1790,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: ROBERT SAPOLSKY</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Prefrontal Cortex (PFC)</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Amygdala</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Dopamine</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Prefrontal Cortex (PFC)</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Amygdala</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Dopamine</span></div></div>
     </article>
     
             
@@ -1716,7 +1807,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Darwin's Dangerous Idea</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Darwin's Dangerous Idea</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1733,7 +1824,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: DANIEL DENNETT</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Crane</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Skyhook</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Non-Teleological Process</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Crane</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Skyhook</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Non-Teleological Process</span></div></div>
     </article>
     
             
@@ -1750,7 +1841,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Intuition Pumps and Other Tools for Thinking</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Intuition Pumps and Other Tools for Thinking</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1767,7 +1858,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: DANIEL DENNETT</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Intuition Pump</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Thinking Tool</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Skyhook</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Intuition Pump</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Thinking Tool</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Skyhook</span></div></div>
     </article>
     
             
@@ -1784,7 +1875,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Meditations</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Meditations</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1801,7 +1892,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: MARCUS AURELIUS</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Dichotomy of Control</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Internal Locus of Control</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Objective Representation</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Dichotomy of Control</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Internal Locus of Control</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Objective Representation</span></div></div>
     </article>
     
             
@@ -1818,7 +1909,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">On the Origin of Species</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">On the Origin of Species</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1835,7 +1926,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH:  </div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Natural Selection</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Common Descent</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Gradualism</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Natural Selection</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Common Descent</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Gradualism</span></div></div>
     </article>
     
             
@@ -1852,7 +1943,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">The Blank Slate</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">The Blank Slate</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1869,7 +1960,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: STEVEN PINKER</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Blank Slate</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Mind</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Biology</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Blank Slate</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Mind</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Biology</span></div></div>
     </article>
     
             
@@ -1886,7 +1977,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">The Moral Landscape</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">The Moral Landscape</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1903,7 +1994,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: SAM HARRIS</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Moral Landscape</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Scientific Realism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Is-Ought Problem</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Moral Landscape</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Scientific Realism</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Is-Ought Problem</span></div></div>
     </article>
     
             
@@ -1920,7 +2011,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">The Selfish Gene</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">The Selfish Gene</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1937,7 +2028,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: RICHARD DAWKINS</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Replicator</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Survival Machines</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Kin Selection</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Replicator</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Survival Machines</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Kin Selection</span></div></div>
     </article>
     
             
@@ -1954,7 +2045,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
                     <span class="text-[16px] font-mono text-yellow-500 uppercase tracking-widest">Source_Text</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">Waking Up</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">Waking Up</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📖</div>
         </div>
@@ -1971,7 +2062,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                 <div class="text-xs font-mono text-gray-400">AUTH: SAM HARRIS</div>
                 <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">READING</span>
             </div>
-        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">The Illusion of the Self</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Mindfulness</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-white transition-colors cursor-pointer">Split Brain</span></div></div>
+        <div class="flex flex-wrap gap-2"><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">The Illusion of the Self</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Mindfulness</span><span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">Split Brain</span></div></div>
     </article>
     
             
@@ -1988,7 +2079,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
                     <span class="text-[16px] font-mono text-gray-800 uppercase tracking-widest">Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">01 MORNING LAUNCH</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">01 MORNING LAUNCH</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📄</div>
         </div>
@@ -2016,7 +2107,7 @@ Conceptually the vertebrate brain is built on top of the more ancient steering s
                     <span class="w-1.5 h-1.5 bg-gray-800 rounded-full"></span>
                     <span class="text-[16px] font-mono text-gray-800 uppercase tracking-widest">Node</span>
                 </div>
-                <h3 class="text-4xl font-bold text-white font-mono group-hover:text-white transition-colors leading-tight">02 DAILY LOG</h3>
+                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">02 DAILY LOG</h3>
             </div>
             <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">📄</div>
         </div>
@@ -3280,38 +3371,42 @@ Download this protocol by clicking below!</div>
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-6xl h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            
-            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
-                    <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">READING_MODE</span>
-                </div>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+    
+    <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        
+        <div class="flex justify-between items-center px-6 py-3 border-b border-gray-800 bg-[#111111]">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
             </div>
+            <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
+        </div>
 
-            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none text-sm font-sans leading-relaxed">
-            </div>
-
-            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
-                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE</span>
+        <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
+            <div class="max-w-5xl mx-auto px-8 py-12">
+                <div id="modal-content" class="obsidian-reader text-lg">
+                    </div>
             </div>
         </div>
+
+        <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
+            <span>MODE: READ_ONLY</span>
+            <span>AURELIA_OS V3.0</span>
+        </div>
     </div>
+</div>
 
     </main>
 
-    <footer class="border-t border-aurelia-dim bg-black/80 backdrop-blur py-6 mt-20 relative z-30">
-        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-gray-600">
+    <footer class="border-t border-aurelia-dim bg-aurelia-bg/80 backdrop-blur py-6 mt-20 relative z-30">
+        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-aurelia-muted">
             <div class="flex items-center gap-2">
                 <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
                 <span class="text-aurelia-cyan">AURELIA / OS SYSTEM</span>
             </div>
-            <div class="text-gray-300">// Evolutionary Theory meets Cognitive Science.</div>
+            <div class="text-aurelia-text">// Evolutionary Theory meets Cognitive Science.</div>
             <div class="flex gap-6 uppercase">
                 <span class="text-aurelia-cyan">v3.2.0</span>
                 <span>SECURE</span>
@@ -3545,21 +3640,21 @@ Download this protocol by clicking below!</div>
 </script>
 
 
-    <div id="cmd-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden transition-opacity duration-200 opacity-0">
-        <div id="cmd-panel" class="w-full max-w-2xl mx-auto mt-20 bg-[#0a0a0b] border border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden transform scale-95 transition-all duration-200">
+    <div id="cmd-backdrop" class="fixed inset-0 bg-aurelia-bg/80 backdrop-blur-sm z-[100] hidden transition-opacity duration-200 opacity-0">
+        <div id="cmd-panel" class="w-full max-w-2xl mx-auto mt-20 bg-[#0a0a0b] border border-aurelia-border shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden transform scale-95 transition-all duration-200">
             
-            <div class="flex items-center px-4 border-b border-gray-800">
+            <div class="flex items-center px-4 border-b border-aurelia-border">
                 <span class="text-aurelia-cyan text-xl mr-3 font-mono">></span>
-                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-white font-mono text-lg focus:outline-none placeholder-gray-600">
+                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-none placeholder-gray-600">
                 <div class="hidden md:flex gap-1">
-                    <span class="text-[10px] font-mono text-gray-500 border border-gray-800 px-1 rounded">ESC</span>
+                    <span class="text-[10px] font-mono text-aurelia-muted border border-aurelia-border px-1 rounded">ESC</span>
                 </div>
             </div>
 
             <div id="cmd-results" class="max-h-[60vh] overflow-y-auto p-2">
                 </div>
 
-            <div class="px-4 py-2 bg-gray-900/50 border-t border-gray-800 flex justify-between items-center text-[10px] font-mono text-gray-500">
+            <div class="px-4 py-2 bg-aurelia-bg/50 border-t border-aurelia-border flex justify-between items-center text-[10px] font-mono text-aurelia-muted">
                 <span>AURELIA_INDEX_V3.2</span>
                 <span id="cmd-count">0 NODES CONNECTED</span>
             </div>
@@ -3625,7 +3720,7 @@ Download this protocol by clicking below!</div>
             const query = e.target.value.toLowerCase();
             
             if(query.length < 1) {
-                cmdResults.innerHTML = `<div class="text-center py-8 text-gray-600 font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
+                cmdResults.innerHTML = `<div class="text-center py-8 text-aurelia-muted font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
                 return;
             }
 
@@ -3644,27 +3739,27 @@ Download this protocol by clicking below!</div>
 
         function renderResults(results) {
             if(results.length === 0 && cmdInput.value.length > 0) {
-                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-gray-500">> NO_MATCHES_FOUND_IN_VAULT</div>`;
+                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-aurelia-muted">> NO_MATCHES_FOUND_IN_VAULT</div>`;
                 return;
             }
 
             // Render List
             cmdResults.innerHTML = results.map((item, index) => {
                 // Color coding based on type
-                let typeColor = "text-gray-500 border-gray-700";
+                let typeColor = "text-aurelia-muted border-aurelia-border";
                 if(item.type === "PROJECT") typeColor = "text-aurelia-purple border-aurelia-purple/50";
                 if(item.type === "GARDEN" || item.type === "NOTE") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
                 if(item.type === "PROTOCOL") typeColor = "text-aurelia-green border-aurelia-green/50";
                 
                 return `
-                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-white/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
+                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
                     <div class="flex items-center gap-3">
                         <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
                             ${item.type}
                         </span>
-                        <span class="font-bold text-gray-300 group-hover:text-white font-mono">${item.title}</span>
+                        <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${item.title}</span>
                     </div>
-                    <span class="text-gray-600 text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
+                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
                 </a>
                 `;
             }).join('');

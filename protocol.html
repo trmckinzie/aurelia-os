@@ -22,21 +22,31 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <script>
   tailwind.config = {
     theme: {
       extend: {
         colors: {
-          // MAPPED ROLES
+          // SEMANTIC MAPPING
           'aurelia-bg': '#0a0a0b',
-          'aurelia-dim': '#1e1e20',
-          'aurelia-text': '#ffffff',
-          'aurelia-text-dim': '#d1d5db',
+          'aurelia-card': '#121214',
+          'aurelia-surface': '#18181b',
           
-          'aurelia-primary': '#00f2ff',   // Replaces Cyan
-          'aurelia-secondary': '#8a2be2', // Replaces Purple
-          'aurelia-tertiary': '#ff8c00',  // Replaces Orange
-          'aurelia-accent': '#39ff14',      // Replaces Green
+          'aurelia-text': '#ffffff',
+          'aurelia-muted': '#9ca3af',
+          'aurelia-inverted': '#000000',
+
+          'aurelia-border': '#27272a',
+          
+          // ROLES
+          'aurelia-primary': '#00f2ff',
+          'aurelia-secondary': '#8a2be2',
+          'aurelia-tertiary': '#ff8c00',
+          'aurelia-accent': '#39ff14',
+        },
+        borderRadius: {
+            'theme': '2px'
         },
         fontFamily: {
           sans: ['Inter', 'sans-serif'],
@@ -51,22 +61,57 @@
 </script>
 
 <style>
-  /* GLOBAL OVERRIDES */
-  body { 
-    background-color: #0a0a0b; 
-    color: #d1d5db;
-  }
-  
-  /* DYNAMIC CURSOR (Follows Accent Color) */
-  a, button, .clickable {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%2339ff14' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='2' fill='%2339ff14'/%3E%3C/svg%3E") 12 12, pointer !important;
-  }
+    /* GLOBAL RESET */
+    body { 
+        background-color: #0a0a0b; 
+        color: #ffffff;
+    }
+    
+    /* UNIVERSAL GLASS CLASS */
+    .glass {
+        background: rgba(10, 10, 11, 0.6);
+    }
+    
+    /* THE_PATRIOT SPECIFIC OVERRIDE FOR GLASS */
+    
+
+    /* --- [NEW] GLOBAL PROSE DEFAULTS --- */
+    /* This makes all Markdown content follow the active theme colors automatically */
+    .prose {
+        color: #9ca3af;
+        max-width: 65ch; /* Optimal reading width */
+    }
+    .prose h1, .prose h2, .prose h3, .prose h4, .prose strong {
+        color: #ffffff;
+    }
+    .prose a {
+        color: #00f2ff;
+        text-decoration: none;
+        border-bottom: 1px dotted #00f2ff;
+    }
+    .prose a:hover {
+        color: #39ff14;
+        border-bottom-style: solid;
+    }
+    .prose code {
+        color: #39ff14;
+        background: #18181b;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.9em;
+    }
+    .prose blockquote {
+        border-left-color: #00f2ff;
+        color: #9ca3af;
+    }
 </style>
     
 <style>
     /* === PROTOCOL CARD (THE GRID) === */
     .protocol-card {
-        background: rgba(10, 10, 11, 0.6);
+/* NEW (Use the variable) */
+background: var(--card-bg, rgba(10, 10, 11, 0.6)); 
+/* OR better yet, just add the class "glass" to the HTML element and remove this background line entirely. */
         border: 1px solid rgba(255, 255, 255, 0.08);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
@@ -154,7 +199,7 @@
 </style>
 
 </head>
-<body class="text-gray-300 font-sans selection:bg-aurelia-cyan selection:text-black overflow-x-hidden min-h-screen flex flex-col">
+<body class="text-aurelia-text font-sans selection:bg-aurelia-cyan selection:text-aurelia-inverted overflow-x-hidden min-h-screen flex flex-col">
     
     <div class="scanline"></div>
 
@@ -162,10 +207,10 @@
         <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
             <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <div class="w-2 h-2 bg-aurelia-cyan rounded-full shadow-[0_0_8px_currentColor] animate-pulse"></div>
-                <span class="text-white font-bold">AURELIA_OS // SYSTEM_PROTOCOL</span>
+                <span class="text-aurelia-text font-bold">AURELIA_OS // SYSTEM_PROTOCOL</span>
             </a>   
             <div class="hidden md:flex gap-8 uppercase">
-                <a href="index.html" class="hover:text-white transition-colors">00_LOBBY</a>
+                <a href="index.html" class="hover:text-aurelia-text transition-colors">00_LOBBY</a>
                 <a href="garden.html" class="hover:text-aurelia-cyan transition-colors">01_GARDEN</a>
                 <a href="protocol.html" class="text-aurelia-green border-b border-aurelia-green pb-1">02_PROTOCOLS</a>
                 <a href="portfolio.html" class="hover:text-aurelia-purple transition-colors">03_PORTFOLIO</a>
@@ -182,7 +227,7 @@
     <div>
         <div class="flex items-center gap-3 mb-2">
             <div id="live-status-indicator" class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
-            <span class="text-xs font-mono text-white tracking-widest">CURRENT_OPERATOR_STATUS: T.R.M. is engaging in...</span>
+            <span class="text-xs font-mono text-aurelia-text tracking-widest">CURRENT_OPERATOR_STATUS: T.R.M. is engaging in...</span>
         </div>
         <h1 id="live-status-text" class="text-3xl md:text-5xl font-black text-gray-600 font-mono tracking-tighter uppercase">
             SYSTEM_CALCULATING...
@@ -206,7 +251,7 @@
                     
                 </div>
             </div>
-            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-accent transition-colors">01_MORNING_LAUNCH</h2>
+            <h2 class="text-xl font-bold text-aurelia-text mb-3 group-hover:text-aurelia-accent transition-colors">01_MORNING_LAUNCH</h2>
             <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
         </div>
         <div id="data-PROT_01_" class="hidden">
@@ -245,7 +290,7 @@ Download this AM routine template for yourself below!</div>
                     
                 </div>
             </div>
-            <h2 class="text-xl font-bold text-white mb-3 group-hover:text-aurelia-accent transition-colors">02_DAILY_LOG</h2>
+            <h2 class="text-xl font-bold text-aurelia-text mb-3 group-hover:text-aurelia-accent transition-colors">02_DAILY_LOG</h2>
             <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100">System Protocol</p>
         </div>
         <div id="data-PROT_02_" class="hidden">
@@ -282,9 +327,9 @@ Download this protocol by clicking below!</div>
     <div class="p-6 border-b border-gray-800 flex justify-between items-start bg-black/50">
         <div>
             <span id="drawer-id" class="text-xs font-mono text-aurelia-accent tracking-widest mb-1 block"></span>
-            <h2 id="drawer-title" class="text-2xl font-bold text-white"></h2>
+            <h2 id="drawer-title" class="text-2xl font-bold text-aurelia-text"></h2>
         </div>
-        <button onclick="closeDrawer()" class="text-gray-500 hover:text-white transition-colors">
+        <button onclick="closeDrawer()" class="text-gray-500 hover:text-aurelia-text transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     </div>
@@ -443,13 +488,13 @@ Download this protocol by clicking below!</div>
 
     </main>
 
-    <footer class="border-t border-aurelia-dim bg-black/80 backdrop-blur py-6 mt-20 relative z-30">
-        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-gray-600">
+    <footer class="border-t border-aurelia-dim bg-aurelia-bg/80 backdrop-blur py-6 mt-20 relative z-30">
+        <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[14px] font-mono tracking-widest text-aurelia-muted">
             <div class="flex items-center gap-2">
                 <div class="w-1.5 h-1.5 bg-aurelia-cyan rounded-full animate-pulse"></div>
                 <span class="text-aurelia-cyan">AURELIA / OS SYSTEM</span>
             </div>
-            <div class="text-gray-300">// Evolutionary Theory meets Cognitive Science.</div>
+            <div class="text-aurelia-text">// Evolutionary Theory meets Cognitive Science.</div>
             <div class="flex gap-6 uppercase">
                 <span class="text-aurelia-cyan">v3.2.0</span>
                 <span>SECURE</span>
@@ -459,21 +504,21 @@ Download this protocol by clicking below!</div>
 
     
 
-    <div id="cmd-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] hidden transition-opacity duration-200 opacity-0">
-        <div id="cmd-panel" class="w-full max-w-2xl mx-auto mt-20 bg-[#0a0a0b] border border-gray-800 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden transform scale-95 transition-all duration-200">
+    <div id="cmd-backdrop" class="fixed inset-0 bg-aurelia-bg/80 backdrop-blur-sm z-[100] hidden transition-opacity duration-200 opacity-0">
+        <div id="cmd-panel" class="w-full max-w-2xl mx-auto mt-20 bg-[#0a0a0b] border border-aurelia-border shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden transform scale-95 transition-all duration-200">
             
-            <div class="flex items-center px-4 border-b border-gray-800">
+            <div class="flex items-center px-4 border-b border-aurelia-border">
                 <span class="text-aurelia-cyan text-xl mr-3 font-mono">></span>
-                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-white font-mono text-lg focus:outline-none placeholder-gray-600">
+                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-none placeholder-gray-600">
                 <div class="hidden md:flex gap-1">
-                    <span class="text-[10px] font-mono text-gray-500 border border-gray-800 px-1 rounded">ESC</span>
+                    <span class="text-[10px] font-mono text-aurelia-muted border border-aurelia-border px-1 rounded">ESC</span>
                 </div>
             </div>
 
             <div id="cmd-results" class="max-h-[60vh] overflow-y-auto p-2">
                 </div>
 
-            <div class="px-4 py-2 bg-gray-900/50 border-t border-gray-800 flex justify-between items-center text-[10px] font-mono text-gray-500">
+            <div class="px-4 py-2 bg-aurelia-bg/50 border-t border-aurelia-border flex justify-between items-center text-[10px] font-mono text-aurelia-muted">
                 <span>AURELIA_INDEX_V3.2</span>
                 <span id="cmd-count">0 NODES CONNECTED</span>
             </div>
@@ -539,7 +584,7 @@ Download this protocol by clicking below!</div>
             const query = e.target.value.toLowerCase();
             
             if(query.length < 1) {
-                cmdResults.innerHTML = `<div class="text-center py-8 text-gray-600 font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
+                cmdResults.innerHTML = `<div class="text-center py-8 text-aurelia-muted font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
                 return;
             }
 
@@ -558,27 +603,27 @@ Download this protocol by clicking below!</div>
 
         function renderResults(results) {
             if(results.length === 0 && cmdInput.value.length > 0) {
-                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-gray-500">> NO_MATCHES_FOUND_IN_VAULT</div>`;
+                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-aurelia-muted">> NO_MATCHES_FOUND_IN_VAULT</div>`;
                 return;
             }
 
             // Render List
             cmdResults.innerHTML = results.map((item, index) => {
                 // Color coding based on type
-                let typeColor = "text-gray-500 border-gray-700";
+                let typeColor = "text-aurelia-muted border-aurelia-border";
                 if(item.type === "PROJECT") typeColor = "text-aurelia-purple border-aurelia-purple/50";
                 if(item.type === "GARDEN" || item.type === "NOTE") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
                 if(item.type === "PROTOCOL") typeColor = "text-aurelia-green border-aurelia-green/50";
                 
                 return `
-                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-white/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
+                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
                     <div class="flex items-center gap-3">
                         <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
                             ${item.type}
                         </span>
-                        <span class="font-bold text-gray-300 group-hover:text-white font-mono">${item.title}</span>
+                        <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${item.title}</span>
                     </div>
-                    <span class="text-gray-600 text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
+                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
                 </a>
                 `;
             }).join('');
