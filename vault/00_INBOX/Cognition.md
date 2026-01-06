@@ -13,7 +13,7 @@ publish: true
 ---
 
 ### 💡 Definition
-> TEST NOTE
+> TEST NOTE TESTER 2
 
 ### 📝 Key Insight
 * TEST NOTE```
