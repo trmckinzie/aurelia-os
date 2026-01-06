@@ -7,7 +7,7 @@
         "**/.DS_Store": true,
         "**/.venv": true,            // Hides the massive Python env
         "**/.smart-env": true,       // Hides AI plugin data
-        "**/.obsidian": true,        // Hides Obsidian config
+        "**/.obsidian": false,        // Hides Obsidian config
         "**/__pycache__": true,      // Hides compiled python files
         "**/*.dist-info": true
     },
