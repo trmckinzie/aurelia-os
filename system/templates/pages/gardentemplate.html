@@ -5,7 +5,7 @@
 
 {% block head_extra %}
 <style>
-    /* 1. SEARCH HIGHLIGHTING */
+    /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
         background-color: rgba(238, 241, 30, 0.966);
         color: white; 
@@ -14,22 +14,19 @@
         padding: 0 2px;
     }
 
-    /* 2. THE AURELIA ATMOSPHERE (SCANLINE) */
+    /* 2. THE AURELIA ATMOSPHERE (PRESERVED) */
     .scanline {
         width: 100%; height: 100px; z-index: 40;
         background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0) 100%);
         opacity: 0.1; position: fixed; pointer-events: none; animation: scanline 8s linear infinite;
     }
 
-    /* 3. CARD PHYSICS */
-    
+    /* 3. CARD PHYSICS (PRESERVED) */
     .glass:hover {
         background: rgba(255, 255, 255, 0.03); 
-        /* REMOVED: border-color: rgba(255,255,255,0.1); */
-        /* The utility class (hover:border-opacity-100) handles the hover effect now */
     }
 
-    /* 4. ACTIVE BUTTON STATE */
+    /* 4. ACTIVE BUTTON STATE (PRESERVED) */
     .filter-btn.active {
         background: rgba(255,255,255,0.1);
         border-color: white;
@@ -37,90 +34,86 @@
         box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
 
-    /* 5. === OBSIDIAN READER ENGINE === */
-    .obsidian-reader {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        color: #dcddde; /* Obsidian Default Text */
-        line-height: 1.6;
-    }
-
-    /* HEADERS */
-    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3, .obsidian-reader h4 {
-        color: {{ theme.colors.text_main|replace("'", "") }};
-        font-weight: 600;
-        margin-top: 1.5em;
-        margin-bottom: 0.5em;
-        line-height: 1.3;
-    }
-    .obsidian-reader h1 { font-size: 2em; border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }}; pb-2; }
-    .obsidian-reader h2 { font-size: 1.6em; }
-    .obsidian-reader h3 { font-size: 1.3em; }
-
-    /* LINKS (Internal Wiki Style) */
-    .obsidian-reader a {
-        color: {{ theme.colors.primary|replace("'", "") }};
-        text-decoration: none;
-        transition: opacity 0.2s;
-    }
-    .obsidian-reader a:hover { opacity: 0.8; text-decoration: underline; }
-
-    /* CODE BLOCKS (Terminal Style) */
-    .obsidian-reader pre {
-        background-color: #121212; /* Darker than card */
-        border: 1px solid #2a2a2a;
-        border-radius: 4px;
-        padding: 16px;
-        overflow-x: auto;
-        margin: 1.5em 0;
-    }
-    .obsidian-reader code {
+    /* 5. TREE VIEW ARCHITECTURE (UPGRADED) */
+    .tree-container {
         font-family: 'JetBrains Mono', monospace;
-        background-color: rgba(255,255,255,0.05);
-        padding: 2px 4px;
-        border-radius: 4px;
-        font-size: 0.85em;
-        color: {{ theme.colors.accent|replace("'", "") }};
-    }
-    .obsidian-reader pre code {
-        background-color: transparent;
-        padding: 0;
-        color: #e3e3e3; /* Standard code color */
-        font-size: 0.9em;
-    }
-
-    /* CALLOUTS / BLOCKQUOTES */
-    .obsidian-reader blockquote {
-        margin: 1.5em 0;
-        padding: 12px 16px;
-        color: inherit;
-        border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }};
-        background-color: rgba(138, 43, 226, 0.05); /* Subtle Tint */
-        border-radius: 0 4px 4px 0;
-    }
-
-    /* LISTS */
-    .obsidian-reader ul, .obsidian-reader ol {
-        padding-left: 2em;
-        margin: 1em 0;
-    }
-    .obsidian-reader li { margin-bottom: 0.25em; }
-    .obsidian-reader li::marker { color: {{ theme.colors.text_muted|replace("'", "") }}; }
-
-    /* IMAGES */
-    .obsidian-reader img {
-        border-radius: 4px;
-        max-width: 100%;
-        height: auto;
-        margin: 1.5em auto;
-        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        padding-left: 0.5rem;
     }
     
-    /* HORIZONTAL RULE */
-    .obsidian-reader hr {
-        border: 0;
-        border-top: 1px solid {{ theme.colors.border_main|replace("'", "") }};
-        margin: 2em 0;
+    /* The Folder Header */
+    details > summary {
+        list-style: none; cursor: pointer; transition: all 0.2s;
+        border: 1px solid transparent; border-radius: 4px;
+        position: relative; z-index: 10;
     }
+    details > summary::-webkit-details-marker { display: none; }
+    details > summary:hover {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    /* Folder Open Animation */
+    details[open] > summary .folder-arrow { transform: rotate(90deg); }
+    details[open] > summary { margin-bottom: 0.5rem; }
+
+    /* The Vertical Circuit Line */
+    .tree-branch {
+        position: relative;
+        margin-left: 1.1rem; /* Aligns with folder icon */
+        padding-left: 1.5rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+        transition: border-color 0.3s ease;
+    }
+    /* Glow the line when hovering the branch */
+    .tree-branch:hover { border-left-color: rgba(0, 242, 255, 0.3); }
+
+    /* The File Row */
+    .tree-node {
+        position: relative;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 6px 12px; margin-bottom: 2px;
+        border-radius: 2px; border: 1px solid transparent;
+        transition: all 0.2s;
+    }
+    /* Hover Effect: The "Active State" */
+    .tree-node:hover {
+        background: rgba(0, 242, 255, 0.05);
+        border-color: rgba(0, 242, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.05); 
+    }
+
+    /* The Horizontal Connector Line */
+    .tree-node::before {
+        content: ''; position: absolute; 
+        left: -1.5rem; top: 50%;
+        width: 1rem; height: 1px;
+        background: rgba(255, 255, 255, 0.1);
+        transition: background 0.2s;
+    }
+    .tree-branch:hover .tree-node::before { background: rgba(0, 242, 255, 0.3); }
+
+    /* The Connector Dot (The Node) */
+    .tree-node::after {
+        content: ''; position: absolute;
+        left: -1.65rem; top: calc(50% - 2px);
+        width: 4px; height: 4px;
+        background: #000;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        z-index: 5;
+    }
+    .tree-branch:hover .tree-node::after { border-color: #00f2ff; background: #00f2ff; box-shadow: 0 0 5px #00f2ff; }
+
+    /* 6. OBSIDIAN READER ENGINE (PRESERVED) */
+    .obsidian-reader { font-family: 'Inter', sans-serif; color: #dcddde; line-height: 1.6; }
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3 { color: {{ theme.colors.text_main|replace("'", "") }}; font-weight: 600; margin-top: 1.5em; }
+    .obsidian-reader h1 { font-size: 2em; border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }}; pb-2; }
+    .obsidian-reader a { color: {{ theme.colors.primary|replace("'", "") }}; text-decoration: none; }
+    .obsidian-reader a:hover { opacity: 0.8; text-decoration: underline; }
+    .obsidian-reader pre { background-color: #121212; border: 1px solid #2a2a2a; border-radius: 4px; padding: 16px; overflow-x: auto; margin: 1.5em 0; }
+    .obsidian-reader code { font-family: 'JetBrains Mono', monospace; background-color: rgba(255,255,255,0.05); padding: 2px 4px; color: {{ theme.colors.accent|replace("'", "") }}; }
+    .obsidian-reader blockquote { border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }}; background-color: rgba(138, 43, 226, 0.05); padding: 12px 16px; margin: 1.5em 0; }
+    .obsidian-reader img { max-width: 100%; border: 1px solid {{ theme.colors.border_main|replace("'", "") }}; border-radius: 4px; }
+    .obsidian-reader ul, .obsidian-reader ol { padding-left: 2em; margin: 1em 0; }
 </style>
 {% endblock %}
 
@@ -129,36 +122,45 @@
 
     <div class="fixed top-14 left-0 w-full z-50 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-wrap gap-2" id="filter-controls">
-                <button onclick="setFilter('all')" 
-            class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all">
-        All_Systems
-    </button>
+            
+            <div class="flex items-center gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+                
+                <div class="flex items-center bg-black/50 border border-gray-800 rounded p-1 shrink-0">
+                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded text-aurelia-primary bg-white/10 transition-all hover:text-white" title="Grid View">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </button>
+                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded text-gray-500 hover:text-white transition-all" title="Tree View">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
 
-    <button onclick="setFilter('daily-bridge')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider">
-        Logs
-    </button>
+                <div class="h-6 w-px bg-gray-800 shrink-0"></div>
 
-    <button onclick="setFilter('concept')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider">
-        Concepts
-    </button>
+                <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
+                    <button onclick="setFilter('all')" class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all whitespace-nowrap">
+                        All_Notes
+                    </button>
 
-    <button onclick="setFilter('source')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider">
-        Library
-    </button>
+                    <button onclick="setFilter('daily-bridge')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Daily Logs
+                    </button>
 
-    <button onclick="setFilter('author')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-text hover:border-white hover:bg-white/5 rounded transition-all uppercase tracking-wider">
-        Authors
-    </button>
+                    <button onclick="setFilter('concept')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Concepts
+                    </button>
 
-    <button onclick="setFilter('discipline')" 
-            class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider">
-        Disciplines
-    </button>
+                    <button onclick="setFilter('source')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Library
+                    </button>
+
+                    <button onclick="setFilter('author')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Authors
+                    </button>
+
+                    <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Disciplines
+                    </button>
+                </div>
             </div>
             
             <div class="flex items-center gap-3 border border-aurelia-dim bg-black/50 rounded px-4 py-2 w-full md:w-96">
@@ -171,18 +173,14 @@
     <div class="flex-grow pt-12 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
         <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-gray-400 bg-black h-64">
-            
             <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
-            
             <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
-            
             <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
-
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
                 <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
                 <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
                     <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_#00f2ff]"></span>
-                    SYSTEM STATUS: ONLINE // NEURAL_LINKS_ESTABLISHED
+                    SYSTEM STATUS: ONLINE // VIEW: <span id="view-mode-label">GRID_MATRIX</span>
                 </p>
             </div>
         </div>
@@ -198,6 +196,89 @@
                 {{ card.html | safe }}
             {% endfor %}
         </div>
+
+        <div id="treeView" class="hidden animate-fade-in-up">
+            <div class="max-w-5xl border-l border-gray-800 ml-4 pl-8 pt-6 pb-20">
+                
+                {% for type, group in cards|groupby('type') %}
+                    
+                    {% set group_color = "text-gray-500" %}
+                    {% set group_border = "border-gray-800" %}
+                    {% set folder_icon = "📁" %}
+                    
+                    {% if "concept" in type %} 
+                        {% set group_color = "text-aurelia-primary" %} 
+                        {% set group_border = "border-aurelia-primary" %}
+                        {% set folder_icon = "🧬" %}
+                    {% endif %}
+                    
+                    {% if "daily" in type or "log" in type %} 
+                        {% set group_color = "text-aurelia-tertiary" %} 
+                        {% set group_border = "border-aurelia-tertiary" %}
+                        {% set folder_icon = "📅" %}
+                    {% endif %}
+                    
+                    {% if "source" in type %} 
+                        {% set group_color = "text-yellow-400" %} 
+                        {% set group_border = "border-yellow-400" %}
+                        {% set folder_icon = "📚" %}
+                    {% endif %}
+
+                    {% if "author" in type %} 
+                        {% set group_color = "text-aurelia-secondary" %} 
+                        {% set group_border = "border-aurelia-secondary" %}
+                        {% set folder_icon = "👤" %}
+                    {% endif %}
+
+                    <details class="mb-6 group tree-folder" open data-type="{{ type|lower }}">
+                        <summary class="flex items-center gap-4 py-2 px-3 select-none">
+                            <div class="folder-arrow text-gray-600 transition-transform duration-200">▶</div>
+                            
+                            <div class="flex items-center gap-3">
+                                <span class="text-lg opacity-80">{{ folder_icon }}</span>
+                                <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type|replace('-', ' ') }}</span>
+                            </div>
+                            
+                            <div class="h-px bg-gray-800 flex-grow mx-4 opacity-50"></div>
+                            
+                            <span class="text-[10px] text-gray-400 font-mono border border-gray-800 bg-black px-2 py-0.5 rounded">
+                                {{ group|length }} NODES
+                            </span>
+                        </summary>
+
+                        <div class="tree-branch space-y-1 mt-2">
+                            {% for card in group %}
+                           <div class="tree-node group/node cursor-pointer searchable-tree-item" 
+                                 onclick="openNote('{{ card.id }}')"
+                                 data-type="{{ card.type|lower }}"
+                                 data-search="{{ card.title }} {{ card.body[:100] }}">
+                                
+                                <div class="flex items-center gap-3 overflow-hidden">
+                                    <span class="text-gray-700 text-[10px] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
+                                    <span class="text-sm font-mono text-gray-400 group-hover/node:text-white transition-colors truncate">{{ card.title }}</span>
+                                </div>
+
+                                <div class="hidden md:flex items-center gap-4 opacity-0 group-hover/node:opacity-100 transition-all transform translate-x-2 group-hover/node:translate-x-0">
+                                    
+                                    <div class="flex gap-1">
+                                        {% for tag in card.tags[:2] %}
+                                        <span class="text-[9px] font-mono text-gray-500 border border-gray-800 px-1.5 py-0.5 rounded bg-black">#{{ tag }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <div class="flex items-center gap-1 text-[9px] font-bold text-aurelia-primary tracking-wider">
+                                        <span>ACCESS</span>
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </details>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 
     <div id="data-storage" style="display: none;">
@@ -207,141 +288,122 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-    
-    <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-        
-        <div class="flex justify-between items-center px-6 py-3 border-b border-gray-800 bg-[#111111]">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
-                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
+        <div id="modal-panel" class="bg-[#0a0a0b] border border-gray-800 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center px-6 py-3 border-b border-gray-800 bg-[#111111]">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
+                </div>
+                <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
             </div>
-            <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
-        </div>
-
-        <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
-            <div class="max-w-5xl mx-auto px-8 py-12">
-                <div id="modal-content" class="obsidian-reader text-lg">
-                    </div>
+            <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
+                <div class="max-w-5xl mx-auto px-8 py-12">
+                    <div id="modal-content" class="obsidian-reader text-lg"></div>
+                </div>
             </div>
-        </div>
-
-        <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
-            <span>MODE: READ_ONLY</span>
-            <span>AURELIA_OS V3.0</span>
+            <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
+                <span>MODE: READ_ONLY</span>
+                <span>AURELIA_OS V3.0</span>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // --- 1. NEURAL ANIMATION ENGINE ---
+    // --- 1. VIEW SWITCHER LOGIC (NEW) ---
+    const gridView = document.getElementById('cardGrid');
+    const treeView = document.getElementById('treeView');
+    const btnGrid = document.getElementById('btn-grid');
+    const btnTree = document.getElementById('btn-tree');
+    const filterControls = document.getElementById('filter-controls');
+    const viewLabel = document.getElementById('view-mode-label');
+
+    function switchView(mode) {
+        if(mode === 'grid') {
+            gridView.classList.remove('hidden');
+            treeView.classList.add('hidden');
+            
+            btnGrid.classList.add('bg-white/10', 'text-aurelia-primary');
+            btnGrid.classList.remove('text-gray-500');
+            btnTree.classList.remove('bg-white/10', 'text-aurelia-primary');
+            btnTree.classList.add('text-gray-500');
+            
+            viewLabel.innerText = "GRID_MATRIX";
+        } else {
+            gridView.classList.add('hidden');
+            treeView.classList.remove('hidden');
+            
+            btnTree.classList.add('bg-white/10', 'text-aurelia-primary');
+            btnTree.classList.remove('text-gray-500');
+            btnGrid.classList.remove('bg-white/10', 'text-aurelia-primary');
+            btnGrid.classList.add('text-gray-500');
+            
+            viewLabel.innerText = "TREE_DIRECTORY";
+        }
+        // DELETED: The lines that set filterControls.style.opacity/pointerEvents
+        // Filters now remain active in both modes.
+    }
+
+    // --- 2. NEURAL ANIMATION (PRESERVED) ---
     (function() {
         const canvas = document.getElementById('neural-canvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
-        
-        // Configuration
-        const particleCount = 60; // Density
-        const connectionDistance = 150; // Reach
-        const mouseDistance = 200; // Interaction radius
+        const particleCount = 60; 
+        const connectionDistance = 150; 
+        const mouseDistance = 200; 
 
-        // Resize Handling
-        function resize() {
-            width = canvas.width = canvas.parentElement.offsetWidth;
-            height = canvas.height = canvas.parentElement.offsetHeight;
-        }
+        function resize() { width = canvas.width = canvas.parentElement.offsetWidth; height = canvas.height = canvas.parentElement.offsetHeight; }
         window.addEventListener('resize', resize);
         resize();
 
-        // Mouse Tracking
         const mouse = { x: null, y: null };
         canvas.parentElement.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
             mouse.x = e.clientX - rect.left;
             mouse.y = e.clientY - rect.top;
         });
-        canvas.parentElement.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
+        canvas.parentElement.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
 
-        // Particle Class
         class Particle {
             constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                // CHANGED: Reduced multiplier from 0.5 to 0.15 for very slow, deep-thought drift
-                this.vx = (Math.random() - 0.5) * 0.20; 
-                this.vy = (Math.random() - 0.5) * 0.20;
+                this.x = Math.random() * width; this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.20; this.vy = (Math.random() - 0.5) * 0.20;
                 this.size = Math.random() * 1.5 + 0.5;
             }
             update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                
-                // Bounce off edges
+                this.x += this.vx; this.y += this.vy;
                 if (this.x < 0 || this.x > width) this.vx *= -1;
                 if (this.y < 0 || this.y > height) this.vy *= -1;
-
-                // Mouse Repulsion/Attraction
                 if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx*dx + dy*dy);
                     if (distance < mouseDistance) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
                         const force = (mouseDistance - distance) / mouseDistance;
-                        const directionX = forceDirectionX * force * 0.5; // Push strength
-                        const directionY = forceDirectionY * force * 0.5;
-                        this.vx -= directionX;
-                        this.vy -= directionY;
+                        this.vx -= (dx / distance) * force * 0.5;
+                        this.vy -= (dy / distance) * force * 0.5;
                     }
                 }
             }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; // Aurelia Primary
-                ctx.fill();
-            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0, 242, 255, 0.5)'; ctx.fill(); }
         }
+        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
-        // Initialize
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // Animation Loop
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            
-            // Update and Draw Particles
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
-            // Draw Connections
+            particles.forEach(p => { p.update(); p.draw(); });
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
-                    let dx = particles[a].x - particles[b].x;
-                    let dy = particles[a].y - particles[b].y;
+                    let dx = particles[a].x - particles[b].x; let dy = particles[a].y - particles[b].y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
-
                     if (distance < connectionDistance) {
-                        let opacity = 1 - (distance / connectionDistance);
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 1.0})`; // Aurelia Primary
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${1 - (distance / connectionDistance)})`;
+                        ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particles[a].x, particles[a].y); ctx.lineTo(particles[b].x, particles[b].y); ctx.stroke();
                     }
                 }
             }
@@ -350,83 +412,109 @@
         animate();
     })();
 
-    // --- 2. STANDARD LOGIC (Filter/Search/Modal) ---
+    // --- 3. FILTER & SEARCH (UPDATED FOR DUAL VIEW) ---
     let currentType = 'all';
     let currentQuery = '';
-
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalPanel = document.getElementById('modal-panel');
     const modalContent = document.getElementById('modal-content');
 
     function setFilter(type) {
+        // REMOVED: The logic that forced 'switchView("grid")'
+        
         currentType = type;
+        
+        // Update Button Visuals
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active');
-            btn.classList.remove('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+            btn.classList.remove('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
             btn.classList.add('border-gray-800', 'text-gray-500');
         });
         event.target.classList.remove('border-gray-800', 'text-gray-500');
         event.target.classList.add('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
-        updateGrid();
-    }
-
-    function handleSearch() {
-        const input = document.getElementById('searchInput');
-        currentQuery = input.value.toLowerCase().trim();
+        
         updateGrid();
     }
 
     function updateGrid() {
-        const items = document.querySelectorAll('.searchable-item');
         let visibleCount = 0;
-        
-        items.forEach(item => {
-            const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
-            const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
-            const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
-            const searchMatch = itemSearch.includes(currentQuery);
 
-            if (typeMatch && searchMatch) {
+        // 1. FILTER GRID ITEMS
+        const gridItems = document.querySelectorAll('.searchable-item');
+        gridItems.forEach(item => {
+            if (checkVisibility(item)) {
                 item.style.display = 'flex';
                 visibleCount++;
-                if (currentQuery.length > 0) {
-                    highlightText(item, currentQuery);
-                } else {
-                    clearHighlights(item);
-                }
+                if (currentQuery.length > 0) highlightText(item, currentQuery);
+                else clearHighlights(item);
             } else {
                 item.style.display = 'none';
                 clearHighlights(item);
             }
         });
-        
+
+        // 2. FILTER TREE NODES
+        const treeNodes = document.querySelectorAll('.searchable-tree-item');
+        treeNodes.forEach(item => {
+            if (checkVisibility(item)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // 3. AUTO-HIDE EMPTY FOLDERS (Robuster Logic)
+        const treeFolders = document.querySelectorAll('.tree-folder'); // Ensure your <details> has class="tree-folder"
+        treeFolders.forEach(folder => {
+            let hasVisibleChildren = false;
+            
+            // Check all children of this specific folder
+            const children = folder.querySelectorAll('.searchable-tree-item');
+            children.forEach(child => {
+                if (child.style.display !== 'none') {
+                    hasVisibleChildren = true;
+                }
+            });
+
+            // Toggle Folder Visibility
+            if (hasVisibleChildren) {
+                folder.style.display = 'block';
+            } else {
+                folder.style.display = 'none';
+            }
+        });
+
         const counter = document.getElementById('node-count');
         if (counter) counter.innerText = visibleCount;
     }
 
+    // HELPER: Centralized Logic
+    function checkVisibility(item) {
+        // Fallback to empty string if attribute is missing to prevent crash
+        const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
+        const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
+        
+        const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
+        const searchMatch = itemSearch.includes(currentQuery);
+
+        return typeMatch && searchMatch;
+    }
+
+    // PRESERVED HELPER FUNCTIONS
     function highlightText(card, term) {
         const targets = card.querySelectorAll('h3, p');
         targets.forEach(element => {
-            if (!element.dataset.original) {
-                element.dataset.original = element.innerHTML;
-            }
+            if (!element.dataset.original) element.dataset.original = element.innerHTML;
             const originalText = element.dataset.original;
             const regex = new RegExp(`(${term})`, 'gi');
-            
-            if (originalText.toLowerCase().includes(term)) {
-                element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
-            } else {
-                element.innerHTML = originalText;
-            }
+            if (originalText.toLowerCase().includes(term)) element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
+            else element.innerHTML = originalText;
         });
     }
 
     function clearHighlights(card) {
         const targets = card.querySelectorAll('h3, p');
         targets.forEach(element => {
-            if (element.dataset.original) {
-                element.innerHTML = element.dataset.original;
-            }
+            if (element.dataset.original) element.innerHTML = element.dataset.original;
         });
     }
 
@@ -437,11 +525,7 @@
         txt.innerHTML = rawEl.innerHTML;
         modalContent.innerHTML = marked.parse(txt.value);
         modalBackdrop.classList.remove('hidden');
-        setTimeout(() => {
-            modalBackdrop.classList.remove('opacity-0');
-            modalPanel.classList.remove('scale-95');
-            modalPanel.classList.add('scale-100');
-        }, 10);
+        setTimeout(() => { modalBackdrop.classList.remove('opacity-0'); modalPanel.classList.remove('scale-95'); modalPanel.classList.add('scale-100'); }, 10);
         document.body.style.overflow = 'hidden';
     }
 
@@ -449,14 +533,9 @@
         modalBackdrop.classList.add('opacity-0');
         modalPanel.classList.remove('scale-100');
         modalPanel.classList.add('scale-95');
-        setTimeout(() => {
-            modalBackdrop.classList.add('hidden');
-        }, 300);
+        setTimeout(() => { modalBackdrop.classList.add('hidden'); }, 300);
         document.body.style.overflow = 'auto';
     }
-
-    document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') closeModal(); 
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 </script>
 {% endblock %}

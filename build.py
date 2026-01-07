@@ -419,7 +419,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
         footer_html += '</div></div>'
 
     elif "author" in note_type:
-        color = "border-white"
+        color = "border-aurelia-secondary"
         icon = "👤"
         label = "Author_Profile"
         prof = extract_profile_context(body_content)
@@ -630,7 +630,7 @@ def build_all():
     portfolio_cards = []
     protocol_cards = []
 
-    # 2. SCAN VAULT (Garden & Portfolio)
+    # 2. SCAN VAULT (The Main Router)
     for root, dirs, files in os.walk(VAULT_PATH):
         for filename in sorted(files):
             if filename.endswith(".md"):
@@ -642,10 +642,13 @@ def build_all():
                 if not meta.get("publish"): continue 
 
                 body = parse_body(content)
-                note_type = meta.get("type", "unknown").lower()
-                tags = meta.get("tags", [])  # <--- CAPTURE TAGS
+                # Normalize type to ensure matching works
+                note_type = meta.get("type", "unknown").lower().strip()
+                tags = meta.get("tags", []) 
                 
-                # Logic to separate Projects from Notes
+                # --- ROUTING SWITCH (The "Traffic Cop") ---
+                
+                # ROUTE A: PROJECTS -> Portfolio
                 if "project" in note_type:
                     project_id = f"project-{len(portfolio_cards)}"
                     sections = {"brief": body}
@@ -657,14 +660,23 @@ def build_all():
                         "title": filename.replace(".md", "").replace("_", " "),
                         "link": f"portfolio.html#{project_id}", 
                         "type": "PROJECT",
-                        "tags": tags,           # <--- SAVE TAGS
-                        "desc": extract_mission_brief(body) # <--- SAVE BRIEF
+                        "tags": tags,
+                        "desc": extract_mission_brief(body)
                     })
+
+                # ROUTE B: PROTOCOLS -> Ignore (Handled in Step 3)
+                elif "protocol" in note_type:
+                    continue 
+
+                # ROUTE C: FUTURE EXPANSION (Example)
+                # elif "book" in note_type:
+                #    book_cards.append(...)
+
+                # ROUTE D: EVERYTHING ELSE -> Garden
                 else:
                     note_id = f"note-{len(garden_cards)}"
                     card_html = generate_garden_card_html(meta, filename, note_id, body)
                     
-                    # Extract a clean text blurb for searching
                     clean_text = re.sub(r'[*#_`\[\]]', '', body)[:200]
                     
                     garden_cards.append({
@@ -673,9 +685,9 @@ def build_all():
                         "id": note_id,
                         "title": filename.replace(".md", "").replace("_", " "),
                         "link": f"garden.html#{note_id}", 
-                        "type": "NOTE",  # NOTE: ensure generate_garden_card_html sets the specific type if needed
-                        "tags": tags,          # <--- SAVE TAGS
-                        "desc": clean_text     # <--- SAVE PREVIEW
+                        "type": "NOTE", # You can change this to use actual note_type if you want sub-sorting
+                        "tags": tags,
+                        "desc": clean_text
                     })
 
     # 3. SCAN PROTOCOLS
