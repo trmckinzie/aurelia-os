@@ -3,7 +3,7 @@
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
   "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": true,
+  "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
@@ -53,6 +53,6 @@
   "repelStrength": 20,
   "linkStrength": 1,
   "linkDistance": 500,
-  "scale": 0.22920135941749112,
+  "scale": 0.10932513232105619,
   "close": false
 }
