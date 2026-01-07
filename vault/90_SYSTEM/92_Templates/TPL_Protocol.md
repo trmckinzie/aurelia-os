@@ -2,7 +2,7 @@
 created: <% tp.date.now("YYYY-MM-DD") %>
 type: protocol
 publish: false
-id: PROT_<% tp.date.now("MMDD") %>
+id: PROT_##
 tags:
   - type/protocol
 description: Brief executive summary. No markdown allowed here.

@@ -690,13 +690,14 @@ def build_all():
                         "desc": clean_text
                     })
 
-    # 3. SCAN PROTOCOLS
+   # 3. SCAN PROTOCOLS
     if os.path.exists(PROTOCOL_PATH):
         for filename in os.listdir(PROTOCOL_PATH):
             if filename.endswith(".md"):
                 filepath = os.path.join(PROTOCOL_PATH, filename)
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
+                
                 meta = parse_frontmatter(content)
                 if not meta.get("publish", False): continue
                 
@@ -713,9 +714,17 @@ def build_all():
                     "type": "PROTOCOL"
                 })
 
-    # ⚡ SORTING PROTOCOL (NEW) ⚡
-    # Groups by Type, then sorts Alphabetically by Title
-    garden_cards.sort(key=lambda x: (x.get('type', ''), x.get('title', '')))
+    # ⚡ SORTING ENGINE (ALL ALPHABETICAL) ⚡
+    # We use .lower() to ensure "Alpha" comes before "beta" (Case Insensitive)
+    
+    # 1. Garden Cards (Sorted by Title A-Z)
+    garden_cards.sort(key=lambda x: x['title'].lower())
+    
+    # 2. Portfolio Cards (Sorted by Title A-Z)
+    portfolio_cards.sort(key=lambda x: x['title'].lower())
+
+    # 3. Protocol Cards (Sorted by Title A-Z)
+    protocol_cards.sort(key=lambda x: x['title'].lower())
 
     print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols")
     
@@ -728,14 +737,14 @@ def build_all():
     master_index.append({"title": "Protocols // Logic", "url": "protocol.html", "type": "SYSTEM", "tags": ["sop", "routines"], "desc": "Operating Procedures"})
     master_index.append({"title": "Portfolio // Output", "url": "portfolio.html", "type": "SYSTEM", "tags": ["work", "jobs"], "desc": "Case Studies"})
     
-    # Add Content
+    # Add Content (Detailed)
     for c in garden_cards: 
         master_index.append({
             "title": c['title'], 
             "url": c['link'], 
             "type": "GARDEN", 
-            "tags": c['tags'],     # <--- PASS TAGS TO FRONTEND
-            "desc": c['desc']      # <--- PASS DESC TO FRONTEND
+            "tags": c['tags'], 
+            "desc": c['desc']
         })
         
     for p in portfolio_cards: 
@@ -756,10 +765,7 @@ def build_all():
             "desc": prot['desc']
         })
     
-    # Add Content Content
-    for c in garden_cards: master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN"})
-    for p in portfolio_cards: master_index.append({"title": p['title'], "url": p['link'], "type": "PROJECT"})
-    for prot in protocol_cards: master_index.append({"title": prot['title'], "url": prot['link'], "type": "PROTOCOL"})
+    # (Duplicate loop removed here for cleaner search index)
 
     # Serialize to JSON string
     json_index = json.dumps(master_index)

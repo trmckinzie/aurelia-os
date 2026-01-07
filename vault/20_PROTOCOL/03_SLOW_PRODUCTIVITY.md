@@ -2,7 +2,7 @@
 created: 2026-01-07
 type: protocol
 publish: true
-id: PROT_0107
+id: PROT_03
 tags:
   - type/protocol
 description: Cal Newport's framework for slowing down, enjoying the process of creating work we are proud of, and living well.
