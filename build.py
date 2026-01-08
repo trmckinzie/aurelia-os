@@ -91,6 +91,7 @@ print(f"🔧 CONFIG: Templates={TEMPLATE_DIR}")
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 # --- HELPER: Frontmatter Parser ---
+# --- HELPER: Frontmatter Parser ---
 def parse_frontmatter(content):
     meta = {"publish": False, "tags": [], "type": "unknown", "status": "unknown"}
     
@@ -107,25 +108,24 @@ def parse_frontmatter(content):
         if re.search(r'^publish:\s*true', yaml_text, re.MULTILINE | re.IGNORECASE):
              meta["publish"] = True
         
-        # Extract basic strings
-        for field in ["type", "status", "role", "cover_image", "date", "icon", "created"]:
+        # [UPDATED] Extract basic strings - Added audio_file, visual_loop, series, episode, summary
+        target_fields = [
+            "type", "status", "role", "cover_image", "date", "icon", "created", 
+            "audio_file", "visual_loop", "series", "episode", "summary", "link_repo", "link_live"
+        ]
+        
+        for field in target_fields:
+            # Regex captures "key: value"
             match = re.search(rf'^{field}:\s*(.+)$', yaml_text, re.MULTILINE)
             if match: 
+                # Clean up quotes and template tags
                 meta[field] = match.group(1).strip().strip('"').strip("'").replace("{{", "").replace("}}", "")
         
-        # Link Handling
-        repo = re.search(r'^link_repo:\s*(.+)$', yaml_text, re.MULTILINE)
-        if repo: meta["link_repo"] = repo.group(1).strip()
-        live = re.search(r'^link_live:\s*(.+)$', yaml_text, re.MULTILINE)
-        if live: meta["link_live"] = live.group(1).strip()
-
         # Date Fallback
         if "date" not in meta and "created" in meta:
             meta["date"] = meta["created"]
 
         # FIX 2: Universal Tag Extraction
-        # Captures inline: tags: [a, b]
-        # Captures list:   - a
         tags = []
         
         # A. Inline Format
@@ -133,13 +133,8 @@ def parse_frontmatter(content):
         if inline_match:
             tags = [t.strip() for t in inline_match.group(1).split(',')]
         
-        # B. List Format (Regex scan for lines starting with dash inside yaml)
-        # We scan the whole yaml block for lines that look like list items
-        # This is safer than state-machine parsing for simple flat lists
+        # B. List Format
         if not tags:
-            # Find lines that are "  - something" or "- something"
-            # We assume these are tags if we didn't find inline tags
-            # (Limitation: This assumes tags are the only list in FM, or distinct enough)
             list_matches = re.findall(r'^\s*-\s*(.+)$', yaml_text, re.MULTILINE)
             if list_matches:
                 tags = [t.strip() for t in list_matches]
