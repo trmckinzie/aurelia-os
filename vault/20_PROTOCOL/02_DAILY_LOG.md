@@ -11,8 +11,8 @@ description: Brief executive summary. No markdown allowed here.
 
 ## 📋 The Sequence
 - [ ] Trigger: 30-60 minute deep reading and annotation on a book/article of choice. 
-- [ ] Active recall on annotations, choose 3-5 of the most important concepts from the reading.
-- [ ] Complete Cornell note with cues/questions in left column (important concepts from previous step) and quotes/definitions/insights in the right column.
+- [ ] [[Active Recall]] on annotations, choose 3-5 of the most important concepts from the reading.
+- [ ] Complete Cornell note with cues/questions in left column (important concepts from previous step) and quotes/definitions/insights in the right column. 
 - [ ] Write a brief summary of the reading session, and be sure to include any connections or insights across disciplines/concepts. 
 - [ ] Transfer Cornell note to dedicated Obsidian "Concept Note" template. 
 - [ ] Publish Daily Log to Github via plugin on Obsidian!

@@ -2,7 +2,12 @@
 created: 2026-01-06
 tags:
   - type/author
-  - topic/
+  - topic/psychology
+  - topic/systems
+  - topic/computation
+  - topic/phil-mind
+  - topic/cognitive-science
+publish: true
 ---
 # 👤 Daniel Kahneman
 

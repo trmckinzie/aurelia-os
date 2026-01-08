@@ -20,7 +20,9 @@ stats:
 ---
 # 🚨 Mission Brief (The Problem)
 **System Failure:** Needed a personal website to start developing a public brand as an academic researcher and business professional with a versatile skillset and digital literacy. Also wanted to design an efficient workflow that allowed my local obsidian notes to become automatically published to a personal site that acts as headquarters for my academic and professional portfolio. 
+
 **Resource Gap:** Traditional sites such as Wix do not allow for the kind of customization I was looking for and Obsidian publish (and equivalent options for publishing notes) was too expensive for my liking. 
+
 **Objective:** Engineer a "Digital Garden" pipeline that automatically compiles raw markdown notes into a high-performance, cybernetic web interface without manual formatting. Create a personal multi-modal website that houses my digital garden but also reflects my competency as a budding academic, productivity expert, and digital architect. This site must be visually stunning but also highly functional. 
 
 # 🛠️ Architecture (The Solution)
