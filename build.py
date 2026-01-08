@@ -3,6 +3,13 @@ import re
 import json
 from jinja2 import Environment, FileSystemLoader
 
+# --- INSERT THIS HELPER FUNCTION AFTER YOUR IMPORTS ---
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError ("Type %s not serializable" % type(obj))
+
 # --- CONFIGURATION ---
 # Correct pathing: Sets the Root to the folder where build.py lives
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -372,15 +379,13 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
                 break
     
     # 2. FAIL-SAFE: Filename Date Check (YYYY-MM-DD)
-    # If the filename looks like a date, it IS a daily log. Period.
     if re.match(r'\d{4}-\d{2}-\d{2}', filename):
         note_type = "daily-bridge"
 
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
     
-    # ... (Rest of function continues below) ...
-    
+    # Clean Body Text for Blurb
     clean_body = re.sub(r'#{1,6}\s.*', '', body_content)
     clean_body = re.sub(r'\*\*.*?\*\*.*', '', clean_body)
     clean_body = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_body)
@@ -391,6 +396,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content):
     raw_search = f"{title} {note_type} {body_content}".lower()
     search_text = raw_search.replace('\n', ' ').replace('"', "'").replace("  ", " ")
 
+    # --- CARD STYLING LOGIC ---
     if "daily" in note_type or "log" in note_type or "bridge" in note_type:
         color = "border-aurelia-tertiary"
         icon = "📅"
@@ -610,6 +616,13 @@ def generate_project_card(meta, sections, title, note_id):
     """
     return html
 
+# --- NEW HELPER: DATE SERIALIZER FOR TRANSMISSIONS ---
+from datetime import date, datetime
+def json_serial(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    raise TypeError ("Type %s not serializable" % type(obj))
+
 def build_all():
     print("\n🧬 AURELIA SYSTEM: INITIALIZING JINJA CORE...")
 
@@ -623,12 +636,11 @@ def build_all():
         print(f"   ⚠️ WARNING: Could not load user_config.json. Using defaults. ({e})")
         user_config = { "author": { "name": "Unknown User" } } # Fallback
 
-    # ... (Rest of your existing code: garden_cards = [], etc.)
-    
-# 1. LOAD DATA CONTAINERS
+    # 1. LOAD DATA CONTAINERS
     garden_cards = []
     portfolio_cards = []
     protocol_cards = []
+    transmissions_data = [] # <--- NEW: Transmissions Container
 
     # 2. SCAN VAULT (The Main Router)
     for root, dirs, files in os.walk(VAULT_PATH):
@@ -668,9 +680,9 @@ def build_all():
                 elif "protocol" in note_type:
                     continue 
 
-                # ROUTE C: FUTURE EXPANSION (Example)
-                # elif "book" in note_type:
-                #    book_cards.append(...)
+                # ROUTE C: TRANSMISSIONS -> Ignore (Handled in Step 4)
+                elif "transmission" in note_type:
+                    continue # Skips adding to Garden, handled by separate loader below
 
                 # ROUTE D: EVERYTHING ELSE -> Garden
                 else:
@@ -685,12 +697,12 @@ def build_all():
                         "id": note_id,
                         "title": filename.replace(".md", "").replace("_", " "),
                         "link": f"garden.html#{note_id}", 
-                        "type": "NOTE", # You can change this to use actual note_type if you want sub-sorting
+                        "type": "NOTE",
                         "tags": tags,
                         "desc": clean_text
                     })
 
-   # 3. SCAN PROTOCOLS
+    # 3. SCAN PROTOCOLS
     if os.path.exists(PROTOCOL_PATH):
         for filename in os.listdir(PROTOCOL_PATH):
             if filename.endswith(".md"):
@@ -714,21 +726,64 @@ def build_all():
                     "type": "PROTOCOL"
                 })
 
-    # ⚡ SORTING ENGINE (ALL ALPHABETICAL) ⚡
-    # We use .lower() to ensure "Alpha" comes before "beta" (Case Insensitive)
+    # 4. SCAN TRANSMISSIONS (UPDATED FOR 40_TRANSMISSIONS)
+    # Checks config first
+    if user_config.get('modules', {}).get('transmissions', {}).get('enabled', False):
+        # 1. Target the new folder structure
+        transmissions_dir = os.path.join(VAULT_PATH, "40_TRANSMISSIONS")
+
+        if os.path.exists(transmissions_dir):
+            print(f"   + Processing Transmissions from: {transmissions_dir}")
+            for filename in os.listdir(transmissions_dir):
+                if filename.endswith(".md"):
+                    filepath = os.path.join(transmissions_dir, filename)
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        t_content = f.read()
+                    
+                    t_meta = parse_frontmatter(t_content)
+                    t_body = parse_body(t_content)
+                    
+                    # Metadata Safety Checks
+                    if 'series' not in t_meta: t_meta['series'] = 'Uncategorized'
+                    if 'title' not in t_meta: t_meta['title'] = filename.replace(".md", "")
+                    
+                    # Ensure episode is integer for safe sorting
+                    try:
+                        t_meta['episode'] = int(t_meta.get('episode', 999))
+                    except:
+                        t_meta['episode'] = 999
+                    
+                    # Markdown Parsing
+                    try:
+                        import markdown
+                        # Enable extensions if you need tables or code fencing
+                        t_meta['content'] = markdown.markdown(t_body, extensions=['fenced_code', 'tables']) 
+                    except ImportError:
+                        t_meta['content'] = t_body 
+                        
+                    t_meta['tags'] = t_meta.get("tags", [])
+                    
+                    transmissions_data.append(t_meta)
+        else:
+            print(f"   ⚠️ WARNING: Transmissions enabled but '40_TRANSMISSIONS' folder not found in {VAULT_PATH}")
+
+    # ⚡ SORTING ENGINE ⚡
     
-    # 1. Garden Cards (Sorted by Title A-Z)
+    # 1. Garden Cards (A-Z)
     garden_cards.sort(key=lambda x: x['title'].lower())
     
-    # 2. Portfolio Cards (Sorted by Title A-Z)
+    # 2. Portfolio Cards (A-Z)
     portfolio_cards.sort(key=lambda x: x['title'].lower())
 
-    # 3. Protocol Cards (Sorted by Title A-Z)
+    # 3. Protocol Cards (A-Z)
     protocol_cards.sort(key=lambda x: x['title'].lower())
 
-    print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols")
+    # 4. Transmissions (Series, then Episode)
+    transmissions_data.sort(key=lambda x: (x['series'], x['episode']))
+
+    print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols, {len(transmissions_data)} Transmissions")
     
-    # 4. BUILD MASTER SEARCH INDEX
+    # 5. BUILD MASTER SEARCH INDEX
     master_index = []
     
     # Add System Pages
@@ -737,40 +792,35 @@ def build_all():
     master_index.append({"title": "Protocols // Logic", "url": "protocol.html", "type": "SYSTEM", "tags": ["sop", "routines"], "desc": "Operating Procedures"})
     master_index.append({"title": "Portfolio // Output", "url": "portfolio.html", "type": "SYSTEM", "tags": ["work", "jobs"], "desc": "Case Studies"})
     
-    # Add Content (Detailed)
+    if transmissions_data:
+        master_index.append({"title": "Transmissions // Signal", "url": "transmissions.html", "type": "SYSTEM", "tags": ["podcast", "audio"], "desc": "Neural Uplink"})
+    
+    # Add Content
     for c in garden_cards: 
-        master_index.append({
-            "title": c['title'], 
-            "url": c['link'], 
-            "type": "GARDEN", 
-            "tags": c['tags'], 
-            "desc": c['desc']
-        })
+        master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN", "tags": c['tags'], "desc": c['desc']})
         
     for p in portfolio_cards: 
-        master_index.append({
-            "title": p['title'], 
-            "url": p['link'], 
-            "type": "PROJECT", 
-            "tags": p['tags'], 
-            "desc": p['desc']
-        })
+        master_index.append({"title": p['title'], "url": p['link'], "type": "PROJECT", "tags": p['tags'], "desc": p['desc']})
         
     for prot in protocol_cards: 
+        master_index.append({"title": prot['title'], "url": prot['link'], "type": "PROTOCOL", "tags": prot['tags'], "desc": prot['desc']})
+
+    for trans in transmissions_data:
         master_index.append({
-            "title": prot['title'], 
-            "url": prot['link'], 
-            "type": "PROTOCOL", 
-            "tags": prot['tags'], 
-            "desc": prot['desc']
+            "title": trans['title'], 
+            "url": "transmissions.html", # All eps live on one SPA page
+            "type": "TRANSMISSION", 
+            "tags": trans['tags'], 
+            "desc": f"Series: {trans['series']} // Ep {trans['episode']}"
         })
-    
-    # (Duplicate loop removed here for cleaner search index)
 
-    # Serialize to JSON string
+    # Serialize Index
     json_index = json.dumps(master_index)
+    
+    # Serialize Transmissions (Custom Date Handler)
+    transmissions_json = json.dumps(transmissions_data, default=json_serial)
 
-    # 5. RENDER PAGES
+    # 6. RENDER PAGES
     pages = [
         ("pages/indextemplate.html", "index.html", {}),
         ("pages/gardentemplate.html", "garden.html", {"cards": garden_cards}),
@@ -780,16 +830,20 @@ def build_all():
         ("404.html", "404.html", {}),
     ]
 
-    # ... inside the pages loop ...
+    # CHECK CONFIG, NOT DATA
+    # We use the config flag to decide whether to build the page
+    if user_config.get('modules', {}).get('transmissions', {}).get('enabled', False):
+         pages.append(("pages/transmissionstemplate.html", "transmissions.html", {"transmissions_json": transmissions_json}))
+
+    # RENDER LOOP
     for template_name, output_name, context in pages:
         try:
-            # INJECT DATA
+            # INJECT GLOBAL DATA
             context["theme"] = CURRENT_THEME 
             context["search_index"] = json_index
-            context["config"] = user_config  # <--- THIS IS THE NEW LINE
+            context["config"] = user_config 
             
             template = env.get_template(template_name)
-            # ... rest of render code
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
             
             with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8") as f:
@@ -799,7 +853,6 @@ def build_all():
             print(f"   ❌ Failed: {output_name} -> {e}")
 
     print("\n✅ SYSTEM SYNC COMPLETE.")
- 
 
 if __name__ == "__main__":
     build_all()

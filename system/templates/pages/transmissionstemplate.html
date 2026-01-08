@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% set active_page = "transmissions" %}
+{% block nav_title %}NEURAL_UPLINK{% endblock %}
+
+{% block head_extra %}
+<style>
+    /* 1. APP CONTAINER HEIGHT FIX */
+    .app-height { height: calc(100vh - 80px); }
+
+    /* 2. CUSTOM SCROLLBARS FOR THE DASHBOARD */
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #0a0a0b; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+
+    /* 3. AUDIO PLAYER OVERRIDES */
+    audio { filter: invert(1) sepia(1) hue-rotate(180deg) saturate(3); opacity: 0.8; width: 100%; height: 30px; }
+    
+    /* 4. GLITCH TEXT EFFECT */
+    .glitch-load { animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite; }
+    @keyframes glitch { 
+        0% { transform: translate(0) } 
+        20% { transform: translate(-2px, 2px) } 
+        40% { transform: translate(-2px, -2px) } 
+        60% { transform: translate(2px, 2px) } 
+        80% { transform: translate(2px, -2px) } 
+        100% { transform: translate(0) }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-height flex flex-col md:flex-row overflow-hidden border-t border-gray-800 relative z-10">
+
+    <aside class="w-full md:w-80 border-r border-gray-800 bg-black/80 backdrop-blur-md flex flex-col z-20">
+        <div class="p-4 border-b border-gray-800 bg-black">
+            <h2 class="text-xs font-mono text-aurelia-muted tracking-widest uppercase">/// SEQUENCE_LIBRARY</h2>
+        </div>
+        
+        <div id="series-container" class="flex-1 overflow-y-auto custom-scroll p-4 space-y-6">
+            <div class="text-xs font-mono text-gray-600 animate-pulse">SCANNING_FREQUENCIES...</div>
+        </div>
+
+        <div class="p-4 border-t border-gray-800 bg-black/50">
+            <div class="flex items-center gap-2 text-[10px] font-mono text-gray-500">
+                <div class="w-2 h-2 rounded-full bg-aurelia-accent animate-pulse"></div>
+                SYSTEM_ONLINE
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative bg-[#050505]">
+        
+        <div class="h-[40%] relative border-b border-gray-800 group overflow-hidden">
+            <video id="visual-loop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" autoplay loop muted playsinline>
+                <source src="" type="video/mp4">
+            </video>
+            
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMDAwIiAvPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDUwLCA1MCwgNTAsIDAuMikiIC8+Cjwvc3ZnPg==')] opacity-50 pointer-events-none"></div>
+
+            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black via-black/90 to-transparent z-10">
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                             <span id="player-series" class="text-[9px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded uppercase">--</span>
+                             <span id="player-date" class="text-[9px] font-mono text-gray-500">--/--/----</span>
+                        </div>
+                        <h1 id="player-title" class="text-2xl md:text-3xl font-bold text-white font-mono leading-none tracking-tight shadow-black drop-shadow-lg">INITIALIZING...</h1>
+                    </div>
+                    <div class="hidden md:block text-right">
+                        <div class="text-[10px] font-mono text-gray-500">AUDIO_CODEC: MP3_320</div>
+                        <div class="text-[10px] font-mono text-gray-500">VISUAL_FEED: ACTIVE</div>
+                    </div>
+                </div>
+                
+                <audio id="audio-player" controls class="w-full">
+                    <source src="">
+                </audio>
+            </div>
+        </div>
+
+        <div class="h-[60%] w-full bg-[#0a0a0b] relative flex flex-col">
+            <div class="flex items-center justify-between px-8 py-3 border-b border-gray-800 bg-black/40 backdrop-blur">
+                <span class="text-[10px] font-mono text-gray-500 uppercase">/// DECRYPTED_TRANSCRIPT</span>
+                <button onclick="toggleZotero()" class="text-[10px] font-mono text-aurelia-cyan hover:text-white transition-colors flex items-center gap-1">
+                    <span>VIEW_REFERENCES</span>
+                    <span class="text-xs">↓</span>
+                </button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto custom-scroll p-8 md:p-12">
+                <article id="transcript-body" class="prose prose-invert prose-sm md:prose-base max-w-3xl mx-auto font-sans leading-relaxed text-gray-300">
+                    </article>
+
+                <div id="zotero-section" class="max-w-3xl mx-auto mt-16 pt-8 border-t border-gray-800 hidden opacity-0 transition-opacity duration-500">
+                    <h3 class="text-xs font-mono text-aurelia-muted mb-4 uppercase tracking-widest">/// ACADEMIC_CITATIONS [ZOTERO_LINKED]</h3>
+                    <ul id="zotero-list" class="space-y-3 text-sm text-gray-400 font-mono"></ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // 1. HYDRATE DATA
+    const db = {{ transmissions_json | safe }};
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!db || db.length === 0) {
+            document.getElementById('series-container').innerHTML = '<div class="p-4 text-xs font-mono text-red-500">NO_SIGNAL_DETECTED</div>';
+            return;
+        }
+        
+        renderSidebar();
+        loadEpisode(0); // Auto-load first episode
+    });
+
+    // 2. RENDER SIDEBAR
+    function renderSidebar() {
+        const container = document.getElementById('series-container');
+        container.innerHTML = ''; // Clear loading state
+        
+        const groups = {};
+        // Group by series
+        db.forEach((ep, index) => {
+            const series = ep.series || "Uncategorized";
+            if (!groups[series]) groups[series] = [];
+            groups[series].push({ ...ep, globalIndex: index });
+        });
+
+        // Generate HTML
+        for (const [seriesName, episodes] of Object.entries(groups)) {
+            const wrapper = document.createElement('div');
+            
+            // Series Header
+            const header = document.createElement('h3');
+            header.className = "text-[10px] font-bold text-aurelia-muted mb-3 uppercase tracking-widest pl-2 border-l-2 border-aurelia-border";
+            header.innerText = seriesName;
+            wrapper.appendChild(header);
+            
+            // Episode List
+            const ul = document.createElement('ul');
+            ul.className = "space-y-1 mb-6";
+            
+            episodes.forEach(ep => {
+                const li = document.createElement('li');
+                li.className = "group flex items-center gap-3 p-2 rounded hover:bg-white/5 cursor-pointer transition-all";
+                li.onclick = () => loadEpisode(ep.globalIndex);
+                
+                li.innerHTML = `
+                    <span class="text-[9px] font-mono text-gray-600 border border-gray-800 px-1 rounded group-hover:border-aurelia-cyan group-hover:text-aurelia-cyan transition-colors">
+                        EP.${String(ep.episode).padStart(2, '0')}
+                    </span>
+                    <span class="text-xs font-mono text-gray-400 group-hover:text-white truncate transition-colors">
+                        ${ep.title}
+                    </span>
+                `;
+                ul.appendChild(li);
+            });
+            
+            wrapper.appendChild(ul);
+            container.appendChild(wrapper);
+        }
+    }
+
+    // 3. LOAD EPISODE (SPA LOGIC)
+    function loadEpisode(index) {
+        const data = db[index];
+        
+        // Text Metadata
+        const titleEl = document.getElementById('player-title');
+        titleEl.innerText = data.title;
+        titleEl.classList.remove('glitch-load'); 
+        void titleEl.offsetWidth; // Trigger reflow
+        titleEl.classList.add('glitch-load'); // Re-trigger animation
+        
+        document.getElementById('player-series').innerText = data.series;
+        document.getElementById('player-date').innerText = data.date || "Unknown Date";
+        
+        // Media
+        const audio = document.getElementById('audio-player');
+        const video = document.getElementById('visual-loop');
+        
+        if(audio.src !== data.audio_file) {
+            audio.src = data.audio_file || "";
+            // audio.play(); // Optional: Auto-play on click
+        }
+        
+        if(data.visual_loop && video.src !== data.visual_loop) {
+            video.src = data.visual_loop;
+        }
+
+        // Transcript Content
+        const body = document.getElementById('transcript-body');
+        body.innerHTML = data.content; // Injected HTML from Python
+
+        // Zotero Parsing
+        const zoteroSection = document.getElementById('zotero-section');
+        const zoteroList = document.getElementById('zotero-list');
+        
+        // Check if there are refs in the YAML or body
+        // (For this version, we assume manual entry in body or separate field)
+        // If you add a 'references' list to your YAML, we handle it here:
+        if (data.references && data.references.length > 0) {
+            zoteroList.innerHTML = data.references.map(ref => 
+                `<li class="hover:text-aurelia-text transition-colors cursor-help">[REF] ${ref}</li>`
+            ).join('');
+            zoteroSection.classList.remove('hidden');
+        } else {
+            zoteroSection.classList.add('hidden');
+        }
+    }
+
+    function toggleZotero() {
+        const z = document.getElementById('zotero-section');
+        z.classList.remove('hidden');
+        setTimeout(() => z.classList.toggle('opacity-0'), 10);
+        z.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+{% endblock %}

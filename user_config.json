@@ -1,16 +1,16 @@
 {
     "system_name": "AURELIA // OS",
     "system_version": "v3.2.0",
-    "status_message": "SYSTEM_ONLINE",
+    "status_message": "Developing_Aurelia_OS",
     
     "author": {
         "name": "Travis R. McKinzie",
         "short_name": "T.R.M.",
-        "role": "System Architect",
+        "role": "Digital Architect",
         "email": "trmckinzie24@gmail.com",
         "location": "Colorado, USA",
         "bio_short": "Evolutionary Theory meets Cognitive Science.",
-        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence."
+        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on designing systems that enhance the learning experience and increase the quality of your output as a creative, while balancing a healthy lifestyle (whatever that means to you). Everybody has a unique set of values, aspirations, desires, and obstacles in their life. It is my intention to provide people with digital tools that augment their knowledge and problem solving abilities through workflows that are functional, customizable, and visually stunning. Lets build together"
     },
 
     "links": {
@@ -37,9 +37,10 @@
     ],
 
     "modules": {
-        "garden": { "title": "The Garden", "subtitle": "INPUT // RAW NOTES" },
-        "projects": { "title": "Portfolio", "subtitle": "OUTPUT // PROOF OF WORK" },
-        "protocols": { "title": "Protocols", "subtitle": "KERNEL // ROUTINES" },
-        "services": { "title": "Services", "subtitle": "COMMERCE // HIRE ME" }
-    }
+    "garden": { "enabled": true },
+    "projects": { "enabled": true },
+    "protocols": { "enabled": true },
+    "services": { "enabled": true },
+    "transmissions": { "enabled": true }  
+}
 }

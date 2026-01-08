@@ -4,6 +4,7 @@
     "cssclasses": "multitext",
     "tags": "tags",
     "publish": "checkbox",
-    "date": "date"
+    "date": "date",
+    "audio_file": "text"
   }
 }
