@@ -8,6 +8,7 @@ tags:
   - topic/career-development
   - topic/focus
   - topic/peak-performance
+publish: true
 ---
 # 👤 Cal Newport
 
