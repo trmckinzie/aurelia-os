@@ -82,7 +82,7 @@ THEME_CONFIG = {
 
 # ⚡ ACTIVE THEME SELECTOR ⚡
 # Change to THEME_CONFIG["CYBER_PRIME"] to go back to original
-CURRENT_THEME = THEME_CONFIG["THE_PATRIOT"]
+CURRENT_THEME = THEME_CONFIG["CYBER_PRIME"]
 
 print(f"🔧 CONFIG: Root={ROOT_DIR}")
 print(f"🔧 CONFIG: Vault={VAULT_PATH}")

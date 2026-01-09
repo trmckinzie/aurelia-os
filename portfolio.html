@@ -29,29 +29,31 @@
       extend: {
         colors: {
           // SEMANTIC MAPPING
-          'aurelia-bg': '#fdfbf7',
-          'aurelia-card': '#ffffff',
-          'aurelia-surface': '#f3f4f6',
+          'aurelia-bg': '#0a0a0b',
+          'aurelia-card': '#121214',
+          'aurelia-surface': '#18181b',
           
-          'aurelia-text': '#111827',
-          'aurelia-muted': '#4b5563',
-          'aurelia-inverted': '#ffffff',
+          'aurelia-text': '#ffffff',
+          'aurelia-muted': '#9ca3af',
+          'aurelia-inverted': '#000000',
 
-          'aurelia-border': '#e5e7eb',
+          'aurelia-border': '#27272a',
           
           // ROLES
-          'aurelia-primary': '#1e3a8a',
-          'aurelia-secondary': '#dc2626',
-          'aurelia-tertiary': '#b45309',
-          'aurelia-accent': '#2563eb',
+          'aurelia-primary': '#00f2ff',
+          'aurelia-secondary': '#8a2be2',
+          'aurelia-tertiary': '#ff8c00',
+          'aurelia-accent': '#39ff14',
         },
         borderRadius: {
-            'theme': '8px'
+            'theme': '2px'
         },
         fontFamily: {
           sans: ['Inter', 'sans-serif'],
-          mono: ['Courier Prime', 'Courier New', monospace],
+          mono: ['JetBrains Mono', 'monospace'],
         },
+        
+        animation: { 'scanline': 'scanline 8s linear infinite' },
         
       }
     }
@@ -60,85 +62,68 @@
 
 <style>
     /* NAV BAR GLOW UTILITIES */
-    .text-shadow-cyan { text-shadow: 0 0 10px #1e3a8a80; }
-    .text-shadow-green { text-shadow: 0 0 10px #2563eb80; }
-    .text-shadow-purple { text-shadow: 0 0 10px #dc262680; }
-    .text-shadow-orange { text-shadow: 0 0 10px #b4530980; }
+    .text-shadow-cyan { text-shadow: 0 0 10px #00f2ff80; }
+    .text-shadow-green { text-shadow: 0 0 10px #39ff1480; }
+    .text-shadow-purple { text-shadow: 0 0 10px #8a2be280; }
+    .text-shadow-orange { text-shadow: 0 0 10px #ff8c0080; }
     .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
     /* GLOBAL RESET */
     body { 
-        background-color: #fdfbf7; 
-        color: #111827;
+        background-color: #0a0a0b; 
+        color: #ffffff;
     }
     
 /* GLOBAL SELECTION HIGHLIGHTER */
     ::selection {
-        background: #1e3a8a; /* Cyan in Cyber Prime */
-        color: #fdfbf7;      /* Black Text for contrast */
+        background: #00f2ff; /* Cyan in Cyber Prime */
+        color: #0a0a0b;      /* Black Text for contrast */
         text-shadow: none; /* Removes glow for cleaner reading */
     }
 
     /* Firefox Support */
     ::-moz-selection {
-        background: #1e3a8a;
-        color: #fdfbf7;
+        background: #00f2ff;
+        color: #0a0a0b;
         text-shadow: none;
     }
 
     /* UNIVERSAL GLASS CLASS */
     .glass {
-        background: rgba(10, 10, 11, 0.95);
+        background: rgba(10, 10, 11, 0.6);
     }
     
     /* THE_PATRIOT SPECIFIC OVERRIDE FOR GLASS */
-    
-    .glass {
-        background: white;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    /* Invert the scanline/grid to be subtle gray on white */
-    .scanline {
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 1px,
-            #e5e7eb 1px,
-            #e5e7eb 2px
-        );
-        opacity: 0.3;
-    }
     
 
     /* --- [NEW] GLOBAL PROSE DEFAULTS --- */
     /* This makes all Markdown content follow the active theme colors automatically */
     .prose {
-        color: #4b5563;
+        color: #9ca3af;
         max-width: 65ch; /* Optimal reading width */
     }
     .prose h1, .prose h2, .prose h3, .prose h4, .prose strong {
-        color: #111827;
+        color: #ffffff;
     }
     .prose a {
-        color: #1e3a8a;
+        color: #00f2ff;
         text-decoration: none;
-        border-bottom: 1px dotted #1e3a8a;
+        border-bottom: 1px dotted #00f2ff;
     }
     .prose a:hover {
-        color: #2563eb;
+        color: #39ff14;
         border-bottom-style: solid;
     }
     .prose code {
-        color: #2563eb;
-        background: #f3f4f6;
+        color: #39ff14;
+        background: #18181b;
         padding: 0.2em 0.4em;
         border-radius: 4px;
         font-size: 0.9em;
     }
     .prose blockquote {
-        border-left-color: #1e3a8a;
-        color: #4b5563;
+        border-left-color: #00f2ff;
+        color: #9ca3af;
     }
 </style>
     
@@ -162,7 +147,7 @@
 
     /* --- HEADERS (The Spacing Fix) --- */
     .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3 {
-        color: #111827;
+        color: #ffffff;
         font-weight: 700;
         line-height: 1.3;
         scroll-margin-top: 2em;
@@ -174,7 +159,7 @@
         margin-top: 2.5em; /* Huge space above to separate sections */
         margin-bottom: 1em; /* Space below to let title breathe */
         padding-bottom: 0.5em;
-        border-bottom: 2px solid #dc2626; /* Theme Accent Border */
+        border-bottom: 2px solid #8a2be2; /* Theme Accent Border */
     }
     /* First H1 shouldn't have huge top margin */
     .obsidian-reader h1:first-child { margin-top: 0; }
@@ -183,7 +168,7 @@
         font-size: 1.5em;
         margin-top: 2em;
         margin-bottom: 0.75em;
-        color: #dc2626; /* Colored Subheaders */
+        color: #8a2be2; /* Colored Subheaders */
     }
 
     /* --- BODY CONTENT --- */
@@ -194,7 +179,7 @@
 
     /* Make **Bold Keys** Pop with Theme Color */
     .obsidian-reader strong {
-        color: #dc2626;
+        color: #8a2be2;
         font-weight: 700;
     }
 
@@ -210,18 +195,18 @@
     }
     
     .obsidian-reader li::marker {
-        color: #dc2626; /* Colored bullets */
+        color: #8a2be2; /* Colored bullets */
     }
 
     /* --- LINKS --- */
     .obsidian-reader a {
-        color: #dc2626;
+        color: #8a2be2;
         text-decoration: none;
-        border-bottom: 1px dotted #dc2626;
+        border-bottom: 1px dotted #8a2be2;
         transition: all 0.2s;
     }
     .obsidian-reader a:hover {
-        background: #dc262620; /* 20 = low opacity hex */
+        background: #8a2be220; /* 20 = low opacity hex */
         border-bottom-style: solid;
     }
 

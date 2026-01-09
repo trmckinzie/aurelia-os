@@ -29,29 +29,31 @@
       extend: {
         colors: {
           // SEMANTIC MAPPING
-          'aurelia-bg': '#fdfbf7',
-          'aurelia-card': '#ffffff',
-          'aurelia-surface': '#f3f4f6',
+          'aurelia-bg': '#0a0a0b',
+          'aurelia-card': '#121214',
+          'aurelia-surface': '#18181b',
           
-          'aurelia-text': '#111827',
-          'aurelia-muted': '#4b5563',
-          'aurelia-inverted': '#ffffff',
+          'aurelia-text': '#ffffff',
+          'aurelia-muted': '#9ca3af',
+          'aurelia-inverted': '#000000',
 
-          'aurelia-border': '#e5e7eb',
+          'aurelia-border': '#27272a',
           
           // ROLES
-          'aurelia-primary': '#1e3a8a',
-          'aurelia-secondary': '#dc2626',
-          'aurelia-tertiary': '#b45309',
-          'aurelia-accent': '#2563eb',
+          'aurelia-primary': '#00f2ff',
+          'aurelia-secondary': '#8a2be2',
+          'aurelia-tertiary': '#ff8c00',
+          'aurelia-accent': '#39ff14',
         },
         borderRadius: {
-            'theme': '8px'
+            'theme': '2px'
         },
         fontFamily: {
           sans: ['Inter', 'sans-serif'],
-          mono: ['Courier Prime', 'Courier New', monospace],
+          mono: ['JetBrains Mono', 'monospace'],
         },
+        
+        animation: { 'scanline': 'scanline 8s linear infinite' },
         
       }
     }
@@ -60,85 +62,68 @@
 
 <style>
     /* NAV BAR GLOW UTILITIES */
-    .text-shadow-cyan { text-shadow: 0 0 10px #1e3a8a80; }
-    .text-shadow-green { text-shadow: 0 0 10px #2563eb80; }
-    .text-shadow-purple { text-shadow: 0 0 10px #dc262680; }
-    .text-shadow-orange { text-shadow: 0 0 10px #b4530980; }
+    .text-shadow-cyan { text-shadow: 0 0 10px #00f2ff80; }
+    .text-shadow-green { text-shadow: 0 0 10px #39ff1480; }
+    .text-shadow-purple { text-shadow: 0 0 10px #8a2be280; }
+    .text-shadow-orange { text-shadow: 0 0 10px #ff8c0080; }
     .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
     /* GLOBAL RESET */
     body { 
-        background-color: #fdfbf7; 
-        color: #111827;
+        background-color: #0a0a0b; 
+        color: #ffffff;
     }
     
 /* GLOBAL SELECTION HIGHLIGHTER */
     ::selection {
-        background: #1e3a8a; /* Cyan in Cyber Prime */
-        color: #fdfbf7;      /* Black Text for contrast */
+        background: #00f2ff; /* Cyan in Cyber Prime */
+        color: #0a0a0b;      /* Black Text for contrast */
         text-shadow: none; /* Removes glow for cleaner reading */
     }
 
     /* Firefox Support */
     ::-moz-selection {
-        background: #1e3a8a;
-        color: #fdfbf7;
+        background: #00f2ff;
+        color: #0a0a0b;
         text-shadow: none;
     }
 
     /* UNIVERSAL GLASS CLASS */
     .glass {
-        background: rgba(10, 10, 11, 0.95);
+        background: rgba(10, 10, 11, 0.6);
     }
     
     /* THE_PATRIOT SPECIFIC OVERRIDE FOR GLASS */
-    
-    .glass {
-        background: white;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    /* Invert the scanline/grid to be subtle gray on white */
-    .scanline {
-        background: repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 1px,
-            #e5e7eb 1px,
-            #e5e7eb 2px
-        );
-        opacity: 0.3;
-    }
     
 
     /* --- [NEW] GLOBAL PROSE DEFAULTS --- */
     /* This makes all Markdown content follow the active theme colors automatically */
     .prose {
-        color: #4b5563;
+        color: #9ca3af;
         max-width: 65ch; /* Optimal reading width */
     }
     .prose h1, .prose h2, .prose h3, .prose h4, .prose strong {
-        color: #111827;
+        color: #ffffff;
     }
     .prose a {
-        color: #1e3a8a;
+        color: #00f2ff;
         text-decoration: none;
-        border-bottom: 1px dotted #1e3a8a;
+        border-bottom: 1px dotted #00f2ff;
     }
     .prose a:hover {
-        color: #2563eb;
+        color: #39ff14;
         border-bottom-style: solid;
     }
     .prose code {
-        color: #2563eb;
-        background: #f3f4f6;
+        color: #39ff14;
+        background: #18181b;
         padding: 0.2em 0.4em;
         border-radius: 4px;
         font-size: 0.9em;
     }
     .prose blockquote {
-        border-left-color: #1e3a8a;
-        color: #4b5563;
+        border-left-color: #00f2ff;
+        color: #9ca3af;
     }
 </style>
     
@@ -168,9 +153,9 @@
 
     .tech-readout {
         min-height: 100px;
-        border-left: 2px solid #1e3a8a;
+        border-left: 2px solid #00f2ff;
         padding-left: 1.5rem;
-        background: linear-gradient(90deg, #1e3a8a0D 0%, transparent 100%);
+        background: linear-gradient(90deg, #00f2ff0D 0%, transparent 100%);
         margin-bottom: 4rem;
     }
 
@@ -181,11 +166,11 @@
         content: attr(data-text); position: absolute; top: 0; width: 100%; height: 100%; background: #0a0a0b; overflow: hidden; clip: rect(0, 0, 0, 0);
     }
     .glitch::before {
-        left: -3px; text-shadow: 2px 0 #1e3a8a;
+        left: -3px; text-shadow: 2px 0 #00f2ff;
         animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
     }
     .glitch::after {
-        left: 3px; text-shadow: -2px 0 #dc2626;
+        left: 3px; text-shadow: -2px 0 #8a2be2;
         animation: glitch-anim-2 3s infinite linear alternate-reverse;
     }
     @keyframes glitch-anim-1 {
@@ -209,17 +194,17 @@
     .decrypt-effect {
         font-family: 'JetBrains Mono', monospace;
         cursor: pointer;
-        background: linear-gradient(to bottom, #ffffff 0%, #1e3a8a 100%);
+        background: linear-gradient(to bottom, #ffffff 0%, #00f2ff 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         color: transparent;
-        filter: drop-shadow(0 0 15px #1e3a8a66);
+        filter: drop-shadow(0 0 15px #00f2ff66);
         animation: bio-pulse 4s ease-in-out infinite alternate;
     }
     @keyframes bio-pulse {
-        0% { filter: drop-shadow(0 0 10px #1e3a8a33); opacity: 0.8; }
-        100% { filter: drop-shadow(0 0 25px #1e3a8aCC); opacity: 1; }
+        0% { filter: drop-shadow(0 0 10px #00f2ff33); opacity: 0.8; }
+        100% { filter: drop-shadow(0 0 25px #00f2ffCC); opacity: 1; }
     }
 </style>
 
