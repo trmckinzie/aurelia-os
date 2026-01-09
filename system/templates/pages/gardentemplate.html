@@ -118,7 +118,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="scanline"></div>
+   <div class="scanline"></div>
 
     <div class="fixed top-14 left-0 w-full z-50 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
@@ -191,9 +191,9 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="cardGrid">
+        <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 auto-rows-fr">
             {% for card in cards %}
-                {{ card.html | safe }}
+                {{ card.html|safe }}
             {% endfor %}
         </div>
 
@@ -231,7 +231,7 @@
                     {% endif %}
 
                     <details class="mb-6 group tree-folder" open data-type="{{ type|lower }}">
-                        <summary class="flex items-center gap-4 py-2 px-3 select-none">
+                        <summary class="flex items-center gap-4 py-2 px-3 select-none cursor-pointer">
                             <div class="folder-arrow text-gray-600 transition-transform duration-200">▶</div>
                             
                             <div class="flex items-center gap-3">
@@ -248,10 +248,10 @@
 
                         <div class="tree-branch space-y-1 mt-2">
                             {% for card in group %}
-                           <div class="tree-node group/node cursor-pointer searchable-tree-item" 
+                            <div class="tree-node group/node cursor-pointer searchable-tree-item" 
                                  onclick="openNote('{{ card.id }}')"
                                  data-type="{{ card.type|lower }}"
-                                 data-search="{{ card.title }} {{ card.body[:100] }}">
+                                 data-search="{{ card.title }} {{ card.desc }}">
                                 
                                 <div class="flex items-center gap-3 overflow-hidden">
                                     <span class="text-gray-700 text-[10px] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
@@ -412,16 +412,20 @@
         animate();
     })();
 
-    // --- 3. FILTER & SEARCH (UPDATED FOR DUAL VIEW) ---
+    // --- 3. FILTER & SEARCH (ADDITIVE DEEP SEARCH) ---
     let currentType = 'all';
     let currentQuery = '';
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalPanel = document.getElementById('modal-panel');
     const modalContent = document.getElementById('modal-content');
 
+    function handleSearch() {
+        const input = document.getElementById('searchInput');
+        currentQuery = input.value.toLowerCase().trim();
+        updateGrid();
+    }
+
     function setFilter(type) {
-        // REMOVED: The logic that forced 'switchView("grid")'
-        
         currentType = type;
         
         // Update Button Visuals
@@ -444,6 +448,7 @@
             if (checkVisibility(item)) {
                 item.style.display = 'flex';
                 visibleCount++;
+                // Additive Highlight: Only highlight if there is a query
                 if (currentQuery.length > 0) highlightText(item, currentQuery);
                 else clearHighlights(item);
             } else {
@@ -462,52 +467,50 @@
             }
         });
 
-        // 3. AUTO-HIDE EMPTY FOLDERS (Robuster Logic)
-        const treeFolders = document.querySelectorAll('.tree-folder'); // Ensure your <details> has class="tree-folder"
+        // 3. AUTO-HIDE EMPTY FOLDERS
+        const treeFolders = document.querySelectorAll('.tree-folder'); 
         treeFolders.forEach(folder => {
-            let hasVisibleChildren = false;
-            
-            // Check all children of this specific folder
             const children = folder.querySelectorAll('.searchable-tree-item');
-            children.forEach(child => {
-                if (child.style.display !== 'none') {
-                    hasVisibleChildren = true;
-                }
-            });
+            let hasVisible = false;
+            children.forEach(c => { if(c.style.display !== 'none') hasVisible = true; });
 
-            // Toggle Folder Visibility
-            if (hasVisibleChildren) {
-                folder.style.display = 'block';
-            } else {
-                folder.style.display = 'none';
-            }
+            if (hasVisible) folder.style.display = 'block';
+            else folder.style.display = 'none';
         });
 
         const counter = document.getElementById('node-count');
         if (counter) counter.innerText = visibleCount;
     }
 
-    // HELPER: Centralized Logic
+    // HELPER: Centralized Logic (The Brain)
     function checkVisibility(item) {
-        // Fallback to empty string if attribute is missing to prevent crash
+        // dataset.search now contains the FULL BODY TEXT (Deep Search)
         const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
         const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
         
+        // ADDITIVE LOGIC: Must match Filter Button AND Search Bar
         const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
         const searchMatch = itemSearch.includes(currentQuery);
 
         return typeMatch && searchMatch;
     }
 
-    // PRESERVED HELPER FUNCTIONS
+    // --- ROBUST HIGHLIGHTING ENGINE ---
     function highlightText(card, term) {
+        // Only target Visible elements (h3, p) to avoid breaking layout/icons
         const targets = card.querySelectorAll('h3, p');
         targets.forEach(element => {
             if (!element.dataset.original) element.dataset.original = element.innerHTML;
-            const originalText = element.dataset.original;
-            const regex = new RegExp(`(${term})`, 'gi');
-            if (originalText.toLowerCase().includes(term)) element.innerHTML = originalText.replace(regex, '<span class="highlight">$1</span>');
-            else element.innerHTML = originalText;
+            const originalHTML = element.dataset.original;
+            
+            // Only highlight if the VISIBLE text actually contains the term
+            if (originalHTML.toLowerCase().includes(term)) {
+                // ⚡ SMART REGEX ⚡: Ignores text inside HTML tags (like <button> or class="")
+                const regex = new RegExp(`(?![^<]*>)(${term})`, 'gi');
+                element.innerHTML = originalHTML.replace(regex, '<span class="highlight">$1</span>');
+            } else {
+                element.innerHTML = originalHTML;
+            }
         });
     }
 

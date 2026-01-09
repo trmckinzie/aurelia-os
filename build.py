@@ -3,17 +3,37 @@ import re
 import json
 from jinja2 import Environment, FileSystemLoader
 
-# --- INSERT THIS HELPER FUNCTION AFTER YOUR IMPORTS ---
-def json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
-    if isinstance(obj, (datetime, date)):
-        return obj.isoformat()
-    raise TypeError ("Type %s not serializable" % type(obj))
+# --- ⚡ RESTORED ENGINE BLOCK ⚡ ---
+
+def make_id(text):
+    """Turns 'My Cool Note.md' into 'note-my-cool-note'"""
+    # Remove file extension and lowercase
+    text = text.replace(".md", "").lower()
+    # Replace non-alphanumeric chars (spaces, underscores) with dashes
+    slug = re.sub(r'[^a-z0-9]+', '-', text).strip('-')
+    return f"note-{slug}"
+
+def process_wikilinks(text):
+    """Converts [[Link]] to clickable Modal Buttons"""
+    def replace_link(match):
+        content = match.group(1)
+        # Handle Piped Links: [[Target|Label]]
+        if '|' in content:
+            target, label = content.split('|', 1)
+        else:
+            target, label = content, content
+            
+        target_id = make_id(target)
+        # Returns a button that triggers the existing openNote() JS function
+        return f'<button onclick="openNote(\'{target_id}\')" class="text-aurelia-primary hover:underline font-bold bg-transparent border-none cursor-pointer p-0 inline">{label}</button>'
+
+    return re.sub(r'\[\[(.*?)\]\]', replace_link, text)
+
+# -----------------------------------
 
 # --- CONFIGURATION ---
-# Correct pathing: Sets the Root to the folder where build.py lives
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# ... (Rest of file continues)
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
@@ -363,155 +383,116 @@ def extract_foundational_texts(body):
 
 # --- GENERATORS ---
 
-def generate_garden_card_html(meta, filename, note_id, body_content):
+def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text):
     note_type = meta.get("type", "unknown").lower()
     
-    # 1. Fallback: Check Tags for "type/..."
+    # 1. TYPE IDENTIFICATION LOGIC
     if (note_type == "unknown" or not note_type) and meta.get("tags"):
         for tag in meta["tags"]:
             if tag.startswith("type/"):
-                note_type = tag.split("/")[1]
-                break
+                note_type = tag.split("/")[1]; break
     
-    # 2. FAIL-SAFE: Filename Date Check (YYYY-MM-DD)
-    if re.match(r'\d{4}-\d{2}-\d{2}', filename):
-        note_type = "daily-bridge"
-
+    if re.match(r'\d{4}-\d{2}-\d{2}', filename): note_type = "daily-bridge"
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
-    
-    # Clean Body Text for Blurb
-    clean_body = re.sub(r'#{1,6}\s.*', '', body_content)
-    clean_body = re.sub(r'\*\*.*?\*\*.*', '', clean_body)
-    clean_body = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_body)
-    clean_body = re.sub(r'[*_]{2,}', '', clean_body)
-    clean_body = " ".join(clean_body.split())
-    blurb = clean_body[:380].strip() + "..."
-    
-    raw_search = f"{title} {note_type} {body_content}".lower()
-    search_text = raw_search.replace('\n', ' ').replace('"', "'").replace("  ", " ")
 
-    # --- CARD STYLING LOGIC ---
-    if "daily" in note_type or "log" in note_type or "bridge" in note_type:
+    # 2. VISUAL CLEANING (The Blurb)
+    # Strip HTML tags (like our new buttons) and Markdown for the preview text
+    clean_body = re.sub(r'<[^>]+>', '', body_content) 
+    clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
+    clean_body = " ".join(clean_body.split())
+    blurb = clean_body[:280].strip() + "..."
+
+    # 3. STYLE & DATA MAPPING
+    # Default State
+    color = "border-gray-800"
+    icon = "📄"
+    label = "NODE"
+    footer_content = f'<div class="text-xs text-gray-600 font-mono">#{note_type}</div>'
+
+    # Specific States
+    if "daily" in note_type or "log" in note_type:
         color = "border-aurelia-tertiary"
         icon = "📅"
-        label = "Daily_Log"
-        summary = extract_brief_summary(body_content)
-        blurb = summary if summary else blurb
+        label = "LOG"
         cues = extract_atomic_cues(body_content)
-        footer_html = '<div class="mt-auto pt-4 flex items-center justify-start border-t border-gray-800/50"><div class="flex gap-2 flex-wrap">'
-        for cue in cues:
-             footer_html += f'<span class="text-xs font-mono px-2 py-1 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/20 rounded">{cue}</span>'
-        footer_html += '</div></div>'
-        
+        footer_content = '<div class="flex gap-2 flex-wrap">' + "".join([f'<span class="text-[10px] font-mono px-1.5 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary rounded border border-aurelia-tertiary/20">{c}</span>' for c in cues]) + '</div>'
+
     elif "concept" in note_type:
         color = "border-aurelia-primary"
         icon = "⚛️"
-        label = "Concept_Node"
+        label = "CONCEPT"
         defin = extract_definition(body_content)
         blurb = defin if defin else blurb
-        related = extract_related_links(body_content)[:3]
-        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50"><div class="text-xs text-aurelia-primary font-mono mb-2 opacity-90">LINKED_TO:</div><div class="flex gap-3 text-xs text-aurelia-muted-300 font-mono flex-wrap">'
-        if related:
-            for link in related:
-                footer_html += f'<span class="hover:text-aurelia-text transition-colors cursor-pointer">→ {link}</span>'
-        else:
-            footer_html += '<span class="opacity-50">// ROOT</span>'
-        footer_html += '</div></div>'
-
-    elif "author" in note_type:
-        color = "border-aurelia-secondary"
-        icon = "👤"
-        label = "Author_Profile"
-        prof = extract_profile_context(body_content)
-        blurb = prof if prof else blurb
-        works = extract_key_works(body_content)
-        concepts = extract_core_concepts(body_content)[:3]
-        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3">'
-        if works:
-            footer_html += '<div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">KEY WORKS:</div><ul class="text-[10px] font-mono text-aurelia-muted-300 space-y-1">'
-            for work in works:
-                footer_html += f'<li class="flex items-center gap-2"><span class="text-aurelia-accent">●</span> {work}</li>'
-            footer_html += '</ul></div>'
-        if concepts:
-            footer_html += '<div><div class="text-[10px] font-mono text-aurelia-muted-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><div class="flex flex-wrap gap-2">'
-            for c in concepts:
-                footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">{c}</span>'
-            footer_html += '</div></div>'
-        footer_html += '</div>'
+        footer_content = '<div class="text-[10px] text-aurelia-primary font-mono opacity-80">:: SYSTEM_CONCEPT</div>'
 
     elif "source" in note_type:
         color = "border-yellow-500"
         icon = "📖"
-        label = "Source_Text"
-        arg = extract_core_argument(body_content)
-        blurb = arg if arg else blurb
+        label = "SOURCE"
         author = extract_source_author(body_content)
-        status = meta.get("status", "UNKNOWN").upper()
-        if meta.get("tags"):
-            for tag in meta["tags"]:
-                if "reading" in tag: status = "READING"
-                if "archive" in tag: status = "ARCHIVE"
-        concepts = extract_core_concepts(body_content)[:3]
-        footer_html = f'''
-        <div class="mt-auto pt-4 border-t border-gray-800/50 flex flex-col gap-3">
-            <div class="flex justify-between items-center">
-                <div class="text-xs font-mono text-gray-400">AUTH: {author.upper()}</div>
-                <span class="px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-500 text-xs font-mono border border-yellow-500/20">{status}</span>
-            </div>
-        '''
-        if concepts:
-             footer_html += '<div class="flex flex-wrap gap-2">'
-             for c in concepts:
-                 footer_html += f'<span class="text-[10px] font-mono border border-gray-700 px-1.5 py-0.5 rounded text-gray-400 hover:text-aurelia-text transition-colors cursor-pointer">{c}</span>'
-             footer_html += '</div>'
-        footer_html += '</div>'
+        footer_content = f'<div class="flex justify-between items-center w-full"><span class="text-[10px] font-mono text-gray-500">AUTH: {author.upper()}</span><span class="text-[10px] text-yellow-500 border border-yellow-500/30 px-1 rounded">REF</span></div>'
 
-    elif "discipline" in note_type:
-        color = "border-aurelia-accent"
-        icon = "🧠"
-        label = "Discipline"
-        defin = extract_definition_scope(body_content)
-        blurb = defin if defin else blurb
-        concepts = extract_core_concepts(body_content)[:3]
-        texts = extract_foundational_texts(body_content)
-        footer_html = '<div class="mt-auto pt-4 border-t border-gray-800/50 grid grid-cols-2 gap-4">'
-        footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">CONCEPTS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
-        for c in concepts:
-            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-accent">●</span> {c}</li>'
-        footer_html += '</ul></div>'
-        footer_html += '<div><div class="text-[10px] font-mono text-gray-500 mb-1 uppercase tracking-wider">TEXTS:</div><ul class="text-[10px] font-mono text-gray-300 space-y-1">'
-        for t in texts:
-            footer_html += f'<li class="flex items-center gap-1 overflow-hidden truncate"><span class="text-aurelia-accent">●</span> {t}</li>'
-        footer_html += '</ul></div></div>'
-        
-    else:
-        color = "border-gray-800"
-        icon = "📄"
-        label = "Node"
-        footer_html = f'<div class="mt-auto pt-4 border-t border-gray-800/50 text-xs text-gray-500">#{note_type}</div>'
+    elif "project" in note_type:
+        color = "border-purple-500"
+        icon = "🚀"
+        label = "PROJECT"
 
+    # 4. THE MASTER COMPONENT (Unified HTML Structure)
+    # Key Fix: 'h-full', 'flex-col', and 'flex-grow' on the paragraph ensure alignment.
     html_card = f"""
     <article 
         onclick="openNote('{note_id}')" 
         data-type="{note_type}"
-        data-search="{search_text}"
-        class="searchable-item glass p-6 rounded-sm border-2 {color} border-opacity-60 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:scale-[1.12] hover:z-10 group min-h-[320px]">
+        data-search="{title} {note_type} {full_search_text}"
+        class="searchable-item glass p-5 rounded-sm border {color} border-opacity-40 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl hover:z-10 group h-full min-h-[240px]">
         
         <div class="flex justify-between items-start">
             <div>
-                <div class="flex items-center gap-2 mb-2">
+                <div class="flex items-center gap-2 mb-1.5">
                     <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
-                    <span class="text-[16px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
+                    <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
                 </div>
-                <h3 class="text-4xl font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
+                <h3 class="text-lg font-bold text-gray-200 font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
             </div>
-            <div class="text-5xl filter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] transition-transform group-hover:scale-110">{icon}</div>
+            <div class="text-2xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-transform">{icon}</div>
         </div>
 
         <div class="w-full h-px bg-gray-800/50"></div>
 
-        <p class="text-lg text-gray-100 leading-relaxed font-normal line-clamp-5">
+        <p class="text-sm text-gray-400 leading-relaxed font-sans line-clamp-4 flex-grow">
+            {blurb}
+        </p>
+        
+        <div class="mt-auto pt-3 border-t border-gray-800/50 flex items-center">
+            {footer_content}
+        </div>
+    </article>
+    """
+    return html_card
+
+    # UPDATE THE HTML CARD BLOCK
+    html_card = f"""
+    <article 
+        onclick="openNote('{note_id}')" 
+        data-type="{note_type}"
+        data-search="{title} {note_type} {full_search_text}" 
+        class="searchable-item glass p-6 rounded-sm border-2 {color} border-opacity-60 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:z-10 group h-full min-h-[220px]">
+        
+        <div class="flex justify-between items-start">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
+                    <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-200 font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
+            </div>
+            <div class="text-2xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">{icon}</div>
+        </div>
+
+        <div class="w-full h-px bg-gray-800/30"></div>
+
+        <p class="text-sm text-gray-400 leading-relaxed font-sans line-clamp-4 flex-grow">
             {blurb}
         </p>
         
@@ -679,22 +660,34 @@ def build_all():
                 elif "transmission" in note_type:
                     continue # Skips adding to Garden, handled by separate loader below
 
-                # ROUTE D: EVERYTHING ELSE -> Garden
+                # ROUTE D: GARDEN NOTES -> Garden
                 else:
-                    note_id = f"note-{len(garden_cards)}"
-                    card_html = generate_garden_card_html(meta, filename, note_id, body)
+                    note_id = make_id(filename)
                     
-                    clean_text = re.sub(r'[*#_`\[\]]', '', body)[:200]
+                    # ⚡ DEEP SEARCH GENERATION ⚡
+                    # 1. Get raw body
+                    raw_search = body
+                    # 2. Strip Markdown & HTML tags (so we don't search "<button>" or "##")
+                    raw_search = re.sub(r'[*#_`\[\]]', '', raw_search)
+                    raw_search = re.sub(r'<[^>]+>', '', raw_search)
+                    # 3. Flatten (remove newlines/quotes) for the data attribute
+                    full_search_text = raw_search.replace('\n', ' ').replace('"', "").replace("'", "").lower()
+                    
+                    # Process Links for the VISIBLE body
+                    processed_body = process_wikilinks(body)
+                    
+                    # Pass the 'full_search_text' as the new 5th argument
+                    card_html = generate_garden_card_html(meta, filename, note_id, processed_body, full_search_text)
                     
                     garden_cards.append({
                         "html": card_html, 
-                        "body": body, 
+                        "body": processed_body, 
                         "id": note_id,
                         "title": filename.replace(".md", "").replace("_", " "),
                         "link": f"garden.html#{note_id}", 
-                        "type": "NOTE",
+                        "type": meta.get("type", "NOTE").upper(), 
                         "tags": tags,
-                        "desc": clean_text
+                        "desc": full_search_text # Use full text for tree search too
                     })
 
     # 3. SCAN PROTOCOLS
