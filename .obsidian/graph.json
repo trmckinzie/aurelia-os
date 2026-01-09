@@ -11,35 +11,35 @@
       "query": "path:vault/10_GARDEN/11_Daily_Bridge  ",
       "color": {
         "a": 1,
-        "rgb": 15790063
+        "rgb": 16749824
       }
     },
     {
       "query": "path:vault/10_GARDEN/13_Authors  ",
       "color": {
         "a": 1,
-        "rgb": 15864322
+        "rgb": 12190206
       }
     },
     {
       "query": "path:vault/10_GARDEN/12_Concepts",
       "color": {
         "a": 1,
-        "rgb": 506634
-      }
-    },
-    {
-      "query": "path:vault/10_GARDEN/14_Disciplines path:",
-      "color": {
-        "a": 1,
-        "rgb": 591349
+        "rgb": 784885
       }
     },
     {
       "query": "path:vault/10_GARDEN/14_Disciplines  ",
       "color": {
         "a": 1,
-        "rgb": 15791110
+        "rgb": 438792
+      }
+    },
+    {
+      "query": "path:vault/10_GARDEN/15_Sources  ",
+      "color": {
+        "a": 1,
+        "rgb": 16251652
       }
     }
   ],
@@ -49,10 +49,10 @@
   "nodeSizeMultiplier": 2.81796875,
   "lineSizeMultiplier": 1.69505208333333,
   "collapse-forces": false,
-  "centerStrength": 0.604166666666667,
+  "centerStrength": 0.679871520342612,
   "repelStrength": 20,
   "linkStrength": 1,
   "linkDistance": 500,
-  "scale": 0.15829551145399923,
+  "scale": 0.48052320672753507,
   "close": false
 }
