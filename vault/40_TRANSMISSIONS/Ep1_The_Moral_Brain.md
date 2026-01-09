@@ -5,7 +5,7 @@ series: "Sequence 01: Computer Metaphor"
 episode: 1
 date: 2026-01-08
 audio_file: assets/audio/ep-1-the-moral-brain.m4a
-visual_loop:
+visual_loop: assets/visuals/neural_spin.mp4
 tags:
   - cognitive-science
   - evolutionary-psych
