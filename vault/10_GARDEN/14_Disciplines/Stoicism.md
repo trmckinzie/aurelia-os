@@ -24,10 +24,10 @@ publish: true
 - **[[Amor Fati]]:** (Love of Fate). The active embrace of whatever happens—treating every event, good or bad, as necessary material for the exercise of virtue.
 
 ### 📚 Foundational Texts
-- **[[Meditations]]** by **Marcus Aurelius** (The Sovereign Application).
+- **[[Meditations]]** by **[[Marcus Aurelius]]** (The Sovereign Application).
 - **[[Enchiridion]]** & **[[Discourses]]** by **Epictetus** (The Technical Manual).
 - **[[Letters from a Stoic]]** by **Seneca** (The Practical Essays).
-- **[[The Daily Stoic]]** by **Ryan Holiday** (Modern synthesis).
+- **[[The Daily Stoic]]** by **[[Ryan Holiday]]** (Modern synthesis).
 ### 🧪 Unresolved Questions
 - The Problem of Determinism: If the universe is governed by Logos (Fate), does true Free Will exist, or is our "choice" merely to accept the script willingly?
 - The "Stone" Critique: Does the goal of Apatheia (freedom from passion) risk turning a human into an unfeeling statue, detached from the love and grief that define the human experience?
