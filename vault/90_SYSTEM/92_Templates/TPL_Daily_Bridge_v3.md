@@ -4,6 +4,7 @@ tags:
   - type/daily-bridge
   - topic/
   - status/active
+publish:
 ---
 # 📅 [[<% tp.date.now("YYYY-MM-DD") %>]]
 

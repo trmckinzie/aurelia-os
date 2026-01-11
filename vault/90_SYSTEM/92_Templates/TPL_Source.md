@@ -4,6 +4,7 @@ tags:
   - type/source/book
   - topic/
   - status/reading
+publish:
 ---
 # 📖 <% tp.file.title %>
 
