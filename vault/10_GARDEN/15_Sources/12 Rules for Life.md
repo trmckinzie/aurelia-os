@@ -23,8 +23,7 @@ publish: true
 ---
 
 ### 🧠 Concepts Extracted
-*(Concepts linked here will show in Graph View)*
-* **[[Dominance Hierarchy]]** (Rule 1: Stand up straight with your shoulders back)
+- **[[Dominance Hierarchy]]** (Rule 1: Stand up straight with your shoulders back)
 - **[[Self-Preservation]]** (Rule 2: Treat yourself like someone you are responsible for helping)
 - **[[Social Selection]]** (Rule 3: Make friends with people who want the best for you)
 - **[[Incremental Progress]]** (Rule 4: Compare yourself to who you were yesterday, not to who someone else is today)

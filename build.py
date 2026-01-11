@@ -143,58 +143,201 @@ def parse_body(content):
 # --- 🧠 GARDEN EXTRACTORS (DATA REFINERY) ---
 
 def extract_log_data(text):
-    """Parses Daily Log for GOAL and Concepts"""
+    """Parses Daily Log for GOAL, SOURCE, CONCEPTS, and SUMMARY"""
+    # 1. GOAL
     goal_match = re.search(r'\*\*GOAL:\*\*\s*(.*)', text)
-    goal = goal_match.group(1).strip() if goal_match else "System Check / No active mission."
-    concepts = re.findall(r'\*\s*\*\*Concept:\*\*\s*\[\[(.*?)\]\]', text)
-    clean_concepts = [c.split('|')[1] if '|' in c else c for c in concepts]
-    return goal, clean_concepts[:4]
+    goal = goal_match.group(1).strip() if goal_match else "System Check."
+    # Strip buttons from goal just in case
+    goal = re.sub(r'<[^>]+>', '', goal)
+
+    # 2. SOURCE (The Fix)
+    # Match the line, then strip ALL HTML tags (buttons) and brackets
+    source_match = re.search(r'\*\*SOURCE:\*\*\s*(.*)', text)
+    source = source_match.group(1).strip() if source_match else "Internal Log"
+    
+    # A. Strip HTML (Handle the <button> tags)
+    source = re.sub(r'<[^>]+>', '', source)
+    # B. Strip WikiLink Brackets (Handle raw [[ ]])
+    source = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', source)
+
+    # 3. CONCEPTS
+    # Regex needs to handle both [[ ]] and <button> formats for robustness
+    concepts = []
+    # Look for bullet points with **Concept:**
+    raw_concepts = re.findall(r'\*\s*\*\*Concept:\*\*\s*(.*)', text)
+    for rc in raw_concepts:
+        # Strip HTML and brackets to get just the text name
+        clean = re.sub(r'<[^>]+>', '', rc)
+        clean = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean)
+        concepts.append(clean.strip())
+
+    # 4. SUMMARY
+    summary = ""
+    if "**📝 BRIEF SUMMARY:**" in text:
+        try:
+            part = text.split("**📝 BRIEF SUMMARY:**")[1]
+            bq_match = re.search(r'>\s*(.*)', part)
+            if bq_match:
+                summary = bq_match.group(1).strip()
+                # CRITICAL: Strip tags before returning, otherwise truncation breaks layout
+                summary = re.sub(r'<[^>]+>', '', summary)
+                summary = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', summary)
+        except: pass
+    
+    return goal, source, concepts[:3], summary
 
 def extract_concept_data(text):
     """Parses Concept for Definition block and Related links"""
-    def_match = re.search(r'>\s*(.*)', text)
-    definition = def_match.group(1).strip() if def_match else "Definition data unavailable."
+    
+    # 1. DEFINITION
+    # Look for the blockquote > specifically under a Definition header
+    def_match = re.search(r'###\s*.*Definition.*\n+>\s*(.*)', text, re.MULTILINE)
+    if not def_match:
+        # Fallback: Just find the first blockquote in the file
+        def_match = re.search(r'>\s*(.*)', text)
+    
+    definition = def_match.group(1).strip() if def_match else "Definition unavailable."
+    
+    # Sanitize: Remove HTML tags (buttons) and WikiLink brackets
+    definition = re.sub(r'<[^>]+>', '', definition)
+    definition = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', definition)
+
+    # 2. RELATED LINKS
+    # Find the line starting with **🔗 Related:**
     related_match = re.search(r'\*\*🔗 Related:\*\*\s*(.*)', text)
-    related_links = []
+    clean_links = []
+    
     if related_match:
-        related_links = re.findall(r'\[\[(.*?)\]\]', related_match.group(1))
-    clean_links = [l.split('|')[1] if '|' in l else l for l in related_links]
-    return definition, clean_links[:3]
+        raw = related_match.group(1)
+        # A. Strip HTML buttons produced by the wiki-linker
+        clean_text = re.sub(r'<[^>]+>', '', raw)
+        # B. Strip remaining brackets [[ ]]
+        clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
+        
+        # Split by comma and clean up whitespace
+        items = clean_text.split(',')
+        clean_links = [i.strip() for i in items if i.strip()]
+
+    return definition, clean_links[:4]
 
 def extract_source_data(text):
-    """Parses Source for Author, Core Argument, and Status"""
-    author = "Unknown"
-    auth_match = re.search(r'\*\*👤 Author:\*\*\s*\[\[(.*?)\]\]', text)
-    if auth_match: author = auth_match.group(1).split('|')[-1]
+    """Parses Source for Author, Core Argument, and Derived Concepts"""
     
-    arg_match = re.search(r'###\s*.*Core Argument.*\s*> (.*)', text)
-    argument = arg_match.group(1).strip() if arg_match else ""
-    if not argument: # Fallback to first blockquote
-        bq = re.search(r'>\s*(.*)', text)
-        if bq: argument = bq.group(1).strip()
+    # 1. AUTHOR
+    # Matches: **Author:** <button...>Name</button>  OR  **Author:** Name
+    auth_match = re.search(r'\*\*.*Author:\*\*\s*(.*)', text)
+    author = "UNKNOWN"
+    if auth_match:
+        raw = auth_match.group(1)
+        # Strip the button tags to get just the name
+        clean_text = re.sub(r'<[^>]+>', '', raw) 
+        # Clean brackets just in case
+        clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
+        author = clean_text.strip().upper()
+
+    # 2. CORE ARGUMENT
+    arg_match = re.search(r'###\s*.*(?:Core Argument|Thesis).*\n+>\s*(.*)', text, re.MULTILINE)
+    if not arg_match:
+        arg_match = re.search(r'>\s*(.*)', text)
+    
+    argument = arg_match.group(1).strip() if arg_match else "No core argument extracted."
+    # Strip buttons so the argument is plain text
+    argument = re.sub(r'<[^>]+>', '', argument)
+    
+    # 3. DERIVED CONCEPTS (The Fix)
+    concepts = []
+    # Split by the header
+    parts = re.split(r'###\s*.*Concepts Extracted.*', text, flags=re.IGNORECASE)
+    
+    if len(parts) > 1:
+        section_content = parts[1]
+        # Stop at next header or horizontal rule
+        clean_section = re.split(r'\n###|\n---', section_content)[0]
+        
+        # ⚡ CRITICAL FIX: Hunt for <button> tags, NOT [[ ]] brackets
+        # Because process_wikilinks() runs before this function.
+        # Regex matches: <button ...>Label</button>
+        links = re.findall(r'<button[^>]*>(.*?)</button>', clean_section)
+        
+        # Safety Fallback: If no buttons found, check for raw brackets (just in case)
+        if not links:
+            links = re.findall(r'\[\[(.*?)\]\]', clean_section)
+            links = [l.split('|')[1] if '|' in l else l for l in links]
             
-    return author.upper(), argument
+        concepts = links
+
+    return author, argument, concepts[:5]
 
 def extract_author_data(text):
-    """Parses Author Profile for Context and Key Works"""
-    context_match = re.search(r'>\s*(.*)', text)
-    context = context_match.group(1).strip() if context_match else ""
+    """Parses Author Profile for Context, Key Works, and Core Concepts"""
+    
+    # 1. PROFILE CONTEXT
+    context_match = re.search(r'###\s*.*Profile & Context.*\n+>\s*(.*)', text, re.MULTILINE)
+    if not context_match:
+        context_match = re.search(r'>\s*(.*)', text)
+    
+    context = context_match.group(1).strip() if context_match else "Profile data unavailable."
+    context = re.sub(r'<[^>]+>', '', context)
+    context = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', context)
+
+    # 2. KEY WORKS
     works = []
-    works_match = re.search(r'###\s*.*Key Works.*', text)
-    if works_match:
-        start = works_match.end()
-        chunk = text[start:]
-        next_header = re.search(r'\n###', chunk)
-        if next_header: chunk = chunk[:next_header.start()]
-        works = re.findall(r'\[\[(.*?)\]\]', chunk)
-    clean_works = [w.split('|')[-1] if '|' in w else w for w in works]
-    return context, clean_works[:3]
+    work_parts = re.split(r'###\s*.*Key Works.*', text, flags=re.IGNORECASE)
+    if len(work_parts) > 1:
+        section = work_parts[1]
+        clean_section = re.split(r'\n###|\n---', section)[0]
+        links = re.findall(r'<button[^>]*>(.*?)</button>', clean_section)
+        if not links: links = re.findall(r'\[\[(.*?)\]\]', clean_section)
+        works = [l.split('|')[1] if '|' in l else l for l in links]
+
+    # 3. CORE CONCEPTS
+    concepts = []
+    concept_parts = re.split(r'###\s*.*Core Concepts.*', text, flags=re.IGNORECASE)
+    if len(concept_parts) > 1:
+        section = concept_parts[1]
+        clean_section = re.split(r'\n###|\n---', section)[0]
+        links = re.findall(r'<button[^>]*>(.*?)</button>', clean_section)
+        if not links: links = re.findall(r'\[\[(.*?)\]\]', clean_section)
+        concepts = [l.split('|')[1] if '|' in l else l for l in links]
+
+    return context, works[:4], concepts[:4]
 
 def extract_discipline_data(text):
-    """Parses Discipline for Definition Scope"""
-    def_match = re.search(r'>\s*(.*)', text)
-    scope = def_match.group(1).strip() if def_match else ""
-    return scope
+    """Parses Discipline for Scope, Core Concepts, and Foundational Texts"""
+    
+    # 1. THE SCOPE (Definition)
+    # Match header like "### ｧDefinition" then the blockquote
+    def_match = re.search(r'###\s*.*Definition.*\n+>\s*(.*)', text, re.MULTILINE)
+    if not def_match:
+        def_match = re.search(r'>\s*(.*)', text)
+    
+    scope = def_match.group(1).strip() if def_match else "Scope defined in parent node."
+    scope = re.sub(r'<[^>]+>', '', scope)
+    scope = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', scope)
+
+    # 2. CORE PILLARS (Concepts)
+    pillars = []
+    # Split by "Core Concepts" header
+    concept_parts = re.split(r'###\s*.*Core Concepts.*', text, flags=re.IGNORECASE)
+    if len(concept_parts) > 1:
+        section = concept_parts[1]
+        clean_section = re.split(r'\n###|\n---', section)[0]
+        # Find links
+        links = re.findall(r'<button[^>]*>(.*?)</button>', clean_section)
+        if not links: links = re.findall(r'\[\[(.*?)\]\]', clean_section)
+        pillars = [l.split('|')[1] if '|' in l else l for l in links]
+
+    # 3. THE CANON (Foundational Texts)
+    canon = []
+    text_parts = re.split(r'###\s*.*Foundational Texts.*', text, flags=re.IGNORECASE)
+    if len(text_parts) > 1:
+        section = text_parts[1]
+        clean_section = re.split(r'\n###|\n---', section)[0]
+        links = re.findall(r'<button[^>]*>(.*?)</button>', clean_section)
+        if not links: links = re.findall(r'\[\[(.*?)\]\]', clean_section)
+        canon = [l.split('|')[1] if '|' in l else l for l in links]
+
+    return scope, pillars[:4], canon[:3]
 
 # --- 🚀 PROJECT EXTRACTORS (RESTORED) ---
 
@@ -253,66 +396,179 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # --- CARD TYPE: DAILY LOG ---
     if "daily" in note_type or "log" in note_type:
         color = "border-aurelia-tertiary"
-        mission, cues = extract_log_data(body_content)
+        mission, source, cues, summary = extract_log_data(body_content)
+        
+        # Truncate summary
+        if len(summary) > 120: summary = summary[:120] + "..."
+
         card_content = f"""
-        <div class="flex flex-col gap-2 h-full">
-            <div><span class="text-[10px] font-mono text-aurelia-tertiary opacity-70 tracking-widest">> CURRENT_OBJECTIVE:</span>
-            <p class="text-sm text-gray-300 font-mono mt-1 border-l-2 border-aurelia-tertiary/30 pl-3 leading-relaxed">"{mission}"</p></div>
-            <div class="flex-grow"></div>
-            <div class="mt-2"><span class="text-[10px] font-mono text-gray-600 uppercase tracking-widest block mb-1">Packet_Data:</span>
-            <div class="flex flex-wrap gap-1.5">{''.join([f'<span class="text-[10px] font-mono px-1.5 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/20 rounded-sm">{c}</span>' for c in cues])}</div></div>
+        <div class="flex flex-col gap-4 h-full">
+            
+            <div>
+                <span class="text-[10px] font-bold font-mono text-aurelia-tertiary tracking-widest">> MISSION_OBJ:</span>
+                <p class="text-sm text-gray-100 font-mono mt-1 border-l-2 border-aurelia-tertiary/50 pl-3 leading-relaxed line-clamp-2">
+                    "{mission}"
+                </p>
+            </div>
+
+            <div class="flex-grow">
+                <span class="text-[10px] font-bold font-mono text-aurelia-tertiary tracking-widest">> DEBRIEF:</span>
+                <p class="text-sm text-white font-sans mt-1 leading-relaxed italic line-clamp-3 opacity-90">
+                    {summary if summary else "// No summary data available."}
+                </p>
+            </div>
+            
+            <div class="mt-auto pt-3 border-t border-gray-800/50 flex flex-col gap-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase truncate w-full">SRC: {source[:40]}</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5">
+                    {''.join([f'<span class="text-[10px] font-mono px-2 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/30 rounded-sm font-bold">{c}</span>' for c in cues])}
+                </div>
+            </div>
+
         </div>"""
         icon = "📅"; label = "SYS_LOG"
 
     # --- CARD TYPE: CONCEPT NODE ---
     elif "concept" in note_type:
-        color = "border-aurelia-primary"
+        color = "border-aurelia-primary" # Cyan
         definition, links = extract_concept_data(body_content)
+        
+        # Truncate definition slightly longer than logs to ensure clarity
+        if len(definition) > 160: definition = definition[:160] + "..."
+
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
-            <div class="relative pl-4 border-l-2 border-aurelia-primary/40"><p class="text-base text-gray-100 font-sans leading-relaxed italic">"{definition}"</p></div>
+            
+            <div class="relative pl-4 border-l-2 border-aurelia-primary">
+                <span class="text-[10px] font-bold font-mono text-aurelia-primary tracking-widest block mb-1">> DEFINITION:</span>
+                <p class="text-sm text-white font-sans leading-relaxed font-medium">
+                    "{definition}"
+                </p>
+            </div>
+            
             <div class="flex-grow"></div>
-            <div class="pt-3 border-t border-gray-800/50"><span class="text-[9px] font-mono text-aurelia-primary opacity-60 uppercase tracking-widest block mb-2">Neural_Connections:</span>
-            <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-400">{''.join([f'<span class="hover:text-aurelia-primary transition-colors">→ {l}</span>' for l in links])}</div></div>
+            
+            <div class="pt-3 border-t border-gray-800/50">
+                <span class="text-[9px] font-bold font-mono text-aurelia-primary uppercase tracking-widest block mb-2">NEURAL_LINKS:</span>
+                <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-300">
+                    {''.join([f'<span class="hover:text-aurelia-primary transition-colors cursor-pointer border-b border-gray-700 hover:border-aurelia-primary pb-0.5">→ {l}</span>' for l in links])}
+                    {'' if links else '<span class="opacity-30 text-[9px]">// NO_LINKS_DETECTED</span>'}
+                </div>
+            </div>
         </div>"""
         icon = "⚛️"; label = "CONCEPT"
 
-    # --- CARD TYPE: SOURCE TEXT ---
+   # --- CARD TYPE: SOURCE TEXT ---
     elif "source" in note_type:
-        color = "border-yellow-500"
-        author, argument = extract_source_data(body_content)
-        status = "READING" if "reading" in str(meta.get("tags")) else "ARCHIVED"
+        color = "border-yellow-500" # Gold
+        author, argument, concepts = extract_source_data(body_content)
+        
+        # Status Logic
+        status = "ARCHIVED"
+        if "reading" in str(meta.get("tags")): status = "READING"
+        if "seed" in str(meta.get("tags")): status = "QUEUED"
+        
+        if len(argument) > 150: argument = argument[:150] + "..."
+
         card_content = f"""
         <div class="flex flex-col h-full gap-3">
-            <div class="flex justify-between items-center"><span class="text-[10px] font-mono text-gray-500">AUTH: {author}</span><span class="text-[10px] text-yellow-500 border border-yellow-500/30 px-1 rounded">{status}</span></div>
-            <div class="w-full h-px bg-yellow-500/20"></div>
-            <p class="text-sm text-gray-300 font-serif leading-relaxed line-clamp-4">{argument}</p>
+            
+            <div class="flex justify-between items-end border-b border-yellow-500/30 pb-2">
+                <span class="text-[10px] font-bold font-mono text-yellow-500 uppercase tracking-wider truncate mr-2">AUTH: {author}</span>
+                <span class="text-[9px] font-bold font-mono text-black bg-yellow-500 px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
+            </div>
+
+            <div class="mt-1">
+                <p class="text-sm text-white font-serif leading-relaxed italic opacity-90">
+                    "{argument}"
+                </p>
+            </div>
+            
             <div class="flex-grow"></div>
+            
+            <div class="mt-auto">
+                 <span class="text-[9px] font-bold font-mono text-yellow-500 opacity-70 uppercase tracking-widest block mb-1">DERIVED_IDEAS:</span>
+                 <div class="flex flex-wrap gap-1.5">
+                    {''.join([f'<span class="text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-gray-300 rounded-sm hover:text-yellow-500 transition-colors cursor-default">{c}</span>' for c in concepts])}
+                    {'' if concepts else '<span class="opacity-30 text-[9px] text-gray-500 font-mono">// NO_CONCEPTS_LINKED</span>'}
+                 </div>
+            </div>
         </div>"""
-        icon = "📖"; label = "SOURCE"
+        icon = "📚"; label = "LIBRARY"
 
     # --- CARD TYPE: AUTHOR PROFILE ---
     elif "author" in note_type:
-        color = "border-aurelia-secondary"
-        context, works = extract_author_data(body_content)
+        color = "border-aurelia-secondary" # Purple/Pink
+        context, works, concepts = extract_author_data(body_content)
+        
+        if len(context) > 150: context = context[:150] + "..."
+
         card_content = f"""
-        <div class="flex flex-col h-full gap-3">
-             <p class="text-sm text-gray-400 font-sans leading-relaxed line-clamp-3">{context}</p>
-             <div class="flex-grow"></div>
-             <div class="bg-gray-900/50 p-3 rounded border border-gray-800"><span class="text-[9px] font-mono text-aurelia-secondary block mb-1">KEY_WORKS:</span>
-             <ul class="text-[10px] text-gray-300 space-y-1">{''.join([f'<li class="truncate">• {w}</li>' for w in works])}</ul></div>
+        <div class="flex flex-col h-full gap-4">
+            
+            <div class="relative pl-4 border-l-2 border-aurelia-secondary">
+                <span class="text-[10px] font-bold font-mono text-aurelia-secondary tracking-widest block mb-1">> BIO_MATRIX:</span>
+                <p class="text-sm text-white font-sans leading-relaxed font-bold">
+                    "{context}"
+                </p>
+            </div>
+            
+            <div class="flex-grow"></div>
+
+            <div>
+                <span class="text-[10px] font-bold font-mono text-aurelia-secondary uppercase tracking-widest block mb-1">CORE_SYSTEMS:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    {''.join([f'<span class="text-[9px] font-mono px-2 py-1 bg-aurelia-secondary text-black font-bold rounded-sm border border-aurelia-secondary">{c}</span>' for c in concepts])}
+                    {'' if concepts else '<span class="text-[9px] text-white font-mono opacity-80">// NO_SYSTEMS_DETECTED</span>'}
+                </div>
+            </div>
+            
+            <div class="pt-2 border-t border-gray-600">
+                <span class="text-[9px] font-bold font-mono text-white uppercase tracking-widest block mb-1">BIBLIOGRAPHY:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    {''.join([f'<span class="text-[9px] font-mono px-2 py-0.5 border border-gray-400 text-white font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors cursor-default">{w}</span>' for w in works])}
+                </div>
+            </div>
+
         </div>"""
         icon = "👤"; label = "PROFILE"
 
     # --- CARD TYPE: DISCIPLINE ---
     elif "discipline" in note_type:
-        color = "border-aurelia-accent"
-        scope = extract_discipline_data(body_content)
+        color = "border-aurelia-accent" # Unique Accent Color
+        scope, pillars, canon = extract_discipline_data(body_content)
+        
+        if len(scope) > 160: scope = scope[:160] + "..."
+
         card_content = f"""
-        <div class="flex flex-col h-full gap-3">
-             <p class="text-sm text-gray-300 font-sans leading-relaxed italic border-l-2 border-aurelia-accent/50 pl-3">{scope}</p>
-             <div class="flex-grow"></div>
-             <div class="mt-auto"><span class="text-[10px] font-mono text-aurelia-accent opacity-70">:: ROOT_DISCIPLINE</span></div>
+        <div class="flex flex-col h-full gap-4">
+            
+            <div class="relative pl-4 border-l-4 border-aurelia-accent">
+                <span class="text-[10px] font-bold font-mono text-aurelia-accent tracking-widest block mb-1">:: FIELD_SCOPE</span>
+                <p class="text-sm text-white font-sans leading-relaxed font-bold opacity-95">
+                    "{scope}"
+                </p>
+            </div>
+            
+            <div class="flex-grow"></div>
+
+            <div>
+                <span class="text-[9px] font-bold font-mono text-aurelia-accent uppercase tracking-widest block mb-1">CORE_PILLARS:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    {''.join([f'<span class="text-[9px] font-mono px-2 py-1 bg-aurelia-accent text-black font-extrabold rounded-sm uppercase">{p}</span>' for p in pillars])}
+                    {'' if pillars else '<span class="text-[9px] text-gray-500 font-mono">// FOUNDATIONS_PENDING</span>'}
+                </div>
+            </div>
+            
+            <div class="pt-2 border-t border-gray-600">
+                <span class="text-[9px] font-bold font-mono text-white uppercase tracking-widest block mb-1">THE_CANON:</span>
+                <div class="flex flex-col gap-1">
+                    {''.join([f'<span class="text-[10px] font-serif italic text-gray-300 hover:text-white transition-colors truncate">• {t}</span>' for t in canon])}
+                </div>
+            </div>
+
         </div>"""
         icon = "🧠"; label = "FIELD"
 
