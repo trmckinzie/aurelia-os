@@ -111,58 +111,28 @@ print(f"🔧 CONFIG: Templates={TEMPLATE_DIR}")
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
 
 # --- HELPER: Frontmatter Parser ---
-# --- HELPER: Frontmatter Parser ---
 def parse_frontmatter(content):
     meta = {"publish": False, "tags": [], "type": "unknown", "status": "unknown"}
-    
-    # FIX 1: Handle leading whitespace/newlines before frontmatter
     content = content.lstrip()
     if not content.startswith("---"): return meta
-    
     try:
         parts = content.split("---", 2)
         if len(parts) < 3: return meta
         yaml_text = parts[1]
-        
-        # Publish Check
-        if re.search(r'^publish:\s*true', yaml_text, re.MULTILINE | re.IGNORECASE):
-             meta["publish"] = True
-        
-        # [UPDATED] Extract basic strings - Added audio_file, visual_loop, series, episode, summary
-        target_fields = [
-            "type", "status", "role", "cover_image", "date", "icon", "created", 
-            "audio_file", "visual_loop", "series", "episode", "summary", "link_repo", "link_live"
-        ]
-        
+        if re.search(r'^publish:\s*true', yaml_text, re.MULTILINE | re.IGNORECASE): meta["publish"] = True
+        target_fields = ["type", "status", "role", "cover_image", "date", "icon", "created", "audio_file", "visual_loop", "series", "episode", "summary", "link_repo", "link_live"]
         for field in target_fields:
-            # Regex captures "key: value"
             match = re.search(rf'^{field}:\s*(.+)$', yaml_text, re.MULTILINE)
-            if match: 
-                # Clean up quotes and template tags
-                meta[field] = match.group(1).strip().strip('"').strip("'").replace("{{", "").replace("}}", "")
-        
-        # Date Fallback
-        if "date" not in meta and "created" in meta:
-            meta["date"] = meta["created"]
-
-        # FIX 2: Universal Tag Extraction
+            if match: meta[field] = match.group(1).strip().strip('"').strip("'").replace("{{", "").replace("}}", "")
+        if "date" not in meta and "created" in meta: meta["date"] = meta["created"]
         tags = []
-        
-        # A. Inline Format
         inline_match = re.search(r'^tags:\s*\[(.*?)\]', yaml_text, re.MULTILINE)
-        if inline_match:
-            tags = [t.strip() for t in inline_match.group(1).split(',')]
-        
-        # B. List Format
+        if inline_match: tags = [t.strip() for t in inline_match.group(1).split(',')]
         if not tags:
             list_matches = re.findall(r'^\s*-\s*(.+)$', yaml_text, re.MULTILINE)
-            if list_matches:
-                tags = [t.strip() for t in list_matches]
-                
+            if list_matches: tags = [t.strip() for t in list_matches]
         meta["tags"] = tags
-
-    except Exception as e:
-        print(f"YAML Error: {e}")
+    except Exception as e: print(f"YAML Error: {e}")
     return meta
 
 def parse_body(content):
@@ -170,26 +140,75 @@ def parse_body(content):
     if len(parts) < 3: return content
     return parts[2].strip()
 
-# --- EXTRACTORS (PROJECT SPECIFIC) ---
+# --- 🧠 GARDEN EXTRACTORS (DATA REFINERY) ---
+
+def extract_log_data(text):
+    """Parses Daily Log for GOAL and Concepts"""
+    goal_match = re.search(r'\*\*GOAL:\*\*\s*(.*)', text)
+    goal = goal_match.group(1).strip() if goal_match else "System Check / No active mission."
+    concepts = re.findall(r'\*\s*\*\*Concept:\*\*\s*\[\[(.*?)\]\]', text)
+    clean_concepts = [c.split('|')[1] if '|' in c else c for c in concepts]
+    return goal, clean_concepts[:4]
+
+def extract_concept_data(text):
+    """Parses Concept for Definition block and Related links"""
+    def_match = re.search(r'>\s*(.*)', text)
+    definition = def_match.group(1).strip() if def_match else "Definition data unavailable."
+    related_match = re.search(r'\*\*🔗 Related:\*\*\s*(.*)', text)
+    related_links = []
+    if related_match:
+        related_links = re.findall(r'\[\[(.*?)\]\]', related_match.group(1))
+    clean_links = [l.split('|')[1] if '|' in l else l for l in related_links]
+    return definition, clean_links[:3]
+
+def extract_source_data(text):
+    """Parses Source for Author, Core Argument, and Status"""
+    author = "Unknown"
+    auth_match = re.search(r'\*\*👤 Author:\*\*\s*\[\[(.*?)\]\]', text)
+    if auth_match: author = auth_match.group(1).split('|')[-1]
+    
+    arg_match = re.search(r'###\s*.*Core Argument.*\s*> (.*)', text)
+    argument = arg_match.group(1).strip() if arg_match else ""
+    if not argument: # Fallback to first blockquote
+        bq = re.search(r'>\s*(.*)', text)
+        if bq: argument = bq.group(1).strip()
+            
+    return author.upper(), argument
+
+def extract_author_data(text):
+    """Parses Author Profile for Context and Key Works"""
+    context_match = re.search(r'>\s*(.*)', text)
+    context = context_match.group(1).strip() if context_match else ""
+    works = []
+    works_match = re.search(r'###\s*.*Key Works.*', text)
+    if works_match:
+        start = works_match.end()
+        chunk = text[start:]
+        next_header = re.search(r'\n###', chunk)
+        if next_header: chunk = chunk[:next_header.start()]
+        works = re.findall(r'\[\[(.*?)\]\]', chunk)
+    clean_works = [w.split('|')[-1] if '|' in w else w for w in works]
+    return context, clean_works[:3]
+
+def extract_discipline_data(text):
+    """Parses Discipline for Definition Scope"""
+    def_match = re.search(r'>\s*(.*)', text)
+    scope = def_match.group(1).strip() if def_match else ""
+    return scope
+
+# --- 🚀 PROJECT EXTRACTORS (RESTORED) ---
 
 def extract_mission_brief(body):
-    # Splits at the header, then ignores the rest of that header line (e.g. "(The Problem)")
     if "# 🚨 Mission Brief" in body:
         try:
             part = body.split("# 🚨 Mission Brief")[1]
-            if "\n# " in part:
-                part = part.split("\n# ")[0]
-            
-            # Remove the header suffix line if it exists
+            if "\n# " in part: part = part.split("\n# ")[0]
             lines = part.split('\n')
             clean_lines = [l for l in lines if not l.strip().startswith('(') and l.strip()]
             clean = " ".join(clean_lines)
-            
-            # Remove bold keys like **System Failure:**
             clean = re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
             return clean[:240] + "..." if len(clean) > 240 else clean
-        except Exception:
-            pass
+        except Exception: pass
     return ""
 
 def extract_core_logic(body):
@@ -201,8 +220,7 @@ def extract_core_logic(body):
                     clean = line.replace("**Core Logic:**", "").strip()
                     clean = re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
                     return clean
-        except Exception:
-            pass
+        except Exception: pass
     return ""
 
 def extract_impact_metrics(body):
@@ -210,393 +228,154 @@ def extract_impact_metrics(body):
     if "# ⚡ Operational Impact" in body:
         try:
             part = body.split("# ⚡ Operational Impact")[1]
-            if "\n# " in part:
-                part = part.split("\n# ")[0]
+            if "\n# " in part: part = part.split("\n# ")[0]
             matches = re.findall(r'[\-\*]\s*\*\*(.*?)\*\*[:\s]', part)
             metrics = [m.strip() for m in matches]
-        except Exception:
-            pass
+        except Exception: pass
     return metrics[:4]
 
-# --- GARDEN EXTRACTORS (PRESERVED) ---
-def extract_related_links(body):
-    match = re.search(r'\*\*🔗 Related:\*\*\s*(.*)', body)
-    if match:
-        raw = match.group(1)
-        links = re.findall(r'\[\[(.*?)\]\]', raw)
-        clean_links = [l.split('|')[-1] for l in links]
-        return clean_links
-    return []
-
-def extract_key_works(body):
-    works = []
-    capture = False
-    for line in body.split('\n'):
-        if "### 📚 Key Works" in line:
-            capture = True
-            continue
-        if capture and line.strip().startswith("###"):
-            break
-        if capture and (line.strip().startswith("*") or line.strip().startswith("-")):
-            clean = line.strip().replace("*", "").replace("-", "").strip()
-            clean = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean)
-            if clean: works.append(clean)
-    return works[:3]
-
-def extract_core_concepts(body):
-    concepts = []
-    header_match = re.search(r'###\s*.*(?:Core Concepts|Concepts Extracted).*', body)
-    if header_match:
-        try:
-            start_idx = header_match.end()
-            part = body[start_idx:]
-            next_header = re.search(r'\n###', part)
-            if next_header:
-                part = part[:next_header.start()]
-            links = re.findall(r'\[\[(.*?)\]\]', part)
-            for l in links:
-                name = l.split('|')[-1]
-                if name not in concepts:
-                    concepts.append(name)
-        except Exception:
-            pass
-    return concepts[:4]
-
-def extract_atomic_cues(body):
-    cues = []
-    pattern = re.compile(r'[\-\*]?\s*\*\*Concept:\*\*\s*\[\[(.*?)\]\]', re.IGNORECASE)
-    for line in body.split('\n'):
-        match = pattern.search(line)
-        if match:
-            cues.append(match.group(1).split('|')[-1])
-    return cues[:3]
-
-def extract_source_author(body):
-    match = re.search(r'\*\*👤 Author:\*\*\s*\[\[(.*?)\]\]', body)
-    if match: return match.group(1).split('|')[-1]
-    match_plain = re.search(r'\*\*👤 Author:\*\*\s*(.*)', body)
-    if match_plain: return match_plain.group(1).strip()
-    return "Unknown"
-
-def extract_brief_summary(body):
-    if "**📝 BRIEF SUMMARY:**" in body:
-        try:
-            part = body.split("**📝 BRIEF SUMMARY:**")[1]
-            summary_block = part.split("---")[0]
-            clean = summary_block.replace(">", "").strip()
-            return clean
-        except IndexError:
-            return ""
-    return ""
-
-def extract_definition(body):
-    if "Definition" in body:
-        try:
-            # Flexible match for Definition header
-            part = re.split(r'###\s*.*Definition.*', body)[1]
-            lines = []
-            for line in part.split('\n'):
-                stripped = line.strip()
-                if stripped.startswith(">"):
-                    lines.append(stripped.replace(">", "").strip())
-                elif stripped.startswith("#") or (lines and not stripped):
-                    break
-            clean_text = " ".join(lines)
-            clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
-            clean_text = re.sub(r'\*\*(.*?)\*\*', r'\1', clean_text)
-            return clean_text
-        except Exception:
-            return ""
-    return ""
-
-def extract_profile_context(body):
-    if "Profile & Context" in body:
-        try:
-            part = re.split(r'###\s*.*Profile & Context.*', body)[1]
-            lines = []
-            for line in part.split('\n'):
-                stripped = line.strip()
-                if stripped.startswith(">"):
-                    lines.append(stripped.replace(">", "").strip())
-                elif stripped.startswith("#") or (lines and not stripped):
-                    break
-            clean_text = " ".join(lines)
-            clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
-            clean_text = re.sub(r'\*\*(.*?)\*\*', r'\1', clean_text)
-            return clean_text
-        except Exception:
-            return ""
-    return ""
-
-def extract_core_argument(body):
-    if "Core Argument" in body:
-        try:
-            part = re.split(r'###\s*.*Core Argument.*', body)[1]
-            lines = []
-            for line in part.split('\n'):
-                stripped = line.strip()
-                if stripped.startswith(">"):
-                    lines.append(stripped.replace(">", "").strip())
-                elif stripped.startswith("#") or (lines and not stripped):
-                    break
-            clean_text = " ".join(lines)
-            clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
-            clean_text = re.sub(r'\*\*(.*?)\*\*', r'\1', clean_text)
-            return clean_text
-        except Exception:
-            return ""
-    return ""
-
-def extract_definition_scope(body):
-    if "Definition (The Scope)" in body:
-        try:
-            part = body.split("### 🧐 Definition (The Scope)")[1]
-            lines = []
-            for line in part.split('\n'):
-                stripped = line.strip()
-                if stripped.startswith(">"):
-                    lines.append(stripped.replace(">", "").strip())
-                elif stripped.startswith("#") or (lines and not stripped):
-                    break
-            clean_text = " ".join(lines)
-            clean_text = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_text)
-            clean_text = re.sub(r'\*\*(.*?)\*\*', r'\1', clean_text)
-            return clean_text
-        except Exception:
-            return ""
-    return ""
-
-def extract_foundational_texts(body):
-    texts = []
-    capture = False
-    for line in body.split('\n'):
-        if "Foundational Texts" in line and "###" in line:
-            capture = True
-            continue
-        if capture and line.strip().startswith("###"):
-            break
-        if capture and (line.strip().startswith("*") or line.strip().startswith("-")):
-            match = re.search(r'\[\[(.*?)\]\]', line)
-            if match:
-                texts.append(match.group(1).split('|')[-1])
-    return texts[:3]
-
-# --- GENERATORS ---
+# --- 🏭 THE CARD FACTORY (VISUAL COMPONENT ENGINE) ---
 
 def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text):
     note_type = meta.get("type", "unknown").lower()
     
-    # 1. TYPE IDENTIFICATION LOGIC
+    # 1. Type ID Logic
     if (note_type == "unknown" or not note_type) and meta.get("tags"):
         for tag in meta["tags"]:
-            if tag.startswith("type/"):
-                note_type = tag.split("/")[1]; break
-    
+            if tag.startswith("type/"): note_type = tag.split("/")[1]; break
     if re.match(r'\d{4}-\d{2}-\d{2}', filename): note_type = "daily-bridge"
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
 
-    # 2. VISUAL CLEANING (The Blurb)
-    # Strip HTML tags (like our new buttons) and Markdown for the preview text
-    clean_body = re.sub(r'<[^>]+>', '', body_content) 
-    clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
-    clean_body = " ".join(clean_body.split())
-    blurb = clean_body[:280].strip() + "..."
-
-    # 3. STYLE & DATA MAPPING
-    # Default State
-    color = "border-gray-800"
-    icon = "📄"
-    label = "NODE"
-    footer_content = f'<div class="text-xs text-gray-600 font-mono">#{note_type}</div>'
-
-    # Specific States
+    # 2. Base Component Shell
+    base_classes = "searchable-item glass p-5 rounded-sm border border-opacity-40 hover:border-opacity-100 cursor-pointer flex flex-col gap-3 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl hover:z-10 group h-full min-h-[240px]"
+    
+    # --- CARD TYPE: DAILY LOG ---
     if "daily" in note_type or "log" in note_type:
         color = "border-aurelia-tertiary"
-        icon = "📅"
-        label = "LOG"
-        cues = extract_atomic_cues(body_content)
-        footer_content = '<div class="flex gap-2 flex-wrap">' + "".join([f'<span class="text-[10px] font-mono px-1.5 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary rounded border border-aurelia-tertiary/20">{c}</span>' for c in cues]) + '</div>'
+        mission, cues = extract_log_data(body_content)
+        card_content = f"""
+        <div class="flex flex-col gap-2 h-full">
+            <div><span class="text-[10px] font-mono text-aurelia-tertiary opacity-70 tracking-widest">> CURRENT_OBJECTIVE:</span>
+            <p class="text-sm text-gray-300 font-mono mt-1 border-l-2 border-aurelia-tertiary/30 pl-3 leading-relaxed">"{mission}"</p></div>
+            <div class="flex-grow"></div>
+            <div class="mt-2"><span class="text-[10px] font-mono text-gray-600 uppercase tracking-widest block mb-1">Packet_Data:</span>
+            <div class="flex flex-wrap gap-1.5">{''.join([f'<span class="text-[10px] font-mono px-1.5 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/20 rounded-sm">{c}</span>' for c in cues])}</div></div>
+        </div>"""
+        icon = "📅"; label = "SYS_LOG"
 
+    # --- CARD TYPE: CONCEPT NODE ---
     elif "concept" in note_type:
         color = "border-aurelia-primary"
-        icon = "⚛️"
-        label = "CONCEPT"
-        defin = extract_definition(body_content)
-        blurb = defin if defin else blurb
-        footer_content = '<div class="text-[10px] text-aurelia-primary font-mono opacity-80">:: SYSTEM_CONCEPT</div>'
+        definition, links = extract_concept_data(body_content)
+        card_content = f"""
+        <div class="flex flex-col h-full gap-4">
+            <div class="relative pl-4 border-l-2 border-aurelia-primary/40"><p class="text-base text-gray-100 font-sans leading-relaxed italic">"{definition}"</p></div>
+            <div class="flex-grow"></div>
+            <div class="pt-3 border-t border-gray-800/50"><span class="text-[9px] font-mono text-aurelia-primary opacity-60 uppercase tracking-widest block mb-2">Neural_Connections:</span>
+            <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-400">{''.join([f'<span class="hover:text-aurelia-primary transition-colors">→ {l}</span>' for l in links])}</div></div>
+        </div>"""
+        icon = "⚛️"; label = "CONCEPT"
 
+    # --- CARD TYPE: SOURCE TEXT ---
     elif "source" in note_type:
         color = "border-yellow-500"
-        icon = "📖"
-        label = "SOURCE"
-        author = extract_source_author(body_content)
-        footer_content = f'<div class="flex justify-between items-center w-full"><span class="text-[10px] font-mono text-gray-500">AUTH: {author.upper()}</span><span class="text-[10px] text-yellow-500 border border-yellow-500/30 px-1 rounded">REF</span></div>'
+        author, argument = extract_source_data(body_content)
+        status = "READING" if "reading" in str(meta.get("tags")) else "ARCHIVED"
+        card_content = f"""
+        <div class="flex flex-col h-full gap-3">
+            <div class="flex justify-between items-center"><span class="text-[10px] font-mono text-gray-500">AUTH: {author}</span><span class="text-[10px] text-yellow-500 border border-yellow-500/30 px-1 rounded">{status}</span></div>
+            <div class="w-full h-px bg-yellow-500/20"></div>
+            <p class="text-sm text-gray-300 font-serif leading-relaxed line-clamp-4">{argument}</p>
+            <div class="flex-grow"></div>
+        </div>"""
+        icon = "📖"; label = "SOURCE"
 
-    elif "project" in note_type:
-        color = "border-purple-500"
-        icon = "🚀"
-        label = "PROJECT"
+    # --- CARD TYPE: AUTHOR PROFILE ---
+    elif "author" in note_type:
+        color = "border-aurelia-secondary"
+        context, works = extract_author_data(body_content)
+        card_content = f"""
+        <div class="flex flex-col h-full gap-3">
+             <p class="text-sm text-gray-400 font-sans leading-relaxed line-clamp-3">{context}</p>
+             <div class="flex-grow"></div>
+             <div class="bg-gray-900/50 p-3 rounded border border-gray-800"><span class="text-[9px] font-mono text-aurelia-secondary block mb-1">KEY_WORKS:</span>
+             <ul class="text-[10px] text-gray-300 space-y-1">{''.join([f'<li class="truncate">• {w}</li>' for w in works])}</ul></div>
+        </div>"""
+        icon = "👤"; label = "PROFILE"
 
-    # 4. THE MASTER COMPONENT (Unified HTML Structure)
-    # Key Fix: 'h-full', 'flex-col', and 'flex-grow' on the paragraph ensure alignment.
+    # --- CARD TYPE: DISCIPLINE ---
+    elif "discipline" in note_type:
+        color = "border-aurelia-accent"
+        scope = extract_discipline_data(body_content)
+        card_content = f"""
+        <div class="flex flex-col h-full gap-3">
+             <p class="text-sm text-gray-300 font-sans leading-relaxed italic border-l-2 border-aurelia-accent/50 pl-3">{scope}</p>
+             <div class="flex-grow"></div>
+             <div class="mt-auto"><span class="text-[10px] font-mono text-aurelia-accent opacity-70">:: ROOT_DISCIPLINE</span></div>
+        </div>"""
+        icon = "🧠"; label = "FIELD"
+
+    # --- DEFAULT CARD ---
+    else:
+        color = "border-gray-800"
+        clean_body = re.sub(r'<[^>]+>', '', body_content) 
+        clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
+        blurb = clean_body[:200] + "..."
+        card_content = f"""<div class="flex flex-col h-full"><p class="text-sm text-gray-400 font-sans leading-relaxed line-clamp-5">{blurb}</p></div>"""
+        icon = "📄"; label = "NOTE"
+
+    # 3. Assemble Final HTML
     html_card = f"""
-    <article 
-        onclick="openNote('{note_id}')" 
-        data-type="{note_type}"
-        data-search="{title} {note_type} {full_search_text}"
-        class="searchable-item glass p-5 rounded-sm border {color} border-opacity-40 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl hover:z-10 group h-full min-h-[240px]">
-        
+    <article onclick="openNote('{note_id}')" data-type="{note_type}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
         <div class="flex justify-between items-start">
             <div>
                 <div class="flex items-center gap-2 mb-1.5">
                     <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
                     <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-200 font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
+                <h3 class="text-lg font-bold text-gray-200 font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
             </div>
             <div class="text-2xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-transform">{icon}</div>
         </div>
-
         <div class="w-full h-px bg-gray-800/50"></div>
-
-        <p class="text-sm text-gray-400 leading-relaxed font-sans line-clamp-4 flex-grow">
-            {blurb}
-        </p>
-        
-        <div class="mt-auto pt-3 border-t border-gray-800/50 flex items-center">
-            {footer_content}
-        </div>
-    </article>
-    """
-    return html_card
-
-    # UPDATE THE HTML CARD BLOCK
-    html_card = f"""
-    <article 
-        onclick="openNote('{note_id}')" 
-        data-type="{note_type}"
-        data-search="{title} {note_type} {full_search_text}" 
-        class="searchable-item glass p-6 rounded-sm border-2 {color} border-opacity-60 hover:border-opacity-100 cursor-pointer flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-2xl hover:z-10 group h-full min-h-[220px]">
-        
-        <div class="flex justify-between items-start">
-            <div>
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
-                    <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
-                </div>
-                <h3 class="text-xl font-bold text-gray-200 font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
-            </div>
-            <div class="text-2xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all">{icon}</div>
-        </div>
-
-        <div class="w-full h-px bg-gray-800/30"></div>
-
-        <p class="text-sm text-gray-400 leading-relaxed font-sans line-clamp-4 flex-grow">
-            {blurb}
-        </p>
-        
-        {footer_html}
+        {card_content}
     </article>
     """
     return html_card
 
 def generate_project_card(meta, sections, title, note_id):
-    # 1. Status Logic
+    # This remains the same as your previous version, ensuring projects still work
     is_active = meta.get("status") == "active"
     status_color = "bg-aurelia-accent shadow-[0_0_10px_#39ff14]" if is_active else "bg-gray-500"
-    status_text = "ONLINE" if is_active else "ARCHIVED"
-    
     role = meta.get('role', 'Architect')
     body = sections.get('brief', '')
-    
-    # 2. Extract Data
     mission = extract_mission_brief(body)
     logic = extract_core_logic(body)
     impacts = extract_impact_metrics(body)
     live_link = meta.get('link_live')
     
-    # 3. Build Action Buttons
     action_buttons = '<div class="flex items-center gap-3 mt-auto pt-4 border-t border-gray-800">'
     if live_link:
-        action_buttons += f'''
-        <a href="{live_link}" target="_blank" onclick="event.stopPropagation()" 
-           class="flex items-center gap-2 px-3 py-2 text-[10px] font-mono font-bold text-black bg-aurelia-secondary hover:bg-white transition-colors rounded-sm uppercase tracking-wider">
-           🚀 LAUNCH_SYSTEM
-        </a>
-        '''
-    action_buttons += f'''
-    <button onclick="openNote('{note_id}'); event.stopPropagation()" 
-            class="ml-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono text-gray-400 border border-gray-700 hover:border-aurelia-text hover:text-aurelia-text transition-all rounded-sm uppercase tracking-wider">
-        <span>ACCESS_DATA</span>
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-    </button>
-    </div>
-    '''
+        action_buttons += f'''<a href="{live_link}" target="_blank" onclick="event.stopPropagation()" class="flex items-center gap-2 px-3 py-2 text-[10px] font-mono font-bold text-black bg-aurelia-secondary hover:bg-white transition-colors rounded-sm uppercase tracking-wider">🚀 LAUNCH_SYSTEM</a>'''
+    action_buttons += f'''<button onclick="openNote('{note_id}'); event.stopPropagation()" class="ml-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono text-gray-400 border border-gray-700 hover:border-aurelia-text hover:text-aurelia-text transition-all rounded-sm uppercase tracking-wider"><span>ACCESS_DATA</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button></div>'''
 
-    # 4. Search Meta
-    search_text = f"{title} project {mission} {logic}".lower().replace('\n', ' ').replace('"', "'")
-
-    # 5. GENERATE HTML (The "Terminal Block" Design)
     html = f"""
-    <div class="searchable-item group relative flex flex-col gap-5 p-6 min-h-[480px]
-                bg-[#0a0a0b]/80 backdrop-blur-md border border-gray-800 
-                hover:border-aurelia-secondary/50 hover:shadow-[0_0_30px_rgba(138,43,226,0.15)] 
-                transition-all duration-300 rounded-sm cursor-pointer overflow-hidden"
-         data-type="project" 
-         data-search="{search_text}"
-         onclick="openNote('{note_id}')">
-        
+    <div class="searchable-item group relative flex flex-col gap-5 p-6 min-h-[480px] bg-[#0a0a0b]/80 backdrop-blur-md border border-gray-800 hover:border-aurelia-secondary/50 hover:shadow-[0_0_30px_rgba(138,43,226,0.15)] transition-all duration-300 rounded-sm cursor-pointer overflow-hidden" data-type="project" data-search="{title} project {mission}" onclick="openNote('{note_id}')">
         <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
         <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
-
-        <div class="flex justify-between items-start z-10">
-            <div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="px-2 py-0.5 rounded text-[9px] font-bold font-mono bg-aurelia-secondary/10 text-aurelia-secondary border border-aurelia-secondary/20 uppercase">
-                        {role}
-                    </span>
-                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-gray-800 bg-black/50">
-                        <span class="w-1.5 h-1.5 {status_color} rounded-full"></span>
-                        <span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">{status_text}</span>
-                    </div>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-100 font-sans tracking-tight leading-none group-hover:text-aurelia-secondary transition-colors">
-                    {title.replace('_', ' ').replace('.md', '')}
-                </h3>
-            </div>
-        </div>
-
-        <div class="flex flex-col gap-2 z-10">
-            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">MISSION_PARAMETER</span>
-            <p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3">
-                {mission}
-            </p>
-        </div>
-
-        <div class="flex flex-col gap-2 flex-grow z-10">
-            <span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SYSTEM_LOGIC</span>
-            <div class="bg-black/60 border-l-2 border-aurelia-secondary p-3 rounded-r-sm h-full">
-                <p class="text-xs text-aurelia-muted font-mono leading-relaxed italic opacity-90">
-                    <span class="text-aurelia-secondary opacity-50">>></span> {logic}
-                </p>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2 z-10">
-            { "".join([f'<span class="text-[10px] font-mono text-gray-400 bg-gray-900 border border-gray-800 px-2 py-1 rounded-sm">{m}</span>' for m in impacts]) }
-        </div>
-
+        <div class="flex justify-between items-start z-10"><div><div class="flex items-center gap-2 mb-3"><span class="px-2 py-0.5 rounded text-[9px] font-bold font-mono bg-aurelia-secondary/10 text-aurelia-secondary border border-aurelia-secondary/20 uppercase">{role}</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-gray-800 bg-black/50"><span class="w-1.5 h-1.5 {status_color} rounded-full"></span><span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">{'ONLINE' if is_active else 'ARCHIVED'}</span></div></div><h3 class="text-2xl font-bold text-gray-100 font-sans tracking-tight leading-none group-hover:text-aurelia-secondary transition-colors">{title.replace('_', ' ').replace('.md', '')}</h3></div></div>
+        <div class="flex flex-col gap-2 z-10"><span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">MISSION_PARAMETER</span><p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3">{mission}</p></div>
+        <div class="flex flex-col gap-2 flex-grow z-10"><span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SYSTEM_LOGIC</span><div class="bg-black/60 border-l-2 border-aurelia-secondary p-3 rounded-r-sm h-full"><p class="text-xs text-aurelia-muted font-mono leading-relaxed italic opacity-90"><span class="text-aurelia-secondary opacity-50">>></span> {logic}</p></div></div>
+        <div class="flex flex-wrap gap-2 z-10">{ "".join([f'<span class="text-[10px] font-mono text-gray-400 bg-gray-900 border border-gray-800 px-2 py-1 rounded-sm">{m}</span>' for m in impacts]) }</div>
         {action_buttons}
-    </div>
-    """
+    </div>"""
     return html
 
-# --- NEW HELPER: DATE SERIALIZER FOR TRANSMISSIONS ---
+# --- HELPER: DATE SERIALIZER FOR TRANSMISSIONS ---
 from datetime import date, datetime
 def json_serial(obj):
-    if isinstance(obj, (datetime, date)):
-        return obj.isoformat()
+    if isinstance(obj, (datetime, date)): return obj.isoformat()
     raise TypeError ("Type %s not serializable" % type(obj))
 
 def build_all():
