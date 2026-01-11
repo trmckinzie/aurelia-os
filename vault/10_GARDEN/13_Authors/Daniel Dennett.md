@@ -10,7 +10,7 @@ publish: true
 # 👤 Daniel Dennett
 
 ### 📝 Profile & Context
-> Dennett is a central architect of modern naturalistic thinking about mind, [[Evolution]], and meaning, offering mechanistic explanations that align closely with your interests in cognition, evolutionary theory, and demystifying complex phenomena.
+> Dennett is a central architect of modern naturalistic thinking about mind, [[Evolution]], and meaning, offering mechanistic explanations that align closely with my interests in cognition, evolutionary theory, and demystifying complex phenomena.
 
 ### 📚 Key Works (In Vault)
 * [[Darwin's Dangerous Idea]]
