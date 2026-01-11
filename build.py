@@ -138,7 +138,44 @@ def parse_frontmatter(content):
 def parse_body(content):
     parts = content.split("---", 2)
     if len(parts) < 3: return content
-    return parts[2].strip()
+    return parts[2].strip()\
+    
+
+
+
+# --- 🧪 PROTOCOL EXTRACTORS (STEP-BY-STEP) --- 
+def extract_protocol_sequence(text):
+    """Extracts the checklist items from a Protocol"""
+    items = []
+    # Look for the sequence header (flexible matching)
+    parts = re.split(r'##\s*.*(?:Sequence|Checklist|Steps).*', text, flags=re.IGNORECASE)
+    
+    if len(parts) > 1:
+        section = parts[1]
+        # Stop at next header
+        clean_section = re.split(r'\n##|\n---', section)[0]
+        
+        # Regex to find: "- [ ] Task" OR "- Task" OR "1. Task"
+        # We prioritize checklists
+        matches = re.findall(r'-\s*\[[ x]\]\s*(.*)', clean_section)
+        
+        # Fallback: if no checkboxes, grab standard bullets
+        if not matches:
+            matches = re.findall(r'^\s*[-*]\s+(.*)', clean_section, re.MULTILINE)
+            
+        items = [m.strip() for m in matches if m.strip()]
+        
+    return items[:6] # Return top 6 steps
+def extract_protocol_logic(text):
+    """Extracts the logic blockquote"""
+    # Look for System Logic header
+    logic_match = re.search(r'##\s*.*System Logic.*\n+>\s*(.*)', text, re.MULTILINE)
+    if not logic_match:
+        # Fallback to just finding the blockquote if header is messy
+        logic_match = re.search(r'>\s*(.*)', text)
+    
+    logic = logic_match.group(1).strip() if logic_match else "Logic not defined."
+    return logic
 
 # --- 🧠 GARDEN EXTRACTORS (DATA REFINERY) ---
 
@@ -601,31 +638,181 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     return html_card
 
 def generate_project_card(meta, sections, title, note_id):
-    # This remains the same as your previous version, ensuring projects still work
+    # 1. Status Logic
     is_active = meta.get("status") == "active"
     status_color = "bg-aurelia-accent shadow-[0_0_10px_#39ff14]" if is_active else "bg-gray-500"
+    status_text = "ONLINE" if is_active else "ARCHIVED"
+    
     role = meta.get('role', 'Architect')
     body = sections.get('brief', '')
+    
+    # 2. Extract Data
     mission = extract_mission_brief(body)
     logic = extract_core_logic(body)
     impacts = extract_impact_metrics(body)
+    
+    # Extract Tech Stack from YAML (Safe Fallback)
+    tech_stack = meta.get("tech_stack", [])
+    if isinstance(tech_stack, str): tech_stack = [tech_stack] # Handle single item
+    
     live_link = meta.get('link_live')
     
-    action_buttons = '<div class="flex items-center gap-3 mt-auto pt-4 border-t border-gray-800">'
+    # 3. Build Action Buttons
+    action_buttons = '<div class="flex items-center gap-3 mt-auto pt-4 border-t border-gray-700">'
     if live_link:
-        action_buttons += f'''<a href="{live_link}" target="_blank" onclick="event.stopPropagation()" class="flex items-center gap-2 px-3 py-2 text-[10px] font-mono font-bold text-black bg-aurelia-secondary hover:bg-white transition-colors rounded-sm uppercase tracking-wider">🚀 LAUNCH_SYSTEM</a>'''
-    action_buttons += f'''<button onclick="openNote('{note_id}'); event.stopPropagation()" class="ml-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono text-gray-400 border border-gray-700 hover:border-aurelia-text hover:text-aurelia-text transition-all rounded-sm uppercase tracking-wider"><span>ACCESS_DATA</span><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button></div>'''
+        action_buttons += f'''
+        <a href="{live_link}" target="_blank" onclick="event.stopPropagation()" 
+           class="flex items-center gap-2 px-3 py-2 text-[10px] font-mono font-bold text-black bg-aurelia-secondary hover:bg-white transition-colors rounded-sm uppercase tracking-wider">
+            🚀 LAUNCH_SYSTEM
+        </a>
+        '''
+    action_buttons += f'''
+    <button onclick="openNote('{note_id}'); event.stopPropagation()" 
+            class="ml-auto flex items-center gap-2 px-3 py-2 text-[10px] font-mono text-white border border-gray-500 hover:border-aurelia-text hover:text-aurelia-text hover:bg-white/5 transition-all rounded-sm uppercase tracking-wider">
+        <span>ACCESS_DOSSIER</span>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+    </button>
+    </div>
+    '''
 
+    # 4. Search Meta
+    search_text = f"{title} project {mission} {logic}".lower().replace('\n', ' ').replace('"', "'")
+
+    # 5. GENERATE HTML (High Contrast "Dossier" Design)
     html = f"""
-    <div class="searchable-item group relative flex flex-col gap-5 p-6 min-h-[480px] bg-[#0a0a0b]/80 backdrop-blur-md border border-gray-800 hover:border-aurelia-secondary/50 hover:shadow-[0_0_30px_rgba(138,43,226,0.15)] transition-all duration-300 rounded-sm cursor-pointer overflow-hidden" data-type="project" data-search="{title} project {mission}" onclick="openNote('{note_id}')">
-        <div class="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
-        <div class="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-aurelia-secondary/20 group-hover:border-aurelia-secondary transition-colors"></div>
-        <div class="flex justify-between items-start z-10"><div><div class="flex items-center gap-2 mb-3"><span class="px-2 py-0.5 rounded text-[9px] font-bold font-mono bg-aurelia-secondary/10 text-aurelia-secondary border border-aurelia-secondary/20 uppercase">{role}</span><div class="flex items-center gap-1.5 px-2 py-0.5 rounded border border-gray-800 bg-black/50"><span class="w-1.5 h-1.5 {status_color} rounded-full"></span><span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">{'ONLINE' if is_active else 'ARCHIVED'}</span></div></div><h3 class="text-2xl font-bold text-gray-100 font-sans tracking-tight leading-none group-hover:text-aurelia-secondary transition-colors">{title.replace('_', ' ').replace('.md', '')}</h3></div></div>
-        <div class="flex flex-col gap-2 z-10"><span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">MISSION_PARAMETER</span><p class="text-sm text-gray-300 font-sans leading-relaxed line-clamp-3">{mission}</p></div>
-        <div class="flex flex-col gap-2 flex-grow z-10"><span class="text-[10px] font-mono text-gray-500 uppercase tracking-widest">SYSTEM_LOGIC</span><div class="bg-black/60 border-l-2 border-aurelia-secondary p-3 rounded-r-sm h-full"><p class="text-xs text-aurelia-muted font-mono leading-relaxed italic opacity-90"><span class="text-aurelia-secondary opacity-50">>></span> {logic}</p></div></div>
-        <div class="flex flex-wrap gap-2 z-10">{ "".join([f'<span class="text-[10px] font-mono text-gray-400 bg-gray-900 border border-gray-800 px-2 py-1 rounded-sm">{m}</span>' for m in impacts]) }</div>
+    <div class="searchable-item group relative flex flex-col gap-5 p-6 min-h-[520px]
+                bg-black border-2 border-gray-800 
+                hover:border-aurelia-secondary hover:shadow-[0_0_30px_rgba(138,43,226,0.2)] 
+                transition-all duration-300 rounded-sm cursor-pointer overflow-hidden"
+         data-type="project" 
+         data-search="{search_text}"
+         onclick="openNote('{note_id}')">
+        
+        <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-gray-800 group-hover:border-aurelia-secondary transition-colors"></div>
+        <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-gray-800 group-hover:border-aurelia-secondary transition-colors"></div>
+
+        <div class="flex justify-between items-start z-10">
+            <div class="w-full">
+                <div class="flex items-center justify-between mb-3 w-full">
+                    <span class="px-2 py-1 rounded-sm text-[10px] font-bold font-mono bg-aurelia-secondary text-black border border-aurelia-secondary uppercase">
+                        {role}
+                    </span>
+                    <div class="flex items-center gap-1.5 px-2 py-1 rounded border border-gray-700 bg-gray-900">
+                        <span class="w-2 h-2 {status_color} rounded-full"></span>
+                        <span class="text-[10px] font-mono text-white font-bold uppercase tracking-wider">{status_text}</span>
+                    </div>
+                </div>
+                <h3 class="text-3xl font-black text-white font-sans tracking-tight leading-none group-hover:text-aurelia-secondary transition-colors uppercase">
+                    {title.replace('_', ' ').replace('.md', '')}
+                </h3>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2 z-10">
+            <span class="text-[10px] font-bold font-mono text-aurelia-secondary uppercase tracking-widest border-b border-gray-800 pb-1">MISSION_PARAMETER</span>
+            <p class="text-sm text-white font-sans leading-relaxed line-clamp-3 font-medium">
+                "{mission}"
+            </p>
+        </div>
+
+        <div class="flex flex-col gap-2 flex-grow z-10">
+            <span class="text-[10px] font-bold font-mono text-aurelia-secondary uppercase tracking-widest border-b border-gray-800 pb-1">SYSTEM_LOGIC</span>
+            <div class="bg-gray-900 border-l-4 border-aurelia-secondary p-3 rounded-r-sm h-full">
+                <p class="text-xs text-gray-300 font-mono leading-relaxed italic">
+                    <span class="text-aurelia-secondary font-bold">>></span> {logic if logic else "Classified / Internal Logic Only."}
+                </p>
+            </div>
+        </div>
+        
+        <div class="z-10 space-y-3">
+             <div class="flex flex-wrap gap-1.5">
+                {''.join([f'<span class="text-[9px] font-mono text-black bg-white px-1.5 py-0.5 rounded-sm font-bold uppercase">{t}</span>' for t in tech_stack[:4]])}
+             </div>
+             
+             <div class="flex flex-wrap gap-2">
+                {''.join([f'<span class="text-[10px] font-mono text-gray-300 border border-gray-600 px-2 py-1 rounded-sm">⚡ {m}</span>' for m in impacts])}
+             </div>
+        </div>
+
         {action_buttons}
-    </div>"""
+    </div>
+    """
+    return html
+
+# --- CARD TYPE: PROTOCOL ---
+def generate_protocol_card(meta, body, title, note_id, p_id_override=None):
+    # 1. EXTRACT DATA
+    # Use the override ID if provided (ensures match with build_all loop), else fallback to metadata
+    prot_id = p_id_override if p_id_override else meta.get("id", "SYS_CMD").upper()
+    sequence = extract_protocol_sequence(body)
+    logic = extract_protocol_logic(body)
+    
+    # 2. STATUS INDICATOR
+    is_auto = "automated" in meta.get("tags", [])
+    status_text = "DAEMON" if is_auto else "MANUAL"
+    
+    # 3. SEARCH META
+    search_text = f"{title} {prot_id} {' '.join(sequence)}".lower()
+
+    # 4. GENERATE HTML (High-Vis HUD Design)
+    # CRITICAL FIX: onclick uses 'prot_id' (PROT_01) instead of 'note_id' (note-slug)
+    # This ensures it matches the 'store-{{ p.id }}' in the HTML template.
+    html = f"""
+    <div class="searchable-item group relative flex flex-col gap-0 min-h-[420px]
+                bg-[#09090b] border border-gray-700 
+                hover:border-aurelia-accent hover:shadow-[0_0_20px_rgba(57,255,20,0.15)] 
+                transition-all duration-200 rounded-sm cursor-pointer overflow-hidden font-mono"
+         data-type="protocol" 
+         data-search="{search_text}"
+         onclick="openNote('{prot_id}')">
+        
+        <div class="bg-[#18181b] border-b border-gray-700 p-4 flex justify-between items-center group-hover:bg-[#27272a] transition-colors">
+            <div class="flex items-center gap-3">
+                <div class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-aurelia-accent opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-aurelia-accent"></span>
+                </div>
+                <span class="text-xs font-bold text-white tracking-widest">{prot_id}</span>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 uppercase bg-black/50 px-2 py-1 rounded border border-gray-700">{status_text}</span>
+        </div>
+
+        <div class="p-6 border-b border-gray-800">
+            <h3 class="text-xl font-black text-white uppercase tracking-tight group-hover:text-aurelia-accent transition-colors leading-none">
+                {title.replace('_', ' ').replace('.md', '')}
+            </h3>
+        </div>
+
+        <div class="p-6 flex flex-col gap-4 flex-grow bg-[#09090b]">
+            <span class="text-[10px] font-bold text-aurelia-accent uppercase tracking-widest border-b border-gray-800 pb-2 w-full">
+                >> EXECUTION_STEPS:
+            </span>
+            
+            <div class="flex flex-col gap-2.5 mt-1">
+                {''.join([f'''
+                <div class="flex items-start gap-3 group/item">
+                    <span class="text-gray-500 font-bold text-xs shrink-0 select-none group-hover:text-aurelia-accent transition-colors">0{i+1}</span>
+                    <span class="text-sm text-gray-200 font-medium group-hover/item:text-white transition-colors border-l-2 border-gray-800 pl-3 leading-snug">
+                        {item}
+                    </span>
+                </div>
+                ''' for i, item in enumerate(sequence)])}
+                {'' if sequence else '<span class="text-sm text-gray-500 italic">// NO_STEPS_DETECTED</span>'}
+            </div>
+        </div>
+
+        <div class="p-5 bg-[#18181b] border-t border-gray-700 mt-auto">
+            <div class="flex items-start gap-3">
+                <span class="text-aurelia-accent font-bold text-sm">i</span>
+                <p class="text-xs text-gray-300 font-sans leading-relaxed">
+                    {logic if logic else "Standard operating procedure."}
+                </p>
+            </div>
+        </div>
+
+        <div class="absolute inset-x-0 bottom-0 h-1 bg-aurelia-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_-2px_10px_rgba(57,255,20,0.5)]"></div>
+    </div>
+    """
     return html
 
 # --- HELPER: DATE SERIALIZER FOR TRANSMISSIONS ---
@@ -651,7 +838,7 @@ def build_all():
     garden_cards = []
     portfolio_cards = []
     protocol_cards = []
-    transmissions_data = [] # <--- NEW: Transmissions Container
+    transmissions_data = []
 
     # 2. SCAN VAULT (The Main Router)
     for root, dirs, files in os.walk(VAULT_PATH):
@@ -665,9 +852,10 @@ def build_all():
                 if not meta.get("publish"): continue 
 
                 body = parse_body(content)
-                # Normalize type to ensure matching works
+                # Normalize type
                 note_type = meta.get("type", "unknown").lower().strip()
                 tags = meta.get("tags", []) 
+                title = filename.replace(".md", "").replace("_", " ")
                 
                 # --- ROUTING SWITCH (The "Traffic Cop") ---
                 
@@ -675,86 +863,92 @@ def build_all():
                 if "project" in note_type:
                     project_id = f"project-{len(portfolio_cards)}"
                     sections = {"brief": body}
-                    card_html = generate_project_card(meta, sections, filename, project_id)
+                    # Generate the High-Contrast Dossier HTML
+                    card_html = generate_project_card(meta, sections, title, project_id)
+                    
                     portfolio_cards.append({
                         "html": card_html, 
                         "body": body, 
                         "id": project_id,
-                        "title": filename.replace(".md", "").replace("_", " "),
+                        "title": title,
                         "link": f"portfolio.html#{project_id}", 
                         "type": "PROJECT",
                         "tags": tags,
                         "desc": extract_mission_brief(body)
                     })
 
-                # ROUTE B: PROTOCOLS -> Ignore (Handled in Step 3)
+                # ROUTE B: PROTOCOLS -> Ignore here (Handled in Step 3 for dedicated folder scan)
                 elif "protocol" in note_type:
                     continue 
 
-                # ROUTE C: TRANSMISSIONS -> Ignore (Handled in Step 4)
+                # ROUTE C: TRANSMISSIONS -> Ignore here (Handled in Step 4)
                 elif "transmission" in note_type:
-                    continue # Skips adding to Garden, handled by separate loader below
+                    continue 
 
                 # ROUTE D: GARDEN NOTES -> Garden
                 else:
                     note_id = make_id(filename)
                     
                     # ⚡ DEEP SEARCH GENERATION ⚡
-                    # 1. Get raw body
                     raw_search = body
-                    # 2. Strip Markdown & HTML tags (so we don't search "<button>" or "##")
                     raw_search = re.sub(r'[*#_`\[\]]', '', raw_search)
                     raw_search = re.sub(r'<[^>]+>', '', raw_search)
-                    # 3. Flatten (remove newlines/quotes) for the data attribute
                     full_search_text = raw_search.replace('\n', ' ').replace('"', "").replace("'", "").lower()
                     
                     # Process Links for the VISIBLE body
                     processed_body = process_wikilinks(body)
                     
-                    # Pass the 'full_search_text' as the new 5th argument
+                    # Generate the Specific Card Type HTML (Log, Concept, Source, etc.)
                     card_html = generate_garden_card_html(meta, filename, note_id, processed_body, full_search_text)
                     
                     garden_cards.append({
                         "html": card_html, 
                         "body": processed_body, 
                         "id": note_id,
-                        "title": filename.replace(".md", "").replace("_", " "),
+                        "title": title,
                         "link": f"garden.html#{note_id}", 
                         "type": meta.get("type", "NOTE").upper(), 
                         "tags": tags,
-                        "desc": full_search_text # Use full text for tree search too
+                        "desc": full_search_text
                     })
 
-    # 3. SCAN PROTOCOLS
-    if os.path.exists(PROTOCOL_PATH):
-        for filename in os.listdir(PROTOCOL_PATH):
+    # 3. SCAN PROTOCOLS (Dedicated Scanner)
+    scan_path = PROTOCOL_PATH if os.path.exists(PROTOCOL_PATH) else VAULT_PATH
+
+    for root, dirs, files in os.walk(scan_path):
+        for filename in files:
             if filename.endswith(".md"):
-                filepath = os.path.join(PROTOCOL_PATH, filename)
+                filepath = os.path.join(root, filename)
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
                 
                 meta = parse_frontmatter(content)
+                if "protocol" not in meta.get("type", ""): continue
                 if not meta.get("publish", False): continue
                 
-                # Use ID if present, else generate one
+                body = parse_body(content)
+                title = filename.replace(".md", "").replace("_", " ")
+                
+                # CALCULATE CONSISTENT ID
                 p_id = meta.get("id", "PROT_" + filename[:3].upper())
+                note_id = make_id(filename)
+
+                # PASS p_id TO GENERATOR
+                card_html = generate_protocol_card(meta, body, title, note_id, p_id)
                 
                 protocol_cards.append({
-                    "title": meta.get("title", filename.replace(".md", "")),
+                    "html": card_html,
+                    "title": title,
                     "desc": meta.get("description", "System Protocol"),
                     "tags": meta.get("tags", []),
-                    "body": content.split("---", 2)[2] if len(content.split("---", 2)) > 2 else content,
-                    "id": p_id,
-                    "link": f"protocol.html", 
+                    "body": body,
+                    "id": p_id,  # This ID matches the onclick='p_id' above
+                    "link": "protocol.html", 
                     "type": "PROTOCOL"
                 })
-
-    # 4. SCAN TRANSMISSIONS (UPDATED FOR 40_TRANSMISSIONS)
-    # Checks config first
+    # 4. SCAN TRANSMISSIONS
     if user_config.get('modules', {}).get('transmissions', {}).get('enabled', False):
-        # 1. Target the new folder structure
         transmissions_dir = os.path.join(VAULT_PATH, "40_TRANSMISSIONS")
-
         if os.path.exists(transmissions_dir):
             print(f"   + Processing Transmissions from: {transmissions_dir}")
             for filename in os.listdir(transmissions_dir):
@@ -766,42 +960,24 @@ def build_all():
                     t_meta = parse_frontmatter(t_content)
                     t_body = parse_body(t_content)
                     
-                    # Metadata Safety Checks
                     if 'series' not in t_meta: t_meta['series'] = 'Uncategorized'
                     if 'title' not in t_meta: t_meta['title'] = filename.replace(".md", "")
+                    try: t_meta['episode'] = int(t_meta.get('episode', 999))
+                    except: t_meta['episode'] = 999
                     
-                    # Ensure episode is integer for safe sorting
-                    try:
-                        t_meta['episode'] = int(t_meta.get('episode', 999))
-                    except:
-                        t_meta['episode'] = 999
-                    
-                    # Markdown Parsing
                     try:
                         import markdown
-                        # Enable extensions if you need tables or code fencing
                         t_meta['content'] = markdown.markdown(t_body, extensions=['fenced_code', 'tables']) 
                     except ImportError:
                         t_meta['content'] = t_body 
                         
                     t_meta['tags'] = t_meta.get("tags", [])
-                    
                     transmissions_data.append(t_meta)
-        else:
-            print(f"   ⚠️ WARNING: Transmissions enabled but '40_TRANSMISSIONS' folder not found in {VAULT_PATH}")
 
     # ⚡ SORTING ENGINE ⚡
-    
-    # 1. Garden Cards (A-Z)
     garden_cards.sort(key=lambda x: x['title'].lower())
-    
-    # 2. Portfolio Cards (A-Z)
     portfolio_cards.sort(key=lambda x: x['title'].lower())
-
-    # 3. Protocol Cards (A-Z)
     protocol_cards.sort(key=lambda x: x['title'].lower())
-
-    # 4. Transmissions (Series, then Episode)
     transmissions_data.sort(key=lambda x: (x['series'], x['episode']))
 
     print(f"   + Indexing: {len(garden_cards)} Notes, {len(portfolio_cards)} Projects, {len(protocol_cards)} Protocols, {len(transmissions_data)} Transmissions")
@@ -809,38 +985,26 @@ def build_all():
     # 5. BUILD MASTER SEARCH INDEX
     master_index = []
     
-    # Add System Pages
+    # System Pages
     master_index.append({"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"})
     master_index.append({"title": "The Garden // Input", "url": "garden.html", "type": "SYSTEM", "tags": ["notes", "writing"], "desc": "Digital Garden"})
     master_index.append({"title": "Protocols // Logic", "url": "protocol.html", "type": "SYSTEM", "tags": ["sop", "routines"], "desc": "Operating Procedures"})
     master_index.append({"title": "Portfolio // Output", "url": "portfolio.html", "type": "SYSTEM", "tags": ["work", "jobs"], "desc": "Case Studies"})
-    
     if transmissions_data:
         master_index.append({"title": "Transmissions // Signal", "url": "transmissions.html", "type": "SYSTEM", "tags": ["podcast", "audio"], "desc": "Neural Uplink"})
     
-    # Add Content
+    # Content Indexing
     for c in garden_cards: 
         master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN", "tags": c['tags'], "desc": c['desc']})
-        
     for p in portfolio_cards: 
         master_index.append({"title": p['title'], "url": p['link'], "type": "PROJECT", "tags": p['tags'], "desc": p['desc']})
-        
     for prot in protocol_cards: 
         master_index.append({"title": prot['title'], "url": prot['link'], "type": "PROTOCOL", "tags": prot['tags'], "desc": prot['desc']})
-
     for trans in transmissions_data:
-        master_index.append({
-            "title": trans['title'], 
-            "url": "transmissions.html", # All eps live on one SPA page
-            "type": "TRANSMISSION", 
-            "tags": trans['tags'], 
-            "desc": f"Series: {trans['series']} // Ep {trans['episode']}"
-        })
+        master_index.append({"title": trans['title'], "url": "transmissions.html", "type": "TRANSMISSION", "tags": trans['tags'], "desc": f"Series: {trans['series']} // Ep {trans['episode']}"})
 
-    # Serialize Index
+    # Serialize Data
     json_index = json.dumps(master_index)
-    
-    # Serialize Transmissions (Custom Date Handler)
     transmissions_json = json.dumps(transmissions_data, default=json_serial)
 
     # 6. RENDER PAGES
@@ -853,15 +1017,12 @@ def build_all():
         ("404.html", "404.html", {}),
     ]
 
-    # CHECK CONFIG, NOT DATA
-    # We use the config flag to decide whether to build the page
     if user_config.get('modules', {}).get('transmissions', {}).get('enabled', False):
          pages.append(("pages/transmissionstemplate.html", "transmissions.html", {"transmissions_json": transmissions_json}))
 
     # RENDER LOOP
     for template_name, output_name, context in pages:
         try:
-            # INJECT GLOBAL DATA
             context["theme"] = CURRENT_THEME 
             context["search_index"] = json_index
             context["config"] = user_config 
@@ -877,5 +1038,6 @@ def build_all():
 
     print("\n✅ SYSTEM SYNC COMPLETE.")
 
+# --- THIS IS THE CRITICAL PART: UN-INDENTED! ---
 if __name__ == "__main__":
     build_all()

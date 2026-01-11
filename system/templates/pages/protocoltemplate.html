@@ -32,7 +32,7 @@
     /* === PROTOCOL TYPOGRAPHY ENGINE === */
     .protocol-reader {
         font-family: 'Inter', sans-serif;
-        color: {{ theme.colors.text_dim|replace("'", "") }};
+        color: {{ theme.colors.text_muted|replace("'", "") }};
         line-height: 1.6;
     }
 
@@ -45,7 +45,7 @@
         padding-bottom: 0.5rem;
         margin-bottom: 2rem;
         margin-top: 1rem;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: {{ theme.font_mono|safe }};
         letter-spacing: -0.05em;
     }
     .protocol-reader h2 {
@@ -55,7 +55,7 @@
         margin-bottom: 1rem;
         text-transform: uppercase;
         letter-spacing: 0.15em;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: {{ theme.font_mono|safe }};
         border-left: 2px solid {{ theme.colors.accent|replace("'", "") }};
         padding-left: 0.8rem;
     }
@@ -126,7 +126,7 @@
 
 {% block content %}
 
-<div class="mb-12 border-b border-gray-800 pb-8 flex flex-col md:flex-row justify-between items-end">
+<div class="mb-12 border-b border-aurelia-dim pb-8 flex flex-col md:flex-row justify-between items-end">
     <div>
         <div class="flex items-center gap-3 mb-2">
             <div id="live-status-indicator" class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
@@ -138,37 +138,19 @@
     </div>
     <div class="hidden md:block text-right">
         <div class="text-xs font-mono text-aurelia-accent opacity-80">AVAILABLE_PROTOCOLS: {{ protocols|length }}</div>
-        <div class="text-xs font-mono text-gray-600">SYS_VER: 2.4.0</div>
+        <div class="text-xs font-mono text-gray-600">SYS_VER: {{ config.system_version }}</div>
     </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for p in protocols %}
-    <div onclick="openProtocol('{{ p.id }}')" class="protocol-card p-6 rounded-lg relative group h-full flex flex-col justify-between">
-        <div>
-            <div class="flex justify-between items-center mb-4 opacity-60 group-hover:opacity-100 transition-opacity">
-                <span class="text-[10px] font-mono text-aurelia-accent border border-aurelia-accent/30 px-1.5 py-0.5 rounded">{{ p.id }}</span>
-                <div class="flex gap-2">
-                    {% for tag in p.tags[:2] %}
-                    <span class="text-[9px] font-mono text-gray-400 uppercase tracking-wider">#{{ tag.replace('type/', '') }}</span>
-                    {% endfor %}
-                </div>
-            </div>
-            <h2 class="text-xl font-bold text-aurelia-text mb-3 group-hover:text-aurelia-accent transition-colors">{{ p.title }}</h2>
-            <p class="text-sm text-gray-200 leading-relaxed opacity-80 group-hover:opacity-100 line-clamp-3">{{ p.desc }}</p>
-        </div>
+        {{ p.html | safe }}
         
         <div id="store-{{ p.id }}" class="hidden" 
              data-title="{{ p.title }}" 
              data-tags="{{ p.tags }}">
-            {{ p.body }}
+            {{ p.body | safe }}
         </div>
-
-        <div class="mt-6 flex items-center text-aurelia-accent text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0">
-            <span>[ INITIATE_SEQUENCE ]</span>
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-        </div>
-    </div>
     {% endfor %}
 </div>
 
@@ -176,7 +158,7 @@
 
 <div id="protocol-drawer" class="fixed top-0 right-0 w-full md:w-[600px] h-full bg-[#0a0a0b] z-[60] transform translate-x-full flex flex-col shadow-2xl">
     
-    <div class="flex items-center justify-between p-6 border-b border-gray-800 bg-[#0f0f10]">
+    <div class="flex items-center justify-between p-6 border-b border-aurelia-dim bg-[#0f0f10]">
         <div>
             <div class="flex items-center gap-2 mb-1">
                 <span class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse shadow-[0_0_8px_#39ff14]"></span>
@@ -209,6 +191,9 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
     // --- 1. LIVE STATUS ENGINE (Wrestling Edition) ---
     function updateSystemStatus() {
@@ -258,19 +243,26 @@
     
     let currentProtocol = { title: "", body: "" };
 
-    function openProtocol(id) {
-        // LOOKUP: Find the hidden storage div by "store-ID"
-        const storageId = "store-" + id;
-        const rawEl = document.getElementById(storageId);
+    function openNote(id) {
+        // FIX: Reroute openNote to openProtocol logic
+        // We need to strip "note-" prefix if it exists to match the ID logic
+        const rawId = id.replace("note-", "");
         
-        if (!rawEl) { console.error("Protocol data missing for:", storageId); return; }
+        // However, the storage div uses specific ID formats.
+        // Let's find the storage element by trying both.
+        let storageEl = document.getElementById("store-" + rawId);
+        
+        // Fallback
+        if (!storageEl) storageEl = document.getElementById("store-" + id);
+        
+        if (!storageEl) { console.error("Protocol data missing for:", id); return; }
 
         // EXTRACT: Use textarea hack to decode HTML entities safely
         const txt = document.createElement("textarea");
-        txt.innerHTML = rawEl.innerHTML;
+        txt.innerHTML = storageEl.innerHTML;
         const rawBody = txt.value;
-        const title = rawEl.dataset.title;
-        const rawTags = rawEl.dataset.tags || "[]";
+        const title = storageEl.dataset.title;
+        const rawTags = storageEl.dataset.tags || "[]";
 
         currentProtocol = { title: title, body: rawBody };
 

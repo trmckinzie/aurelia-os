@@ -30,130 +30,168 @@
         scroll-margin-top: 2em;
     }
 
-    /* H1: The Major Section Divider */
+    /* H1: The Title */
     .obsidian-reader h1 {
-        font-size: 2.2em;
-        margin-top: 2.5em; /* Huge space above to separate sections */
-        margin-bottom: 1em; /* Space below to let title breathe */
+        font-size: 2.25rem;
+        border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }};
         padding-bottom: 0.5em;
-        border-bottom: 2px solid {{ theme.colors.secondary|replace("'", "") }}; /* Theme Accent Border */
+        margin-top: 1.5em;
+        margin-bottom: 1em;
     }
-    /* First H1 shouldn't have huge top margin */
-    .obsidian-reader h1:first-child { margin-top: 0; }
 
+    /* H2: Section Headers */
     .obsidian-reader h2 {
-        font-size: 1.5em;
+        font-size: 1.75rem;
         margin-top: 2em;
         margin-bottom: 0.75em;
-        color: {{ theme.colors.secondary|replace("'", "") }}; /* Colored Subheaders */
     }
 
-    /* --- BODY CONTENT --- */
+    /* H3: Sub-sections */
+    .obsidian-reader h3 {
+        font-size: 1.4rem;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        color: {{ theme.colors.primary|replace("'", "") }};
+    }
+
+    /* --- PARAGRAPHS & LISTS --- */
     .obsidian-reader p {
-        margin-bottom: 1.5em; /* clear separation between paragraphs */
-        opacity: 0.9;
+        margin-bottom: 1.5em;
     }
 
-    /* Make **Bold Keys** Pop with Theme Color */
-    .obsidian-reader strong {
-        color: {{ theme.colors.secondary|replace("'", "") }};
-        font-weight: 700;
-    }
-
-    /* --- LISTS (Fixing the dense bullet points) --- */
     .obsidian-reader ul, .obsidian-reader ol {
-        margin-bottom: 2em;
+        margin-bottom: 1.5em;
         padding-left: 1.5em;
     }
     
+    .obsidian-reader ul { list-style-type: disc; }
+    .obsidian-reader ol { list-style-type: decimal; }
+
     .obsidian-reader li {
-        margin-bottom: 0.8em; /* Space between individual list items */
+        margin-bottom: 0.5em;
         padding-left: 0.5em;
     }
-    
-    .obsidian-reader li::marker {
-        color: {{ theme.colors.secondary|replace("'", "") }}; /* Colored bullets */
-    }
 
-    /* --- LINKS --- */
+    /* --- LINKS (The Glow) --- */
     .obsidian-reader a {
-        color: {{ theme.colors.secondary|replace("'", "") }};
+        color: {{ theme.colors.accent|replace("'", "") }};
         text-decoration: none;
-        border-bottom: 1px dotted {{ theme.colors.secondary|replace("'", "") }};
+        border-bottom: 1px solid transparent;
         transition: all 0.2s;
     }
     .obsidian-reader a:hover {
-        background: {{ theme.colors.secondary|replace("'", "") }}20; /* 20 = low opacity hex */
-        border-bottom-style: solid;
+        border-bottom-color: {{ theme.colors.accent|replace("'", "") }};
+        text-shadow: 0 0 8px {{ theme.colors.accent|replace("'", "") }}40;
+    }
+
+    /* --- IMAGES & MEDIA --- */
+    .obsidian-reader img {
+        border-radius: 8px;
+        max-width: 100%;
+        height: auto;
+        margin: 2em auto;
+        display: block;
+        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+    }
+
+    /* --- BLOCKQUOTES --- */
+    .obsidian-reader blockquote {
+        border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }};
+        background: {{ theme.colors.bg_layer_2|replace("'", "") }};
+        padding: 1em 1.5em;
+        margin: 2em 0;
+        font-style: italic;
+        color: {{ theme.colors.text_muted|replace("'", "") }};
+        border-radius: 0 8px 8px 0;
     }
 
     /* --- CODE BLOCKS --- */
     .obsidian-reader pre {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 6px;
-        padding: 1.5em;
-        margin: 2em 0;
+        background: #000;
+        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        border-radius: 8px;
+        padding: 1em;
         overflow-x: auto;
+        margin: 2em 0;
+    }
+    .obsidian-reader code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9em;
+        color: #a5b3ce;
     }
 </style>
 {% endblock %}
 
 {% block content %}
     
-    <section class="w-full mb-20 animate-fade-in-up pt-2">
-        
-        <div class="flex justify-between items-center mb-8 border-b border-aurelia-secondary/20 pb-4">
-           <div>
-                <h1 class="text-4xl font-black text-aurelia-text font-mono tracking-tighter">OPERATOR_PROFILE</h1>
-                <p class="text-xs text-aurelia-secondary font-mono tracking-widest uppercase">ID: {{ config.author.short_name }}-01 // CLEARANCE: LEVEL 5</p>
+    <section class="w-full mb-16 pt-8 animate-fade-in-up">
+        <div class="flex flex-col md:flex-row justify-between items-end border-b border-aurelia-border pb-6 gap-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="w-2 h-2 bg-aurelia-secondary rounded-full animate-pulse"></span>
+                    <span class="text-xs font-mono text-aurelia-secondary tracking-[0.2em] uppercase">OPERATOR_ID: {{ config.author.short_name }}</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl font-black text-aurelia-text font-sans tracking-tight uppercase">
+                    Operator<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-aurelia-secondary to-purple-800">Profile</span>
+                </h1>
             </div>
             
-            <div>
-                <a href="assets/docs/dossier.pdf" target="_blank" class="flex items-center gap-3 px-6 py-3 bg-aurelia-secondary/10 border border-aurelia-secondary/60 hover:bg-aurelia-secondary hover:text-aurelia-text transition-all duration-300 rounded-sm group cursor-pointer shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:shadow-[0_0_30px_rgba(168,85,247,0.5)]">
-                    <span class="text-xs font-bold font-mono tracking-widest uppercase text-aurelia-secondary group-hover:text-aurelia-text">DOWNLOAD_LIVING_CV</span>
-                    <svg class="w-4 h-4 text-aurelia-secondary group-hover:text-aurelia-text group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                </a>
-            </div>
+            <a href="assets/docs/dossier.pdf" target="_blank" class="group flex items-center gap-4 px-6 py-3 bg-aurelia-secondary/5 border border-aurelia-secondary/30 hover:bg-aurelia-secondary hover:border-aurelia-secondary hover:text-white transition-all duration-300 rounded-sm">
+                <div class="flex flex-col text-right">
+                    <span class="text-[10px] font-mono text-aurelia-secondary group-hover:text-white tracking-widest uppercase">SYNOPSIS_FILE</span>
+                    <span class="text-sm font-bold text-aurelia-text group-hover:text-white font-sans">Download CV</span>
+                </div>
+                <div class="p-2 border border-aurelia-secondary/30 rounded-sm group-hover:border-white">
+                    <svg class="w-4 h-4 text-aurelia-secondary group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </div>
+            </a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-auto">
             
             <div class="lg:col-span-4 flex flex-col gap-6">
                 
-                <div class="glass p-6 border border-aurelia-secondary/30 relative overflow-hidden group rounded-sm bg-black/40 hover:bg-black/60 transition-colors">
-                    <div class="absolute inset-0 bg-aurelia-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="glass p-8 border border-gray-800 relative overflow-hidden group rounded-sm bg-[#0a0a0b]">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-aurelia-secondary/5 rounded-bl-full pointer-events-none"></div>
                     
-                    <div class="flex items-center gap-6">
-                        <div class="relative w-24 h-24 shrink-0">
-                            <div class="absolute inset-0 rounded-full border-2 border-aurelia-secondary/50 border-dashed animate-[spin_12s_linear_infinite]"></div>
-                            <img src="assets/images/profile.jpg" class="w-full h-full object-cover rounded-full p-1 grayscale group-hover:grayscale-0 transition-all duration-500">
-                            <div class="absolute bottom-1 right-1 w-3 h-3 bg-aurelia-accent rounded-full border-2 border-black animate-pulse"></div>
+                    <div class="flex flex-col items-center text-center">
+                        <div class="relative w-32 h-32 mb-6">
+                            <div class="absolute inset-0 rounded-full border border-aurelia-secondary/30"></div>
+                            <div class="absolute inset-2 rounded-full border border-aurelia-secondary/10"></div>
+                            <img src="assets/images/profile.jpg" class="w-full h-full object-cover rounded-full p-3 grayscale group-hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute bottom-2 right-2 w-4 h-4 bg-aurelia-accent border-2 border-black rounded-full"></div>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-aurelia-text font-sans tracking-tight">{{ config.author.name }}</h2>
-                            <div class="h-px w-full bg-aurelia-secondary/30 my-2"></div>
-                            <p class="text-[10px] text-aurelia-secondary font-mono">> {{ config.author.role }}</p>
-                            <p class="text-[10px] text-gray-400 font-mono">> {{ config.author.location }}</p>
+                        
+                        <h2 class="text-2xl font-bold text-white font-sans tracking-tight mb-1">{{ config.author.name }}</h2>
+                        <p class="text-sm text-aurelia-secondary font-mono mb-4">{{ config.author.role }}</p>
+                        
+                        <div class="w-full h-px bg-gray-800 my-4"></div>
+                        
+                        <div class="flex items-center gap-2 text-xs text-gray-400 font-mono">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span>{{ config.author.location }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="glass p-5 border border-gray-800 rounded-sm bg-black/40">
-                     <h3 class="text-[10px] font-bold text-gray-500 font-mono mb-3 uppercase tracking-widest border-b border-gray-800 pb-2">Credentials_Log</h3>
-                     <div class="space-y-3">
-                        <div class="flex items-start gap-3">
-                            <span class="text-aurelia-secondary mt-1">🎓</span>
+                <div class="glass border border-gray-800 rounded-sm bg-[#0a0a0b] flex flex-col">
+                     <div class="p-4 border-b border-gray-800 bg-white/5 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-gray-400 font-mono uppercase tracking-widest">EDUCATION_DB</span>
+                        <span class="text-[10px] text-gray-600 font-mono">V.2.0</span>
+                     </div>
+                     <div class="p-5 space-y-4">
+                        <div class="group flex gap-4 items-start">
+                            <div class="mt-1 w-1.5 h-1.5 bg-aurelia-secondary rounded-full group-hover:shadow-[0_0_8px_#8a2be2] transition-shadow"></div>
                             <div>
-                                <div class="text-xs text-aurelia-text font-bold">B.S. General Business</div>
-                                <div class="text-[10px] text-gray-500">Adams State University // 2026</div>
+                                <div class="text-sm font-bold text-white leading-none mb-1">B.S. General Business</div>
+                                <div class="text-xs text-gray-500 font-mono">Adams State University // 2026</div>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <span class="text-gray-600 mt-1">🎓</span>
+                        <div class="group flex gap-4 items-start">
+                            <div class="mt-1 w-1.5 h-1.5 bg-gray-600 rounded-full group-hover:bg-white transition-colors"></div>
                             <div>
-                                <div class="text-xs text-gray-300 font-bold">B.A. Psychology</div>
-                                <div class="text-[10px] text-gray-500">Adams State University // 2026</div>
+                                <div class="text-sm font-bold text-gray-300 leading-none mb-1">B.A. Psychology</div>
+                                <div class="text-xs text-gray-500 font-mono">Adams State University // 2026</div>
                             </div>
                         </div>
                      </div>
@@ -163,65 +201,71 @@
 
             <div class="lg:col-span-8 flex flex-col gap-6">
                 
-                <div class="glass p-6 border border-aurelia-secondary/20 flex flex-col relative rounded-sm bg-black/40 min-h-[200px]">
-                    <div class="absolute top-0 right-0 w-4 h-4 border-t border-r border-aurelia-secondary/50"></div>
-                    <div class="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-aurelia-secondary/50"></div>
-                    
-                    <h3 class="text-sm font-bold text-aurelia-text font-mono mb-6 uppercase tracking-widest flex justify-between">
-                        <span>// NEURAL_COMPETENCIES</span>
-                        <span class="text-aurelia-secondary animate-pulse">● ONLINE</span>
-                    </h3>
+                <div class="glass p-8 border border-gray-800 relative rounded-sm bg-[#0a0a0b]">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-sm font-bold text-white font-mono uppercase tracking-widest flex items-center gap-3">
+                            <span class="text-aurelia-secondary">///</span>
+                            NEURAL_COMPETENCIES
+                        </h3>
+                        <span class="text-[10px] font-mono text-aurelia-accent bg-aurelia-accent/10 border border-aurelia-accent/20 px-2 py-1 rounded">OPTIMIZED</span>
+                    </div>
 
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-1">
-                                <span>SYSTEMS ARCHITECTURE (PYTHON/ETL)</span>
-                                <span class="text-aurelia-secondary">94%</span>
+                    <div class="grid gap-8">
+                        <div class="group">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs font-bold text-gray-300 font-sans">SYSTEMS ARCHITECTURE</span>
+                                <span class="text-xs font-mono text-aurelia-secondary">94%</span>
                             </div>
-                            <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-aurelia-secondary w-[94%] shadow-[0_0_10px_#a855f7]"></div>
+                            <div class="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-800">
+                                <div class="h-full bg-aurelia-secondary w-[94%] shadow-[0_0_10px_#8a2be2] group-hover:w-full transition-all duration-1000 ease-out"></div>
                             </div>
+                            <p class="text-[10px] text-gray-500 mt-1 font-mono">Python, ETL Pipelines, Automation</p>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-1">
-                                <span>COGNITIVE SCIENCE (RESEARCH/DESIGN)</span>
-                                <span class="text-aurelia-primary">90%</span>
+                        
+                        <div class="group">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs font-bold text-gray-300 font-sans">COGNITIVE SCIENCE</span>
+                                <span class="text-xs font-mono text-aurelia-primary">90%</span>
                             </div>
-                            <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-aurelia-primary w-[90%] shadow-[0_0_10px_#a855f7]"></div>
+                            <div class="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-800">
+                                <div class="h-full bg-aurelia-primary w-[90%] shadow-[0_0_10px_#00f2ff] group-hover:w-full transition-all duration-1000 ease-out"></div>
                             </div>
+                            <p class="text-[10px] text-gray-500 mt-1 font-mono">Research, Synthesis, Model Construction</p>
                         </div>
-                        <div>
-                            <div class="flex justify-between text-[10px] font-mono text-gray-400 mb-1">
-                                <span>WEB DEPLOYMENT (CI/CD/TAILWIND)</span>
-                                <span class="text-green-400">85%</span>
+
+                        <div class="group">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs font-bold text-gray-300 font-sans">WEB DEPLOYMENT</span>
+                                <span class="text-xs font-mono text-green-400">85%</span>
                             </div>
-                            <div class="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 w-[85%] shadow-[0_0_10px_#39ff14]"></div>
+                            <div class="w-full h-1.5 bg-gray-900 rounded-full overflow-hidden border border-gray-800">
+                                <div class="h-full bg-green-500 w-[85%] shadow-[0_0_10px_#39ff14] group-hover:w-full transition-all duration-1000 ease-out"></div>
                             </div>
+                            <p class="text-[10px] text-gray-500 mt-1 font-mono">Tailwind, Jinja2, CI/CD</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     
-                    <div class="glass p-4 border border-gray-800 font-mono text-[10px] text-green-400 overflow-hidden relative rounded-sm bg-black/90 flex flex-col justify-end min-h-[120px]">
-                        <div class="absolute top-0 left-0 w-full h-full bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.1)_0px,rgba(0,0,0,0.1)_1px,transparent_1px,transparent_2px)] pointer-events-none opacity-50"></div>
-                        <p class="opacity-50">root@aurelia:~$ load_profile</p>
-                        <p>> [OK] Education_Module</p>
-                        <p>> [OK] Skills_Matrix</p>
-                        <p>> [OK] Portfolio_Link</p>
-                        <p class="animate-pulse">> Ready_<span class="inline-block w-2 h-4 bg-green-400 align-middle ml-1"></span></p>
+                    <div class="glass p-5 border border-gray-800 font-mono text-[10px] text-gray-400 overflow-hidden relative rounded-sm bg-black flex flex-col justify-end min-h-[140px] shadow-inner">
+                        <div class="absolute inset-0 bg-white/5 opacity-0 hover:opacity-10 transition-opacity"></div>
+                        <p><span class="text-green-500">root@aurelia:~$</span> ./init_profile.sh</p>
+                        <p class="text-gray-500">> Loading Modules...</p>
+                        <p>> Education..........[<span class="text-green-500">OK</span>]</p>
+                        <p>> Skills.............[<span class="text-green-500">OK</span>]</p>
+                        <p>> Portfolio..........[<span class="text-green-500">OK</span>]</p>
+                        <p class="mt-1"><span class="text-aurelia-secondary">>> SYSTEM READY</span><span class="animate-pulse">_</span></p>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="bg-aurelia-secondary/10 border border-aurelia-secondary/20 p-4 flex flex-col justify-center items-center rounded-sm">
-                            <span class="text-2xl text-aurelia-text font-bold font-mono">{{ projects|length }}</span>
-                            <span class="text-[9px] text-gray-400 font-mono tracking-widest mt-1">PROJECTS</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-[#0f0f10] border border-gray-800 p-4 flex flex-col justify-center items-center rounded-sm hover:border-aurelia-secondary/50 transition-colors group">
+                            <span class="text-3xl text-white font-black font-sans group-hover:text-aurelia-secondary transition-colors">{{ projects|length }}</span>
+                            <span class="text-[9px] text-gray-500 font-mono tracking-widest mt-1">DEPLOYMENTS</span>
                         </div>
-                        <div class="bg-aurelia-secondary/10 border border-aurelia-secondary/20 p-4 flex flex-col justify-center items-center rounded-sm">
-                            <span class="text-2xl text-aurelia-accent font-bold font-mono">ON</span>
-                            <span class="text-[9px] text-gray-400 font-mono tracking-widest mt-1">STATUS</span>
+                        <div class="bg-[#0f0f10] border border-gray-800 p-4 flex flex-col justify-center items-center rounded-sm hover:border-aurelia-accent/50 transition-colors group">
+                            <span class="text-3xl text-aurelia-accent font-black font-sans shadow-green-500/20 drop-shadow-lg">ON</span>
+                            <span class="text-[9px] text-gray-500 font-mono tracking-widest mt-1">STATUS</span>
                         </div>
                     </div>
                 </div>
@@ -232,12 +276,10 @@
     </section>
 
     <section class="w-full">
-        <div class="flex items-center gap-4 mb-8">
-            <h2 class="text-xl font-mono font-bold text-aurelia-text tracking-widest">ACTIVE_DEPLOYMENTS</h2>
-            <div class="h-px bg-gray-800 flex-grow"></div>
+        <div class="flex items-end justify-between mb-8 border-b border-gray-800 pb-2">
+            <h2 class="text-2xl font-bold text-white font-sans tracking-tight">Active Deployments</h2>
             <div class="flex gap-2">
-                <span class="text-[10px] text-aurelia-accent font-mono tracking-widest bg-aurelia-accent/10 px-2 py-1 rounded border border-aurelia-accent/20">LIVE_SYSTEMS</span>
-                <span class="text-[10px] text-gray-600 font-mono tracking-widest border border-gray-800 px-2 py-1 rounded">ARCHIVE</span>
+                <span class="text-[10px] font-mono text-gray-500">SORT: CHRONOLOGICAL</span>
             </div>
         </div>
 
@@ -255,35 +297,34 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-    
-    <div id="modal-panel" class="bg-[#0a0a0b] border border-aurelia-secondary/30 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-[0_0_50px_rgba(168,85,247,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
         
-        <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-secondary/20 bg-[#111111]">
-            <div class="flex items-center gap-3">
-                <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
-                <span class="ml-4 text-xs font-mono text-aurelia-secondary uppercase tracking-widest">PROJECT_DEBRIEF</span>
+        <div id="modal-panel" class="bg-[#0a0a0b] border border-aurelia-secondary/30 w-full max-w-[90vw] h-[90vh] rounded-lg shadow-[0_0_50px_rgba(168,85,247,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            
+            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-secondary/20 bg-[#111111]">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
+                    <span class="ml-4 text-xs font-mono text-aurelia-secondary uppercase tracking-widest">PROJECT_DEBRIEF</span>
+                </div>
+                 <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
             </div>
-             <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
-        </div>
 
-        <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
-            <div class="max-w-5xl mx-auto px-8 py-12">
-                <div id="modal-content" class="obsidian-reader text-lg">
+            <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
+                <div class="max-w-5xl mx-auto px-8 py-12">
+                    <div id="modal-content" class="obsidian-reader text-lg">
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="px-4 py-2 border-t border-aurelia-secondary/20 bg-[#111111] text-center">
-            <span class="text-[9px] font-mono text-gray-600">CONFIDENTIAL // EYES ONLY</span>
+            
+            <div class="px-4 py-2 border-t border-aurelia-secondary/20 bg-[#111111] text-center">
+                <span class="text-[9px] font-mono text-gray-600">CONFIDENTIAL // EYES ONLY</span>
+            </div>
         </div>
     </div>
-</div>
 
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // MODAL LOGIC
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalPanel = document.getElementById('modal-panel');
     const modalContent = document.getElementById('modal-content');
@@ -295,7 +336,7 @@
             return;
         }
         
-        // Decode HTML entities
+        // Decode HTML entities (textarea hack)
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
         
@@ -309,7 +350,7 @@
             modalPanel.classList.remove('scale-95');
             modalPanel.classList.add('scale-100');
         }, 10);
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden'; 
     }
 
     function closeModal() {
@@ -321,9 +362,10 @@
         }, 300);
         document.body.style.overflow = 'auto';
     }
-
-    document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') closeModal(); 
+    
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
     });
 </script>
 {% endblock %}
