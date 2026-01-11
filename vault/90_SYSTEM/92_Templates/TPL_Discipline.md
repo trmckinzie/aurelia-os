@@ -4,6 +4,7 @@ tags:
   - type/discipline
   - topic/
   - status/evergreen
+publish:
 ---
 # 🧠 <% tp.file.title %>
 

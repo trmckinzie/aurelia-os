@@ -2,7 +2,8 @@
 created: <% tp.date.now("YYYY-MM-DD") %>
 tags:
   - type/author
-  - topic/  
+  - topic/
+publish:
 ---
 # 👤 <% tp.file.title %>
 

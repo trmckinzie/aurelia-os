@@ -11,6 +11,7 @@ tags:
   - evolutionary-psych
   - python
 summary: Why the brain is not a computer, but an ecosystem.
+publish:
 ---
 
 ## Decrypted Log (Transcript)
