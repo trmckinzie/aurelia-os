@@ -2,7 +2,7 @@
 created: 2026-01-03
 tags:
   - type/source/book
-  - status/reading
+  - status/archive
   - topic/morality
   - topic/phil-mind
   - topic/rationality
