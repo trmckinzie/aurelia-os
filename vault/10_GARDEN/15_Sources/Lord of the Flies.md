@@ -3,6 +3,10 @@ created: 2026-01-11
 tags:
   - type/source/book
   - status/reading
+  - topic/literature
+  - topic/allegory
+  - topic/human-nature
+  - topic/political-phil
 publish: true
 ---
 # 📖 Lord of the Flies
