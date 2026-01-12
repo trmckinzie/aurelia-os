@@ -23,6 +23,11 @@ Paper Copy in bookshelf
 
 ---
 
+### 🧠 Concepts Extracted
+*(Concepts linked here will show in Graph View)*
+- [[Human Nature]]
+- [[Entropy]]
+- [[Social Entropy]]
 ### 🔑 Key Themes (Classical View)
 
 - **Civilization vs. Savagery:** The central conflict of the book. It posits that moral behavior is forced upon individuals by civilization (the police, the school, the law) rather than being an innate expression of human nature. When the structure is removed, the "darkness of man's heart" takes over.
