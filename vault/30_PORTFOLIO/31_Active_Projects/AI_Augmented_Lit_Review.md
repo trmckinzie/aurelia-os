@@ -22,11 +22,13 @@ stats:
 ---
 
 # 🚨 Mission Brief (The Problem)
+
 **System Failure:** The traditional academic literature review process is inefficient, prone to "citation rabbit holes," and lacks a cohesive method for synthesizing hundreds of sources rapidly.
 
 **Objective:** Engineer a modern "AI-Augmented" research pipeline to accelerate insight discovery without sacrificing rigorous verification. 
 
 # 🛠️ Architecture (The Solution)
+
 **Core Logic:** Designed a multi-modal **Knowledge Synthesis Pipeline** integrating Generative AI with verifying sources. 
 
 - **Discovery Layer:** utilized **Perplexity AI** and **Google Scholar** for semantic search and retrieval of recent peer reviewed papers. 
@@ -35,6 +37,7 @@ stats:
 - **Drafting Layer:** Exported synthesized insights to **reMarkable 2 Type Folio** for distraction-free, linear editing and final manuscript composition.
 
 # ⚡ Operational Impact (The Results)
+
 **Velocity:** Reduced "Time-to-First-Draft" compared to traditional manual review methods. 
 
 **Synthesis:** Successfully mapped connections between [Self Regulated Learning] and [LLM Usage], an area of research that has very recently picked up traction due to the wide adoption and capabilities of LLMs. 
