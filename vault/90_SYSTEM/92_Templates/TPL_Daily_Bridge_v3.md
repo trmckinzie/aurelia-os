@@ -2,8 +2,8 @@
 created: <% tp.date.now("YYYY-MM-DD") %>
 tags:
   - type/daily-bridge
-  - topic/
   - status/active
+  - topic
 publish:
 ---
 # 📅 [[<% tp.date.now("YYYY-MM-DD") %>]]
@@ -12,8 +12,8 @@ publish:
 
 ## 🎯 THE MISSION (Float Block)
 *The single 30-60 min Deep Work Goal (Reading/Writing).*
-**GOAL:** [ ]
-**AI CONTEXT:** `NEWTASK: []`
+**GOAL:** 
+
 
 ---
 
@@ -34,5 +34,4 @@ publish:
 
 ## 🔒 CLOSING THE LOOP
 * **LESSON:** " "
-* [ ] **Inbox Zero:** (Drag new files from Inbox -> Atlas/Sources)
-* [ ] **Context Cleared:** `/CLEARTASK`
+* [ ] **Inbox Zero:** (Drag new files from Inbox -> Garden)
