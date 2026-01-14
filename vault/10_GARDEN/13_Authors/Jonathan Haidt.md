@@ -13,7 +13,8 @@ publish: true
 # 👤 Jonathan Haidt
 
 ### 📝 Profile & Context
-> A social psychologist at New York University's Stern School of Business, Haidt is a central figure in the field of **Moral Psychology**. His work focuses on the intuitive foundations of morality and how they vary across cultures and political lines. Unlike the rationalist tradition (which views morality as a logic puzzle), Haidt views morality as an evolutionary adaptation—a set of emotional "taste buds" designed to suppress selfishness and create cooperative societies. He is also a prominent cultural critic, diagnosing the rise of political polarization and the mental health crisis in Gen Z through the lens of evolutionary mismatch and the decline of "play-based childhood."
+> A social psychologist at New York University's Stern School of Business, Haidt is a central figure in the field of **[[Moral Psychology]]**. His work focuses on the intuitive foundations of morality and how they vary across cultures and political lines. Unlike the rationalist tradition (which views morality as a logic puzzle), Haidt views morality as an evolutionary adaptation—a set of emotional "taste buds" designed to suppress selfishness and create cooperative societies. He is also a prominent cultural critic, diagnosing the rise of political polarization and the mental health crisis in Gen Z through the lens of evolutionary mismatch and the decline of "play-based childhood."
+> Related to [[Psychology]], [[Social Psychology]], [[Evolution]], [[Ethics]], [[Morality]]
 
 ### 📚 Key Works (In Vault)
 - [[The Righteous Mind]]
@@ -28,3 +29,4 @@ publish: true
 - [[The Hive Switch]]
 - [[Safetyism]]
 - [[Concept Creep]]
+
