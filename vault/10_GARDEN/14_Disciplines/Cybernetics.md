@@ -32,7 +32,7 @@ publish: true
 
 ### 📚 Foundational Texts
 
-- **[[Cybernetics: Or Control and Communication in the Animal and the Machine]]** by **[[Norbert Wiene]]r** (The founding manifesto).
+- **[[Cybernetics: Or Control and Communication in the Animal and the Machine]]** by **[[Norbert Wiener]]** (The founding manifesto).
 - **[[An Introduction to Cybernetics]]** by **W. Ross Ashby** (The rigorous textbook).
 - **[[The Human Use of Human Beings]]** by **Norbert Wiener** (The philosophical/social implications).
 - **[[Steps to an Ecology of Mind]]** by **Gregory Bateson** (Applying cybernetics to anthropology and psychiatry).

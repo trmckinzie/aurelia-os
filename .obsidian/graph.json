@@ -1,10 +1,10 @@
 {
   "collapse-filter": false,
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
-  "showTags": false,
+  "showTags": true,
   "showAttachments": false,
-  "hideUnresolved": true,
-  "showOrphans": true,
+  "hideUnresolved": false,
+  "showOrphans": false,
   "collapse-color-groups": false,
   "colorGroups": [
     {
@@ -46,13 +46,13 @@
   "collapse-display": true,
   "showArrow": false,
   "textFadeMultiplier": -3,
-  "nodeSizeMultiplier": 2.81796875,
+  "nodeSizeMultiplier": 4.74599393290507,
   "lineSizeMultiplier": 1.69505208333333,
   "collapse-forces": false,
-  "centerStrength": 0,
+  "centerStrength": 0.525606709493219,
   "repelStrength": 20,
-  "linkStrength": 1,
+  "linkStrength": 0,
   "linkDistance": 500,
-  "scale": 0.15829551145399928,
+  "scale": 0.04972021226604904,
   "close": false
 }
