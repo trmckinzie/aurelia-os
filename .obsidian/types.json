@@ -5,6 +5,7 @@
     "tags": "tags",
     "publish": "checkbox",
     "date": "date",
-    "audio_file": "text"
+    "audio_file": "text",
+    "created": "date"
   }
 }
