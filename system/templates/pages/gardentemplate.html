@@ -160,6 +160,9 @@
                     <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Disciplines
                     </button>
+
+                    <button onclick="setFilter('notebooklm')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-indigo-500 hover:border-indigo-500 hover:bg-indigo-500/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        NotebookLM
                 </div>
             </div>
             
@@ -428,13 +431,46 @@
     function setFilter(type) {
         currentType = type;
         
-        // Update Button Visuals
+        // 1. Reset All Buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+            // Remove generic active styles
+            btn.classList.remove('active');
+            
+            // Remove color-specific active styles (Clean Sweep)
+            btn.classList.remove(
+                'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary',
+                'bg-aurelia-tertiary/10', 'text-aurelia-tertiary', 'border-aurelia-tertiary',
+                'bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary',
+                'bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent',
+                'bg-yellow-400/10', 'text-yellow-400', 'border-yellow-400',
+                'bg-indigo-400/10', 'text-indigo-400', 'border-indigo-400'
+            );
+
+            // Add inactive state
             btn.classList.add('border-gray-800', 'text-gray-500');
         });
-        event.target.classList.remove('border-gray-800', 'text-gray-500');
-        event.target.classList.add('active', 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+
+        // 2. Activate Target Button
+        const target = event.target; // Using the global event object from onclick
+        target.classList.remove('border-gray-800', 'text-gray-500');
+        target.classList.add('active');
+
+        // 3. Apply Dynamic Color Scheme
+        if (type === 'daily-bridge') {
+            target.classList.add('bg-aurelia-tertiary/10', 'text-aurelia-tertiary', 'border-aurelia-tertiary');
+        } else if (type === 'source') {
+            target.classList.add('bg-yellow-400/10', 'text-yellow-400', 'border-yellow-400');
+        } else if (type === 'author') {
+            target.classList.add('bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary');
+        } else if (type === 'discipline') {
+            target.classList.add('bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent');
+        } else if (type === 'notebooklm') {
+            // NEW: Indigo Theme for AI Research
+            target.classList.add('bg-indigo-400/10', 'text-indigo-400', 'border-indigo-400');
+        } else {
+            // Default (All, Concepts) -> Cyan
+            target.classList.add('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
+        }
         
         updateGrid();
     }

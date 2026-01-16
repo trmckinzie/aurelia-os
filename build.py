@@ -29,6 +29,103 @@ def process_wikilinks(text):
 
     return re.sub(r'\[\[(.*?)\]\]', replace_link, text)
 
+def process_notebooklm_media(text):
+    """
+    Scans NotebookLM headers and converts file paths into interactive HTML media.
+    Handles: Audio (mp3/wav), Video (mp4), and Images (png/jpg/webp).
+    """
+    
+    # DEFINITION: How to handle each section
+    # (Header Pattern, HTML Template, Asset Type)
+    media_map = [
+        {
+            "header": r"#+\s*.*Audio Overview",
+            "regex": r'(?:\[\[)?(assets/audio/[a-zA-Z0-9_\-\.\s]+\.(?:mp3|wav|m4a|ogg))(?:\]\])?',
+            "type": "audio"
+        },
+        {
+            "header": r"#+\s*.*Video Overview",
+            "regex": r'(?:\[\[)?(assets/video/[a-zA-Z0-9_\-\.\s]+\.(?:mp4|webm))(?:\]\])?',
+            "type": "video"
+        },
+        {
+            # CATCH-ALL FOR IMAGES (Mind Map, Reports, Flashcards, etc.)
+            "header": r"#+\s*.*(?:Mind Map|Reports|Flashcards|Quiz|Infographic|Slide Deck|Data Table)",
+            "regex": r'(?:\[\[)?(assets/images/[a-zA-Z0-9_\-\.\s]+\.(?:png|jpg|jpeg|webp|gif))(?:\]\])?',
+            "type": "image"
+        }
+    ]
+
+    def render_audio(path):
+        mime = "audio/mpeg"
+        if path.endswith(".m4a"): mime = "audio/mp4"
+        if path.endswith(".wav"): mime = "audio/wav"
+        return f"""
+<div class="my-6 p-4 border-l-2 border-indigo-500 bg-indigo-500/5 rounded-r-sm">
+    <div class="flex items-center justify-between mb-3">
+        <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
+        <span class="text-[10px] font-mono text-indigo-500 animate-pulse">● LIVE_ASSET</span>
+    </div>
+    <audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity" style="filter: hue-rotate(20deg) invert(0);">
+        <source src="{path}" type="{mime}">
+    </audio>
+</div>"""
+
+    def render_video(path):
+        return f"""
+<div class="my-6 border border-gray-800 rounded-sm overflow-hidden bg-black">
+    <div class="p-2 border-b border-gray-800 bg-gray-900/50 flex items-center gap-2">
+        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">VISUAL_FEED</span>
+    </div>
+    <video controls class="w-full max-h-[400px]">
+        <source src="{path}" type="video/mp4">
+    </video>
+</div>"""
+
+    def render_image(path):
+        return f"""
+<div class="my-6 group relative border border-gray-800 rounded-sm overflow-hidden bg-black/50 hover:border-indigo-500/50 transition-colors">
+    <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <a href="{path}" target="_blank" class="px-2 py-1 bg-black/80 text-[10px] font-mono text-white border border-gray-700 rounded hover:bg-indigo-600">ENLARGE</a>
+    </div>
+    <img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="NotebookLM Asset">
+</div>"""
+
+    # PROCESS LOOP
+    # We iterate through the text multiple times, one for each media type
+    # This allows us to handle multiple sections independently.
+    
+    processed_text = text
+    
+    for item in media_map:
+        # 1. Find the specific Header + Content block
+        pattern = f"({item['header']}\\s*\\n)([\\s\\S]*?)(?=\\n#|$)"
+        
+        def replacement_logic(match):
+            header = match.group(1)
+            content = match.group(2).strip()
+            
+            # 2. Check if content contains a valid file path for this type
+            file_match = re.search(item['regex'], content, re.IGNORECASE)
+            
+            if file_match:
+                path = file_match.group(1)
+                html_widget = ""
+                
+                if item['type'] == "audio": html_widget = render_audio(path)
+                elif item['type'] == "video": html_widget = render_video(path)
+                elif item['type'] == "image": html_widget = render_image(path)
+                
+                # Replace the raw path with the widget, keep other text
+                new_content = content.replace(file_match.group(0), html_widget)
+                return header + new_content + "\n"
+            
+            return match.group(0) # No match, leave alone
+
+        processed_text = re.sub(pattern, replacement_logic, processed_text, flags=re.IGNORECASE)
+
+    return processed_text
 # -----------------------------------
 
 # --- CONFIGURATION ---
@@ -376,6 +473,46 @@ def extract_discipline_data(text):
 
     return scope, pillars[:4], canon[:3]
 
+def extract_notebooklm_data(text):
+    """Parses NotebookLM Note for Overview and Active Studio Features"""
+    data = {}
+    
+    # 1. GET OVERVIEW
+    # Grab text between "Lit Review Overview" and the next header
+    overview_match = re.search(r'#\s*.*Lit Review Overview.*\n([\s\S]*?)(?=\n#|$)', text)
+    raw_overview = overview_match.group(1).strip() if overview_match else "Synthesis data pending."
+    
+    # Clean up formatting for the card face
+    clean_overview = re.sub(r'<[^>]+>', '', raw_overview)
+    clean_overview = re.sub(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', r'\1', clean_overview)
+    clean_overview = clean_overview.replace('>', '').strip()
+    
+    # 2. CHECK ACTIVE FEATURES
+    # We define the regex for each header. If content exists below it, the feature is "Active".
+    features = {
+        'audio': r'#+\s*.*Audio Overview',
+        'video': r'#+\s*.*Video Overview',
+        'mindmap': r'#+\s*.*Mind Map',
+        'reports': r'#+\s*.*Reports',
+        'flashcards': r'#+\s*.*Flashcards',
+        'quiz': r'#+\s*.*Quiz',
+        'infographic': r'#+\s*.*Infographic',
+        'slides': r'#+\s*.*Slide Deck',
+        'datatable': r'#+\s*.*Data Table'
+    }
+    
+    active_features = []
+    for key, pattern in features.items():
+        # Check if header exists
+        if re.search(pattern, text, re.IGNORECASE):
+            # Capture content between this header and the NEXT header (or end of file)
+            section_match = re.search(f"{pattern}.*\\n([\\s\\S]*?)(?=\\n#|$)", text, re.IGNORECASE)
+            # If the capture group contains non-whitespace characters, it's active
+            if section_match and section_match.group(1).strip():
+                active_features.append(key)
+                
+    return clean_overview, active_features
+
 # --- 🚀 PROJECT EXTRACTORS (RESTORED) ---
 
 def extract_mission_brief(body):
@@ -608,6 +745,49 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         </div>"""
         icon = "🧠"; label = "FIELD"
+
+# --- CARD TYPE: NOTEBOOKLM (AI SYNTHESIS) ---
+    elif "notebooklm" in note_type:
+        color = "border-indigo-500" # AI/Synthesis Color
+        overview, active_features = extract_notebooklm_data(body_content)
+        
+        if len(overview) > 160: overview = overview[:160] + "..."
+        
+        # Icon Mapping
+        feature_icons = {
+            'audio': '🎙️', 'video': '🎥', 'mindmap': '🧠', 
+            'reports': '📄', 'flashcards': '🃏', 'quiz': '📝',
+            'infographic': '📊', 'slides': '📽️', 'datatable': '📉'
+        }
+
+        card_content = f"""
+        <div class="flex flex-col h-full gap-4">
+            
+            <div class="relative pl-4 border-l-4 border-indigo-500">
+                <span class="text-[10px] font-bold font-mono text-indigo-400 tracking-widest block mb-1">:: RESEARCH_SYNTHESIS</span>
+                <p class="text-sm text-gray-200 font-sans leading-relaxed opacity-95">
+                    "{overview}"
+                </p>
+            </div>
+            
+            <div class="flex-grow"></div>
+
+            <div>
+                <span class="text-[9px] font-bold font-mono text-gray-500 uppercase tracking-widest block mb-2">AVAILABLE_DATA_STREAMS:</span>
+                
+                <div class="flex flex-wrap gap-2">
+                    {''.join([f'''
+                    <div class="flex items-center gap-2 px-2 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-sm" title="{f.upper()}">
+                        <span class="text-xs">{feature_icons.get(f, "•")}</span>
+                        <span class="text-[9px] font-mono text-indigo-300 font-bold uppercase">{f}</span>
+                    </div>
+                    ''' for f in active_features])}
+                    
+                    {'' if active_features else '<span class="text-[9px] text-gray-600 font-mono">// NO_MODULES_ONLINE</span>'}
+                </div>
+            </div>
+        </div>"""
+        icon = "🧬"; label = "NOTEBOOK"
 
     # --- DEFAULT CARD ---
     else:
@@ -895,15 +1075,19 @@ def build_all():
                     raw_search = re.sub(r'<[^>]+>', '', raw_search)
                     full_search_text = raw_search.replace('\n', ' ').replace('"', "").replace("'", "").lower()
                     
-                    # Process Links for the VISIBLE body
+                    # 1. Standard Link Processing
                     processed_body = process_wikilinks(body)
                     
-                    # Generate the Specific Card Type HTML (Log, Concept, Source, etc.)
+                    # 2. SPECIAL: NotebookLM Media Processing (Audio/Video/Images)
+                    if "notebooklm" in note_type:
+                        processed_body = process_notebooklm_media(processed_body)
+                    
+                    # Generate the Specific Card Type HTML
                     card_html = generate_garden_card_html(meta, filename, note_id, processed_body, full_search_text)
                     
                     garden_cards.append({
                         "html": card_html, 
-                        "body": processed_body, 
+                        "body": processed_body, # Now contains the <audio> player HTML
                         "id": note_id,
                         "title": title,
                         "link": f"garden.html#{note_id}", 

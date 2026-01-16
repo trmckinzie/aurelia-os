@@ -1,0 +1,69 @@
+How is 'coding' defined in a basic technical context?,The process of writing instructions for computers and hardware that the machine reads as programs.
+What is 'machine code'?,Information stored in binary digits (zeros and ones) that a computer can execute directly.
+What is the primary difference in scope between coding and programming?,"Programming includes high-level problem-solving like security and scalability, while coding focuses on fulfilling specific user stories."
+"In the context of software development, what does 'bootstrapping' mean?",Building a technology product or business yourself without external funding or paying others to create a prototype.
+What does the acronym SDLC stand for?,Software Development Lifecycle.
+What are the seven phases of the SDLC?,"Planning, Analysis, Design, Coding, Testing, Deployment, and Maintenance."
+"In the SDLC, what is the primary question answered during the Planning phase?",Why should the application be built?
+What is the primary objective of the Analysis phase in the SDLC?,To finalize the specific requirements of the proposed application with stakeholders and Subject Matter Experts.
+"In the SDLC, what are 'Subject Matter Experts' (SMEs)?",Individuals who provide specialized expertise regarding the application's requirements and its specific marketplace.
+What is determined during the Design phase of the SDLC?,"The building blocks of the app, including architecture, frameworks, database software, and functional specifications."
+"In the SDLC, what is the difference between 'Front-end' and 'Back-end' coding?","Front-end creates the User Interface (UI) that runs in the browser, while Back-end executes on the web server."
+What is the definition of a 'Predictive Model' in software development?,A model where SDLC phases are completed sequentially one after the other with no backward movement.
+What is the primary disadvantage of the Waterfall model?,It is inflexible and does not allow for design changes once the coding phase has commenced.
+How does an 'Adaptive Model' (Iterative Model) differ from a Predictive Model?,"It builds the application incrementally, allowing for changes during the coding phase through repeated cycles."
+What are the core priorities of the 'Agile Manifesto'?,"People and interactions are prioritized over tools and processes, emphasizing an iterative approach and speed of delivery."
+"In Scrum, what is the 'Product Backlog'?","A collection of customer requirements, referred to as stories, assembled by the Product Owner."
+What is the role of a 'Scrum Master'?,A guide who ensures the development team can work without obstacles and leads team meetings.
+What is a 'Sprint' in the Scrum Model?,"A timeboxed development effort, typically lasting 3 to 4 weeks, to complete a specific set of tasks."
+What occurs during a 'Daily Scrum Meeting'?,A 10–15 minute standing-only meeting where the team discusses progress from the previous day and immediate plans.
+What is 'Unit Testing'?,The process of testing individual programs or code snippets immediately after they are written to ensure they work as expected.
+What is 'Integration Testing'?,Retesting sets of programs within a module to ensure that outputs from one program flow smoothly into the next.
+How does 'System Testing' differ from Integration Testing?,It tests the entire application in a near-production environment to ensure all modules interface correctly.
+What is 'User Acceptance Testing' (UAT)?,The final stage where the completed app is presented to the customer to ensure it meets their satisfaction before deployment.
+"In software environments, what is the 'Production Environment'?","The final, 'real' environment where the code is operational and usable by actual customers."
+What is 'Corrective Maintenance'?,Code modifications performed to fix flaws or errors in the system identified after deployment.
+What is 'Perfective Maintenance'?,Enhancements or changes requested by the customer that are not due to system flaws but to improve functionality.
+What is 'Adaptive Maintenance'?,IT-initiated changes required by upgrades to the operating system or database management software.
+What is 'Preventive Maintenance'?,Tasks performed to enhance code efficiency (refactoring) or documentation without changing existing functionality.
+"In web analytics, what are 'Key Performance Indicators' (KPIs)?","Measures the customer monitors to assess performance, such as uptime, availability, or response time."
+What is 'AI-First Software Delivery' (AIFSD)?,"An end-to-end process designed to leverage AI from the ground up, from framing scope to long-term maintenance."
+What area of software engineering is predicted to have the most impact from AIFSD?,"Legacy modernization, specifically accelerating the reverse engineering of massive codebases."
+What is the primary risk of 'Relinquishing' development tasks to AI without human supervision?,"The amplification of errors and a degradation of code quality over time, known as 'death by 1,000 paper cuts.'"
+What does 'Code Churn' signal in software quality analysis?,"Frequent changes to code that were recently modified, indicating potential issues with quality or correction cycles."
+Why is 'Human in the loop' considered non-optional in AI-assisted development?,"Human expertise is required to supervise results, adjust outputs, and provide the strategic organizational knowledge AI lacks."
+"What is the 'Garbage In, Garbage Out' principle in AI coding?","The idea that AI works best with well-constructed, modular code; poor quality inputs will result in poor quality AI outputs."
+Which basic Python data structures should an aspiring AI Engineer master?,"Lists, Tuples, and Dictionaries."
+"In the context of LLMs, what is a 'Context Window'?",The maximum amount of text (tokens) the model can consider at one time when generating a response.
+What is the purpose of the 'Temperature' setting in LLMs?,It controls the randomness or creativity of the model's output; lower values are more deterministic.
+Why is 'Prompt Engineering' NOT considered the primary skill of the future by some experts?,Prompt generation is increasingly being automated by Large Language Models themselves and specialized frameworks like DSPy.
+What is the 'ONLY' requirement to get hired as an AI Engineer according to Krzysztof Ograbek?,Showing that you can actually create and execute things using AI and code through completed projects.
+What are the three main benefit categories businesses care about in AI projects?,"Saving time, saving money, or making more money."
+What does the acronym RAG stand for in AI Engineering?,Retrieval-Augmented Generation.
+"In the 'Car Analogy' for web development, what do HTML and CSS represent?","HTML is the blueprint/structural components (frame, seats); CSS is the design and furnishings (paint job, dashboard layout)."
+"In the 'Car Analogy' for web development, what is the role of JavaScript?",It acts as the engine and smart features that power the car's functionality and interactivity.
+What is the purpose of 'Semantic HTML' elements like $\text{<main>}$ and $\text{<section>}$?,They provide meaningful information about the content structure to both the browser and developers.
+"In CSS, what is the function of a 'Media Query'?","It allows different styles to be applied based on the device width or screen size, enabling responsive design."
+What is 'Flexbox' in CSS used for?,"It provides an efficient way to layout, align, and distribute space among items in a container, such as stacking form fields."
+"In JavaScript, what is an 'Event Listener'?",A piece of code that 'listens' for a specific user action (like a click) and executes functionality in response.
+What is the difference between $\text{let}$ and $\text{const}$ when declaring variables in JavaScript?,"$\text{let}$ allows a variable to be reassigned, while $\text{const}$ creates a constant value that cannot be changed."
+What is the purpose of $\text{event.preventDefault()}$ in form handling?,It cancels the default browser behavior of refreshing the page when a form is submitted.
+"In programming, what is a 'String'?","Any value or data written within single or double quotes, representing text."
+What is a JavaScript 'Array'?,A data structure that allows for the storage of multiple values or items in a single list-like variable.
+"In the context of CSS, what does the $VH$ unit represent?","Viewport Height, where $100\ VH$ equals $100\%$ of the visible area height in the browser."
+How can AI tools like ChatGPT assist in 'Debugging'?,"They can identify syntax errors, explain logic flaws, and suggest better coding practices based on provided error messages."
+What is 'Reverse Engineering' in the context of legacy software?,The process of analyzing an existing system to identify its components and interrelationships to create documentation or modernize it.
+Why is 'Learning in Public' recommended for aspiring AI engineers?,"It builds trust, credibility, and a personal brand while solidifying knowledge through teaching others."
+What is the 'Transformer Architecture' in AI?,The foundational underlying structure of Large Language Models that utilizes the attention mechanism.
+What is 'DevOps' coding primarily used for?,"Creating scripts to configure servers, manage cloud entities, and automate the transition of code between environments."
+"In HTML, what is the purpose of the 'alt' attribute for images?",It provides alternative text for screen readers or if the image fails to load.
+What is a 'Content Management System' (CMS)?,"A software application, like WordPress, that provides pre-built content and structure that can be customized for websites."
+"In CSS, what is the difference between 'padding' and 'margin'?",Padding controls spacing inside an element; margin controls the space outside and around an element.
+What is the 'Console' in a web browser used for by developers?,"To run and test JavaScript code, display error messages, and log data for debugging purposes."
+Why is 'Refactoring' performed during preventive maintenance?,To improve the internal structure and efficiency of the code without changing its external behavior.
+What is a 'Template Literal' in JavaScript?,A syntax using backticks and the $\$\{ \}$ notation to dynamically insert and display variables within a string.
+"In software testing, what is the 'Quality Assurance (QA) environment'?","A stable environment that mimics the final production environment, used by QA personnel to rigorously test code."
+What are 'Sprints' in the context of the Scrum methodology?,"Short, time-boxed intervals (usually 3-4 weeks) during which a team works to complete specific, prioritized tasks."
+Cloze: The _____ phase of the SDLC decides whether an application should be developed at all based on business feasibility.,Planning
+What is 'Recursive' or 'Reverse' engineering in the Thoughtworks carmaker case study?,Using AI to generate documentation for $15$ million lines of code in hours instead of years.
+"In Prompt Engineering, what does it mean to 'Assign a Role' to the AI?","Instructing the AI to act as a specific persona (e.g., 'You are Developer GPT') to guide the style and accuracy of its output."
