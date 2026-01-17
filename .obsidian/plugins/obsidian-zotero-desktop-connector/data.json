@@ -1,0 +1,21 @@
+{
+  "database": "Zotero",
+  "noteImportFolder": "",
+  "pdfExportImageDPI": 120,
+  "pdfExportImageFormat": "jpg",
+  "pdfExportImageQuality": 90,
+  "citeFormats": [],
+  "exportFormats": [
+    {
+      "name": "Literature Note",
+      "outputPathTemplate": "literature-notes/{{citekey}}.md",
+      "imageOutputPathTemplate": "literature-notes/assets2/zotero-mages",
+      "imageBaseNameTemplate": "image",
+      "templatePath": "vault/90_SYSTEM/92_Templates/Zotero Template.md",
+      "cslStyle": "norsk-apa-manual"
+    }
+  ],
+  "citeSuggestTemplate": "[[{{citekey}}]]",
+  "openNoteAfterImport": false,
+  "whichNotesToOpenAfterImport": "first-imported-note"
+}
