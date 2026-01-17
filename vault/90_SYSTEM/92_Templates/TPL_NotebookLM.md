@@ -1,6 +1,6 @@
 ---
 type: notebooklm
-publish: true
+publish: false
 status: active
 tags:
   - topic/research
