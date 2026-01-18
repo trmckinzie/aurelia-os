@@ -37,12 +37,9 @@ stats:
 - **Drafting Layer:** Exported synthesized insights to **reMarkable 2 Type Folio** for distraction-free, linear editing and final manuscript composition.
 
 # ⚡ Operational Impact (The Results)
-
-**Velocity:** Reduced "Time-to-First-Draft" compared to traditional manual review methods. 
-
-**Synthesis:** Successfully mapped connections between [Self Regulated Learning] and [LLM Usage], an area of research that has very recently picked up traction due to the wide adoption and capabilities of LLMs. 
-
-**Accuracy:** Maintained 100% citation integrity by using Zotero pdfs as the "Source of Truth" while using AI only for summarization. Notebook LM greatly reduces risk of hallucinations, and helps with deep comprehension of source material and scaffolds conceptual clarity across topics. 
+- **Velocity:** Reduced "Time-to-First-Draft" compared to traditional manual review methods. 
+- **Synthesis:** Successfully mapped connections between [Self Regulated Learning] and [LLM Usage], an area of research that has very recently picked up traction due to the wide adoption and capabilities of LLMs. 
+- **Accuracy:** Maintained 100% citation integrity by using Zotero pdfs as the "Source of Truth" while using AI only for summarization. Notebook LM greatly reduces risk of hallucinations, and helps with deep comprehension of source material and scaffolds conceptual clarity across topics. 
 
 # 📡 System Artifacts (Deliverables) 
 Access the generated outputs from this workflow: 

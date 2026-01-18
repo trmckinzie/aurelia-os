@@ -36,9 +36,6 @@ stats:
 * **Integration:** The system is "Headless"—the content lives in Obsidian, the code lives in VS Code, and they merge only at build time. Using a plugin on Obsidian I am able to publish updated versions of the site to Github, without opening VS code or Github itself! 
 
 # ⚡ Operational Impact (The Results)
-
-**Velocity:** Reduced deployment time from hours to seconds (1-click build process).
-
-**Performance:** Achieved perfect Lighthouse scores (100/100) due to static HTML architecture.
-
-**Cohesion:** Successfully merged "Portfolio" (Proof of Work) with "Garden" (Proof of Knowledge) into a single, unified Operating System. I am currently building other modules at this time. It will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by AI automation, digital gardening, and advanced synthesis across ideas and concepts. 
+- **Velocity:** Reduced deployment time from hours to seconds (1-click build process).
+- **Performance:** Achieved perfect Lighthouse scores (100/100) due to static HTML architecture.
+- **Cohesion:** Successfully merged "Portfolio" (Proof of Work) with "Garden" (Proof of Knowledge) into a single, unified Operating System. I am currently building other modules at this time. It will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by AI automation, digital gardening, and advanced synthesis across ideas and concepts. 
