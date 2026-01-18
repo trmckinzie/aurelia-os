@@ -114,6 +114,12 @@
     .obsidian-reader blockquote { border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }}; background-color: rgba(138, 43, 226, 0.05); padding: 12px 16px; margin: 1.5em 0; }
     .obsidian-reader img { max-width: 100%; border: 1px solid {{ theme.colors.border_main|replace("'", "") }}; border-radius: 4px; }
     .obsidian-reader ul, .obsidian-reader ol { padding-left: 2em; margin: 1em 0; }
+
+    /* 3D CARD FLIP UTILITIES FLASHCARDS */
+    .perspective-1000 { perspective: 1000px; }
+    .preserve-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
 </style>
 {% endblock %}
 
