@@ -1,3 +1,4 @@
+import csv
 import os
 import re
 import json
@@ -32,11 +33,11 @@ def process_wikilinks(text):
 def process_notebooklm_media(text):
     """
     Scans NotebookLM headers and converts file paths into interactive HTML media.
-    Handles: Audio (mp3/wav), Video (mp4), and Images (png/jpg/webp).
+    Handles: Audio, Video, Images, and CSV Flashcards.
+    *UPDATED: Removes indentation to prevent Markdown code-block errors.*
     """
     
     # DEFINITION: How to handle each section
-    # (Header Pattern, HTML Template, Asset Type)
     media_map = [
         {
             "header": r"#+\s*.*Audio Overview",
@@ -49,8 +50,12 @@ def process_notebooklm_media(text):
             "type": "video"
         },
         {
-            # CATCH-ALL FOR IMAGES (Mind Map, Reports, Flashcards, etc.)
-            "header": r"#+\s*.*(?:Mind Map|Reports|Flashcards|Quiz|Infographic|Slide Deck|Data Table)",
+            "header": r"#+\s*.*Flashcards",
+            "regex": r'(?:\[\[)?(assets/.*?[a-zA-Z0-9_\-\.\s]+\.(?:csv))(?:\]\])?',
+            "type": "flashcards"
+        },
+        {
+            "header": r"#+\s*.*(?:Mind Map|Reports|Quiz|Infographic|Slide Deck|Data Table)",
             "regex": r'(?:\[\[)?(assets/images/[a-zA-Z0-9_\-\.\s]+\.(?:png|jpg|jpeg|webp|gif))(?:\]\])?',
             "type": "image"
         }
@@ -60,68 +65,111 @@ def process_notebooklm_media(text):
         mime = "audio/mpeg"
         if path.endswith(".m4a"): mime = "audio/mp4"
         if path.endswith(".wav"): mime = "audio/wav"
+        # FLUSH LEFT HTML
         return f"""
 <div class="my-6 p-4 border-l-2 border-indigo-500 bg-indigo-500/5 rounded-r-sm">
-    <div class="flex items-center justify-between mb-3">
-        <span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
-        <span class="text-[10px] font-mono text-indigo-500 animate-pulse">● LIVE_ASSET</span>
-    </div>
-    <audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity" style="filter: hue-rotate(20deg) invert(0);">
-        <source src="{path}" type="{mime}">
-    </audio>
+<div class="flex items-center justify-between mb-3">
+<span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
+<span class="text-[10px] font-mono text-indigo-500 animate-pulse">● LIVE_ASSET</span>
+</div>
+<audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity" style="filter: hue-rotate(20deg) invert(0);">
+<source src="{path}" type="{mime}">
+</audio>
 </div>"""
 
     def render_video(path):
+        # FLUSH LEFT HTML
         return f"""
 <div class="my-6 border border-gray-800 rounded-sm overflow-hidden bg-black">
-    <div class="p-2 border-b border-gray-800 bg-gray-900/50 flex items-center gap-2">
-        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">VISUAL_FEED</span>
-    </div>
-    <video controls class="w-full max-h-[400px]">
-        <source src="{path}" type="video/mp4">
-    </video>
+<div class="p-2 border-b border-gray-800 bg-gray-900/50 flex items-center gap-2">
+<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+<span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">VISUAL_FEED</span>
+</div>
+<video controls class="w-full max-h-[400px]">
+<source src="{path}" type="video/mp4">
+</video>
 </div>"""
 
     def render_image(path):
+        # FLUSH LEFT HTML
         return f"""
 <div class="my-6 group relative border border-gray-800 rounded-sm overflow-hidden bg-black/50 hover:border-indigo-500/50 transition-colors">
-    <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-        <a href="{path}" target="_blank" class="px-2 py-1 bg-black/80 text-[10px] font-mono text-white border border-gray-700 rounded hover:bg-indigo-600">ENLARGE</a>
-    </div>
-    <img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="NotebookLM Asset">
+<div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+<a href="{path}" target="_blank" class="px-2 py-1 bg-black/80 text-[10px] font-mono text-white border border-gray-700 rounded hover:bg-indigo-600">ENLARGE</a>
+</div>
+<img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="NotebookLM Asset">
+</div>"""
+
+    def render_flashcards(path):
+        # 1. Resolve Path
+        csv_path = os.path.join(VAULT_PATH, path)
+        if not os.path.exists(csv_path):
+            csv_path = os.path.join(ROOT_DIR, path)
+        
+        if not os.path.exists(csv_path):
+            return f'<div class="text-red-500 font-mono text-xs">⚠️ CSV NOT FOUND: {path}</div>'
+
+        # 2. Parse CSV
+        cards_html = ""
+        try:
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                rows = list(reader)
+                
+                for i, row in enumerate(rows):
+                    if len(row) < 2: continue
+                    q, a = row[0], row[1]
+                    
+                    # FLUSH LEFT HTML - CRITICAL FOR MARKDOWN PARSING
+                    cards_html += f"""
+<div class="snap-center shrink-0 w-64 h-40 relative group perspective-1000 cursor-pointer" onclick="this.querySelector('.inner-card').classList.toggle('rotate-y-180')">
+<div class="inner-card w-full h-full relative preserve-3d transition-transform duration-500 shadow-lg">
+<div class="absolute inset-0 backface-hidden bg-[#0f0f12] border border-indigo-500/30 p-4 flex flex-col items-center justify-center text-center rounded-sm group-hover:border-indigo-500 transition-colors">
+<span class="text-[9px] font-mono text-indigo-400 uppercase tracking-widest absolute top-2 left-2">Q_NODE // 0{i+1}</span>
+<p class="text-xs font-bold text-white font-sans leading-relaxed">{q}</p>
+<span class="text-[9px] text-gray-600 absolute bottom-2 animate-pulse">TAP TO DECRYPT</span>
+</div>
+<div class="absolute inset-0 backface-hidden rotate-y-180 bg-indigo-900/20 border border-indigo-500 p-4 flex flex-col items-center justify-center text-center rounded-sm bg-black">
+<span class="text-[9px] font-mono text-indigo-300 uppercase tracking-widest absolute top-2 left-2">A_DATA</span>
+<p class="text-xs text-gray-200 font-mono leading-relaxed">{a}</p>
+</div>
+</div>
+</div>"""
+        except Exception as e:
+            return f'<div class="text-red-500 font-mono text-xs">⚠️ CSV ERROR: {e}</div>'
+
+        # 3. Return Container (FLUSH LEFT)
+        return f"""
+<div class="my-6">
+<div class="flex items-center gap-2 mb-3">
+<span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: MEMORY_BANK_LOADED</span>
+<div class="h-px bg-indigo-500/30 flex-grow"></div>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-6 pt-2 px-1 snap-x no-scrollbar">
+{cards_html}
+</div>
 </div>"""
 
     # PROCESS LOOP
-    # We iterate through the text multiple times, one for each media type
-    # This allows us to handle multiple sections independently.
-    
     processed_text = text
-    
     for item in media_map:
-        # 1. Find the specific Header + Content block
         pattern = f"({item['header']}\\s*\\n)([\\s\\S]*?)(?=\\n#|$)"
-        
         def replacement_logic(match):
             header = match.group(1)
             content = match.group(2).strip()
-            
-            # 2. Check if content contains a valid file path for this type
             file_match = re.search(item['regex'], content, re.IGNORECASE)
             
             if file_match:
                 path = file_match.group(1)
                 html_widget = ""
-                
                 if item['type'] == "audio": html_widget = render_audio(path)
                 elif item['type'] == "video": html_widget = render_video(path)
                 elif item['type'] == "image": html_widget = render_image(path)
+                elif item['type'] == "flashcards": html_widget = render_flashcards(path)
                 
-                # Replace the raw path with the widget, keep other text
                 new_content = content.replace(file_match.group(0), html_widget)
                 return header + new_content + "\n"
-            
-            return match.group(0) # No match, leave alone
+            return match.group(0)
 
         processed_text = re.sub(pattern, replacement_logic, processed_text, flags=re.IGNORECASE)
 

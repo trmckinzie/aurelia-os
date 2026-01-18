@@ -71,7 +71,6 @@ cover_image: ""
 
 # 🎙️ Audio Overview
 assets/audio/Intellectual_Humility_Reduces_Political_Hatred.m4a
-assets/audio/Affective_Polarization_Is_Psychological_Warfare.m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4
@@ -83,7 +82,7 @@ assets/images/NotebookLM-mindmap-ih-nfc-ap.png
 assets/images/[filename].png
 
 # 🃏 Flashcards
-assets/images/[filename].png
+assets/flashcards/flashcards-ih-nfc-ap.csv
 
 # 📝 Quiz
 assets/images/[filename].png
