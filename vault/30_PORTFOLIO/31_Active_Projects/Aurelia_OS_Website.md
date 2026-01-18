@@ -28,7 +28,7 @@ stats:
 
 # 🛠️ Architecture (The Solution)
 
-**Core Logic:** Designed a custom **Python ETL Script** (`build_garden.py`) acting as the compiler.
+**Core Logic:** Designed a custom **Python ETL Script** (`build.py`) acting as the compiler. The site now acts as a custom PKM that balances complex functionality and UX convenience. 
 
 * **Ingestion Module:** Scans the local Obsidian vault for notes tagged `#publish`.
 * **Transformation Engine:** Parses Frontmatter metadata (Type, Status, Tags) and converts Markdown syntax to semantic HTML.
@@ -41,4 +41,4 @@ stats:
 
 **Performance:** Achieved perfect Lighthouse scores (100/100) due to static HTML architecture.
 
-**Cohesion:** Successfully merged "Portfolio" (Proof of Work) with "Garden" (Proof of Knowledge) into a single, unified Operating System. I am currently building the services, and museum portions of the site as well. It will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by automation, digital gardening, and synthesis across ideas and concepts. 
+**Cohesion:** Successfully merged "Portfolio" (Proof of Work) with "Garden" (Proof of Knowledge) into a single, unified Operating System. I am currently building other modules at this time. It will all function together and maintain the same aesthetic, allowing me to display a personal brand while also taking advantage of the functional utility provided by AI automation, digital gardening, and advanced synthesis across ideas and concepts. 
