@@ -243,6 +243,31 @@
     .preserve-3d { transform-style: preserve-3d; }
     .backface-hidden { backface-visibility: hidden; }
     .rotate-y-180 { transform: rotateY(180deg); }
+    /* === OBSIDIAN READER ENGINE (For The Modal) === */
+    .obsidian-reader {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #e5e7eb; /* Light Gray text */
+        line-height: 1.8;
+        font-size: 1.125rem;
+    }
+    .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3 {
+        color: #ffffff;
+        font-weight: 700; line-height: 1.3; margin-top: 2em; margin-bottom: 0.75em;
+        border-bottom: 1px solid #27272a; padding-bottom: 0.3em;
+    }
+    .obsidian-reader h1 { font-size: 2.25rem; border-bottom: none; }
+    .obsidian-reader p { margin-bottom: 1.5em; white-space: pre-wrap; } /* Respects whitespace */
+    .obsidian-reader ul, .obsidian-reader ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+    .obsidian-reader ul { list-style-type: disc; }
+    .obsidian-reader blockquote {
+        border-left: 4px solid #8a2be2;
+        background: #18181b;
+        padding: 1em 1.5em; margin: 2em 0;
+        font-style: italic; color: #9ca3af;
+    }
+    .obsidian-reader a { color: #39ff14; text-decoration: none; border-bottom: 1px solid transparent; transition: all 0.2s; }
+    .obsidian-reader a:hover { border-bottom-color: #39ff14; }
+    .obsidian-reader strong { color: #fff; font-weight: 800; }
 </style>
 
 </head>
@@ -10451,7 +10476,7 @@ unlike the <button onclick="openNote('note-hawk-dove-game')" class="text-aurelia
             </div>
             <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
                 <div class="max-w-5xl mx-auto px-8 py-12">
-                    <div id="modal-content" class="obsidian-reader text-lg"></div>
+                    <div id="modal-content" class="obsidian-reader max-w-3xl mx-auto"></div>
                 </div>
             </div>
             <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
@@ -10725,7 +10750,7 @@ unlike the <button onclick="openNote('note-hawk-dove-game')" class="text-aurelia
         if (!rawEl) return;
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
-        modalContent.innerHTML = marked.parse(txt.value);
+        modalContent.innerHTML = marked.parse(txt.value, { breaks: true });
         modalBackdrop.classList.remove('hidden');
         setTimeout(() => { modalBackdrop.classList.remove('opacity-0'); modalPanel.classList.remove('scale-95'); modalPanel.classList.add('scale-100'); }, 10);
         document.body.style.overflow = 'hidden';

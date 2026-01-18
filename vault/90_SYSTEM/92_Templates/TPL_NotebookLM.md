@@ -26,7 +26,7 @@ assets/images/[filename].png
 assets/images/[filename].png
 
 # 🃏 Flashcards
-assets/images/[filename].png
+assets/images/[filename].csv
 
 # 📝 Quiz
 assets/images/[filename].png
