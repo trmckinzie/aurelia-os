@@ -29,13 +29,15 @@ stats:
 
 # 🚨 Mission Brief (The Problem)
 
-In Spring 2025, I was commissioned by **Chris Kam** to investigate strategies for countering political polarization. This initial probe evolved into a comprehensive two-semester study extending into Fall 2025, where I partnered with **Miguel Sanchez**. The goal then was to empirically disentangle the relationship between **Intellectual Humility (IH)** (the buffer) and **Need for Cognitive Closure (NFC)** (the driver) in predicting **Affective Polarization (AP)**, while simultaneously capturing the lived experience of political conflict through qualitative phenomenology.
+In Spring 2025, I was commissioned by **Chris Kam** to investigate strategies for countering political polarization. This initial probe evolved into a comprehensive two-semester study extending into Fall 2025, where I partnered with **Miguel Sanchez**. The goal then was to empirically disentangle the relationship between **Intellectual Humility (IH)** (the buffer) and **Need for Cognitive Closure (NFC)** (the driver) in predicting **Affective Polarization (AP)**, while simultaneously capturing the lived experience of political conflict through qualitative phenomenology. 
 
 # 🛠️ Architecture (The Workflow)
 
 **Core Logic:** Designed an AI augmented research workflow to become well versed in the literature and to add efficiency to the literature review process. Created audio overviews, a mind map, and flashcards on Notebook LM which gamifies and enhances the learning process. 
 
 * **Module A: AI-Augmented Learning (NotebookLM):** I used NotebookLM not to write, but to *understand*. I uploaded my curated Zotero PDFs to generate **Audio Overviews, Mindmaps, and Flashcards**, allowing me to rapidly synthesize complex literature on Moral Foundations and Group Dynamics.
+
+**Search for "IH-NFC-AP" in the digital garden to access these learning materials**  [[IH-NFC-AP]]
 
 * **Module B: Analog Writing (reMarkable 2):** To avoid the temptation of generative AI hallucinations, I wrote the actual manuscript on a **reMarkable 2 Type Folio**. This ensured the cognitive load remained on me, preserving the "human loop" in the creative process.
 
