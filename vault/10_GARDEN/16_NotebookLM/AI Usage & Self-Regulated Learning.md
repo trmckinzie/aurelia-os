@@ -103,13 +103,13 @@ assets/audio/ai-usage-srl.m4a
 assets/video/[filename].mp4
 
 # 🧠 Mind Map
-assets/images/ai-usage-srl.png
+assets/images/NotebookLM-mindmap-ai-usage-srl.png
 
 # 📄 Reports
 assets/images/[filename].png
 
 # 🃏 Flashcards
-assets/images/ai-usage-srl.csv
+assets/flashcards/flashcards-ai-usage-srl.csv
 
 # 📝 Quiz
 assets/images/[filename].
