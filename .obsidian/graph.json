@@ -1,11 +1,11 @@
 {
-  "collapse-filter": false,
+  "collapse-filter": true,
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
-  "showTags": true,
+  "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": false,
+  "hideUnresolved": true,
   "showOrphans": false,
-  "collapse-color-groups": false,
+  "collapse-color-groups": true,
   "colorGroups": [
     {
       "query": "path:vault/10_GARDEN/11_Daily_Bridge  ",
@@ -46,13 +46,13 @@
   "collapse-display": true,
   "showArrow": false,
   "textFadeMultiplier": -3,
-  "nodeSizeMultiplier": 4.74599393290507,
-  "lineSizeMultiplier": 1.69505208333333,
-  "collapse-forces": false,
-  "centerStrength": 0.525606709493219,
+  "nodeSizeMultiplier": 3.65521056388294,
+  "lineSizeMultiplier": 2.00438972162741,
+  "collapse-forces": true,
+  "centerStrength": 0,
   "repelStrength": 20,
   "linkStrength": 0,
   "linkDistance": 500,
-  "scale": 0.04972021226604904,
-  "close": false
+  "scale": 0.023715691734252413,
+  "close": true
 }
