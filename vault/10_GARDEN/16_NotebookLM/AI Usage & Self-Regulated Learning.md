@@ -97,7 +97,7 @@ The literature confirms that AI and LLMs represent a critical turning point for 
 Successful integration demands a move beyond merely creating AI support tools towards establishing a **principled pedagogical design architecture** that actively counters cognitive offloading. Future systems must embrace complexity by incorporating not only the **technical interest** (efficiency, personalization) but also the **practical interest** (social co-regulation via teacher-peer-chatbot triads) and the **emancipatory interest** (critical reflection, ethical inquiry, and fostering learner agency). Conceptual frameworks like the AI-augmented heutagogy and the Cognitive Mirror paradigm offer actionable roadmaps for designing AI systems that intentionally transform the learner's role from passive recipient to active, responsible knowledge constructor, ultimately ensuring that technology strengthens, rather than diminishes, human intellectual capacity.
 
 # 🎙️ Audio Overview
-assets/audio/ai-usage-srl.m4a
+assets/audio/AI_Usage_SRL.m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4
