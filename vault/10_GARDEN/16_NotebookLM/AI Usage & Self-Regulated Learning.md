@@ -124,4 +124,30 @@ assets/images/[filename].png
 assets/images/[filename].png
 
 # 📚 Sources
-> [Zotero Data Placeholder]
+> Alvarez, R. P., Jivet, I., Perez-Sanagustin, M., Scheffel, M., & Verbert, K. (2022). Tools Designed to Support Self-Regulated Learning in Online Learning Environments: A Systematic Review. _IEEE Transactions on Learning Technologies_, _15_(4), 508–522. [https://doi.org/10.1109/TLT.2022.3193271](https://doi.org/10.1109/TLT.2022.3193271)
+
+>Dahri, N. A., Yahaya, N., Al-Rahmi, W. M., Aldraiweesh, A., Alturki, U., Almutairy, S., Shutaleva, A., & Soomro, R. B. (2024). Extended TAM based acceptance of AI-Powered ChatGPT for supporting metacognitive self-regulated learning in education: A mixed-methods study. _Heliyon_, _10_(8), e29317. [https://doi.org/10.1016/j.heliyon.2024.e29317](https://doi.org/10.1016/j.heliyon.2024.e29317)
+
+>Delikoura, I., Fung, Y. R., & Hui, P. (2025). _From Superficial Outputs to Superficial Learning: Risks of Large Language Models in Education_ (No. arXiv:2509.21972). arXiv. [https://doi.org/10.48550/arXiv.2509.21972](https://doi.org/10.48550/arXiv.2509.21972)
+
+>Fan, Y., Tang, L., Le, H., Shen, K., Tan, S., Zhao, Y., Shen, Y., Li, X., & Gašević, D. (2025). Beware of Metacognitive Laziness: Effects of Generative Artificial Intelligence on Learning Motivation, Processes, and Performance. _British Journal of Educational Technology_, _56_(2), 489–530. [https://doi.org/10.1111/bjet.13544](https://doi.org/10.1111/bjet.13544)
+
+>Ge, W., Sun, Y., Wang, Z., Zheng, H., He, W., Wang, P., Zhu, Q., & Wang, B. (2025). _SRLAgent: Enhancing Self-Regulated Learning Skills through Gamification and LLM Assistance_ (No. arXiv:2506.09968). arXiv. [https://doi.org/10.48550/arXiv.2506.09968](https://doi.org/10.48550/arXiv.2506.09968)
+
+>Lan, M., & Zhou, X. (2025). A qualitative systematic review on AI empowered self-regulated learning in higher education. _Npj Science of Learning_, _10_(1), 21. [https://doi.org/10.1038/s41539-025-00319-0](https://doi.org/10.1038/s41539-025-00319-0)
+
+>Lowry, B., McGrath, S., Eitel, C., Hall, H., & Clapp, T. R. (2025). Leveraging generative AI to foster metacognition and self-directed learning. _Journal of Microbiology & Biology Education_, e00153-25. [https://doi.org/10.1128/jmbe.00153-25](https://doi.org/10.1128/jmbe.00153-25)
+
+>Ma, B., Li, H., Li, G., Chen, L., Tang, C., Xie, Y., Gu, C., Shimada, A., & Konomi, S. (2025). _Scaffolding Metacognition in Programming Education: Understanding Student-AI Interactions and Design Implications_ (No. arXiv:2511.04144). arXiv. [https://doi.org/10.48550/arXiv.2511.04144](https://doi.org/10.48550/arXiv.2511.04144)
+
+>Ng, S. H. S., & Lai, J. W. (2025). AI-augmented heutagogy: A framework for fostering self-determined learning and agency in higher education. _Higher Education Research & Development_, 1–21. [https://doi.org/10.1080/07294360.2025.2564977](https://doi.org/10.1080/07294360.2025.2564977)
+
+>Panadero, E. (2017). A Review of Self-regulated Learning: Six Models and Four Directions for Research. _Frontiers in Psychology_, _8_, 422. [https://doi.org/10.3389/fpsyg.2017.00422](https://doi.org/10.3389/fpsyg.2017.00422)
+
+>Ren, L., Lee, K., & May, L. (2025). A Systematic Review Exploring AI’s Role in Self-Regulated Learning Within Education Contexts. _IEEE Access_, _13_, 109771–109782. [https://doi.org/10.1109/ACCESS.2025.3582600](https://doi.org/10.1109/ACCESS.2025.3582600)
+
+>Tomisu, H., Ueda, J., & Yamanaka, T. (2025). The cognitive mirror: A framework for AI-powered metacognition and self-regulated learning. _Frontiers in Education_, _10_, 1697554. [https://doi.org/10.3389/feduc.2025.1697554](https://doi.org/10.3389/feduc.2025.1697554)
+
+>Uittenhove, K., Ellis, A., Mumenthaler, F., Gatzka, I., & Jermann, P. (2025). _Metacognitive Reflection in the Era of Generative AI_. In Review. [https://doi.org/10.21203/rs.3.rs-6973046/v1](https://doi.org/10.21203/rs.3.rs-6973046/v1)
+
+>Wu, X.-Y., Radloff, J. D., Yeter, I. H., Wang, L., & Chiu, T. K. F. (2025). Designing artificial intelligence chatbots for self-regulated learning from a systematic review based on Habermas’s three interests. _Interactive Learning Environments_, 1–24. [https://doi.org/10.1080/10494820.2025.2563086](https://doi.org/10.1080/10494820.2025.2563086)
