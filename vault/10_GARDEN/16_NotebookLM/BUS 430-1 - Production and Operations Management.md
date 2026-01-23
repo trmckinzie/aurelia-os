@@ -14,7 +14,7 @@ cover_image: ""
 > [Paste the Executive Summary or Core Thesis here.]
 
 # 🎙️ Audio Overview
-assets/audio/[filename].wav
+assets/audio/[filename].m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4
