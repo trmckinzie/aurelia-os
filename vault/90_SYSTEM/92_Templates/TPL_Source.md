@@ -9,7 +9,7 @@ publish:
 # 📖 <% tp.file.title %>
 
 **👤 Author:** [[ ]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
+ Full Notes: 
 
 ---
 
@@ -19,5 +19,4 @@ publish:
 ---
 
 ### 🧠 Concepts Extracted
-*(Concepts linked here will show in Graph View)*
 * [[ ]]

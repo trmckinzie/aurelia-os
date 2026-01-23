@@ -18,5 +18,4 @@ description: Brief executive summary. No markdown allowed here.
 > Why we do this.
 
 ## 📦 Assets
-```markdown
-Code block here
+>

@@ -16,7 +16,7 @@ publish:
 > 
 
 ### 📝 Key Insight
-* ```
+* 
 
 ---
 

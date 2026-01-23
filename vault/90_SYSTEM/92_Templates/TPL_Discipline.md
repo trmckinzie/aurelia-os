@@ -23,4 +23,4 @@ publish:
 * [[ ]]
 
 ### 🧪 Unresolved Questions
-* *What are the open problems in this field I am tracking?*
+* 
