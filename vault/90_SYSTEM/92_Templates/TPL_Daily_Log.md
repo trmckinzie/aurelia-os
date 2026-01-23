@@ -33,5 +33,4 @@ publish:
 ---
 
 ## 🔒 CLOSING THE LOOP
-* **LESSON:** " "
 * [ ] **Inbox Zero:** (Drag new files from Inbox -> Garden)
