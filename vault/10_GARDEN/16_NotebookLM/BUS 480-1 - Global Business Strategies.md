@@ -12,6 +12,9 @@ cover_image: ""
 ---
 ---
 
+# 📚 Lit Review Overview
+
+>This Notebook houses materials and resources for both the Business Strategy Game and the HBR On Strategy, 10 Articles of which TEAM Orange will present Chapters 1 & 10. 
 # 📚 Chapter 1 : What is Strategy 
 
 > Michael Porter’s "What Is Strategy?" argues that **strategy is the creation of a unique and valuable position** involving a different set of activities than those performed by rivals. It requires a company to deliberately choose to be different to establish a sustainable competitive advantage.
@@ -113,6 +116,109 @@ To maintain a high-functioning system, management should watch for these warning
 • **Meaningless "I's":** If a vast number of people are providing input, it is likely that many of them are not making a meaningful contribution.
 
 • **Second-Guessing:** Decisions should rarely be revisited once made. Frequent second-guessing suggests a lack of clarity in roles and a breakdown in organizational trust.
+
+# 📚 Global Business Strategy : Quick Guide to Mastering the Game
+
+>To win the Business Strategy Game (BSG), you must transcend basic operational understanding and adopt a perspective rooted in **long-term strategic coherence and rigorous financial engineering**. Success is the cumulative effect of hundreds of interconnected decisions across production, marketing, distribution, and finance.
+
+1. Choosing and Maintaining a Strategy
+
+You must choose a deliberate strategic path by the end of Year 11 and maintain consistency through Year 20. **Strategic "drifting"—switching between low-cost and differentiation—leads to mediocre performance** because the company fails to optimize its facilities and brand image for either path.
+
+• **Low-Cost Provider:** Focus on achieving meaningfully lower costs than rivals through efficiency and scale, then underpricing competitors to capture market share.
+
+• **Broad Differentiation:** Focus on unique product attributes (high S/Q ratings, many models, influential celebrities) that consumers find valuable and will pay a premium for.
+
+• **Best-Cost Provider (Hybrid):** Provide high-quality shoes at a lower price than other premium brands, aiming for value-conscious buyers.
+
+• **Focus Strategies:** Target a narrow market niche, such as a specific geographic region or a narrow product line.
+
+2. Mastering Performance Metrics (KPIs)
+
+The simulation evaluates your management team on five key indicators, typically weighted equally at 20%:
+
+• **Earnings Per Share (EPS):** Boost this by **increasing net profit (numerator) and aggressively buying back stock (denominator)**.
+
+• **Return on Equity (ROE):** Improve this by maintaining high net income while **reducing shareholders' equity through stock repurchases and dividends**.
+
+• **Stock Price:** This is correlated to both EPS and ROE. Consistently beating investor expectations and increasing dividends year-over-year will drive the price up.
+
+• **Credit Rating:** Calculated via the interest coverage ratio, debt-to-asset ratio, and risk of default. **Focus cash flow on reducing the debt-to-asset ratio** and refinancing high-interest debt to improve this score.
+
+• **Image Rating:** Based on your S/Q rating, market share, and Corporate Social Responsibility (CSR) efforts. Aim for a rating above 70 to remain competitive.
+
+3. Operational Excellence and Production
+
+• **Regional Advantage:** Move quickly to expand manufacturing capacity in **Asia-Pacific and Latin America**, where labor costs are significantly lower than in North America or Europe.
+
+• **Plant Upgrades:** Invest in upgrades that complement your strategy. **Upgrade B** is vital for high-model strategies as it reduces setup costs. **Upgrade C** is powerful for differentiators as it boosts S/Q ratings by 1 star at lower material costs. **Upgrade D** increases worker productivity by 25-50%, making it essential for low-cost leaders.
+
+• **Workforce Training:** **Always max out Best Practices Training** ($3,500 per worker). This reduces reject rates, improves S/Q ratings, and increases worker productivity, often paying for itself within two years.
+
+• **Capacity Utilization:** Use all available capacity every year for branded or private-label production to spread fixed costs (depreciation, administrative salaries) over more units.
+
+4. Strategic Marketing and Distribution
+
+• **Competitive Factors:** Monitor 11 to 13 factors, including price, S/Q rating, advertising, and delivery time. **Wholesale Price, S/Q rating, and product line breadth** are the three most critical factors for buyers.
+
+• **Channel Conflict:** Ensure your **Internet Price is at least 40% above your Wholesale Price**. If online prices are too low, retailers will view you as a competitor and may refuse to stock your brand.
+
+• **Celebrity Endorsements:** Avoid bidding too high ($20,000+), as the marginal revenue may not cover the cost. Focus on a "stable" of athletes that provide maximum appeal in regions where you have the most capacity.
+
+• **Private Label:** View this as a "battlefield" to defeat competitors. Bidding low enough to win large contracts allows you to flood the market and prevent others from selling their shoes, while also maintaining high plant utilization.
+
+5. Financial Engineering and Analysis
+
+• **Stock Buybacks:** This is the most effective way to grow EPS and ROE. **Buy back the maximum amount of stock allowed every year** while the price is low, especially in the early rounds (Year 11-14). **Selling stock is often the single biggest mistake a team can make**.
+
+• **Debt Management:** Use 10-year loans rather than 5-year loans for large expansions; 5-year loans require double the principal payment and can severely hurt your credit rating.
+
+• **Reporting and Forecasting:** Spend 50% of your decision time analyzing the **Footwear Industry Report (FIR)** and **Competitive Intelligence Report (CIR)**. Use **forecasting spreadsheets** to anticipate rival moves and perform "worst-case scenario" trend analysis.
+
+• **Corporate Social Responsibility (CSR):** Invest in Energy Efficiency, Ethics Training, and Workforce Diversity. These initiatives provide a steady boost to image rating and worker productivity for a minimal impact on net profit.
+
+# 📚 Global Business Strategy : BSG Strategy Architecture 
+
+>Success in the Business Strategy Game requires management teams to transcend basic operational decisions and adopt a long-term perspective rooted in **strategic coherence and rigorous financial engineering**. Management must choose a deliberate strategic path by the end of Year 11 and maintain consistency through Year 20, as **strategic "drifting"—switching between different approaches—leads to mediocre performance** and fails to optimize production facilities or brand image. The sources outline several frameworks for these competitive strategy options, ranging from generic theoretical models to specific quadrant-based applications.
+
+Specific BSG Strategic Guide Options
+
+The BSG Strategic Guide categorizes competitive options into four primary strategies based on the relationship between **Star Quality (S/Q) ratings and product line breadth (models)**:
+
+• **Low Quality, Low Models, and Low Price:** This is the easiest strategy to execute and uses **price penetration** to impact the industry, but it often does not fare well in the long term against more advanced competitors.
+
+• **High Quality, Low Models, and Lower Medium Price:** This approach is relatively easy to perform and is viable for the long term because the **high quality allows for significant image rating points**.
+
+• **Low Quality, High Models, and Higher Medium Price:** This is a more difficult strategy that offers flexibility and **high profit potential** by taking advantage of cost-saving plant upgrades B and C.
+
+• **High Quality, High Models, and High Price:** This is the **most complicated but potentially most profitable** strategy; it requires achieving economies of scale and is typically only effective in the late game.
+
+Five Generic Competitive Strategies
+
+Drawing on Michael Porter’s framework, the simulation also presents five generic options distinguished by their **market target (broad vs. narrow)** and the **type of competitive advantage (lower cost vs. differentiation)**:
+
+• **Low-Cost Provider:** Aims for a competitive advantage by achieving **meaningfully lower costs than rivals**, allowing the firm to either underprice competitors or reap higher margins at standard prices.
+
+• **Broad Differentiation:** Focuses on creating **unique product attributes** that a wide range of buyers find valuable enough to pay a premium for.
+
+• **Focused Low-Cost:** Targets a **narrow market niche** or specific geographic region by serving members at a lower cost than rivals.
+
+• **Focused Differentiation:** Seeks to compete in a narrow niche with a product carefully designed to appeal to the **unique preferences** of that specific group.
+
+• **Best-Cost Provider (Hybrid):** Strives to deliver **superior value** by meeting buyer expectations on quality and features while beating their price expectations.
+
+Strategic Context and Execution
+
+The simulation is designed with **no built-in bias** favoring any single strategy; most well-executed approaches can succeed provided they are not thwarted by rivals. Key insights for execution include:
+
+• **Price is a Reflection, Not just a Slogan:** Having the lowest price is only an effective strategy if it reflects **greater efficiency and lower costs**, similar to the Walmart model.
+
+• **Niche Positioning:** The only major decision remaining for companies dominating all geographic regions is deciding which **niche of quality and models** to occupy.
+
+• **Resource-Based Success:** Strategies must be underpinned by appropriate resources; for instance, a low-cost leader must have the **resource strengths to keep costs below competitors** through scale and efficiency.
+
+• **Analysis of the "White Space":** Elite teams use strategic group maps to find underserved market segments—**"white space"**—where they can capture demand without intense competition
+
 # 🎙️ Audio Overview
 assets/audio/[filename].wav
 
