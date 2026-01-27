@@ -17,6 +17,7 @@ cover_image: ""
 ---
 ---
 
+Discipline Note [[Neuroanatomy]], [[Neuroscience]]
 # 📚 Lit Review Overview
 >Functional Neuroanatomy: A Structural and Functional Atlas of the Human Central Nervous System
 
