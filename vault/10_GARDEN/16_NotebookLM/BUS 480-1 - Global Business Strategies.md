@@ -65,7 +65,7 @@ Porter notes that the greatest threat to strategy often comes from **within the
 
 To maintain a strategy, leadership must provide the **discipline to say no**, set limits, and focus on deepening a strategic position rather than compromising it in the name of "easy" growth
 
-# 📚 Chapter 10 : What is Strategy 
+# 📚 Chapter 10 : Who Has the D? How Clear Decision Roles Enhance Organizational Performance
 
 >"Who Has the D?" explores how ambiguity in decision-making roles is a primary cause of organizational stalls and poor performance. The article introduces the **RAPID framework** to clarify accountability and ensure that the right people are involved in the right decisions at the right time.
 
@@ -117,122 +117,137 @@ To maintain a high-functioning system, management should watch for these warning
 
 • **Second-Guessing:** Decisions should rarely be revisited once made. Frequent second-guessing suggests a lack of clarity in roles and a breakdown in organizational trust.
 
-# 📚 Global Business Strategy : Quick Guide to Mastering the Game
+# 📚 Global Business Strategy : Master Manual for the Business Strategy Game
 
->To win the Business Strategy Game (BSG), you must transcend basic operational understanding and adopt a perspective rooted in **long-term strategic coherence and rigorous financial engineering**. Success is the cumulative effect of hundreds of interconnected decisions across production, marketing, distribution, and finance.
+>The Business Strategy Game (BSG) is an online simulation where you manage an athletic footwear company in head-to-head competition against companies run by your peers. Your goal is to develop and execute a winning strategy that increases earnings, market share, and stock price year-after-year.
 
-1. Choosing and Maintaining a Strategy
+The game is **100% competition-based**, meaning your results depend entirely on how your decisions stack up against the decisions made by your rivals.
 
-You must choose a deliberate strategic path by the end of Year 11 and maintain consistency through Year 20. **Strategic "drifting"—switching between low-cost and differentiation—leads to mediocre performance** because the company fails to optimize its facilities and brand image for either path.
+--------------------------------------------------------------------------------
 
-• **Low-Cost Provider:** Focus on achieving meaningfully lower costs than rivals through efficiency and scale, then underpricing competitors to capture market share.
+1. Core Strategic Principles
 
-• **Broad Differentiation:** Focus on unique product attributes (high S/Q ratings, many models, influential celebrities) that consumers find valuable and will pay a premium for.
+Success in BSG is not about finding a "magic bullet" or a secret formula; it is about **strategic coherence and operational efficiency**.
 
-• **Best-Cost Provider (Hybrid):** Provide high-quality shoes at a lower price than other premium brands, aiming for value-conscious buyers.
+• **No Built-In Bias:** The simulation does not favor any specific strategy (e.g., low-cost vs. high-quality). Any well-executed strategy can win as long as it isn't overpowered by rivals.
 
-• **Focus Strategies:** Target a narrow market niche, such as a specific geographic region or a narrow product line.
+• **The Power of "Fit":** Efficiency is achieved when your production, marketing, and finance decisions reinforce one another. For example, a high-model strategy is only efficient if you invest in **Production Improvement Option B** to reduce setup costs.
 
-2. Mastering Performance Metrics (KPIs)
+• **Data-Driven Decisions:** Every decision page provides "projections" based on your entries. You must use these to perform "what-if" analysis before finalizing any round.
 
-The simulation evaluates your management team on five key indicators, typically weighted equally at 20%:
+--------------------------------------------------------------------------------
 
-• **Earnings Per Share (EPS):** Boost this by **increasing net profit (numerator) and aggressively buying back stock (denominator)**.
+2. Market Dynamics and Distribution
 
-• **Return on Equity (ROE):** Improve this by maintaining high net income while **reducing shareholders' equity through stock repurchases and dividends**.
+You operate in four geographic regions: **North America, Europe-Africa, Asia-Pacific, and Latin America**.
 
-• **Stock Price:** This is correlated to both EPS and ROE. Consistently beating investor expectations and increasing dividends year-over-year will drive the price up.
+• **Three Distribution Channels:**
 
-• **Credit Rating:** Calculated via the interest coverage ratio, debt-to-asset ratio, and risk of default. **Focus cash flow on reducing the debt-to-asset ratio** and refinancing high-interest debt to improve this score.
+    1. **Wholesale:** Selling to ~60,000 independent retailers.
 
-• **Image Rating:** Based on your S/Q rating, market share, and Corporate Social Responsibility (CSR) efforts. Aim for a rating above 70 to remain competitive.
+    2. **Online:** Direct-to-consumer sales via your website (currently 15% of demand, growing to 25% by Year 20).
 
-3. Operational Excellence and Production
+    3. **Private-Label:** Bidding to supply large multi-outlet chains with shoes sold under their own brand.
 
-• **Regional Advantage:** Move quickly to expand manufacturing capacity in **Asia-Pacific and Latin America**, where labor costs are significantly lower than in North America or Europe.
+• **Market Growth:** Expect 7–9% annual growth in global demand for Years 11–15, slowing to 5–7% for Years 16–20.
 
-• **Plant Upgrades:** Invest in upgrades that complement your strategy. **Upgrade B** is vital for high-model strategies as it reduces setup costs. **Upgrade C** is powerful for differentiators as it boosts S/Q ratings by 1 star at lower material costs. **Upgrade D** increases worker productivity by 25-50%, making it essential for low-cost leaders.
+--------------------------------------------------------------------------------
 
-• **Workforce Training:** **Always max out Best Practices Training** ($3,500 per worker). This reduces reject rates, improves S/Q ratings, and increases worker productivity, often paying for itself within two years.
+3. Key Decision Areas (Operational Pillars)
 
-• **Capacity Utilization:** Use all available capacity every year for branded or private-label production to spread fixed costs (depreciation, administrative salaries) over more units.
+**Manufacturing and Workforce**
 
-4. Strategic Marketing and Distribution
+• **Capacity:** You start with facilities in North America and Asia-Pacific. You can expand these or build new ones in Europe-Africa or Latin America.
 
-• **Competitive Factors:** Monitor 11 to 13 factors, including price, S/Q rating, advertising, and delivery time. **Wholesale Price, S/Q rating, and product line breadth** are the three most critical factors for buyers.
+• **Worker Productivity:** Influenced by base pay, incentive pay, and **Best Practices Training**. Higher productivity reduces the number of workers needed, lowering total labor costs.
 
-• **Channel Conflict:** Ensure your **Internet Price is at least 40% above your Wholesale Price**. If online prices are too low, retailers will view you as a competitor and may refuse to stock your brand.
+• **Reject Rates:** High reject rates (currently 7–10%) are costly. They are reduced by incentive pay for "non-defective" pairs, TQM/Six Sigma spending, and Best Practices Training.
 
-• **Celebrity Endorsements:** Avoid bidding too high ($20,000+), as the marginal revenue may not cover the cost. Focus on a "stable" of athletes that provide maximum appeal in regions where you have the most capacity.
+**S/Q Rating (Styling & Quality)**
 
-• **Private Label:** View this as a "battlefield" to defeat competitors. Bidding low enough to win large contracts allows you to flood the market and prevent others from selling their shoes, while also maintaining high plant utilization.
+The International Footwear Federation (IFF) assigns a 0.0 to 10.0 star rating based on five factors:
 
-5. Financial Engineering and Analysis
+1. Percentage of **superior materials** used.
 
-• **Stock Buybacks:** This is the most effective way to grow EPS and ROE. **Buy back the maximum amount of stock allowed every year** while the price is low, especially in the early rounds (Year 11-14). **Selling stock is often the single biggest mistake a team can make**.
+2. Spending on **new features and styling** per model.
 
-• **Debt Management:** Use 10-year loans rather than 5-year loans for large expansions; 5-year loans require double the principal payment and can severely hurt your credit rating.
+3. Current and cumulative spending on **TQM/Six Sigma**.
 
-• **Reporting and Forecasting:** Spend 50% of your decision time analyzing the **Footwear Industry Report (FIR)** and **Competitive Intelligence Report (CIR)**. Use **forecasting spreadsheets** to anticipate rival moves and perform "worst-case scenario" trend analysis.
+4. **Best Practices Training** for workers.
 
-• **Corporate Social Responsibility (CSR):** Invest in Energy Efficiency, Ethics Training, and Workforce Diversity. These initiatives provide a steady boost to image rating and worker productivity for a minimal impact on net profit.
+5. Use of **new vs. refurbished equipment** (new equipment adds 0.5 stars).
 
-# 📚 Global Business Strategy : BSG Strategy Architecture 
+--------------------------------------------------------------------------------
 
->Success in the Business Strategy Game requires management teams to transcend basic operational decisions and adopt a long-term perspective rooted in **strategic coherence and rigorous financial engineering**. Management must choose a deliberate strategic path by the end of Year 11 and maintain consistency through Year 20, as **strategic "drifting"—switching between different approaches—leads to mediocre performance** and fails to optimize production facilities or brand image. The sources outline several frameworks for these competitive strategy options, ranging from generic theoretical models to specific quadrant-based applications.
+4. The 13 Competitive Factors
 
-Specific BSG Strategic Guide Options
+While 13 factors influence branded sales, the **top three most influential factors** are:
 
-The BSG Strategic Guide categorizes competitive options into four primary strategies based on the relationship between **Star Quality (S/Q) ratings and product line breadth (models)**:
+1. **Price:** Your wholesale and online prices relative to the industry average.
 
-• **Low Quality, Low Models, and Low Price:** This is the easiest strategy to execute and uses **price penetration** to impact the industry, but it often does not fare well in the long term against more advanced competitors.
+2. **S/Q Rating:** The perceived quality of your footwear.
 
-• **High Quality, Low Models, and Lower Medium Price:** This approach is relatively easy to perform and is viable for the long term because the **high quality allows for significant image rating points**.
+3. **Model Availability:** The breadth of your product line (number of models/styles).
 
-• **Low Quality, High Models, and Higher Medium Price:** This is a more difficult strategy that offers flexibility and **high profit potential** by taking advantage of cost-saving plant upgrades B and C.
+**Secondary Factors:** Celebrity endorsements, brand advertising, search engine ads, brand image, number of retail outlets, and free shipping.
 
-• **High Quality, High Models, and High Price:** This is the **most complicated but potentially most profitable** strategy; it requires achieving economies of scale and is typically only effective in the late game.
+--------------------------------------------------------------------------------
 
-Five Generic Competitive Strategies
+5. Financial Management (The 5 KPIs)
 
-Drawing on Michael Porter’s framework, the simulation also presents five generic options distinguished by their **market target (broad vs. narrow)** and the **type of competitive advantage (lower cost vs. differentiation)**:
+Your Board of Directors evaluates your performance based on five specific targets:
 
-• **Low-Cost Provider:** Aims for a competitive advantage by achieving **meaningfully lower costs than rivals**, allowing the firm to either underprice competitors or reap higher margins at standard prices.
+• **Earnings Per Share (EPS):** Targets grow from $2.50 in Year 11 to $10.00 by Year 20.
 
-• **Broad Differentiation:** Focuses on creating **unique product attributes** that a wide range of buyers find valuable enough to pay a premium for.
+• **Return on Equity (ROE):** Target starts at 21% and reaches 30% by Year 20.
 
-• **Focused Low-Cost:** Targets a **narrow market niche** or specific geographic region by serving members at a lower cost than rivals.
+• **Stock Price:** Targets grow from $40 in Year 11 to $250 by Year 20.
 
-• **Focused Differentiation:** Seeks to compete in a narrow niche with a product carefully designed to appeal to the **unique preferences** of that specific group.
+• **Credit Rating:** Aim for a B+ early on, moving to an A by Year 17.
 
-• **Best-Cost Provider (Hybrid):** Strives to deliver **superior value** by meeting buyer expectations on quality and features while beating their price expectations.
+• **Image Rating:** Target grows from 70 to 80 over time.
 
-Strategic Context and Execution
+--------------------------------------------------------------------------------
 
-The simulation is designed with **no built-in bias** favoring any single strategy; most well-executed approaches can succeed provided they are not thwarted by rivals. Key insights for execution include:
+6. Non-Negotiable "Must-Know" Rules
 
-• **Price is a Reflection, Not just a Slogan:** Having the lowest price is only an effective strategy if it reflects **greater efficiency and lower costs**, similar to the Walmart model.
+|Rule Category|Crucial Information|
+|---|---|
+|**Channel Conflict**|**Internet Price must be at least 40% higher than Wholesale Price**. If it is lower, retailers will view you as a threat and stop stocking your brand.|
+|**Private-Label Bidding**|To be eligible, your private-label price **must be at least $10.00 below your branded wholesale price** in that region.|
+|**Tariffs**|Shipping across borders incurs costs (e.g., $10 per pair into Latin America, $8 into Asia-Pacific).|
+|**Exchange Rates**|BSG uses real-world fluctuations. You are alerted to the impacts for the upcoming year in advance, allowing you to shift shipping to favorable regions.|
+|**Inventory Penalty**|Unsold pairs carried over have their **S/Q rating reduced by 0.3 stars** because they are "last year's models".|
+|**Stock Management**|You cannot issue new shares and repurchase shares in the same year. Repurchasing stock is a primary way to boost EPS and ROE.|
 
-• **Niche Positioning:** The only major decision remaining for companies dominating all geographic regions is deciding which **niche of quality and models** to occupy.
+--------------------------------------------------------------------------------
 
-• **Resource-Based Success:** Strategies must be underpinned by appropriate resources; for instance, a low-cost leader must have the **resource strengths to keep costs below competitors** through scale and efficiency.
+7. Strategic Approach for Efficiency and Intelligence
 
-• **Analysis of the "White Space":** Elite teams use strategic group maps to find underserved market segments—**"white space"**—where they can capture demand without intense competition
+• **Scout Your Rivals:** Use the **Competitive Intelligence Report (CIR)**. It is your most accurate tool for understanding why rivals outsold you or how they achieved better margins.
+
+• **Update Competitive Assumptions:** The projections on your decision pages are useless if they use "last year's" data. You **must** enter estimates of what you think rivals will do this year (e.g., if they will raise prices or S/Q) to get accurate forecasts.
+
+• **Leverage Best Practices Training:** This is one of the most powerful "win" buttons. It simultaneously improves S/Q, increases productivity, reduces materials waste, and lowers reject rates.
+
+• **Utilize the Private Label Segment:** Use this "battlefield" to soak up excess production capacity and spread your fixed costs over more units, lowering your branded cost per pair.
+
+• **The "3-Year Strategic Plan":** Even if not assigned, use this tool to ensure you aren't just making "year-to-year" reactive decisions.
 
 # 🎙️ Audio Overview
-assets/audio/[filename].wav
+assets/audio/BSG_Players_Manual_Overview.m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4
 
 # 🧠 Mind Map
-assets/images/[filename].png
+assets/images/NotebookLM Mind Map - BSG_Overview.png
 
 # 📄 Reports
 assets/images/[filename].png
 
 # 🃏 Flashcards
-assets/images/[filename].csv
+assets/flashcards/flashcards-BSG-overview.csv
 
 # 📝 Quiz
 assets/images/[filename].png
