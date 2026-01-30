@@ -4,17 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "6856a17019dc0ad2",
+        "id": "37a9ab56f8da9461",
         "type": "tabs",
         "children": [
           {
-            "id": "acf584cf7372e867",
+            "id": "bea5474a770e3121",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "pdf",
+              "state": {
+                "file": "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Chapter 2 Problems"
             }
           }
         ]
@@ -202,12 +204,24 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "bea5474a770e3121",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
+    "80_COURSES/81_ASU/PSYC 414/pdfs/Kirkland () The Stress Response is all in your Mind.pdf",
+    "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
+    "80_COURSES/81_ASU/PSYC 414/submitted",
+    "80_COURSES/81_ASU/PSYC 414/New folder",
+    "80_COURSES/81_ASU/PSYC 414/pdfs/Fernyhough (2006) Metaphors of the Mind.pdf",
+    "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
+    "80_COURSES/81_ASU/BUS 430/ch-1-ppt.pdf",
+    "80_COURSES/81_ASU/BUS 430/ch-2-ppt.pdf",
+    "80_COURSES/81_ASU/BUS 430/ch-3-ppt.pdf",
+    "80_COURSES/81_ASU/BUS 430/ch-4-ppt.pdf",
+    "10_GARDEN/12_Concepts/Action Potential.md",
+    "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
+    "10_GARDEN/16_NotebookLM/Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
-    "assets/audio/AI_Usage_SRL.m4a",
-    "assets/audio/AI_Career_Roadmap_and_Coding_Disciplines.m4a",
     "10_GARDEN/12_Concepts/Active Recall.md",
     "20_PROTOCOL/02_DAILY_LOG.md",
     "00_INBOX/Entropy.md",
@@ -217,7 +231,6 @@
     "00_INBOX/Sense Organ.md",
     "2026-01-29.md",
     "10_GARDEN/12_Concepts/Untitled 1.md",
-    "10_GARDEN/12_Concepts/Action Potential.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/13_Authors/Travis R McKinzie.md",
     "10_GARDEN/Untitled.md"
