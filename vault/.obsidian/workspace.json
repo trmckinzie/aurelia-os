@@ -4,19 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "37a9ab56f8da9461",
+        "id": "a927f2e924c7aab1",
         "type": "tabs",
         "children": [
           {
-            "id": "bea5474a770e3121",
+            "id": "107157270976c4bb",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf"
+                "file": "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-file-text",
-              "title": "Chapter 2 Problems"
+              "icon": "lucide-file",
+              "title": "2026-01-30"
             }
           }
         ]
@@ -200,13 +212,18 @@
       "templater-obsidian:Templater": false,
       "smart-connections:Smart Connections: Open connections view": false,
       "smart-connections:Smart Lookup: Open lookup view": false,
-      "smart-connections:Smart Connections: Open random connection": false
+      "smart-connections:Smart Connections: Open random connection": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "bea5474a770e3121",
+  "active": "107157270976c4bb",
   "lastOpenFiles": [
-    "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
+    "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
+    "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Kirkland () The Stress Response is all in your Mind.pdf",
+    "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
+    "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf",
+    "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
     "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
     "80_COURSES/81_ASU/PSYC 414/submitted",
     "80_COURSES/81_ASU/PSYC 414/New folder",
@@ -214,12 +231,9 @@
     "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
     "80_COURSES/81_ASU/BUS 430/ch-1-ppt.pdf",
     "80_COURSES/81_ASU/BUS 430/ch-2-ppt.pdf",
-    "80_COURSES/81_ASU/BUS 430/ch-3-ppt.pdf",
-    "80_COURSES/81_ASU/BUS 430/ch-4-ppt.pdf",
     "10_GARDEN/12_Concepts/Action Potential.md",
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/16_NotebookLM/Untitled.md",
-    "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "10_GARDEN/12_Concepts/Active Recall.md",
     "20_PROTOCOL/02_DAILY_LOG.md",
