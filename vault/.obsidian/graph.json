@@ -3,56 +3,20 @@
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
   "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": true,
-  "showOrphans": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
   "collapse-color-groups": false,
-  "colorGroups": [
-    {
-      "query": "path:vault/10_GARDEN/11_Daily_Bridge  ",
-      "color": {
-        "a": 1,
-        "rgb": 16749824
-      }
-    },
-    {
-      "query": "path:vault/10_GARDEN/13_Authors  ",
-      "color": {
-        "a": 1,
-        "rgb": 12190206
-      }
-    },
-    {
-      "query": "path:vault/10_GARDEN/12_Concepts",
-      "color": {
-        "a": 1,
-        "rgb": 784885
-      }
-    },
-    {
-      "query": "path:vault/10_GARDEN/14_Disciplines  ",
-      "color": {
-        "a": 1,
-        "rgb": 438792
-      }
-    },
-    {
-      "query": "path:vault/10_GARDEN/15_Sources  ",
-      "color": {
-        "a": 1,
-        "rgb": 16251652
-      }
-    }
-  ],
+  "colorGroups": [],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": -3,
-  "nodeSizeMultiplier": 1.92044967880086,
-  "lineSizeMultiplier": 2.00438972162741,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1,
   "collapse-forces": false,
-  "centerStrength": 1,
-  "repelStrength": 20,
-  "linkStrength": 0.756055363321799,
-  "linkDistance": 500,
-  "scale": 0.3972898768278934,
-  "close": false
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 0.14417147825207652,
+  "close": true
 }
