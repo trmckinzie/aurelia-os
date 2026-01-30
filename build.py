@@ -2,6 +2,7 @@ import csv
 import os
 import re
 import json
+import shutil
 from jinja2 import Environment, FileSystemLoader
 
 # --- ⚡ RESTORED ENGINE BLOCK ⚡ ---
@@ -1049,9 +1050,79 @@ def json_serial(obj):
     if isinstance(obj, (datetime, date)): return obj.isoformat()
     raise TypeError ("Type %s not serializable" % type(obj))
 
-def build_all():
-    print("\n🧬 AURELIA SYSTEM: INITIALIZING JINJA CORE...")
+def organize_assets():
+    """
+    Scans vault/99_DROP_ZONE and moves files to their correct
+    assets/ subfolder based on file extension.
+    """
+    print("\n🧹 SYSTEM CLEANUP: Scanning Drop Zone...")
+    
+    # 1. SETUP PATHS
+    drop_zone = os.path.join(VAULT_PATH, "99_DROP_ZONE")
+    assets_root = os.path.join(VAULT_PATH, "assets") # Ensure this points to vault/assets
+    
+    # Define Destinations
+    destinations = {
+        "images": [".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"],
+        "audio": [".mp3", ".wav", ".m4a", ".ogg"],
+        "video": [".mp4", ".mov", ".webm"],
+        "flashcards": [".csv"],
+        "documents": [".pdf", ".txt"]
+    }
 
+    # Create Drop Zone if missing
+    if not os.path.exists(drop_zone):
+        os.makedirs(drop_zone)
+        print("   + Created 99_DROP_ZONE")
+        return
+
+    # 2. SCAN AND MOVE
+    files = [f for f in os.listdir(drop_zone) if os.path.isfile(os.path.join(drop_zone, f))]
+    
+    if not files:
+        print("   > Drop Zone empty. No assets to sort.")
+        return
+
+    moved_count = 0
+    for f in files:
+        name, ext = os.path.splitext(f)
+        ext = ext.lower()
+        
+        target_folder = None
+        
+        # Determine Destination
+        for folder, extensions in destinations.items():
+            if ext in extensions:
+                target_folder = folder
+                break
+        
+        if target_folder:
+            # Construct Paths
+            src_path = os.path.join(drop_zone, f)
+            dest_dir = os.path.join(assets_root, target_folder)
+            dest_path = os.path.join(dest_dir, f)
+            
+            # Ensure Dest Exists
+            os.makedirs(dest_dir, exist_ok=True)
+            
+            # Move (Overwrite if exists)
+            shutil.move(src_path, dest_path)
+            print(f"   + [MOVED] {f} -> assets/{target_folder}/")
+            moved_count += 1
+        else:
+            print(f"   ! [SKIPPED] Unknown type: {f}")
+
+    print(f"   > Organization Complete. Sorted {moved_count} files.")
+
+def build_all():
+    print("------------------------------------------------")
+    print("💠 AURELIA OS BUILD ENGINE v3.2.0")
+    print("------------------------------------------------")
+    
+    # 1. RUN ASSET SORTER FIRST
+    organize_assets() 
+
+    # ... rest of your build logic ...
     # --- 0. LOAD IDENTITY CHIP ---
     config_path = os.path.join(ROOT_DIR, "user_config.json")
     try:
