@@ -10,7 +10,7 @@ publish: true
 ---
 # ⚛️ Transistor
 
-**🔗 Related:** [[Semiconductor]], [[Systems]], [[Algorithm]]
+**🔗 Related:** [[Semiconductor]], [[Algorithm]]
 
 ---
 
@@ -19,7 +19,7 @@ publish: true
 
 ### 📝 Key Insight
 
-- Transistors are the **fundamental building blocks** of modern computing and information processing [[Systems]].
+- Transistors are the **fundamental building blocks** of modern computing and information processing [[00_INBOX/Systems]].
 - Their ability to act as [[Binary Switch]] underlies [[Logic Gate]] and [[Algorithm]]s.
 - They exemplify how simple components can generate complex behavior when scaled and networked.
 ---

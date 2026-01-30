@@ -314,4 +314,194 @@ assets/images/[filename].png
 assets/images/[filename].png
 
 # 📚 Sources
-> [Zotero Data Placeholder]
+1. Darwin's Legacy to Comparative Psychology and Ethology - Ovid, [https://www.ovid.com/journals/ampsy/pdf/10.1037/a0013385~darwins-legacy-to-comparative-psychology-and-ethology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ovid.com%2Fjournals%2Fampsy%2Fpdf%2F10.1037%2Fa0013385~darwins-legacy-to-comparative-psychology-and-ethology)
+
+2. Evolutionary psychology - Wikipedia, [https://en.wikipedia.org/wiki/Evolutionary_psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FEvolutionary_psychology)
+
+3. History of evolutionary psychology - Wikipedia, [https://en.wikipedia.org/wiki/History_of_evolutionary_psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FHistory_of_evolutionary_psychology)
+
+4. Darwin's Legacy to Comparative Psychology and Ethology - ResearchGate, [https://www.researchgate.net/publication/23993578_Darwin's_Legacy_to_Comparative_Psychology_and_Ethology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F23993578_Darwin%27s_Legacy_to_Comparative_Psychology_and_Ethology)
+
+5. A Brief History of Evolutionary Psychology, [https://www.psychologytoday.com/us/blog/darwins-subterranean-world/202311/a-brief-history-of-evolutionary-psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.psychologytoday.com%2Fus%2Fblog%2Fdarwins-subterranean-world%2F202311%2Fa-brief-history-of-evolutionary-psychology)
+
+6. Evolutionary Psychology Primer by Leda Cosmides and John Tooby - CogWeb, [http://cogweb.ucla.edu/ep/EP-primer.html](https://www.google.com/url?sa=E&q=http%3A%2F%2Fcogweb.ucla.edu%2Fep%2FEP-primer.html)
+
+7. Evolutionary Psychology: A Primer, [https://www.cep.ucsb.edu/wp-content/uploads/2023/06/Evolutionary-Psychology-A-Primer-CosmidesTooby1993.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cep.ucsb.edu%2Fwp-content%2Fuploads%2F2023%2F06%2FEvolutionary-Psychology-A-Primer-CosmidesTooby1993.pdf)
+
+8. Chapter 21 Ethology, Sociobiology, and ... - Lehigh University, [https://www.lehigh.edu/~mhb0/PhilBioPotentialReadings%2020Oct18/Sahotra_Sarkar,_Anya_PlutynskiEthologySociobiologyEvolPsych_A_Companion_to_th%20.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.lehigh.edu%2F~mhb0%2FPhilBioPotentialReadings%252020Oct18%2FSahotra_Sarkar%2C_Anya_PlutynskiEthologySociobiologyEvolPsych_A_Companion_to_th%2520.pdf)
+
+9. Evolutionary and Behavior Genetics – Individual and Family Development, Health, and Well-being, [https://iastate.pressbooks.pub/individualfamilydevelopment/chapter/evolutionary-behavior-genetics/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fiastate.pressbooks.pub%2Findividualfamilydevelopment%2Fchapter%2Fevolutionary-behavior-genetics%2F)
+
+10. SOCIOBIOLOGY AND EVOLUTIONARY PSYCHOLOGY - Mountain Scholar, [https://mountainscholar.org/bitstreams/d9d01555-0f2f-4f1a-9757-5af3d239d2b0/download](https://www.google.com/url?sa=E&q=https%3A%2F%2Fmountainscholar.org%2Fbitstreams%2Fd9d01555-0f2f-4f1a-9757-5af3d239d2b0%2Fdownload)
+
+11. Sociobiology: The New Synthesis - Wikipedia, [https://en.wikipedia.org/wiki/Sociobiology:_The_New_Synthesis](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FSociobiology%3A_The_New_Synthesis)
+
+12. BIBLIOMETRIC ANALYSIS OF RESEARCH IN THE FIELD OF EVOLUTIONARY PSYCHOLOGY BETWEEN 1894 AND 2024 EVRİMSEL PSİKOLOJİ ALANINDA 1 - DergiPark, [https://dergipark.org.tr/tr/download/article-file/4548383](https://www.google.com/url?sa=E&q=https%3A%2F%2Fdergipark.org.tr%2Ftr%2Fdownload%2Farticle-file%2F4548383)
+
+13. Robert Trivers - Todd Shackelford, [http://www.toddkshackelford.com/downloads/Vance-Shackelford-Robert-Trivers-EACB-2021.pdf](https://www.google.com/url?sa=E&q=http%3A%2F%2Fwww.toddkshackelford.com%2Fdownloads%2FVance-Shackelford-Robert-Trivers-EACB-2021.pdf)
+
+14. Robert Trivers - International Cognition and Culture Institute, [https://cognitionandculture.net/wp-content/uploads/Robert-Trivers-Wikipedia.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fcognitionandculture.net%2Fwp-content%2Fuploads%2FRobert-Trivers-Wikipedia.pdf)
+
+15. Parental investment - Wikipedia, [https://en.wikipedia.org/wiki/Parental_investment](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FParental_investment)
+
+16. Parental Investment Theory (Chapter 7) - The Cambridge Handbook of Evolutionary Perspectives on Sexual Psychology, [https://www.cambridge.org/core/books/cambridge-handbook-of-evolutionary-perspectives-on-sexual-psychology/parental-investment-theory/3FF01CF8AF3B165BF1F09B4A25246F2F](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cambridge.org%2Fcore%2Fbooks%2Fcambridge-handbook-of-evolutionary-perspectives-on-sexual-psychology%2Fparental-investment-theory%2F3FF01CF8AF3B165BF1F09B4A25246F2F)
+
+17. A Wild Life: An overview of Robert Trivers' autobiography - Darwinian Business, [https://darwinianbusiness.com/2016/05/15/a-wild-life-a-review-of-robert-trivers-autobiography/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fdarwinianbusiness.com%2F2016%2F05%2F15%2Fa-wild-life-a-review-of-robert-trivers-autobiography%2F)
+
+18. Sociobiology - Stanford Encyclopedia of Philosophy, [https://plato.stanford.edu/entries/sociobiology/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fplato.stanford.edu%2Fentries%2Fsociobiology%2F)
+
+19. Sociobiology: The New Synthesis | work by Wilson | Britannica, [https://www.britannica.com/topic/Sociobiology-The-New-Synthesis](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.britannica.com%2Ftopic%2FSociobiology-The-New-Synthesis)
+
+20. No End in Sight: The Sociobiology Debate at Fifty - UC Press Journals, [https://online.ucpress.edu/hsns/article/55/1/37/207538/No-End-in-SightThe-Sociobiology-Debate-at-Fifty](https://www.google.com/url?sa=E&q=https%3A%2F%2Fonline.ucpress.edu%2Fhsns%2Farticle%2F55%2F1%2F37%2F207538%2FNo-End-in-SightThe-Sociobiology-Debate-at-Fifty)
+
+21. Sociobiology on Trial - Quillette, [https://quillette.com/2025/12/06/sociobiology-edward-o-wilson-darwin-evolutionary-psychology/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fquillette.com%2F2025%2F12%2F06%2Fsociobiology-edward-o-wilson-darwin-evolutionary-psychology%2F)
+
+22. E.O. Wilson's Sociobiology and the Marxist Response: A Critique of the Critics, [http://www.inquiriesjournal.com/articles/1914/eo-wilsons-sociobiology-and-the-marxist-response-a-critique-of-the-critics](https://www.google.com/url?sa=E&q=http%3A%2F%2Fwww.inquiriesjournal.com%2Farticles%2F1914%2Feo-wilsons-sociobiology-and-the-marxist-response-a-critique-of-the-critics)
+
+23. The Spandrels of San Marco and the Panglossian Paradigm - Wikipedia, [https://en.wikipedia.org/wiki/The_Spandrels_of_San_Marco_and_the_Panglossian_Paradigm](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FThe_Spandrels_of_San_Marco_and_the_Panglossian_Paradigm)
+
+24. Splendor and misery of adaptation, or the importance of neutral null for understanding evolution - PMC - PubMed Central, [https://pmc.ncbi.nlm.nih.gov/articles/PMC5180405/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC5180405%2F)
+
+25. Spandrel | Encyclopedia MDPI, [https://encyclopedia.pub/entry/31432](https://www.google.com/url?sa=E&q=https%3A%2F%2Fencyclopedia.pub%2Fentry%2F31432)
+
+26. What is the "Spandrels" debate about? - Biology Stack Exchange, [https://biology.stackexchange.com/questions/21346/what-is-the-spandrels-debate-about](https://www.google.com/url?sa=E&q=https%3A%2F%2Fbiology.stackexchange.com%2Fquestions%2F21346%2Fwhat-is-the-spandrels-debate-about)
+
+27. No Ramp Needed: Spandrels, Statistics, and a Slippery Slope - eLife, [https://elifesciences.org/reviewed-preprints/89656v1](https://www.google.com/url?sa=E&q=https%3A%2F%2Felifesciences.org%2Freviewed-preprints%2F89656v1)
+
+28. Sociobiology: The New Synthesis (25th Anniversary Edition) - Harvard University Press, [https://www.hup.harvard.edu/file/feeds/PDF/9780674002357_sample.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.hup.harvard.edu%2Ffile%2Ffeeds%2FPDF%2F9780674002357_sample.pdf)
+
+29. Founders of Evolutionary Psychology, [https://labs.la.utexas.edu/buss/files/2019/02/Founders-of-Evolutionary-Psychology-2017.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Flabs.la.utexas.edu%2Fbuss%2Ffiles%2F2019%2F02%2FFounders-of-Evolutionary-Psychology-2017.pdf)
+
+30. Evolutionary Psychology | PDF | Perception | Evolution - Scribd, [https://www.scribd.com/document/131986968/Evolutionary-Psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.scribd.com%2Fdocument%2F131986968%2FEvolutionary-Psychology)
+
+31. INSIDE PSYCHOLOGY, [https://psych.ucsb.edu/sites/default/files/docs/IP24_final.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpsych.ucsb.edu%2Fsites%2Fdefault%2Ffiles%2Fdocs%2FIP24_final.pdf)
+
+32. From computers to cultivation: reconceptualizing evolutionary psychology - PMC, [https://pmc.ncbi.nlm.nih.gov/articles/PMC4130453/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC4130453%2F)
+
+33. From computers to cultivation: reconceptualizing evolutionary psychology - Frontiers, [https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2014.00867/full](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.frontiersin.org%2Fjournals%2Fpsychology%2Farticles%2F10.3389%2Ffpsyg.2014.00867%2Ffull)
+
+34. Evolutionary Psychology | Encyclopedia.com, [https://www.encyclopedia.com/medicine/psychology/psychology-and-psychiatry/evolutionary-psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.encyclopedia.com%2Fmedicine%2Fpsychology%2Fpsychology-and-psychiatry%2Fevolutionary-psychology)
+
+35. The Adapted Mind - Wikipedia, [https://en.wikipedia.org/wiki/The_Adapted_Mind](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FThe_Adapted_Mind)
+
+36. Standard social science model - Wikipedia, [https://en.wikipedia.org/wiki/Standard_social_science_model](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FStandard_social_science_model)
+
+37. Evolutionary Psychology Versus Fodor: Arguments For and Against the Massive Modularity Hypothesis - edX, [https://courses.edx.org/assets/courseware/v1/f316be9758d045f8f9d0f69d8760409a/asset-v1:UniversityofCambridge+2324EDX001+2T2023+type@asset+block/Frankenhuis_and_Ploeger_2007.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fcourses.edx.org%2Fassets%2Fcourseware%2Fv1%2Ff316be9758d045f8f9d0f69d8760409a%2Fasset-v1%3AUniversityofCambridge%2B2324EDX001%2B2T2023%2Btype%40asset%2Bblock%2FFrankenhuis_and_Ploeger_2007.pdf)
+
+38. Evolutionary Psychology: A Framework for Strategic Communication Research - u:scholar, [https://uscholar.univie.ac.at/detail/o:937214.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fuscholar.univie.ac.at%2Fdetail%2Fo%3A937214.pdf)
+
+39. The hierarchically mechanistic mind: an evolutionary systems theory of the human brain, cognition, and behavior - PMC - PubMed Central, [https://pmc.ncbi.nlm.nih.gov/articles/PMC6861365/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC6861365%2F)
+
+40. Active Inference in Psychology and Psychiatry: Progress to Date? - PMC - PubMed Central, [https://pmc.ncbi.nlm.nih.gov/articles/PMC11507080/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC11507080%2F)
+
+41. Neural reuse: A fundamental organizational principle of the brain, [https://web.sas.upenn.edu/rozin/files/2022/06/273ModularPreadaptBBS2010.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fweb.sas.upenn.edu%2Frozin%2Ffiles%2F2022%2F06%2F273ModularPreadaptBBS2010.pdf)
+
+42. Social exchange and inference - J-Stage, [https://www.jstage.jst.go.jp/article/jjpsy1926/72/1/72_1_29/_article/-char/en](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.jstage.jst.go.jp%2Farticle%2Fjjpsy1926%2F72%2F1%2F72_1_29%2F_article%2F-char%2Fen)
+
+43. Adaptive specializations, social exchange, and the evolution of human intelligence - PNAS, [https://www.pnas.org/doi/10.1073/pnas.0914623107](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.pnas.org%2Fdoi%2F10.1073%2Fpnas.0914623107)
+
+44. Adaptations for Reasoning About Social Exchange - psychology, [https://www.cep.ucsb.edu/wp-content/uploads/2023/05/2015CosmidesTooby-BussEPHandbook-1.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cep.ucsb.edu%2Fwp-content%2Fuploads%2F2023%2F05%2F2015CosmidesTooby-BussEPHandbook-1.pdf)
+
+45. (PDF) Strategies of Human Mating - ResearchGate, [https://www.researchgate.net/publication/41391479_Strategies_of_Human_Mating](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F41391479_Strategies_of_Human_Mating)
+
+46. Sex Differences in Mate Preferences Revisited: Do People Know What They Initially Desire in a Romantic Partner? - Northwestern University, [https://faculty.wcas.northwestern.edu/eli-finkel/documents/EastwickFinkel2008_JPSP.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Ffaculty.wcas.northwestern.edu%2Feli-finkel%2Fdocuments%2FEastwickFinkel2008_JPSP.pdf)
+
+47. 2026 David M. Buss: Psychology Researcher – H-Index, Publications & Awards, [https://research.com/u/david-m-buss](https://www.google.com/url?sa=E&q=https%3A%2F%2Fresearch.com%2Fu%2Fdavid-m-buss)
+
+48. Sexual Strategies Theory: An Evolutionary Perspective on Human Mating - UT Psychology Labs, [https://labs.la.utexas.edu/buss/files/2015/09/SexualStrategiesTheory.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Flabs.la.utexas.edu%2Fbuss%2Ffiles%2F2015%2F09%2FSexualStrategiesTheory.pdf)
+
+49. The Evolution Of Desire: Strategies of Human Mating by David M. Buss | Goodreads, [https://www.goodreads.com/book/show/27491.The_Evolution_Of_Desire](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.goodreads.com%2Fbook%2Fshow%2F27491.The_Evolution_Of_Desire)
+
+50. Sexual strategies theory: an evolutionary perspective on human mating - PubMed - NIH, [https://pubmed.ncbi.nlm.nih.gov/8483982/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpubmed.ncbi.nlm.nih.gov%2F8483982%2F)
+
+51. Mate Preferences and Their Behavioral Manifestations - Annual Reviews, [https://www.annualreviews.org/doi/10.1146/annurev-psych-010418-103408](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.annualreviews.org%2Fdoi%2F10.1146%2Fannurev-psych-010418-103408)
+
+52. A theory of human sexual strategies accounts for the observation that people worldwide are attracted to the same qualities in the opposite sex - UT Psychology Labs, [https://labs.la.utexas.edu/buss/files/2015/09/AmerSciMay1994.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Flabs.la.utexas.edu%2Fbuss%2Ffiles%2F2015%2F09%2FAmerSciMay1994.pdf)
+
+53. Evolutionary Psychology: Summary & Review (David Buss) | TPM - The Power Moves, [https://thepowermoves.com/evolutionary-psychology-by-david-buss/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fthepowermoves.com%2Fevolutionary-psychology-by-david-buss%2F)
+
+54. Mate Preferences and Their Behavioral Manifestations - UT Psychology Labs, [https://labs.la.utexas.edu/buss/files/2019/03/mate-preferences-and-their-behavioral-manifestations-FINAL-PUBLISHED-2019.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Flabs.la.utexas.edu%2Fbuss%2Ffiles%2F2019%2F03%2Fmate-preferences-and-their-behavioral-manifestations-FINAL-PUBLISHED-2019.pdf)
+
+55. 2026 Evolution and Human Behavior – Impact Factor, Ranking ..., [https://research.com/journal/evolution-and-human-behavior](https://www.google.com/url?sa=E&q=https%3A%2F%2Fresearch.com%2Fjournal%2Fevolution-and-human-behavior)
+
+56. The Grand Challenges for Evolutionary Psychology: Survival Challenges for a Discipline - Frontiers, [https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2017.01727/full](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.frontiersin.org%2Fjournals%2Fpsychology%2Farticles%2F10.3389%2Ffpsyg.2017.01727%2Ffull)
+
+57. Publications in peer-reviewed journals — English, [https://www.psych.uni-goettingen.de/en/biopers/team/penke/publications-new](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.psych.uni-goettingen.de%2Fen%2Fbiopers%2Fteam%2Fpenke%2Fpublications-new)
+
+58. Publications - UT Psychology Labs, [https://labs.la.utexas.edu/buss/publications/](https://www.google.com/url?sa=E&q=https%3A%2F%2Flabs.la.utexas.edu%2Fbuss%2Fpublications%2F)
+
+59. Applying Life-History Theory to Development: A Two-Tiered Model All Along? | Behavioral and Brain Sciences, [https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/applying-lifehistory-theory-to-development-a-twotiered-model-all-along/BB0A48C7F92285FC3A66D6E836A2F8C0](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cambridge.org%2Fcore%2Fjournals%2Fbehavioral-and-brain-sciences%2Farticle%2Fapplying-lifehistory-theory-to-development-a-twotiered-model-all-along%2FBB0A48C7F92285FC3A66D6E836A2F8C0)
+
+60. Jennifer Lansford | Scholars@Duke profile: Publications, [https://scholars.duke.edu/person/lansford/publications](https://www.google.com/url?sa=E&q=https%3A%2F%2Fscholars.duke.edu%2Fperson%2Flansford%2Fpublications)
+
+61. The two-tiered life history model: from interrogating assumptions to refining concepts and hypotheses | Behavioral and Brain Sciences, [https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/twotiered-life-history-model-from-interrogating-assumptions-to-refining-concepts-and-hypotheses/4A7787C603439DD19E03FEAE2FBB07F2](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cambridge.org%2Fcore%2Fjournals%2Fbehavioral-and-brain-sciences%2Farticle%2Ftwotiered-life-history-model-from-interrogating-assumptions-to-refining-concepts-and-hypotheses%2F4A7787C603439DD19E03FEAE2FBB07F2)
+
+62. The relationship between sadness and prosocial behavior: A three-level meta-analysis, [https://journal.psych.ac.cn/xlkxjz/EN/10.3724/SP.J.1042.2026.0083](https://www.google.com/url?sa=E&q=https%3A%2F%2Fjournal.psych.ac.cn%2Fxlkxjz%2FEN%2F10.3724%2FSP.J.1042.2026.0083)
+
+63. A reputation management and signalling account of moral disgust and moral contagion - Kent Academic Repository, [https://kar.kent.ac.uk/id/document/1108462](https://www.google.com/url?sa=E&q=https%3A%2F%2Fkar.kent.ac.uk%2Fid%2Fdocument%2F1108462)
+
+64. Evolutionary Psychology; The New Science of the Mind; Sixth Edition, [https://api.pageplace.de/preview/DT0400.9780429592003_A37401864/preview-9780429592003_A37401864.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fapi.pageplace.de%2Fpreview%2FDT0400.9780429592003_A37401864%2Fpreview-9780429592003_A37401864.pdf)
+
+65. Evolutionary Behavioral Sciences (American Psychological Association) | 244 Publications | 966 Citations | Top authors | Related journals - SciSpace, [https://scispace.com/journals/evolutionary-behavioral-sciences-29lhw10f](https://www.google.com/url?sa=E&q=https%3A%2F%2Fscispace.com%2Fjournals%2Fevolutionary-behavioral-sciences-29lhw10f)
+
+66. Leda Cosmides and the Wason Selection Task, [https://www.ling.upenn.edu/courses/hum100/evolutionary_psychology.html](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ling.upenn.edu%2Fcourses%2Fhum100%2Fevolutionary_psychology.html)
+
+67. Our Ancestral Shadow: Hate and Human Nature in Evolutionary Psychology - Gonzaga University, [https://repository.gonzaga.edu/cgi/viewcontent.cgi?article=1025&context=jhs](https://www.google.com/url?sa=E&q=https%3A%2F%2Frepository.gonzaga.edu%2Fcgi%2Fviewcontent.cgi%3Farticle%3D1025%26context%3Djhs)
+
+68. Commentaries and Author's Reply on “Evolutionary Psychology: A New Perspective in the Behavioral Sciences” by Tamas Bereczkei: Nature or Nurture? - Hogrefe eContent, [https://econtent.hogrefe.com/doi/10.1027//1016-9040.5.3.196](https://www.google.com/url?sa=E&q=https%3A%2F%2Fecontent.hogrefe.com%2Fdoi%2F10.1027%2F%2F1016-9040.5.3.196)
+
+69. Human nature and personality variation: Reconnecting evolutionary psychology with the science of individual differences - Ovid, [https://www.ovid.com/journals/nebior/pdf/10.1016/j.neubiorev.2022.104946~human-nature-and-personality-variation-reconnecting](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ovid.com%2Fjournals%2Fnebior%2Fpdf%2F10.1016%2Fj.neubiorev.2022.104946~human-nature-and-personality-variation-reconnecting)
+
+70. (PDF) Evolutionary Psychology - ResearchGate, [https://www.researchgate.net/publication/232556056_Evolutionary_Psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F232556056_Evolutionary_Psychology)
+
+71. Genetic interference reduces the evolvability of modular and non-modular visual neural networks - Royal Society Publishing, [https://royalsocietypublishing.org/rstb/article/362/1479/403/20897/Genetic-interference-reduces-the-evolvability-of](https://www.google.com/url?sa=E&q=https%3A%2F%2Froyalsocietypublishing.org%2Frstb%2Farticle%2F362%2F1479%2F403%2F20897%2FGenetic-interference-reduces-the-evolvability-of)
+
+72. Evolutionary psychology hypotheses are testable and falsifiable. - DOI, [https://doi.org/10.1037/amp0001529](https://www.google.com/url?sa=E&q=https%3A%2F%2Fdoi.org%2F10.1037%2Famp0001529)
+
+73. Evolutionary Theories in Psychology - British Columbia/Yukon Open Authoring Platform, [https://pressbooks.bccampus.ca/discoverpsychology2/chapter/chapter-11/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpressbooks.bccampus.ca%2Fdiscoverpsychology2%2Fchapter%2Fchapter-11%2F)
+
+74. Evolutionary Behavioral Sciences - American Psychological Association, [https://www.apa.org/pubs/journals/ebs](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.apa.org%2Fpubs%2Fjournals%2Febs)
+
+75. Evolutionary Psychology in Marketing - World Scholars Review, [https://www.worldscholarsreview.org/article/evolutionary-psychology-in-marketing](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.worldscholarsreview.org%2Farticle%2Fevolutionary-psychology-in-marketing)
+
+76. Coalitional psychology and the evolution of nationalistic cultures | Behavioral and Brain Sciences | Cambridge Core, [https://www.cambridge.org/core/journals/behavioral-and-brain-sciences/article/coalitional-psychology-and-the-evolution-of-nationalistic-cultures/C5DD20E58F20AA0C4CC1699392357963](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.cambridge.org%2Fcore%2Fjournals%2Fbehavioral-and-brain-sciences%2Farticle%2Fcoalitional-psychology-and-the-evolution-of-nationalistic-cultures%2FC5DD20E58F20AA0C4CC1699392357963)
+
+77. David M Buss Ph.D., UC Berkeley Professor at University of Texas at Austin - ResearchGate, [https://www.researchgate.net/profile/David-Buss](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fprofile%2FDavid-Buss)
+
+78. Evolutionary Psychology and Normal Science: in Search of a Unifying Research Program, [https://pmc.ncbi.nlm.nih.gov/articles/PMC10113342/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC10113342%2F)
+
+79. (PDF) Evolutionary Psychology - ResearchGate, [https://www.researchgate.net/publication/325112371_Evolutionary_Psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F325112371_Evolutionary_Psychology)
+
+80. (PDF) Evolutionary Psychology Is a Scientific Revolution - ResearchGate, [https://www.researchgate.net/publication/341394320_Evolutionary_psychology_is_a_scientific_revolution](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F341394320_Evolutionary_psychology_is_a_scientific_revolution)
+
+81. Self-Regulatory Challenges in Decision-Making: Cardiac Autonomic Modulation in - DuEPublico - Uni DUE, [https://duepublico2.uni-due.de/servlets/MCRFileNodeServlet/duepublico_derivate_00082637/Diss_Prell.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fduepublico2.uni-due.de%2Fservlets%2FMCRFileNodeServlet%2Fduepublico_derivate_00082637%2FDiss_Prell.pdf)
+
+82. A critique of evolutionary psychology - ResearchGate, [https://www.researchgate.net/publication/233673813_A_critique_of_evolutionary_psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F233673813_A_critique_of_evolutionary_psychology)
+
+83. Sociobiology and Evolutionary Psychology: Darwinism and Dogma - RESEARCH REVIEW International Journal of Multidisciplinary, [https://old.rrjournals.com/wp-content/uploads/2020/07/2364-2366_RRIJM190405517.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fold.rrjournals.com%2Fwp-content%2Fuploads%2F2020%2F07%2F2364-2366_RRIJM190405517.pdf)
+
+84. Evolutionary Psychology and the Functional Nature of Human Behavior: An Interview With Glenn Geher, PhD - Psi Chi, [https://www.psichi.org/page/223EyeSpr18dMcMahan](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.psichi.org%2Fpage%2F223EyeSpr18dMcMahan)
+
+85. A Systematic Review and Meta‐Analytic Assessment of Unpredictability and Disordered Eating - PMC - NIH, [https://pmc.ncbi.nlm.nih.gov/articles/PMC12812503/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC12812503%2F)
+
+86. Are none, some, or all disorders interpersonal? - PAGEPress Social Sciences, [https://socialsciences.pagepress.net/rp/article/download/1095/1133/2729](https://www.google.com/url?sa=E&q=https%3A%2F%2Fsocialsciences.pagepress.net%2Frp%2Farticle%2Fdownload%2F1095%2F1133%2F2729)
+
+87. The Logic of Social Exchange: Has Natural Selection Shaped How Humans Reason?, [https://www.researchgate.net/publication/20411984_The_Logic_of_Social_Exchange_Has_Natural_Selection_Shaped_How_Humans_Reason](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F20411984_The_Logic_of_Social_Exchange_Has_Natural_Selection_Shaped_How_Humans_Reason)
+
+88. Evolution of direct reciprocity under uncertainty can explain human generosity in one-shot encounters - NIH, [https://pmc.ncbi.nlm.nih.gov/articles/PMC3156224/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC3156224%2F)
+
+89. (PDF) Evolutionary Psychology: An Emerging Integrative Perspective within the Science and Practice of Psychology - ResearchGate, [https://www.researchgate.net/publication/263127175_Evolutionary_Psychology_An_Emerging_Integrative_Perspective_within_the_Science_and_Practice_of_Psychology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F263127175_Evolutionary_Psychology_An_Emerging_Integrative_Perspective_within_the_Science_and_Practice_of_Psychology)
+
+90. Evolutionary accounts of human behavioural diversity - PMC - PubMed Central, [https://pmc.ncbi.nlm.nih.gov/articles/PMC3013476/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC3013476%2F)
+
+91. Léo Fitouchi - PUBLICATIONS, [https://sites.google.com/view/leofitouchi/publications](https://www.google.com/url?sa=E&q=https%3A%2F%2Fsites.google.com%2Fview%2Fleofitouchi%2Fpublications)
+
+92. CH Legare 1 Cristine H. Legare, Ph.D. Department of Psychology - The University of Texas at Austin, [https://minio.la.utexas.edu/colaweb-prod/person_files/0/691/Legare_CV_20240708.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fminio.la.utexas.edu%2Fcolaweb-prod%2Fperson_files%2F0%2F691%2FLegare_CV_20240708.pdf)
+
+93. Michael Tomasello | Scholars@Duke profile: Publications, [https://scholars.duke.edu/person/michael.tomasello/publications](https://www.google.com/url?sa=E&q=https%3A%2F%2Fscholars.duke.edu%2Fperson%2Fmichael.tomasello%2Fpublications)
+
+94. Evolutionary Psychology Hypotheses Are Testable and Falsifiable | Request PDF, [https://www.researchgate.net/publication/400215354_Evolutionary_Psychology_Hypotheses_Are_Testable_and_Falsifiable?_fam=1](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F400215354_Evolutionary_Psychology_Hypotheses_Are_Testable_and_Falsifiable%3F_fam%3D1)
+
+95. David Buss Evolutionary Psychology - www .ec -undp, [https://www.ec-undp-electoralassistance.org/filedownload.ashx/book-search/iblcN3/DavidBussEvolutionaryPsychology.pdf](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ec-undp-electoralassistance.org%2Ffiledownload.ashx%2Fbook-search%2FiblcN3%2FDavidBussEvolutionaryPsychology.pdf)
+
+96. (PDF) Parental Investment and Sexual Selection - ResearchGate, [https://www.researchgate.net/publication/200008932_Parental_Investment_and_Sexual_Selection](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F200008932_Parental_Investment_and_Sexual_Selection)

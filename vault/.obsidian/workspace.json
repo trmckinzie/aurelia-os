@@ -4,19 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "a927f2e924c7aab1",
+        "id": "ba26e4b532d34e61",
         "type": "tabs",
         "children": [
           {
-            "id": "107157270976c4bb",
+            "id": "2c0bc85531576d17",
             "type": "leaf",
             "state": {
-              "type": "audio",
+              "type": "markdown",
               "state": {
-                "file": "99_DROP_ZONE/Evo_Psych_Overview.m4a"
+                "file": "20_PROTOCOL/02_DAILY_LOG.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-file-audio",
-              "title": "Evo_Psych_Overview"
+              "icon": "lucide-file",
+              "title": "02_DAILY_LOG"
             }
           }
         ]
@@ -204,27 +216,35 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "107157270976c4bb",
+  "active": "2c0bc85531576d17",
   "lastOpenFiles": [
+    "10_GARDEN/13_Authors/William James.md",
+    "90_SYSTEM/92_Templates/TPL_Author.md",
+    "10_GARDEN/15_Sources/The Principles of Psychology.md",
+    "00_INBOX/Steering.md",
+    "00_INBOX/Semiconductor.md",
+    "00_INBOX/Population Thinking.md",
+    "00_INBOX/Logic Gate.md",
+    "00_INBOX/Linguistics.md",
+    "00_INBOX/Negative Feedback.md",
+    "10_GARDEN/12_Concepts/Transistor.md",
+    "00_INBOX/Systems.md",
+    "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
+    "10_GARDEN/13_Authors/Travis R McKinzie.md",
+    "10_GARDEN/12_Concepts/Sense Organ.md",
+    "10_GARDEN/12_Concepts/Mind.md",
+    "10_GARDEN/12_Concepts/Genetic Variation.md",
+    "10_GARDEN/12_Concepts/Systems.md",
+    "10_GARDEN/12_Concepts/Negentropy.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "assets/images/neuron-image.png",
     "99_DROP_ZONE/NotebookLM Mind Map - evo-psych.png",
     "99_DROP_ZONE/Evo_Psych_Overview.m4a",
-    "10_GARDEN/16_NotebookLM/Evolutionary Psychology.md",
     "99_DROP_ZONE/Unconfirmed 976319.crdownload",
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "99_DROP_ZONE/Unconfirmed 597963.crdownload",
     "99_DROP_ZONE/flashcards-evo-psych.csv",
     "99_DROP_ZONE/Unconfirmed 988766.crdownload",
-    "00_INBOX/The Principles of Psychology.md",
-    "00_INBOX/Systems.md",
-    "00_INBOX/Steering.md",
-    "00_INBOX/Sense Organ.md",
-    "00_INBOX/Semiconductor.md",
-    "00_INBOX/Population Thinking.md",
-    "00_INBOX/Negative Feedback.md",
-    "00_INBOX/Mind.md",
-    "00_INBOX/Logic Gate.md",
-    "00_INBOX/Linguistics.md",
-    "00_INBOX/Genetic Variation.md",
     "00_INBOX/Jim Rohn.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "00_INBOX/IH, NFC, AP, Lit Review.md",
@@ -236,12 +256,6 @@
     "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
     "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
     "80_COURSES/81_ASU/PSYC 414/submitted",
-    "10_GARDEN/12_Concepts/Action Potential.md",
-    "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
-    "10_GARDEN/12_Concepts/Active Recall.md",
-    "20_PROTOCOL/02_DAILY_LOG.md",
-    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
-    "Untitled.canvas",
-    "10_GARDEN/16_NotebookLM/PSYC 498-1 - Capstone Research Thesis II.md"
+    "Untitled.canvas"
   ]
 }
