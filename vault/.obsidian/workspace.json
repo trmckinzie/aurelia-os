@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
+                "file": "00_INBOX/Entropy.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-01-30"
+              "title": "Entropy"
             }
           }
         ]
@@ -88,7 +88,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "fcec043428c271bd",
@@ -218,10 +218,10 @@
   },
   "active": "107157270976c4bb",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
     "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Kirkland () The Stress Response is all in your Mind.pdf",
-    "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf",
     "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
     "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
