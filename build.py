@@ -1119,7 +1119,7 @@ def build_all():
     print("💠 AURELIA OS BUILD ENGINE v3.2.0")
     print("------------------------------------------------")
     
-    # 1. RUN ASSET SORTER FIRST
+# 1 RUN ASSET SORTER FIRST
     organize_assets() 
 
     # ... rest of your build logic ...
@@ -1132,6 +1132,47 @@ def build_all():
     except Exception as e:
         print(f"   ⚠️ WARNING: Could not load user_config.json. Using defaults. ({e})")
         user_config = { "author": { "name": "Unknown User" } } # Fallback
+
+    def sync_vault_assets():
+     """
+    Copies media from 'vault/assets' to the root 'assets' folder
+    so the browser can actually find them.
+    """
+    print("\n🔄 SYNCING ASSETS: Vault -> Public...")
+    
+    source_root = os.path.join(VAULT_PATH, "assets")
+    public_root = os.path.join(ROOT_DIR, "assets") # The folder with css/js
+
+    # Subfolders to sync
+    subfolders = ["audio", "video", "images", "flashcards"]
+
+    if not os.path.exists(source_root):
+        print("   ! Vault assets not found. Skipping.")
+        return
+
+    for folder in subfolders:
+        src = os.path.join(source_root, folder)
+        dst = os.path.join(public_root, folder)
+        
+        # Create public dest if missing
+        os.makedirs(dst, exist_ok=True)
+
+        if os.path.exists(src):
+            # Copy new/changed files
+            files = os.listdir(src)
+            count = 0
+            for f in files:
+                s_file = os.path.join(src, f)
+                d_file = os.path.join(dst, f)
+                
+                if os.path.isfile(s_file):
+                    # Only copy if missing or newer
+                    if not os.path.exists(d_file) or os.path.getmtime(s_file) > os.path.getmtime(d_file):
+                        shutil.copy2(s_file, d_file)
+                        count += 1
+            
+            if count > 0:
+                print(f"   + Synced {count} files to assets/{folder}/")
 
     # 1. LOAD DATA CONTAINERS
     garden_cards = []
