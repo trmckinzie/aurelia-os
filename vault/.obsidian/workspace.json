@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+                "file": "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2025-12-21"
+              "title": "2026-01-31"
             }
           }
         ]
@@ -216,8 +216,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "9f517ac373a90472",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/Untitled.md",
+    "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Kirkland () The Stress Response is all in your Mind.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "assets/audio/AI_Usage_SRL.m4a",
@@ -226,7 +229,6 @@
     "80_COURSES/81_ASU/PSYC 414/ppts/week-1-ppt-Introduction-Cog-Psych.pdf",
     "00_INBOX/Entropy.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
-    "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf",
     "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
     "80_COURSES/81_ASU/PSYC 414/submitted",
@@ -244,7 +246,6 @@
     "00_INBOX/Sense Organ.md",
     "2026-01-29.md",
     "10_GARDEN/12_Concepts/Untitled 1.md",
-    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/13_Authors/Travis R McKinzie.md",
     "10_GARDEN/Untitled.md"
   ]
