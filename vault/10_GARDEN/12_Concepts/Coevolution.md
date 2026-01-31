@@ -12,12 +12,12 @@ publish: true
 ---
 # ⚛️ Coevolution
 
-**🔗 Related:** [[Evolution]], [[Biology]], [[Systems]]
+**🔗 Related:** [[Evolution]], [[Biology]], [[00_INBOX/Systems]]
 
 ---
 
 ### 💡 Definition
-> Co-evolution is a process in which two or more interacting [[Systems]] (biological, cognitive, or cultural) reciprocally influence each other’s evolutionary trajectories over time.
+> Co-evolution is a process in which two or more interacting [[00_INBOX/Systems]] (biological, cognitive, or cultural) reciprocally influence each other’s evolutionary trajectories over time.
 
 ### 📝 Key Insight
 - Co-evolution produces **coupled [[Adaptation]]s**, where change in one system alters selection pressures on the other.

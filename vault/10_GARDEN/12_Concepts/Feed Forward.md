@@ -9,12 +9,12 @@ publish: true
 ---
 # ⚛️ Feed Forward
 
-**🔗 Related:** [[Negative Feedback]], [[Systems]], [[Cognition]]
+**🔗 Related:** [[Negative Feedback]], [[00_INBOX/Systems]], [[Cognition]]
 
 ---
 
 ### 💡 Definition
-> Feedforward is a control strategy in which a [[Systems]] anticipates future states and adjusts [[Behavior]] in advance, without relying on error correction.
+> Feedforward is a control strategy in which a [[00_INBOX/Systems]] anticipates future states and adjusts [[Behavior]] in advance, without relying on error correction.
 
 ### 📝 Key Insight
 - Feedforward enables **speed and efficiency** by acting before errors occur.

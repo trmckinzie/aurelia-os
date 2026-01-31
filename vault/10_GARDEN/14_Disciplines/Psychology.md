@@ -22,7 +22,7 @@ publish: true
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-- [[Evolutionary Psychology]]: The understanding that our mental faculties are adaptations—tools forged by natural selection to solve specific ancestral problems (e.g., mate selection, cheater detection).
+- [[Evolutionary Psychology NB]]: The understanding that our mental faculties are adaptations—tools forged by natural selection to solve specific ancestral problems (e.g., mate selection, cheater detection).
 - [[Cognitive Architecture]]: The structural design of the mind, often modeled as **Information Processing** (Input $\to$ Algorithm $\to$ Output). Includes the distinction between System 1 (Fast/Heuristic) and System 2 (Slow/Rational).
 - [[Behaviorism & Conditioning]]: The study of how organisms learn through interaction with the environment via reinforcement (rewards) and punishment (costs). This is the "habit loop" layer.
 - [[Neuroplasticity]]: The brain's ability to reorganize itself by forming new neural connections throughout life; the mechanism by which "software" updates occur.

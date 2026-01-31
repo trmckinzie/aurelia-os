@@ -30,8 +30,33 @@
               "icon": "lucide-file",
               "title": "2026-01-31"
             }
+          },
+          {
+            "id": "05425bac40503492",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "conflict-files-obsidian-git.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "conflict-files-obsidian-git"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -216,24 +241,35 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "9f517ac373a90472",
+  "active": "05425bac40503492",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
+    "conflict-files-obsidian-git.md",
+    "assets/images/NotebookLM Mind Map - evo-psych.png",
+    "assets/flashcards/flashcards-evo-psych.csv",
+    "assets/audio/Evo_Psych_Overview.m4a",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zwicker et al. - 2020 - Persistent beliefs Political extremism predicts ideological stability over time.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2020 - The partisan mind Is extreme political partisanship related to cognitive inflexibility.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2019 - Cognitive Inflexibility Predicts Extremist Attitudes.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/West and Yelderman - The dispositional need for cognitive closure indirectly predicts mock jurors’ sentencing decisions t.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Welker et al. - 2023 - The online educational program ‘Perspectives’ improves affective polarization, intellectual humility.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Tyler and Iyengar - 2024 - Testing the Robustness of the ANES Feeling Thermometer Indicators of Affective Polarization.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Tajfel - 1970 - Experiments in Intergroup Discrimination.pdf",
+    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Smith - 2023 - You Know You're Right How Intellectual Humility Decreases Political Hostility.pdf",
+    "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
+    "10_GARDEN/15_Sources/The Principles of Psychology.md",
+    "10_GARDEN/13_Authors/William James.md",
+    "10_GARDEN/12_Concepts/Systems.md",
+    "10_GARDEN/12_Concepts/Sense Organ.md",
+    "10_GARDEN/12_Concepts/Negentropy.md",
+    "10_GARDEN/12_Concepts/Mind.md",
+    "10_GARDEN/12_Concepts/Genetic Variation.md",
+    "10_GARDEN/12_Concepts/Entropy.md",
+    "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
-    "80_COURSES/81_ASU/PSYC 414/pdfs/Kirkland () The Stress Response is all in your Mind.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
-    "assets/audio/AI_Usage_SRL.m4a",
-    "80_COURSES/81_ASU/PSYC 414/submitted/Article Assignment 1 Finished.pdf",
-    "80_COURSES/81_ASU/PSYC 414/pdfs/Fernyhough (2006) Metaphors of the Mind.pdf",
-    "80_COURSES/81_ASU/PSYC 414/ppts/week-1-ppt-Introduction-Cog-Psych.pdf",
     "00_INBOX/Entropy.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
-    "80_COURSES/81_ASU/BUS 430/Chapter 2 Problems.pdf",
-    "80_COURSES/81_ASU/PSYC 414/turn in/Unconfirmed 950955.crdownload",
-    "80_COURSES/81_ASU/PSYC 414/submitted",
-    "80_COURSES/81_ASU/PSYC 414/New folder",
-    "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
     "10_GARDEN/12_Concepts/Action Potential.md",
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/16_NotebookLM/Untitled.md",
@@ -244,9 +280,6 @@
     "Untitled.canvas",
     "10_GARDEN/16_NotebookLM/PSYC 498-1 - Capstone Research Thesis II.md",
     "00_INBOX/Sense Organ.md",
-    "2026-01-29.md",
-    "10_GARDEN/12_Concepts/Untitled 1.md",
-    "10_GARDEN/13_Authors/Travis R McKinzie.md",
-    "10_GARDEN/Untitled.md"
+    "2026-01-29.md"
   ]
 }
