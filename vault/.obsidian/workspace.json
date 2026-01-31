@@ -30,33 +30,8 @@
               "icon": "lucide-file",
               "title": "2026-01-31"
             }
-          },
-          {
-            "id": "05425bac40503492",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "conflict-files-obsidian-git.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "conflict-files-obsidian-git"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -241,10 +216,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "05425bac40503492",
+  "active": "9f517ac373a90472",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
     "conflict-files-obsidian-git.md",
+    "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "assets/flashcards/flashcards-evo-psych.csv",
     "assets/audio/Evo_Psych_Overview.m4a",
