@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
+                "file": "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,10 +28,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-01-31"
+              "title": "A Brief History of Intelligence"
+            }
+          },
+          {
+            "id": "ad2e1b739a869607",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "2026-02-01"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -216,10 +241,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "9f517ac373a90472",
+  "active": "ad2e1b739a869607",
   "lastOpenFiles": [
-    "conflict-files-obsidian-git.md",
+    "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
+    "conflict-files-obsidian-git.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "assets/flashcards/flashcards-evo-psych.csv",
     "assets/audio/Evo_Psych_Overview.m4a",
@@ -253,8 +280,6 @@
     "20_PROTOCOL/02_DAILY_LOG.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "Untitled.canvas",
-    "10_GARDEN/16_NotebookLM/PSYC 498-1 - Capstone Research Thesis II.md",
-    "00_INBOX/Sense Organ.md",
-    "2026-01-29.md"
+    "10_GARDEN/16_NotebookLM/PSYC 498-1 - Capstone Research Thesis II.md"
   ]
 }
