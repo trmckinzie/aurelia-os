@@ -4,59 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "23b1446cd8d2b464",
+        "id": "41ffc76ad2d54723",
         "type": "tabs",
         "children": [
           {
-            "id": "9f517ac373a90472",
+            "id": "a87334b0ab7b8c76",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "A Brief History of Intelligence"
-            }
-          },
-          {
-            "id": "ad2e1b739a869607",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "2026-02-01"
+              "title": "New tab"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -241,7 +202,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ad2e1b739a869607",
+  "active": "a87334b0ab7b8c76",
   "lastOpenFiles": [
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
