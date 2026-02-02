@@ -4,19 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "1f97a87a14ac18d1",
+        "id": "fd903d4d6532a744",
         "type": "tabs",
         "children": [
           {
-            "id": "00ee0aca98d721fa",
+            "id": "eb664865488068de",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf"
+                "file": "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-file-text",
-              "title": "week-2-ppt-Brain-and-Cognition"
+              "icon": "lucide-file",
+              "title": "2026-02-02"
             }
           }
         ]
@@ -51,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:status/reading",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -204,10 +216,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "eb664865488068de",
   "lastOpenFiles": [
-    "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
+    "10_GARDEN/11_Daily_Bridge/Untitled.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
+    "10_GARDEN/15_Sources/Atomic Habits.md",
     "80_COURSES/81_ASU/PSYC 414/ppts/week-3-ppt-Attention.pdf",
+    "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
     "70_CITADEL/Series_A/The Evolved Mind.md",
     "90_SYSTEM/92_Templates/TPL_Series_A.md",
     "70_CITADEL/Series_A",
@@ -223,7 +238,6 @@
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2020 - The partisan mind Is extreme political partisanship related to cognitive inflexibility.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2019 - Cognitive Inflexibility Predicts Extremist Attitudes.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/West and Yelderman - The dispositional need for cognitive closure indirectly predicts mock jurors’ sentencing decisions t.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Welker et al. - 2023 - The online educational program ‘Perspectives’ improves affective polarization, intellectual humility.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
@@ -233,7 +247,6 @@
     "10_GARDEN/12_Concepts/Mind.md",
     "10_GARDEN/12_Concepts/Genetic Variation.md",
     "10_GARDEN/12_Concepts/Entropy.md",
-    "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "00_INBOX/Entropy.md",
@@ -242,7 +255,6 @@
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/16_NotebookLM/Untitled.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
-    "10_GARDEN/12_Concepts/Active Recall.md",
     "Untitled.canvas"
   ]
 }
