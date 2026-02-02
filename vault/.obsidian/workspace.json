@@ -4,31 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "41ffc76ad2d54723",
+        "id": "1f97a87a14ac18d1",
         "type": "tabs",
         "children": [
           {
-            "id": "a87334b0ab7b8c76",
+            "id": "00ee0aca98d721fa",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "70_CITADEL/Series_A/The Evolved Mind.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf"
               },
-              "icon": "lucide-file",
-              "title": "The Evolved Mind"
+              "icon": "lucide-file-text",
+              "title": "week-2-ppt-Brain-and-Cognition"
             }
           }
         ]
@@ -216,10 +204,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a87334b0ab7b8c76",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
-    "90_SYSTEM/92_Templates/TPL_Series_A.md",
+    "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
+    "80_COURSES/81_ASU/PSYC 414/ppts/week-3-ppt-Attention.pdf",
     "70_CITADEL/Series_A/The Evolved Mind.md",
+    "90_SYSTEM/92_Templates/TPL_Series_A.md",
     "70_CITADEL/Series_A",
     "70_CITADEL",
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
@@ -234,7 +224,6 @@
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2019 - Cognitive Inflexibility Predicts Extremist Attitudes.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/West and Yelderman - The dispositional need for cognitive closure indirectly predicts mock jurors’ sentencing decisions t.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Welker et al. - 2023 - The online educational program ‘Perspectives’ improves affective polarization, intellectual humility.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Tyler and Iyengar - 2024 - Testing the Robustness of the ANES Feeling Thermometer Indicators of Affective Polarization.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
@@ -254,7 +243,6 @@
     "10_GARDEN/16_NotebookLM/Untitled.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "10_GARDEN/12_Concepts/Active Recall.md",
-    "20_PROTOCOL/02_DAILY_LOG.md",
     "Untitled.canvas"
   ]
 }
