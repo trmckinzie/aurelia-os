@@ -11,10 +11,24 @@
             "id": "a87334b0ab7b8c76",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "70_CITADEL/Series_A/The Evolved Mind.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "The Evolved Mind"
             }
           }
         ]
@@ -204,6 +218,10 @@
   },
   "active": "a87334b0ab7b8c76",
   "lastOpenFiles": [
+    "90_SYSTEM/92_Templates/TPL_Series_A.md",
+    "70_CITADEL/Series_A/The Evolved Mind.md",
+    "70_CITADEL/Series_A",
+    "70_CITADEL",
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
@@ -217,8 +235,6 @@
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/West and Yelderman - The dispositional need for cognitive closure indirectly predicts mock jurors’ sentencing decisions t.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Welker et al. - 2023 - The online educational program ‘Perspectives’ improves affective polarization, intellectual humility.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Tyler and Iyengar - 2024 - Testing the Robustness of the ANES Feeling Thermometer Indicators of Affective Polarization.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Tajfel - 1970 - Experiments in Intergroup Discrimination.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Smith - 2023 - You Know You're Right How Intellectual Humility Decreases Political Hostility.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
@@ -239,8 +255,6 @@
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "10_GARDEN/12_Concepts/Active Recall.md",
     "20_PROTOCOL/02_DAILY_LOG.md",
-    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
-    "Untitled.canvas",
-    "10_GARDEN/16_NotebookLM/PSYC 498-1 - Capstone Research Thesis II.md"
+    "Untitled.canvas"
   ]
 }
