@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "fd903d4d6532a744",
+        "id": "50cc1fb11e38329d",
         "type": "tabs",
         "children": [
           {
-            "id": "eb664865488068de",
+            "id": "c51324d9238206cf",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/13_Authors/Sam Harris.md",
+                "file": "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Sam Harris"
+              "title": "BUS 480-1 - Global Business Strategies"
             }
           }
         ]
@@ -63,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:status/reading",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -216,8 +216,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "eb664865488068de",
+  "active": "c51324d9238206cf",
   "lastOpenFiles": [
+    "assets/audio/What_Is_Strategy_Overview.m4a",
+    "assets/audio/Unconfirmed 443447.crdownload",
+    "10_GARDEN/13_Authors/Sam Harris.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
     "10_GARDEN/11_Daily_Bridge/Untitled.md",
     "10_GARDEN/15_Sources/Atomic Habits.md",
@@ -237,7 +240,6 @@
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zwicker et al. - 2020 - Persistent beliefs Political extremism predicts ideological stability over time.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2020 - The partisan mind Is extreme political partisanship related to cognitive inflexibility.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2019 - Cognitive Inflexibility Predicts Extremist Attitudes.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/West and Yelderman - The dispositional need for cognitive closure indirectly predicts mock jurors’ sentencing decisions t.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
@@ -253,8 +255,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-01-29.md",
     "10_GARDEN/12_Concepts/Action Potential.md",
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
-    "10_GARDEN/16_NotebookLM/Untitled.md",
-    "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "Untitled.canvas"
   ]
 }
