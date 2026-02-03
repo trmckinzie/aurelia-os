@@ -28,3 +28,5 @@ publish: true
 - **[[Determinism]]:** The view that thoughts and intentions emerge from background causes of which we are unaware and over which we exert no conscious control. (Direct link to [[Robert Sapolsky]]).
 - **[[The Illusion of the Self]]:** The experiential realization that the "Thinker" is a fiction; there is no homunculus in the brain, only a stream of consciousness.
 - **[[Conversational Intolerance]]:** The refusal to respect bad ideas. Harris argues that beliefs (especially religious ones) should be open to the same scrutiny as scientific claims.
+
+Waking up App
