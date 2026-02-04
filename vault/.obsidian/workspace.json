@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
+                "file": "70_CITADEL/Series_A/The Evolved Mind.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-02-04"
+              "title": "The Evolved Mind"
             }
           }
         ]
@@ -63,7 +63,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:topic/adaptation",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -216,11 +216,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c51324d9238206cf",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
-    "70_CITADEL/Series_A/The Evolved Mind.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
+    "assets/audio/Evo_Psych_Overview.m4a",
+    "10_GARDEN/14_Disciplines/Evolutionary Psychology.md",
+    "10_GARDEN/12_Concepts/EPM.md",
+    "Environment of Evolutionary Adaptedness (EEA).md",
+    "10_GARDEN/12_Concepts/EEA.md",
+    "70_CITADEL/Series_A/The Evolved Mind.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/14_Disciplines/Psychology.md",
     "10_GARDEN/12_Concepts/Synapse.md",
@@ -242,7 +247,6 @@
     "conflict-files-obsidian-git.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "assets/flashcards/flashcards-evo-psych.csv",
-    "assets/audio/Evo_Psych_Overview.m4a",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zwicker et al. - 2020 - Persistent beliefs Political extremism predicts ideological stability over time.pdf",
     "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2020 - The partisan mind Is extreme political partisanship related to cognitive inflexibility.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
@@ -250,11 +254,6 @@
     "10_GARDEN/13_Authors/William James.md",
     "10_GARDEN/12_Concepts/Systems.md",
     "10_GARDEN/12_Concepts/Sense Organ.md",
-    "10_GARDEN/12_Concepts/Negentropy.md",
-    "10_GARDEN/12_Concepts/Mind.md",
-    "10_GARDEN/12_Concepts/Genetic Variation.md",
-    "10_GARDEN/12_Concepts/Entropy.md",
-    "10_GARDEN/11_Daily_Bridge/2026-01-30.md",
     "Untitled.canvas"
   ]
 }

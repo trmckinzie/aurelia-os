@@ -11,7 +11,7 @@ publish: true
 ---
 # ⚛️ EEA
 
-**🔗 Related:** [[Mismatch Theory]], [[Pleistocene]], [[Hunter-Gatherer]], [[Dunbar's Number]], [[Adaptive Lag]], [[Paleolithic]]
+**🔗 Related:** [[Mismatch Theory]], [[Pleistocene]], [[Hunter-Gatherer]], [[Dunbar's Number]], [[Adaptive Lag]], [[Paleolithic]], [[EPM]]
 
 ---
 
