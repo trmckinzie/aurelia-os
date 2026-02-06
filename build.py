@@ -2,8 +2,13 @@ import csv
 import os
 import re
 import json
-import shutil
+import shutil # <--- NEW IMPORT
 from jinja2 import Environment, FileSystemLoader
+
+# --- CONFIGURATION ---
+OUTPUT_DIR = "dist"       # <--- MUST be the string "dist"
+VAULT_PATH = "vault"
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # --- ⚡ RESTORED ENGINE BLOCK ⚡ ---
 
@@ -183,7 +188,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system/templates")
 PROTOCOL_PATH = os.path.join(ROOT_DIR, "vault", "20_PROTOCOL")
-OUTPUT_DIR = ROOT_DIR
+OUTPUT_DIR = "dist"
 
 # --- THEME ENGINE V2.1 (FULL SEMANTIC) ---
 THEME_CONFIG = {
@@ -1114,13 +1119,72 @@ def organize_assets():
 
     print(f"   > Organization Complete. Sorted {moved_count} files.")
 
+def prepare_dist():
+    """Creates the clean dist folder and copies system assets."""
+    print(f"\n📦 INITIALIZING BUILD TARGET: {OUTPUT_DIR}...")
+    
+    # --- 🛡️ SAFETY INTERLOCK (CRITICAL) ---
+    # This prevents the script from deleting your project root if config is wrong.
+    abs_output = os.path.abspath(OUTPUT_DIR)
+    abs_root = os.path.abspath(ROOT_DIR)
+    
+    if abs_output == abs_root:
+        print("\n🛑 EMERGENCY STOP: OUTPUT_DIR is pointing to the Root Directory.")
+        print("   Fix 'OUTPUT_DIR' in build.py to be 'dist' (a subfolder).")
+        exit(1)
+    # ---------------------------------------
+
+    # 1. Reset Dist Folder
+    if os.path.exists(OUTPUT_DIR):
+        try:
+            shutil.rmtree(OUTPUT_DIR)
+        except OSError as e:
+            # This catches permission errors without crashing the whole script
+            print(f"   ⚠️  Warning: Could not fully wipe dist folder (File in use?): {e}")
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # 2. Copy System Assets (CSS/JS from root to dist)
+    src_assets = os.path.join(ROOT_DIR, "assets")
+    dst_assets = os.path.join(OUTPUT_DIR, "assets")
+    
+    if os.path.exists(src_assets):
+        shutil.copytree(src_assets, dst_assets, dirs_exist_ok=True)
+        print("   + System assets copied.")
+
+def sync_vault_assets():
+    """Copies media from vault to dist/assets."""
+    print("\n🔄 SYNCING ASSETS: Vault -> Dist...")
+    source_root = os.path.join(VAULT_PATH, "assets")
+    public_root = os.path.join(OUTPUT_DIR, "assets") # <--- TARGETS DIST NOW
+    
+    subfolders = ["audio", "video", "images", "flashcards"]
+    
+    if not os.path.exists(source_root): return
+
+    for folder in subfolders:
+        src = os.path.join(source_root, folder)
+        dst = os.path.join(public_root, folder)
+        os.makedirs(dst, exist_ok=True)
+
+        if os.path.exists(src):
+            for f in os.listdir(src):
+                s_file = os.path.join(src, f)
+                d_file = os.path.join(dst, f)
+                if os.path.isfile(s_file):
+                    shutil.copy2(s_file, d_file)
+    print("   + Assets synced.")
+
 def build_all():
     print("------------------------------------------------")
-    print("💠 AURELIA OS BUILD ENGINE v3.2.0")
+    print("💠 AURELIA OS BUILD ENGINE")
     print("------------------------------------------------")
     
-# 1 RUN ASSET SORTER FIRST
-    organize_assets() 
+    prepare_dist()       # <--- NEW STEP 1
+    organize_assets()    # <--- KEEP THIS
+    sync_vault_assets()  # <--- NEW STEP 2
+
+    
 
     # ... rest of your build logic ...
     # --- 0. LOAD IDENTITY CHIP ---
@@ -1132,47 +1196,6 @@ def build_all():
     except Exception as e:
         print(f"   ⚠️ WARNING: Could not load user_config.json. Using defaults. ({e})")
         user_config = { "author": { "name": "Unknown User" } } # Fallback
-
-    def sync_vault_assets():
-     """
-    Copies media from 'vault/assets' to the root 'assets' folder
-    so the browser can actually find them.
-    """
-    print("\n🔄 SYNCING ASSETS: Vault -> Public...")
-    
-    source_root = os.path.join(VAULT_PATH, "assets")
-    public_root = os.path.join(ROOT_DIR, "assets") # The folder with css/js
-
-    # Subfolders to sync
-    subfolders = ["audio", "video", "images", "flashcards"]
-
-    if not os.path.exists(source_root):
-        print("   ! Vault assets not found. Skipping.")
-        return
-
-    for folder in subfolders:
-        src = os.path.join(source_root, folder)
-        dst = os.path.join(public_root, folder)
-        
-        # Create public dest if missing
-        os.makedirs(dst, exist_ok=True)
-
-        if os.path.exists(src):
-            # Copy new/changed files
-            files = os.listdir(src)
-            count = 0
-            for f in files:
-                s_file = os.path.join(src, f)
-                d_file = os.path.join(dst, f)
-                
-                if os.path.isfile(s_file):
-                    # Only copy if missing or newer
-                    if not os.path.exists(d_file) or os.path.getmtime(s_file) > os.path.getmtime(d_file):
-                        shutil.copy2(s_file, d_file)
-                        count += 1
-            
-            if count > 0:
-                print(f"   + Synced {count} files to assets/{folder}/")
 
     # 1. LOAD DATA CONTAINERS
     garden_cards = []
