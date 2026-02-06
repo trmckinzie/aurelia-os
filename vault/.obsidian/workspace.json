@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "aefbf14d07831315",
+        "id": "9dbb92fcca49728a",
         "type": "tabs",
         "children": [
           {
-            "id": "3d1136cdd497787f",
+            "id": "890fc3a6ae01ef80",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-02-05.md",
+                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-02-05"
+              "title": "PSYC 414-1 - Cognitive Psychology"
             }
           }
         ]
@@ -225,10 +225,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3d1136cdd497787f",
+  "active": "890fc3a6ae01ef80",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
+    "99_DROP_ZONE/flashcards-cog-psyc-overview-1.csv",
+    "99_DROP_ZONE/Unconfirmed 607251.crdownload",
+    "assets/audio/Cog_Psyc_Overview_1.m4a",
+    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+    "99_DROP_ZONE/Unconfirmed 640347.crdownload",
     "10_GARDEN/11_Daily_Bridge/2026-02-05.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "80_COURSES/81_ASU/PSYC 498/Syllabus Spring 26.pdf",
     "80_COURSES/81_ASU/PSYC 498/2025-01-05_IRB_APPROVAL_TM.pdf",
@@ -248,11 +253,8 @@
     "10_GARDEN/12_Concepts/Action Potential.md",
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "assets/audio/What_Is_Strategy_Overview.m4a",
-    "assets/audio/Unconfirmed 443447.crdownload",
     "10_GARDEN/13_Authors/Sam Harris.md",
     "10_GARDEN/15_Sources/Atomic Habits.md",
-    "80_COURSES/81_ASU/PSYC 414/ppts/week-3-ppt-Attention.pdf",
-    "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
     "90_SYSTEM/92_Templates/TPL_Series_A.md",
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
@@ -262,8 +264,6 @@
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
-    "10_GARDEN/12_Concepts/Systems.md",
-    "10_GARDEN/12_Concepts/Sense Organ.md",
     "Untitled.canvas"
   ]
 }
