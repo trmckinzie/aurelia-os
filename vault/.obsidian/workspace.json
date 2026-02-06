@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "70_CITADEL/Series_A/The Evolved Mind.md",
+                "file": "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "The Evolved Mind"
+              "title": "2025-12-21"
             }
           }
         ]
@@ -192,14 +192,23 @@
               "icon": "lucide-ghost",
               "title": "smart-connections-view"
             }
+          },
+          {
+            "id": "1847dc00b7d0461a",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
         ],
-        "currentTab": 6
+        "currentTab": 7
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -216,8 +225,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "c51324d9238206cf",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/PSYC 498/Syllabus Spring 26.pdf",
+    "80_COURSES/81_ASU/PSYC 498/2025-01-05_IRB_APPROVAL_TM.pdf",
+    "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
+    "80_COURSES/81_ASU/PSYC 498/Lit Review/Acar-Burkay et al. - 2014 - Trusting others The polarization effect of need for closure..pdf",
+    "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
+    "70_CITADEL/Series_A/The Evolved Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
     "assets/audio/Evo_Psych_Overview.m4a",
@@ -225,7 +240,6 @@
     "10_GARDEN/12_Concepts/EPM.md",
     "Environment of Evolutionary Adaptedness (EEA).md",
     "10_GARDEN/12_Concepts/EEA.md",
-    "70_CITADEL/Series_A/The Evolved Mind.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/14_Disciplines/Psychology.md",
     "10_GARDEN/12_Concepts/Synapse.md",
@@ -240,15 +254,11 @@
     "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
     "90_SYSTEM/92_Templates/TPL_Series_A.md",
     "70_CITADEL/Series_A",
-    "70_CITADEL",
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
     "conflict-files-obsidian-git.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
-    "assets/flashcards/flashcards-evo-psych.csv",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zwicker et al. - 2020 - Persistent beliefs Political extremism predicts ideological stability over time.pdf",
-    "80_COURSES/81_ASU/IH-NFC-AP/quant-study-lit-rev/Zmigrod et al. - 2020 - The partisan mind Is extreme political partisanship related to cognitive inflexibility.pdf",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/13_Authors/William James.md",
