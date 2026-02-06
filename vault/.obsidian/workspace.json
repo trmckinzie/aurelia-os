@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "50cc1fb11e38329d",
+        "id": "aefbf14d07831315",
         "type": "tabs",
         "children": [
           {
-            "id": "c51324d9238206cf",
+            "id": "3d1136cdd497787f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+                "file": "10_GARDEN/11_Daily_Bridge/2026-02-05.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2025-12-21"
+              "title": "2026-02-05"
             }
           }
         ]
@@ -225,8 +225,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c51324d9238206cf",
+  "active": "3d1136cdd497787f",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-05.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "80_COURSES/81_ASU/PSYC 498/Syllabus Spring 26.pdf",
     "80_COURSES/81_ASU/PSYC 498/2025-01-05_IRB_APPROVAL_TM.pdf",
     "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
@@ -234,13 +237,11 @@
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "70_CITADEL/Series_A/The Evolved Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
     "assets/audio/Evo_Psych_Overview.m4a",
     "10_GARDEN/14_Disciplines/Evolutionary Psychology.md",
     "10_GARDEN/12_Concepts/EPM.md",
     "Environment of Evolutionary Adaptedness (EEA).md",
     "10_GARDEN/12_Concepts/EEA.md",
-    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/14_Disciplines/Psychology.md",
     "10_GARDEN/12_Concepts/Synapse.md",
     "10_GARDEN/12_Concepts/Neuron.md",
@@ -253,7 +254,6 @@
     "80_COURSES/81_ASU/PSYC 414/ppts/week-3-ppt-Attention.pdf",
     "80_COURSES/81_ASU/PSYC 414/ppts/week-2-ppt-Brain-and-Cognition.pdf",
     "90_SYSTEM/92_Templates/TPL_Series_A.md",
-    "70_CITADEL/Series_A",
     "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
