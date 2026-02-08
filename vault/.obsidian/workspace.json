@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
+                "file": "10_GARDEN/16_NotebookLM/Autodidactic Learning.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "BUS 480-1 - Global Business Strategies"
+              "title": "Autodidactic Learning"
             }
           }
         ]
@@ -227,6 +227,14 @@
   },
   "active": "890fc3a6ae01ef80",
   "lastOpenFiles": [
+    "99_DROP_ZONE/Autodidactic_Learning_Overview.m4a",
+    "10_GARDEN/16_NotebookLM/Autodidactic Learning.md",
+    "99_DROP_ZONE/flashcards-autodidactic_learning_overview.csv",
+    "99_DROP_ZONE/Unconfirmed 975423.crdownload",
+    "99_DROP_ZONE/Unconfirmed 518651.crdownload",
+    "20_PROTOCOL/06_AUTODIDACTIC_LEARNING.md",
+    "20_PROTOCOL/05_DEEP_LEARNING_SRL.md",
+    "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "99_DROP_ZONE/flashcards-cog-psyc-overview-1.csv",
     "99_DROP_ZONE/Unconfirmed 607251.crdownload",
@@ -237,12 +245,8 @@
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "80_COURSES/81_ASU/PSYC 498/Syllabus Spring 26.pdf",
     "80_COURSES/81_ASU/PSYC 498/2025-01-05_IRB_APPROVAL_TM.pdf",
-    "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
-    "80_COURSES/81_ASU/PSYC 498/Lit Review/Acar-Burkay et al. - 2014 - Trusting others The polarization effect of need for closure..pdf",
-    "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "70_CITADEL/Series_A/The Evolved Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-02.md",
-    "assets/audio/Evo_Psych_Overview.m4a",
     "10_GARDEN/14_Disciplines/Evolutionary Psychology.md",
     "10_GARDEN/12_Concepts/EPM.md",
     "Environment of Evolutionary Adaptedness (EEA).md",
@@ -251,7 +255,6 @@
     "10_GARDEN/12_Concepts/Synapse.md",
     "10_GARDEN/12_Concepts/Neuron.md",
     "10_GARDEN/12_Concepts/Action Potential.md",
-    "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/13_Authors/Sam Harris.md",
     "10_GARDEN/15_Sources/Atomic Habits.md",
     "90_SYSTEM/92_Templates/TPL_Series_A.md",
@@ -260,9 +263,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
     "conflict-files-obsidian-git.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
-    "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
-    "10_GARDEN/15_Sources/The Principles of Psychology.md",
-    "10_GARDEN/13_Authors/William James.md",
     "Untitled.canvas"
   ]
 }
