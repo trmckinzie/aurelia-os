@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-02-10.md",
+                "file": "10_GARDEN/14_Disciplines/Engineering.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-02-10"
+              "title": "Engineering"
             }
           }
         ]
@@ -228,8 +228,9 @@
   },
   "active": "890fc3a6ae01ef80",
   "lastOpenFiles": [
-    "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-10.md",
+    "10_GARDEN/14_Disciplines/Engineering.md",
+    "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "10_GARDEN/16_NotebookLM/Autodidactic Learning.md",
     "assets/audio/Autodidactic_Learning_Overview.m4a",
     "assets/audio/AI_Usage_SRL.m4a",
@@ -244,7 +245,6 @@
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "99_DROP_ZONE/flashcards-cog-psyc-overview-1.csv",
     "99_DROP_ZONE/Unconfirmed 607251.crdownload",
-    "assets/audio/Cog_Psyc_Overview_1.m4a",
     "10_GARDEN/11_Daily_Bridge/2026-02-05.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-04.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
