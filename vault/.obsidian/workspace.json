@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/14_Disciplines/Engineering.md",
+                "file": "10_GARDEN/13_Authors/7 Habits.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,10 +28,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Engineering"
+              "title": "7 Habits"
+            }
+          },
+          {
+            "id": "ba9c49c5b6d50681",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/12_Concepts/Habit.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Habit"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -226,10 +251,19 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "890fc3a6ae01ef80",
+  "active": "ba9c49c5b6d50681",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/2026-02-10.md",
+    "Strategic Positioning.md",
+    "10_GARDEN/12_Concepts/Habit.md",
+    "10_GARDEN/12_Concepts/Skyhook.md",
+    "10_GARDEN/12_Concepts/Crane.md",
+    "10_GARDEN/13_Authors/Daniel Dennett.md",
+    "10_GARDEN/12_Concepts/Evolution.md",
+    "10_GARDEN/12_Concepts/Operational Effectiveness.md",
+    "10_GARDEN/13_Authors/William James.md",
+    "10_GARDEN/13_Authors/7 Habits.md",
     "10_GARDEN/14_Disciplines/Engineering.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-10.md",
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "10_GARDEN/16_NotebookLM/Autodidactic Learning.md",
     "assets/audio/Autodidactic_Learning_Overview.m4a",
@@ -255,15 +289,6 @@
     "Environment of Evolutionary Adaptedness (EEA).md",
     "10_GARDEN/12_Concepts/EEA.md",
     "10_GARDEN/14_Disciplines/Psychology.md",
-    "10_GARDEN/12_Concepts/Synapse.md",
-    "10_GARDEN/12_Concepts/Neuron.md",
-    "10_GARDEN/12_Concepts/Action Potential.md",
-    "10_GARDEN/13_Authors/Sam Harris.md",
-    "10_GARDEN/15_Sources/Atomic Habits.md",
-    "90_SYSTEM/92_Templates/TPL_Series_A.md",
-    "10_GARDEN/15_Sources/A Brief History of Intelligence.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-01.md",
-    "10_GARDEN/11_Daily_Bridge/2026-01-31.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
