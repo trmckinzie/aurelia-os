@@ -70,8 +70,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -213,7 +212,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a8fcc1be958c7668",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
     "10_GARDEN/16_NotebookLM/IH-NFC-AP.md",
     "20_PROTOCOL/04_SHUTDOWN_RITUAL.md",
