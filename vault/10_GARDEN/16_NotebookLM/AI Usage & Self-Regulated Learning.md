@@ -96,6 +96,33 @@ The literature confirms that AI and LLMs represent a critical turning point for 
 
 Successful integration demands a move beyond merely creating AI support tools towards establishing a **principled pedagogical design architecture** that actively counters cognitive offloading. Future systems must embrace complexity by incorporating not only the **technical interest** (efficiency, personalization) but also the **practical interest** (social co-regulation via teacher-peer-chatbot triads) and the **emancipatory interest** (critical reflection, ethical inquiry, and fostering learner agency). Conceptual frameworks like the AI-augmented heutagogy and the Cognitive Mirror paradigm offer actionable roadmaps for designing AI systems that intentionally transform the learner's role from passive recipient to active, responsible knowledge constructor, ultimately ensuring that technology strengthens, rather than diminishes, human intellectual capacity.
 
+# 📚 Mastering Self-Regulated Learning Through Artificial Intelligence 
+
+>**Self-Regulated Learning (SRL)** is an active and constructive process where you become the master of your own learning by setting goals and then monitoring, regulating, and controlling your own thinking and behavior. In modern online environments, where traditional teachers are often less available, these self-guiding skills are essential for successfully completing courses and managing flexible schedules. To achieve better **self-directed learning outcomes**, a person can combine structured psychological frameworks with the power of **Artificial Intelligence (AI)**, provided they follow specific best practices to avoid common pitfalls like mental "laziness".
+
+The Blueprint for Learning: SRL Frameworks
+
+The most effective way to start is by using a structured framework, such as **Zimmerman’s cyclical model**, which breaks learning into three repeatable steps: **Forethought** (planning), **Performance** (doing), and **Self-Reflection** (checking your work). In the planning phase, you should not just dive into a task but first analyze the requirements, set specific goals, and build your own motivation. Research shows that having a clear "roadmap" or learning contract helps you take ownership of your journey and leads to better academic achievement. It is also helpful to recognize that different frameworks might suit you better depending on your experience level; for example, beginners often benefit from social-cognitive models that emphasize observing others, while advanced learners thrive with metacognitive models that focus on internal information processing.
+
+Enhancing the Process: Strategic AI Usage
+
+AI tools like ChatGPT can act as a **personalized learning companion** throughout the entire SRL cycle if used intentionally.
+
+• **Planning Support:** You can use AI as a personalized planner to help break down large, intimidating tasks into manageable sub-goals.
+
+• **Active Assistance:** During the "doing" phase, AI can provide instant, personalized feedback on assignments or coding tasks, helping you identify errors and suggesting resources at your own pace.
+
+• **Deep Reflection:** For the final phase, customized AI models can facilitate **reflective conversations**, prompting you to think about _how_ you learned and what strategies were most effective. Engaging with these tools just twice a week for ten minutes per session has been shown to significantly improve a person’s readiness for self-directed learning and their awareness of their own thinking.
+
+Fostering Effective Learning: Best Practices and Habits
+
+The greatest risk when using AI is **"metacognitive laziness"** or cognitive offloading, which happens when a learner relies on the AI to provide the final answer rather than doing the hard mental work themselves. To foster effective habits, you should treat AI as a **"Cognitive Mirror"** or a teachable novice rather than an all-knowing oracle. By explaining concepts _to_ the AI and seeing if it understands your explanation, you force yourself to structure your knowledge and confront your own misconceptions.
+
+Effective learning also requires **"desirable difficulties"**—strategies that feel harder in the short term but lead to better long-term memory. Instead of passive habits like rereading or highlighting, which create a false "fluency" that makes you overconfident, you should use AI to generate **practice tests** or flashcards. Research confirms that active retrieval and spacing out your study sessions are the most high-utility techniques for lasting results.
+
+Conclusion: Synthesizing AI, Frameworks, and Habits
+
+Synthesizing the evidence across these sources suggests that the goal of using AI in learning is not to find answers faster, but to **augment human intelligence and agency**. Better self-directed learning habits are formed when you use **SRL frameworks** to stay organized, **active strategies** like practice testing to ensure deep understanding, and **AI tools** as a supportive "cognitive coach" rather than a replacement for effort. The ideal learning habit involves **double-loop reflection**, where you not only check your answers but also reflect on why you chose a particular strategy and how you can improve your approach in the future. Ultimately, by combining the structure of proven psychological models with the interactive capabilities of AI, you can move toward **heutagogy**—a state of full autonomy where you are capable of navigating an AI-driven world with critical thinking, ethical awareness, and resilient study habits.
 # 🎙️ Audio Overview
 assets/audio/AI_Usage_SRL.m4a
 

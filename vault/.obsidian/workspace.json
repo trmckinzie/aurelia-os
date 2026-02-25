@@ -11,10 +11,24 @@
             "id": "f79e2f4bcd4621f1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "SSD Abstract - Self-Regulated Learning in the Age of AI"
             }
           }
         ]
@@ -214,6 +228,13 @@
   },
   "active": "f79e2f4bcd4621f1",
   "lastOpenFiles": [
+    "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
+    "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
+    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
+    "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
+    "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
+    "80_COURSES/81_ASU/PSYC 498/materials/Recruitment Plan for Capstone Thesis II.pdf",
+    "80_COURSES/81_ASU/BUS 430/Chapter 4 Problems Scan  Project.pdf",
     "10_GARDEN/13_Authors/George Miller.md",
     "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
@@ -242,14 +263,8 @@
     "10_GARDEN/13_Authors/7 Habits.md",
     "10_GARDEN/12_Concepts/Habit.md",
     "Strategic Positioning.md",
-    "10_GARDEN/12_Concepts/Skyhook.md",
-    "10_GARDEN/12_Concepts/Crane.md",
-    "10_GARDEN/13_Authors/Daniel Dennett.md",
     "assets/audio/Autodidactic_Learning_Overview.m4a",
     "assets/audio/AI_Usage_SRL.m4a",
-    "99_DROP_ZONE/Autodidactic_Learning_Overview.m4a",
-    "assets/flashcards/flashcards-autodidactic_learning_overview.csv",
-    "99_DROP_ZONE/flashcards-autodidactic_learning_overview.csv",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
