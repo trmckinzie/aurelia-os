@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "bbd9e912b3c005d2",
+        "id": "ca686cec288f59c8",
         "type": "tabs",
         "children": [
           {
-            "id": "8aadd59e80059467",
+            "id": "fd498db3a560f737",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -212,8 +212,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8aadd59e80059467",
+  "active": "fd498db3a560f737",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-02-25.md",
+    "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
@@ -247,10 +249,7 @@
     "10_GARDEN/14_Disciplines/Computer Science.md",
     "10_GARDEN/12_Concepts/Computation.md",
     "10_GARDEN/13_Authors/7 Habits.md",
-    "10_GARDEN/12_Concepts/Habit.md",
-    "Strategic Positioning.md",
     "assets/audio/Autodidactic_Learning_Overview.m4a",
-    "assets/audio/AI_Usage_SRL.m4a",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
