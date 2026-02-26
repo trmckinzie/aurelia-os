@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "4d1dac8904a2ff1f",
+        "id": "bbd9e912b3c005d2",
         "type": "tabs",
         "children": [
           {
-            "id": "f79e2f4bcd4621f1",
+            "id": "8aadd59e80059467",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "SSD Abstract - Self-Regulated Learning in the Age of AI"
+              "title": "New tab"
             }
           }
         ]
@@ -226,11 +212,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "f79e2f4bcd4621f1",
+  "active": "8aadd59e80059467",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
-    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Recruitment Plan for Capstone Thesis II.pdf",
