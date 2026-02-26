@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "ca686cec288f59c8",
+        "id": "b02b16abf001b417",
         "type": "tabs",
         "children": [
           {
-            "id": "fd498db3a560f737",
+            "id": "d0c0c4c0154473a8",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "SSD Abstract - Self-Regulated Learning in the Age of AI"
             }
           }
         ]
@@ -212,13 +226,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "fd498db3a560f737",
+  "active": "d0c0c4c0154473a8",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
+    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
+    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-25.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
-    "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Recruitment Plan for Capstone Thesis II.pdf",
@@ -230,7 +246,6 @@
     "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
     "80_COURSES/81_ASU/PSYC 498/Recruitment Plan for Capstone Thesis II.pdf",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Miller (2003) The Cog Revolution, A Hist. Perspective.pdf",
-    "80_COURSES/81_ASU/PSYC 414/pdfs/Miller (1956) The Magical Number Seven, Plus or Minus Two.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-22.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-21.md",
     "10_GARDEN/12_Concepts/Pattern Recognition.md",
@@ -249,7 +264,6 @@
     "10_GARDEN/14_Disciplines/Computer Science.md",
     "10_GARDEN/12_Concepts/Computation.md",
     "10_GARDEN/13_Authors/7 Habits.md",
-    "assets/audio/Autodidactic_Learning_Overview.m4a",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
