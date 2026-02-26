@@ -326,6 +326,238 @@ There are fundamental differences in how capacity is managed across these two se
 |**Utilization**|Can aim for very high utilization.|Best operating point is near **70%** to maintain quality.|
 
 In services, the relationship between **arrival rate** (customer entries) and **service rate** (processing speed) is critical. Low utilization rates are appropriate for high-uncertainty or high-stakes environments like emergency rooms, while higher rates are possible for predictable services like commuter trains.
+
+# 📚 Exam Study Guide 3/2/26
+
+>This exam study guide has been thoroughly filled out using the provided PowerPoint lecture sources to match the requirements of the **Test 1 Study Guide**.
+
+--------------------------------------------------------------------------------
+
+**Chapter 1: Introduction to OSCM**
+
+• **Operations and Supply Chain Management (OSCM):** The design, operation, and improvement of the systems that create and deliver the firm’s primary products and services. It is a functional field of business with clear line management responsibilities concerned with the entire production and delivery system.
+
+• **Efficiency, Effectiveness, and Value:**
+
+    ◦ **Efficiency:** Doing something at the **lowest possible cost**.
+
+    ◦ **Effectiveness:** Doing the right things to create the **most value** for the company.
+
+    ◦ **Value:** Abstractly defined as **Quality divided by Price**. Quality refers to attractiveness, features, and durability.
+
+• **Goods vs. Services:**
+
+    ◦ **Pure Goods:** Tangible products such as food, chemicals, and mining.
+
+    ◦ **Core Goods:** Tangible goods that include a service component, like appliances or automobiles.
+
+    ◦ **Core Services:** Services that include tangible goods, like hotels or airlines.
+
+    ◦ **Pure Services:** Intangible services like education, medical care, or investment.
+
+• **Business Process Reengineering (BPR):** An approach that seeks to make **revolutionary changes** as opposed to evolutionary changes (the latter being the focus of TQM).
+
+• **Product-Service Bundling:** When a company builds **service activities into its product offerings** to create more value for the customer.
+
+--------------------------------------------------------------------------------
+
+**Chapter 2: Strategy**
+
+• **Operations and Supply Chain Strategy:** Setting broad policies and plans that guide the use of a firm's resources to implement its **corporate strategy**.
+
+• **Competitive Dimensions and Trade-offs:**
+
+    ◦ **Dimensions:** Price (cost), Quality, Delivery Speed, Delivery Reliability, Coping with Changes in Demand, and Flexibility/New-Product Introduction Speed.
+
+    ◦ **Trade-offs:** Management must decide which performance parameters are critical and concentrate resources there; for example, a low-cost firm may struggle with rapid new-product introduction.
+
+    ◦ **Straddling:** Seeking to match a competitor's success while maintaining an existing position; this is often a **risky strategy**.
+
+• **Order Winners vs. Order Qualifiers:**
+
+    ◦ **Order Qualifiers:** Screening criteria that permit a firm's products to be **considered for purchase**.
+
+    ◦ **Order Winners:** Specific criteria used by customers to **differentiate** the products of one firm from another to make a final purchase decision.
+
+• **Productivity and Calculations:**
+
+    ◦ **Definition:** A measure of how well resources (inputs) are used to create outputs (Output / Input).
+
+    ◦ **Partial Productivity:** Ratio of output to a **single input** (e.g., Output / Labor).
+
+    ◦ **Multifactor Productivity:** Ratio of output to a **group of inputs** (e.g., Output / Labor + Capital + Energy).
+
+    ◦ **Total Productivity:** Ratio of all outputs to **all inputs** used.
+
+--------------------------------------------------------------------------------
+
+**Chapter 3: Design of Products and Services**
+
+• **Core Competency:** The one thing a company can do better than its competitors. It must provide market access, increase customer benefits, and be **hard for competitors to imitate**.
+
+• **Product Development Process (Six Phases):**
+
+    ◦ **Phase 0: Planning:** Precedes project approval; outputs the mission statement.
+
+    ◦ **Phase 1: Concept Development:** Identifies market needs and selects concepts.
+
+    ◦ **Phase 2: System-Level Design:** Defines product architecture and subsystems.
+
+    ◦ **Phase 3: Design Detail:** Complete specifications of geometry and materials.
+
+    ◦ **Phase 4: Testing and Refinement:** Evaluation of preproduction prototypes.
+
+    ◦ **Phase 5: Production Ramp-Up:** Training workers and transitioning to ongoing production.
+
+• **QFD and DFMA:**
+
+    ◦ **Quality Function Deployment (QFD):** Uses interfunctional teams to translate customer requirements into technical specifications.
+
+    ◦ **House of Quality:** A matrix used in QFD to translate customer requirements into engineering goals.
+
+    ◦ **Design for Manufacture and Assembly (DFMA):** Focuses on simplification by **reducing the number of separate parts**.
+
+--------------------------------------------------------------------------------
+
+**Chapter 4: Project Management**
+
+• **Project Management:** Planning, directing, and controlling resources (people, equipment, material) to meet technical, cost, and time constraints. It is critical because management must often juggle a **portfolio of projects**.
+
+• **Structuring Projects:**
+
+    ◦ **Pure Project:** A self-contained team works full-time; provides high motivation but duplicates resources.
+
+    ◦ **Functional Project:** Responsibility lies within one functional area; technical expertise is maintained but motivation may be weak.
+
+    ◦ **Matrix Project:** A blend of pure and functional; people from different areas work together under a project manager.
+
+• **Gantt Chart:** A visual bar chart showing both the **time and sequence** for completing project activities.
+
+• **Network Models/CPM:**
+
+    ◦ **Critical Path:** The sequence of activities forming the **longest chain** in a project; these tasks have zero slack.
+
+    ◦ **Slack:** The difference between the **late and early start times** for an activity.
+
+    ◦ **PERT:** Used when task times are **probabilistic** (optimistic, most likely, and pessimistic estimates).
+
+    ◦ **Crashing:** Reducing project completion time by **trading off time versus cost**.
+
+--------------------------------------------------------------------------------
+
+**Chapter 5: Strategic Capacity Management**
+
+• **Strategic Capacity Planning:** Determining the overall level of capacity-intensive resources (facilities, equipment, labor) that best supports long-range strategy.
+
+• **Capacity Concepts:**
+
+    ◦ **Capacity:** The amount of output a system is capable of achieving over a specific period.
+
+    ◦ **Best Operating Level:** The capacity level for which a process was designed and at which **average cost per unit is minimized**.
+
+    ◦ **Capacity Utilization Rate:** Measure of how close a firm is to its best operating level (Capacity Used / Best Operating Level).
+
+    ◦ **Economies of Scale:** As a plant gets larger and volume increases, the **average cost per unit drops**.
+
+--------------------------------------------------------------------------------
+
+**Chapter 7: Manufacturing Processes**
+
+• **Production Processes Organization:**
+
+    ◦ **Workcenter (Job Shop):** Similar equipment or functions are grouped together.
+
+    ◦ **Manufacturing Cell:** Dedicated area where similar products are produced using dissimilar machines.
+
+    ◦ **Assembly Line:** Work processes arranged according to progressive steps of product assembly.
+
+    ◦ **Project Layout:** The product remains in a fixed location (e.g., a bridge or airplane).
+
+• **Product-Process Matrix:** A framework describing how layout structures are suited to different **volume and product variety** characteristics.
+
+• **Break-Even Analysis:** A standard approach for choosing between alternative processes. It identifies the point in units where **total revenue and total cost are equal**.
+
+    ◦ **Formula:** TotalFixedCosts/(UnitPrice−VariableCost).
+
+--------------------------------------------------------------------------------
+
+# 📚 Exam Study Guide Formulas and Analytics 3/2/26
+
+>To ensure you are prepared for the 40-60% of the exam that focuses on mathematical problems, here are the crucial formulas and analytical notes for each key topic area based on the sources.
+
+**1. Productivity Measurement (Chapter 2)**
+
+Productivity is a **relative measure** of how well resources are used. It only becomes meaningful when compared to other firms, other operations, or the same firm over time.
+
+• **General Formula:** Productivity=Outputs/Inputs.
+
+• **Partial Productivity:** Compares output to a **single input** (e.g., TotalOutput/Labor or TotalOutput/Energy).
+
+    ◦ _Examples:_ Customers per labor hour in a restaurant or sales per square foot in retail.
+
+• **Multifactor Productivity:** Compares output to a **group of inputs** (e.g., TotalOutput/(Labor+Material)).
+
+• **Total Productivity:** Compares all outputs to **all inputs used** (e.g., TotalOutput/TotalInput).
+
+**2. Network-Planning Models (Chapter 4)**
+
+These models are used to find the earliest time a project can be completed and which activities are "critical" to that timeline.
+
+• **Critical Path:** The sequence of activities that form the **longest chain** in the network; these must be completed on time for the project to finish on schedule.
+
+• **Slack Calculation:** Slack=LateStart(LS)−EarlyStart(ES) or LateFinish(LF)−EarlyFinish(EF).
+
+    ◦ _Note:_ Activities on the critical path always have **zero slack**.
+
+• **PERT (Probabilistic) Formulas:** Used when task times are uncertain.
+
+    ◦ **Expected Time (ET):** ET=(a+4m+b)/6 (where a=optimistic, m=most likely, b=pessimistic).
+
+    ◦ **Variance (**σ2**):** σ2=((b−a)/6)2.
+
+• **Project Crashing (Time-Cost Trade-offs):**
+
+    ◦ **Cost per unit of time to expedite:** (CrashCost−NormalCost)/(NormalTime−CrashTime).
+
+    ◦ _Rule:_ To shorten a project, you must **shorten the critical path** at the point where costs are lowest.
+
+**3. Strategic Capacity Management (Chapter 5)**
+
+Capacity is the amount of output a system is capable of achieving over a period.
+
+• **Capacity Utilization Rate:** CapacityUsed/BestOperatingLevel.
+
+• **Best Operating Level:** The capacity level for which the process was designed and where **average cost per unit is minimized**.
+
+• **Capacity Requirements (Equipment/Labor):**
+
+    ◦ MachineRequirement=(TotalDemand/CapacityperMachine).
+
+    ◦ LaborRequirement=MachineRequirement×OperatorsperMachine.
+
+• **Service Utilization Note:** In services, the best operating point is usually near **70%**. Higher rates (the "critical zone") can cause service quality to suffer.
+
+**4. Break-Even Analysis (Chapter 7)**
+
+This standard approach is used to choose between alternative processes or equipment by finding the point where they are equally economical.
+
+• **Break-Even Demand Formula:** TotalFixedCosts/(UnitPrice−VariableCost).
+
+• **Choosing Between Two Processes:** Set the total cost of Process A equal to the total cost of Process B to find the "indifference point" demand.
+
+    ◦ **Total Cost (TC) Formula:** TC=FixedCosts+(VariableCost×Demand).
+
+• _Analytical Note:_ Generally, low-volume processes (like a **Workcenter**) have lower fixed costs but higher variable costs, while high-volume processes (like an **Assembly Line**) have higher fixed costs but lower variable costs.
+
+**5. Management Efficiency Ratios (Chapter 1)**
+
+Wall Street uses these ratios to evaluate how effectively a firm manages its assets.
+
+• **Receivable Turnover:** AnnualCreditSales/AverageAccountReceivable.
+
+• **Inventory Turnover:** CostofGoodsSold/AverageInventoryValue.
+
+• **Asset Turnover:** Revenue(orSales)/TotalAssets.
 # 🎙️ Audio Overview
 assets/audio/[filename].m4a
 
