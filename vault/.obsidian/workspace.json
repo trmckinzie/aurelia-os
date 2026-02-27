@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "a1b68d5379263e45",
+        "id": "6d15d1bc1d69eed7",
         "type": "tabs",
         "children": [
           {
-            "id": "fc2d72d403d02ace",
+            "id": "83add99001089903",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/16_NotebookLM/BUS 430-1 - Production and Operations Management.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "BUS 430-1 - Production and Operations Management"
+              "title": "New tab"
             }
           }
         ]
@@ -226,8 +212,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "fc2d72d403d02ace",
+  "active": "83add99001089903",
   "lastOpenFiles": [
+    "10_GARDEN/16_NotebookLM/BUS 430-1 - Production and Operations Management.md",
     "80_COURSES/81_ASU/BUS 430/Ch 7 problems scan.pdf",
     "80_COURSES/81_ASU/BUS 430/Unconfirmed 910058.crdownload",
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
@@ -246,7 +233,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
-    "80_COURSES/81_ASU/PSYC 498/Recruitment Plan for Capstone Thesis II.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-22.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-21.md",
     "10_GARDEN/12_Concepts/Pattern Recognition.md",
