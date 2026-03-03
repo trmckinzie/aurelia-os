@@ -11,10 +11,12 @@
             "id": "83add99001089903",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
+              "type": "pdf",
+              "state": {
+                "file": "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Biwer et al (2020) Fostering Effective Learning Strategies"
             }
           }
         ]
