@@ -30,8 +30,21 @@
               "icon": "lucide-file",
               "title": "2026-02-26"
             }
+          },
+          {
+            "id": "1ce6e4b0a7fbe52c",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.12.4"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.12.4"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -226,7 +239,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3e2406bd494a7664",
+  "active": "1ce6e4b0a7fbe52c",
   "lastOpenFiles": [
     "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-26.md",
