@@ -4,19 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "6d15d1bc1d69eed7",
+        "id": "8847ad28d61a5760",
         "type": "tabs",
         "children": [
           {
-            "id": "83add99001089903",
+            "id": "3e2406bd494a7664",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf"
+                "file": "10_GARDEN/11_Daily_Bridge/2026-02-26.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-file-text",
-              "title": "Biwer et al (2020) Fostering Effective Learning Strategies"
+              "icon": "lucide-file",
+              "title": "2026-02-26"
             }
           }
         ]
@@ -214,8 +226,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "83add99001089903",
+  "active": "3e2406bd494a7664",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
+    "10_GARDEN/11_Daily_Bridge/2026-02-26.md",
+    "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "10_GARDEN/16_NotebookLM/BUS 430-1 - Production and Operations Management.md",
     "80_COURSES/81_ASU/BUS 430/Ch 7 problems scan.pdf",
     "80_COURSES/81_ASU/BUS 430/Unconfirmed 910058.crdownload",
@@ -224,7 +239,6 @@
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-25.md",
-    "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
@@ -232,7 +246,6 @@
     "80_COURSES/81_ASU/BUS 430/Chapter 4 Problems Scan  Project.pdf",
     "10_GARDEN/13_Authors/George Miller.md",
     "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-22.md",
@@ -252,7 +265,6 @@
     "10_GARDEN/14_Disciplines/Cognitive Neuroscience.md",
     "10_GARDEN/14_Disciplines/Computer Science.md",
     "10_GARDEN/12_Concepts/Computation.md",
-    "10_GARDEN/13_Authors/7 Habits.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
