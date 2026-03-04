@@ -11,52 +11,13 @@
             "id": "4eb1b9453e3d0c1f",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/12_Concepts/Cognitive Hexagon.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "Cognitive Hexagon"
-            }
-          },
-          {
-            "id": "8fd86f530c7c24c4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-02-28.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "2026-02-28"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -88,8 +49,8 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:person/psychologisttopic/cognitive-sciencetopic/memory",
-                "matchingCase": false,
+                "query": "",
+                "matchingCase": true,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
@@ -251,10 +212,21 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8fd86f530c7c24c4",
+  "active": "4eb1b9453e3d0c1f",
   "lastOpenFiles": [
-    "10_GARDEN/12_Concepts/Cognitive Hexagon.md",
+    "10_GARDEN/14_Disciplines/Philosophy of Mind.md",
+    "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
+    "10_GARDEN/12_Concepts/Working Memory.md",
+    "10_GARDEN/12_Concepts/Zimmerman's Model of SRL.md",
+    "10_GARDEN/12_Concepts/Untitled.md",
+    "10_GARDEN/12_Concepts/Untitled 1.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-28.md",
+    "10_GARDEN/12_Concepts/Cognitive Hexagon.md",
+    "10_GARDEN/13_Authors/William James.md",
+    "10_GARDEN/15_Sources/The Principles of Psychology.md",
+    "10_GARDEN/11_Daily_Bridge/2026-01-07.md",
     "10_GARDEN/12_Concepts/Computational Theory of Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-27.md",
     "10_GARDEN/12_Concepts/Brain.md",
@@ -279,17 +251,6 @@
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
     "10_GARDEN/11_Daily_Bridge/2026-02-22.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-21.md",
-    "10_GARDEN/12_Concepts/Pattern Recognition.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-12.md",
-    "10_GARDEN/12_Concepts/Working Memory.md",
-    "10_GARDEN/16_NotebookLM/IH-NFC-AP.md",
-    "20_PROTOCOL/04_SHUTDOWN_RITUAL.md",
-    "20_PROTOCOL/05_DEEP_LEARNING_SRL.md",
-    "20_PROTOCOL/06_AUTODIDACTIC_LEARNING.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-10.md",
-    "10_GARDEN/12_Concepts/Integral (Calculus).md",
-    "10_GARDEN/12_Concepts/Derivative.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
