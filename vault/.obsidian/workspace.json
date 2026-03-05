@@ -11,12 +11,24 @@
             "id": "4eb1b9453e3d0c1f",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf"
+                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-file-text",
-              "title": "Year 12 Travis Decisions"
+              "icon": "lucide-file",
+              "title": "PSYC 414-1 - Cognitive Psychology"
             }
           }
         ]
@@ -216,6 +228,7 @@
   },
   "active": "4eb1b9453e3d0c1f",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "80_COURSES/81_ASU/BUS 480/BSG Checklists.pdf",
@@ -252,7 +265,6 @@
     "80_COURSES/81_ASU/BUS 430/Chapter 4 Problems Scan  Project.pdf",
     "10_GARDEN/13_Authors/George Miller.md",
     "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
-    "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]

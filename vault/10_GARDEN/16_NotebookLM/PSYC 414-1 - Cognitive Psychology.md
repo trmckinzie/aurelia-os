@@ -179,6 +179,268 @@ Face recognition is considered the most critical pattern for human survival, sup
 • **Clinical Variations:** People with **schizophrenia** often have a smaller fusiform gyrus and poorer face memory. Individuals with **autism** tend to rely on feature-based rather than holistic processing, often focusing more on the mouth than the eyes when identifying emotions.
 
 • **The Cross-Race Effect:** Our accuracy in recognizing faces is significantly better for members of our own race, as our prototypes are tuned to the configurations we encounter most frequently during childhood
+
+# 📚 Chapter 5 - STM & WM 
+
+>This overview synthesizes the fundamental mechanisms, theoretical models, and empirical phenomena associated with **Short-Term Memory (STM)** and **Working Memory (WM)**. As a Ph.D.-level synthesis, it categorizes these concepts into structural, process-oriented, and applied frameworks.
+
+I. Foundations: The Relationship Between Learning and Memory
+
+The cognitive architecture relies on the interplay between learning and memory. **Learning** is defined as a permanent change in behavior resulting from experience, whereas **memory** is the specific mechanism allowing for the retention and retrieval of that information over time. Within this system, **Short-Term Memory (STM)** represents our moment-to-moment conscious thoughts and perceptions. It is characterized as fleeting, with contents that endure only as long as active attention is maintained.
+
+II. Properties and Limits of Short-Term Memory
+
+Research into STM focuses on three central questions: capacity, duration, and the causes of forgetting.
+
+- **Capacity and Chunking:** The typical adult memory span is approximately **7 (between 5 and 9) unrelated items**. This capacity can be effectively increased through **chunking**—the process of grouping information into meaningful units based on prior knowledge stored in long-term memory (LTM). For example, a sequence of 12 digits (149290210714) is difficult to remember as individual items but easily retained if "chunked" into familiar patterns like historical dates or area codes.
+- **Duration and Decay:** Without rehearsal, information in STM is lost in approximately **18 seconds**. The **Brown-Peterson task** demonstrated that when rehearsal is prevented (e.g., by counting backward by threes), recall accuracy drops to roughly 10–20% within this 18-second window.
+- **Forgetting via Interference:** Forgetting in STM is primarily attributed to **interference** rather than simple decay.
+    - **Proactive Interference:** Older information inhibits the recall of newer information (e.g., Spanish words intruding when trying to speak French).
+    - **Retroactive Interference:** Newer information inhibits the recall of older information (e.g., a new phone number making it hard to remember an old one).
+- **Retrieval Mechanisms:** Retrieval from STM occurs through a **serial exhaustive search**. Unlike a self-terminating search where one stops upon finding a target, the brain scans the entire contents of STM regardless of whether the target is located early in the set.
+
+III. The Serial Position Effect
+
+When recalling a list, accuracy is tied to the position of items, resulting in a U-shaped curve.
+
+- **Primacy Effect:** Items at the beginning are remembered better because they receive more rehearsal and are more likely to be encoded into LTM.
+- **Recency Effect:** Items at the end are remembered better because they are still newly placed in STM and immediately available.
+- **Modality Effect:** Recall patterns differ by stimulus; auditory presentations often show a stronger recency effect than visual ones because sound-based information is inherently more fleeting and requires immediate processing.
+
+IV. Working Memory: The Structure Beneath STM
+
+Modern cognitive science views STM as a component of the broader **Working Memory (WM)** system—a limited-capacity system for the temporary storage and manipulation of information. The Baddeley and Hitch model identifies four primary divisions:
+
+1. **Phonological Loop:** Dedicated to temporary storage of sound-based information. It consists of a **phonological store** (reservoir) and an **articulatory control process** (subvocal rehearsal). The capacity of this loop is determined by how much can be rehearsed in a **2-second cycle**.
+2. **Visuospatial Sketchpad:** Responsible for visual and spatial information (e.g., mental imagery or map navigation). It contains the **visual cache** (form/color) and the **inner scribe** (spatial relationships/movement).
+3. **Episodic Buffer:** Acts as an integrative system that sequences events from the other two buffers into a coherent, time-based "episode". It explains why we can remember 15–16 words in a sentence despite the "7 +/- 2" limit for unrelated words.
+4. **Central Executive:** A control system that coordinates the other divisions and allocates attentional resources. It is not a storage site but a manager of "controlled processes". Effectiveness is often measured via the **PASAT** (Paced Auditory Serial Addition Task), which requires simultaneous processing and inhibition.
+
+V. Applied Phenomena and Clinical Insights
+
+Working memory explains several key cognitive phenomena:
+
+- **Word-Length Effect:** STM span decreases as words get longer because they take more time to pronounce, exceeding the 2-second rehearsal limit of the phonological loop.
+- **Irrelevant Speech Effect:** Background conversation interferes with reading or memorization because speech sounds automatically enter the phonological loop and disrupt rehearsal.
+- **The Impact of Emotion:** Stress and negative thoughts compete for limited WM resources, effectively reducing capacity. Research shows that expressive writing about negative events can improve WM capacity by reducing the "intrusion" of these thoughts into the central executive.
+- **Clinical Populations:** Individuals with **Parkinson’s disease** show slower memory-scanning rates (steeper slope in retrieval graphs), while those with **Multiple Sclerosis (MS)** may experience executive dysfunction due to the destruction of myelin or the emotional impact of the disease.
+
+# 📚 Chapter 6 - LTM
+
+>This comprehensive overview details the mechanisms of Long-Term Memory (LTM), spanning its structural divisions, empirical characteristics, and the biological systems that support it.
+
+I. Structural Divisions of Long-Term Memory
+
+Long-term memory is the repository of all knowledge and experiences gathered throughout a lifetime, serving as a scaffold for identity and daily function. Researchers categorize LTM into two primary systems:
+
+- **Explicit (Declarative) Memory:** This system contains memories that we consciously seek to store and retrieve, and which can be verbally described. It is further divided into **Semantic Memory**, which acts as a library for discrete facts and conceptual knowledge (e.g., knowing that "robins are birds"), and **Episodic Memory**, which stores autobiographical events tied to specific times and places. Episodic memory includes **Retrospective Memory** for past events and **Prospective Memory** for future-oriented actions, such as remembering to take medication.
+- **Implicit Memory:** This semiautonomous system operates in the background to free up cognitive resources for demanding tasks. It includes **Procedural Memory**, which stores motor skills like riding a bicycle or typing, and **Perceptual Memory**, which facilitates pattern recognition through automated sensory identification.
+
+II. Core Characteristics: Capacity, Duration, and Coding
+
+LTM is a distinct system defined by several key performance metrics:
+
+- **Infinite Capacity:** Unlike short-term memory, LTM has no obvious limit; new information does not displace old facts, and retrieval difficulties are usually due to the vastness of stored knowledge rather than a lack of space.
+- **Permastore Duration:** Firmly stored information can endure for nearly 50 years, a state referred to as **permastore**.
+- **Semantic Coding:** While LTM can use visual, auditory, or kinesthetic codes, it primarily favors **semantic features** (meaning) for storage, which is why people often remember the "gist" of a sentence even if they forget its exact wording.
+
+III. The Architecture of Retrieval: Metamemory and Encoding Specificity
+
+Retrieval is a deliberate search process mediated by **metamemory**, our intuitive knowledge of what our own memory contains. This includes the **Feeling of Knowing**—a judgment on whether a fact is worth a retrieval attempt—and the **Tip-of-the-Tongue (TOT) phenomenon**, where a word is temporarily inaccessible despite a high feeling of knowing.
+
+The effectiveness of retrieval is governed by **Encoding Specificity**, which posits that a cue is most effective when it re-creates the specific context present during initial encoding. This manifests as **State-Dependent Retrieval**, where matching a mental state (mood) or physical state (e.g., being sober or intoxicated) between learning and testing significantly improves recall.
+
+IV. Autobiographical Memory and Developmental Phenomena
+
+Autobiographical memory requires a sense of self, personal ownership, and the ability to view time as an unfolding narrative. It is marked by three distinct temporal phenomena:
+
+- **Infantile Amnesia:** The near-total inability to recall events from the first 2-3 years of life, potentially due to the late development of language or the concept of self.
+- **Reminiscence Bump:** A universal peak in recall for events occurring between the ages of 10 and 25, a period defined by many life "firsts".
+- **Flashbulb Memories:** Highly vivid, emotional memories of significant events (e.g., 9/11); while people are more confident in these memories, they are actually no more accurate than everyday memories and decline at the same rate.
+
+V. Neuropsychology of Memory Systems
+
+Specific brain regions are dedicated to different memory functions, as evidenced by clinical case studies:
+
+- **The Hippocampus:** Essential for consolidating new information and linking disparate sensory elements into a coherent memory; its removal results in profound **anterograde amnesia**, as seen in the landmark case of **H.M.**.
+- **The Amygdala:** Processes the emotional component of memories; when damaged, a person can remember a tragic event but loses the associated emotional reaction.
+- **The HERA Model:** Identifies a hemispheric asymmetry where the left prefrontal cortex is more active during **encoding** and the right is more active during **retrieval**.
+- **Mammillary Bodies:** Damage here, often due to excessive alcohol consumption, leads to **Korsakoff’s syndrome**, characterized by **prevaricating** (making up answers to fill memory gaps).
+
+VI. Reconstructive Memory and Forensic Applications
+
+Memory is not a verbatim recording but a reconstructive process influenced by prior knowledge and cultural biases, a concept demonstrated by Bartlett’s **"War of the Ghosts"** study. This reconstructive nature makes **eyewitness testimony** fallible, as **leading questions** (e.g., using "smashed" vs. "hit") can alter a witness's estimate of speed or even plant false memories of broken glass. **Source Monitoring** errors further complicate this, as people often forget whether they saw an event or merely heard about it. To mitigate these biases, the **Cognitive Interview** uses context reinstatement and reverse-order sequencing to increase correct recollections by roughly 25%.
+
+# 📚 Chapter 7 - Knowledge
+
+>Chapter 7 explores the nature of **knowledge**, specifically how it is structured within **semantic memory**—the portion of long-term memory dedicated to facts and inferences. This chapter synthesizes four major theoretical frameworks of knowledge representation and examines the role of **schemas** in everyday cognition and expertise.
+
+I. Major Theories of Knowledge Representation
+
+Researchers have proposed four dominant models to explain how humans store and retrieve information efficiently:
+
+- **Network Theories (Quillian’s TLC):** These models view knowledge as a **node-link system** resembling a giant net or fishnet. The **Teachable Language Comprehender (TLC)** assumes a hierarchy where specific facts (canary) are at the bottom and abstract concepts (living thing) are at the top.
+    - **Mechanism:** It utilizes **spreading activation**, where energy spreads from activated nodes to connected ones.
+    - **Key Findings:** The **semantic distance effect** shows it takes longer to answer questions if more links must be traveled (e.g., "is a canary an animal?" takes longer than "is a canary a bird?").
+    - **Limitations:** TLC struggles to explain the **typicality effect** (why we identify a sparrow as a bird faster than an ostrich) and the **semantic relatedness effect**.
+- **Feature Comparison Model (FCM):** This model portrays knowledge as a **semantic space**—a "plain" of hills and valleys where clusters represent categories.
+    - **Features:** It distinguishes between **defining features** (essential for membership, like "lays eggs" for birds) and **characterizing features** (common but not necessary, like "builds nests").
+    - **Decision Process:** Categorization involves comparing the overlap of features between two terms; high or low overlap leads to fast decisions, while intermediate overlap requires a slower search of defining features only.
+- **Perceptual Theory of Knowledge:** This view argues that knowledge is not purely abstract but is based on **perceptual symbols**. When we think of a concept, our brains reactivate the sensory images (visual, auditory, etc.) associated with our original experience of it.
+- **Connectionist Model:** Often called **neural networks**, this model asserts that knowledge is represented by the entire pattern of connections in the brain. It assumes humans are **parallel processors** and can account for **learning** through the strengthening of connections over time. It also explains the gradual decline of knowledge in **semantic dementia**.
+
+II. Schemas: The "Sketches" of Knowledge
+
+A **schema** is a flexible piece of knowledge that represents a "sketch" of a situation or object rather than a detailed picture.
+
+- **Scripts:** A specialized type of schema describing behavior sequences in specific situations, such as a "restaurant script".
+- **Functions:** Schemas help us **fill in missing information** during conversations and speed up comprehension by providing a framework for unstated details.
+- **Memory Errors:** Schemas can cause us to misinterpret events or falsely remember items that "should" have been there. For example, in a famous study, students falsely recalled seeing books in a graduate student's office because books fit their "office schema".
+- **Activation:** Schemas are activated by key terms or titles. The "Helen Keller" study showed that participants falsely remembered sentences consistent with their schema of Keller one week after reading a story, but only if they were told the story was about her.
+
+III. Schema Development and Narrative Structures
+
+Humans are born with innate action schemas called **reflexes** (e.g., Blink, Moro, and Walking reflexes). As we grow, our ability to organize knowledge into **narrative (story) schemas** evolves:
+
+- **Development:** Children progress from two-word "recounts" to full plot structures by age 8.
+- **Constituents:** Every narrative typically contains four categories: **setting, theme, plot, and resolution**. Stories conforming to this standard structure are significantly easier to remember.
+
+IV. Educational and Social Applications
+
+- **Advance Organizers:** Providing a framework (diagrams or background info) before learning helps students bridge new information with existing knowledge, significantly improving recall and problem-solving.
+- **Person Schemas and Stereotypes:** A **stereotype** is an overgeneralized person schema applied to a group. These can lead to biased behavior and distorted memory; for example, a study showed that racial stereotypes caused participants to misremember who was holding a knife in a subway scene.
+
+V. Expertise and Skilled Memory
+
+Expertise is domain-specific; being an expert in one area does not translate to others. Experts exhibit superior memory because they possess "hills of knowledge" called **semantic neighborhoods**.
+
+- **Skilled Memory Theory:** Consists of three principles:
+    1. **Meaningful Encoding Principle:** Experts use prior knowledge to store info in **memory chunks**.
+    2. **Retrieval Structure Principle:** They attach specific cues to material for easy access from long-term memory.
+    3. **Speed-up Principle:** Through practice, experts create a seamless connection between working memory and long-term memory, a process known as **long-term working memory**.
+
+# 📚 Exam 2 Study Guide
+
+>This study guide response is synthesized from the provided technical sources, following the structure of your "Study Guide Exam 2" document.
+
+**Chapter 5: Short-Term and Working Memory**
+
+- **Defining STM and WM:** Short-term memory (STM) is defined as the system containing our moment-to-moment conscious thoughts and perceptions; it is considered "fleeting" because its contents endure only as long as active attention is maintained. Working memory (WM) refers to the set of mechanisms that underlie STM and communicate with long-term memory (LTM), serving as a process-oriented support system for cognitive work like reasoning and decision-making.
+- **Capacity and Duration:** The capacity of STM is approximately 7 (between 5 and 9) unrelated items. Without rehearsal, information is lost from STM in approximately 18 seconds.
+- **Chunking and Prior Knowledge:** Chunking is the process of grouping information into meaningful units, which increases memory span. This process relies on prior knowledge stored in LTM; for example, chess experts have a higher memory span for board configurations because they recognize patterns as familiar "chunks".
+- **Interference:** Proactive interference occurs when previously learned information inhibits the recall of new information. Retroactive interference occurs when recently learned information makes it difficult to recall older information.
+- **Maintenance vs. Elaborative Rehearsal:** Maintenance rehearsal involves rote repetition to keep information fresh in STM. Elaborative rehearsal involves connecting new items to existing knowledge in LTM, which promotes better long-term recall.
+- **Serial Position Effect:** This is the U-shaped curve where items at the beginning (**primacy effect**) and end (**recency effect**) of a list are remembered best. Primacy occurs because early items receive more rehearsal and are likely stored in LTM; recency occurs because final items are still available in STM.
+- **Suppression of Primacy:** Primacy effects can be suppressed if items are presented at a fast rate, making it difficult for the individual to rehearse the first few items.
+- **Modality Effect:** Humans typically show better recall for the last few items of a list when they are presented auditorily rather than visually. This suggests humans may have evolved sound-based rehearsal to compensate for the fleeting nature of speech compared to visual events.
+- **Baddeley’s Multi-Component Model:**
+    - **Phonological Loop:** Temporarily stores sound-based information; it includes a **phonological store** (reservoir) and an **articulatory control process** (subvocal rehearsal) that refreshes energy in a 2-second cycle.
+    - **Visuospatial Sketchpad:** Stores visual and spatial information; it includes the **visual cache** (storing form/color) and the **inner scribe** (refreshing spatial relationships and bodily movement).
+    - **Episodic Buffer:** An integrative system that sequences events from other buffers into coherent "episodes" or sentences using a time-based "glue".
+    - **Central Executive:** A control system that coordinates the other three divisions, guides attention, and manages controlled processes.
+- **Word-Length Effect:** STM span decreases as words get longer because long words take more time to pronounce, exceeding the 2-second rehearsal limit of the phonological loop.
+- **Irrelevant Speech Effect:** Background speech interferes with reading or memorization because the irrelevant sounds enter the phonological loop and disrupt the rehearsal of target information.
+- **Attentional Capture Hypothesis:** This posits that emotional stimuli (e.g., a threatening face or taboo word) capture attention more effectively than non-emotional stimuli, often competing for WM resources.
+- **Stress and Emotion:** Extreme life stressors intrude into thoughts and compete for WM capacity. Intervention studies show that writing about negative events can improve WM capacity by organizing thoughts and preventing them from intruding unbidden into consciousness.
+
+**Cognitive Load Theory & Metacognition**
+
+>To understand CLT, you first have to look at how it maps onto the standard information processing model of the mind.
+
+- **Working Memory (WM):** This is the mental "workspace" where conscious processing happens. CLT's foundational premise is that working memory is severely limited in both capacity (holding only about 4 to 7 "chunks" of novel information at a time) and duration (information fades within 15-30 seconds unless rehearsed).
+    
+- **Long-Term Memory (LTM):** In contrast to working memory, LTM has an effectively infinite capacity. Learning, according to CLT, is defined as a permanent alteration in long-term memory. If nothing has changed in LTM, nothing has been learned.
+    
+- **Schemas:** These are cognitive structures stored in LTM that organize categories of information and the relationships among them. As we learn, we build increasingly complex schemas. Crucially, working memory treats a highly complex, well-practiced schema as a _single_ element.
+    
+- **Automation:** When a schema becomes highly practiced, it can be processed automatically (System 1 processing) without taking up conscious working memory space, freeing up cognitive resources for higher-level tasks.
+    
+
+---
+
+## The Three Types of Cognitive Load
+
+CLT proposes that during any learning task, the total cognitive load placed on working memory is the sum of three distinct types of load:
+
+### 1. Intrinsic Cognitive Load
+
+This is the inherent difficulty or complexity of the material itself. It is determined by **element interactivity**—how many elements must be processed simultaneously to understand the concept.
+
+- _Low Interactivity:_ Learning the vocabulary words of a new language (you can learn "perro" means "dog" without needing to know other words).
+    
+- _High Interactivity:_ Learning the grammar syntax of a new language (you have to hold the subject, verb, tense, and object in mind all at once to form a correct sentence).
+    
+- _Management:_ You cannot change the intrinsic load of a concept, but you can manage it by breaking complex tasks down into smaller, sequenced sub-tasks.
+    
+
+### 2. Extraneous Cognitive Load
+
+This is the "bad" cognitive load. It is generated by the way information is presented to the learner and by activities that do not contribute to schema construction.
+
+- _Examples:_ Poorly designed instructional materials, distracting background noise, forcing a learner to split their attention between a diagram and a block of text on another page (the "split-attention effect"), or explaining a concept with both on-screen text and a narrator reading the exact same text (the "redundancy effect").
+    
+- _Management:_ Instructional design should aim to reduce or eliminate extraneous load as much as possible.
+    
+
+### 3. Germane Cognitive Load
+
+This is the "good" cognitive load. It represents the mental effort explicitly directed toward integrating new information with existing knowledge to construct and automate schemas in long-term memory.
+
+- _Examples:_ Self-explanation, comparing and contrasting concepts, or generating your own examples.
+    
+- _Management:_ You want to maximize germane load.
+    
+
+---
+
+## The Core Equation
+
+The relationship between these three dictates successful learning: **Total Cognitive Load = Intrinsic + Extraneous + Germane**
+
+If the total load exceeds the capacity of working memory, cognitive overload occurs, and learning stops. The goal is to reduce extraneous load so that working memory capacity can be reallocated to germane load (schema construction) while managing the intrinsic load.
+
+## The Broader Cognitive Psychology Perspective
+
+When exploring self-regulated learning or developing personal knowledge management systems, understanding CLT becomes incredibly useful. A self-regulated learner actively monitors their own cognitive load. By externalizing memory—such as building a digital second brain, using structured databases, or creating automated processing pipelines—you effectively offload extraneous and intrinsic demands from your biological working memory. This preserves your limited mental bandwidth entirely for germane processing: connecting ideas, synthesizing research, and generating new insights.
+
+- **Metacognition Definition:** This refers to "thinking about thinking" or our awareness of our own mental processes.
+- **Related Concepts:**
+    - **Retrieval Cues:** Cues that help search LTM to make facts available.
+    - **Judgment of Learning:** A student's estimate of their own performance on a test.
+    - **Feeling of Knowing:** A quick judgment on whether a fact is worth a retrieval attempt.
+    - **Prospective Memory:** Remembering to perform an action in the future.
+    - **Source Monitoring:** Identifying the origin of our memories (e.g., "did I see this or hear it?").
+    - **Effective Strategies:** Strategies like **retrieval practice** (practice testing) and **distributed practice** (spacing) are high-utility methods supported by metacognitive research.
+
+**Chapter 6: Long-Term Memory**
+
+- **Explicit vs. Implicit Memory:** Explicit memory involves conscious retrieval (e.g., naming a teacher); it includes **semantic memory** (discrete facts like "robins are birds") and **episodic memory** (biographical events connected to time and place). Implicit memory is semiautonomous and operates in the background; it includes **procedural memory** (motor skills like riding a bike) and **perceptual memory** (automated pattern recognition).
+- **Patient H.M. (Henry Molaison):** After the removal of his hippocampi to treat epilepsy, H.M. suffered from profound **anterograde amnesia**, meaning he could not store new explicit memories. However, his implicit memory remained intact; he could improve on tasks like mirror tracing without remembering ever performing them, providing evidence that explicit and implicit systems are separate.
+- **Autobiographical Memory:** Memory of personal past experiences where the individual is the central actor.
+- **LTM Capacity and Duration:** LTM has no practical capacity limit; retrieval failures are usually due to poor search cues rather than loss of space. Duration can last nearly a lifetime, a state called **permastore**.
+- **Theories of Forgetting:** Major sources of forgetting in LTM include failure to find a match with retrieval cues and reconstructive errors based on cultural biases or leading questions.
+- **Tip-of-the-Tongue (TOT):** The temporary inaccessibility of a word despite a high feeling of knowing; it is a universal experience and suggests that sound-based codes play a role in LTM retrieval.
+- **Retrieval Specificity:** **Context-dependent retrieval** posits that recall is better when the physical environment (e.g., a specific room) matches encoding. **State-dependent retrieval** applies to internal mental or physical states, such as mood or sobriety.
+- **Reminiscence Bump:** A universal peak in recall for events occurring between the ages of 10 and 25, a period filled with many life "firsts".
+- **DRM Method:** A study paradigm where participants are given lists of related words (e.g., bed, rest, awake) and frequently "falsely remember" a non-present critical lure (e.g., sleep).
+- **Eyewitness and False Memories:** Memories are reconstructive, not verbatim. They can be distorted by **leading questions** (e.g., using the word "smashed" to increase speed estimates) or forced lying. **Source monitoring errors** occur when a witness forgets the source of new information and misattributes it to the original event.
+- **Cognitive Interview:** A technique involving context reinstatement and reverse-order sequencing that increases correct recollections by roughly 25%.
+- **Amnesia Types:** **Retrograde amnesia** is the loss of memories prior to a brain injury; **anterograde amnesia** is the inability to form new memories after the injury. These illustrate the biological independence of encoding and retrieval.
+
+**Chapter 7: Knowledge**
+
+- **Teachable Language Comprehender (TLC):** A network theory assuming knowledge is a node-link system where properties are stored at the highest appropriate node (**efficient filing system**) and retrieved via **spreading activation**.
+- **Feature Comparison Model (FCM):** Portrays knowledge as a semantic space where categorization involves comparing features. **Defining features** are essential for category membership (e.g., laying eggs for birds); **characterizing features** are common but not required (e.g., building nests).
+- **Connectionist Model:** A "neural network" model where activation spreads across entire patterns of connections; the strength of these connections is determined by experience and learning.
+- **Schemas and Scripts:** A **schema** is a generalized "sketch" of knowledge for objects or events; a **script** is a specialized schema for sequences of behavior (e.g., a restaurant script).
+- **Misleading Schemas:** Schemas can cause us to misrecall experiences by "filling in" missing but expected details, such as falsely remembering books in a graduate student office.
+- **Person Schemas and Stereotypes:** A **person schema** connects personality traits with expected behavior. A **stereotype** is an overgeneralized person schema applied to a whole group, which can lead to distorted memories consistent with assumptions.
+- **Expertise Principles:** Experts use **meaningful encoding** to perceive configurations as "chunks" invisible to novices and utilize **retrieval structures** between WM and LTM (long-term working memory) to speed up storage and retrieval.
+
+
+
+
+
 # 🎙️ Audio Overview
 assets/audio/Cog_Psyc_Overview_1.m4a
 
