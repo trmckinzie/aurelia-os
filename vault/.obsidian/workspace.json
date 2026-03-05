@@ -11,10 +11,12 @@
             "id": "4eb1b9453e3d0c1f",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "pdf",
+              "state": {
+                "file": "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "Year 12 Travis Decisions"
             }
           }
         ]
@@ -214,6 +216,10 @@
   },
   "active": "4eb1b9453e3d0c1f",
   "lastOpenFiles": [
+    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
+    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
+    "80_COURSES/81_ASU/BUS 480/BSG Checklists.pdf",
+    "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
     "10_GARDEN/14_Disciplines/Philosophy of Mind.md",
     "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
@@ -239,8 +245,6 @@
     "80_COURSES/81_ASU/BUS 430/Unconfirmed 910058.crdownload",
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
-    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
-    "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
@@ -249,8 +253,6 @@
     "10_GARDEN/13_Authors/George Miller.md",
     "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
     "80_COURSES/81_ASU/PSYC 414/instructions/applied paper options.pdf",
-    "80_COURSES/81_ASU/PSYC 498/Hypotheses & Analysis Plan.pdf",
-    "10_GARDEN/11_Daily_Bridge/2026-02-22.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
