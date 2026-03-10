@@ -10,7 +10,7 @@ publish: true
 ---
 # ⚛️ Neuron
 
-**🔗 Related:** [[Action Potential]], [[Synapse]], [[Dendrite]], [[Axon]], [[Glial Cells]], [[Hebbian Learning]]
+**🔗 Related:** [[Action Potential]], [[Synapse]], [[Dendrite]], [[Axon]], [[Glial Cells]], [[Hebbian Learning]], [[Myelination]]
 
 ---
 

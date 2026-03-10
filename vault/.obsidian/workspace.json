@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "8f4390cdadf9a240",
+        "id": "1fcd53ed6aecb643",
         "type": "tabs",
         "children": [
           {
-            "id": "4eb1b9453e3d0c1f",
+            "id": "29f837551d0327da",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+                "file": "10_GARDEN/12_Concepts/Neuron.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "PSYC 414-1 - Cognitive Psychology"
+              "title": "Neuron"
             }
           }
         ]
@@ -226,21 +226,29 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4eb1b9453e3d0c1f",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
+    "10_GARDEN/12_Concepts/Hebbian Learning.md",
+    "10_GARDEN/12_Concepts/Neuron.md",
+    "10_GARDEN/12_Concepts/Myelination.md",
+    "10_GARDEN/12_Concepts/Axon.md",
+    "10_GARDEN/12_Concepts/Dendrite.md",
+    "10_GARDEN/12_Concepts/Glial Cells.md",
+    "10_GARDEN/12_Concepts/Synapse.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
+    "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
+    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "80_COURSES/81_ASU/BUS 480/BSG Checklists.pdf",
     "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
     "10_GARDEN/14_Disciplines/Philosophy of Mind.md",
-    "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
     "10_GARDEN/12_Concepts/Working Memory.md",
     "10_GARDEN/12_Concepts/Zimmerman's Model of SRL.md",
     "10_GARDEN/12_Concepts/Untitled.md",
     "10_GARDEN/12_Concepts/Untitled 1.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-28.md",
     "10_GARDEN/12_Concepts/Cognitive Hexagon.md",
     "10_GARDEN/13_Authors/William James.md",
@@ -251,20 +259,12 @@
     "10_GARDEN/12_Concepts/Brain.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-26.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-25.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-23.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
-    "10_GARDEN/16_NotebookLM/BUS 430-1 - Production and Operations Management.md",
     "80_COURSES/81_ASU/BUS 430/Ch 7 problems scan.pdf",
     "80_COURSES/81_ASU/BUS 430/Unconfirmed 910058.crdownload",
-    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
-    "80_COURSES/81_ASU/AI x SRL/Mastering Self-Regulated Learning Through Artificial Intelligence.md",
-    "10_GARDEN/16_NotebookLM/AI Usage & Self-Regulated Learning.md",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "80_COURSES/81_ASU/PSYC 498/materials/Hypotheses & Analysis Plan.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Recruitment Plan for Capstone Thesis II.pdf",
-    "80_COURSES/81_ASU/BUS 430/Chapter 4 Problems Scan  Project.pdf",
-    "10_GARDEN/13_Authors/George Miller.md",
-    "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"
   ]
