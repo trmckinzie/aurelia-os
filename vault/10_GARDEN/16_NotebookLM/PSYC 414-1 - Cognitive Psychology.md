@@ -442,7 +442,7 @@ When exploring self-regulated learning or developing personal knowledge manageme
 
 
 # 🎙️ Audio Overview
-assets/audio/Cog_Psyc_Overview_1.m4a
+assets/audio/Fostering_Effective_Learning_Strategies.m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4
