@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "a8f5bb8fc2c32767",
+        "id": "a23915682ed8e6b9",
         "type": "tabs",
         "children": [
           {
-            "id": "086c9c45de7271f3",
+            "id": "7db93dff294b943e",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Desirable Difficulty.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Desirable Difficulty"
             }
           }
         ]
@@ -212,14 +226,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "7db93dff294b943e",
   "lastOpenFiles": [
+    "Desirable Difficulty.md",
+    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+    "10_GARDEN/12_Concepts/Axon.md",
     "10_GARDEN/12_Concepts/Neurotransmitters.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
-    "10_GARDEN/12_Concepts/Axon.md",
-    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "assets/audio/Unconfirmed 180726.crdownload",
     "assets/audio/PSYC_414_Exam_2_Overview.m4a",
@@ -248,7 +263,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-01-07.md",
     "10_GARDEN/12_Concepts/Computational Theory of Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-27.md",
-    "10_GARDEN/12_Concepts/Brain.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",

@@ -343,6 +343,32 @@ Expertise is domain-specific; being an expert in one area does not translate to 
 - **Attentional Capture Hypothesis:** This posits that emotional stimuli (e.g., a threatening face or taboo word) capture attention more effectively than non-emotional stimuli, often competing for WM resources.
 - **Stress and Emotion:** Extreme life stressors intrude into thoughts and compete for WM capacity. Intervention studies show that writing about negative events can improve WM capacity by organizing thoughts and preventing them from intruding unbidden into consciousness.
 
+**Chapter 6 - LTM**
+
+- **Explicit vs. Implicit Memory:** Explicit memory involves conscious retrieval (e.g., naming a teacher); it includes **semantic memory** (discrete facts like "robins are birds") and **episodic memory** (biographical events connected to time and place). Implicit memory is semiautonomous and operates in the background; it includes **procedural memory** (motor skills like riding a bike) and **perceptual memory** (automated pattern recognition).
+- **Patient H.M. (Henry Molaison):** After the removal of his hippocampi to treat epilepsy, H.M. suffered from profound **anterograde amnesia**, meaning he could not store new explicit memories. However, his implicit memory remained intact; he could improve on tasks like mirror tracing without remembering ever performing them, providing evidence that explicit and implicit systems are separate.
+- **Autobiographical Memory:** Memory of personal past experiences where the individual is the central actor.
+- **LTM Capacity and Duration:** LTM has no practical capacity limit; retrieval failures are usually due to poor search cues rather than loss of space. Duration can last nearly a lifetime, a state called **permastore**.
+- **Theories of Forgetting:** Major sources of forgetting in LTM include failure to find a match with retrieval cues and reconstructive errors based on cultural biases or leading questions.
+- **Tip-of-the-Tongue (TOT):** The temporary inaccessibility of a word despite a high feeling of knowing; it is a universal experience and suggests that sound-based codes play a role in LTM retrieval.
+- **Retrieval Specificity:** **Context-dependent retrieval** posits that recall is better when the physical environment (e.g., a specific room) matches encoding. **State-dependent retrieval** applies to internal mental or physical states, such as mood or sobriety.
+- **Reminiscence Bump:** A universal peak in recall for events occurring between the ages of 10 and 25, a period filled with many life "firsts".
+- **DRM Method:** A study paradigm where participants are given lists of related words (e.g., bed, rest, awake) and frequently "falsely remember" a non-present critical lure (e.g., sleep).
+- **Eyewitness and False Memories:** Memories are reconstructive, not verbatim. They can be distorted by **leading questions** (e.g., using the word "smashed" to increase speed estimates) or forced lying. **Source monitoring errors** occur when a witness forgets the source of new information and misattributes it to the original event.
+- **Cognitive Interview:** A technique involving context reinstatement and reverse-order sequencing that increases correct recollections by roughly 25%.
+- **Amnesia Types:** **Retrograde amnesia** is the loss of memories prior to a brain injury; **anterograde amnesia** is the inability to form new memories after the injury. These illustrate the biological independence of encoding and retrieval.
+
+**Chapter 7: Knowledge**
+
+- **Teachable Language Comprehender (TLC):** A network theory assuming knowledge is a node-link system where properties are stored at the highest appropriate node (**efficient filing system**) and retrieved via **spreading activation**.
+- **Feature Comparison Model (FCM):** Portrays knowledge as a semantic space where categorization involves comparing features. **Defining features** are essential for category membership (e.g., laying eggs for birds); **characterizing features** are common but not required (e.g., building nests).
+- **Connectionist Model:** A "neural network" model where activation spreads across entire patterns of connections; the strength of these connections is determined by experience and learning.
+- **Schemas and Scripts:** A **schema** is a generalized "sketch" of knowledge for objects or events; a **script** is a specialized schema for sequences of behavior (e.g., a restaurant script).
+- **Misleading Schemas:** Schemas can cause us to misrecall experiences by "filling in" missing but expected details, such as falsely remembering books in a graduate student office.
+- **Person Schemas and Stereotypes:** A **person schema** connects personality traits with expected behavior. A **stereotype** is an overgeneralized person schema applied to a whole group, which can lead to distorted memories consistent with assumptions.
+- **Expertise Principles:** Experts use **meaningful encoding** to perceive configurations as "chunks" invisible to novices and utilize **retrieval structures** between WM and LTM (long-term working memory) to speed up storage and retrieval.
+
+
 **Cognitive Load Theory & Metacognition**
 
 >To understand CLT, you first have to look at how it maps onto the standard information processing model of the mind.
@@ -411,31 +437,7 @@ When exploring self-regulated learning or developing personal knowledge manageme
     - **Prospective Memory:** Remembering to perform an action in the future.
     - **Source Monitoring:** Identifying the origin of our memories (e.g., "did I see this or hear it?").
     - **Effective Strategies:** Strategies like **retrieval practice** (practice testing) and **distributed practice** (spacing) are high-utility methods supported by metacognitive research.
-
-**Chapter 6: Long-Term Memory**
-
-- **Explicit vs. Implicit Memory:** Explicit memory involves conscious retrieval (e.g., naming a teacher); it includes **semantic memory** (discrete facts like "robins are birds") and **episodic memory** (biographical events connected to time and place). Implicit memory is semiautonomous and operates in the background; it includes **procedural memory** (motor skills like riding a bike) and **perceptual memory** (automated pattern recognition).
-- **Patient H.M. (Henry Molaison):** After the removal of his hippocampi to treat epilepsy, H.M. suffered from profound **anterograde amnesia**, meaning he could not store new explicit memories. However, his implicit memory remained intact; he could improve on tasks like mirror tracing without remembering ever performing them, providing evidence that explicit and implicit systems are separate.
-- **Autobiographical Memory:** Memory of personal past experiences where the individual is the central actor.
-- **LTM Capacity and Duration:** LTM has no practical capacity limit; retrieval failures are usually due to poor search cues rather than loss of space. Duration can last nearly a lifetime, a state called **permastore**.
-- **Theories of Forgetting:** Major sources of forgetting in LTM include failure to find a match with retrieval cues and reconstructive errors based on cultural biases or leading questions.
-- **Tip-of-the-Tongue (TOT):** The temporary inaccessibility of a word despite a high feeling of knowing; it is a universal experience and suggests that sound-based codes play a role in LTM retrieval.
-- **Retrieval Specificity:** **Context-dependent retrieval** posits that recall is better when the physical environment (e.g., a specific room) matches encoding. **State-dependent retrieval** applies to internal mental or physical states, such as mood or sobriety.
-- **Reminiscence Bump:** A universal peak in recall for events occurring between the ages of 10 and 25, a period filled with many life "firsts".
-- **DRM Method:** A study paradigm where participants are given lists of related words (e.g., bed, rest, awake) and frequently "falsely remember" a non-present critical lure (e.g., sleep).
-- **Eyewitness and False Memories:** Memories are reconstructive, not verbatim. They can be distorted by **leading questions** (e.g., using the word "smashed" to increase speed estimates) or forced lying. **Source monitoring errors** occur when a witness forgets the source of new information and misattributes it to the original event.
-- **Cognitive Interview:** A technique involving context reinstatement and reverse-order sequencing that increases correct recollections by roughly 25%.
-- **Amnesia Types:** **Retrograde amnesia** is the loss of memories prior to a brain injury; **anterograde amnesia** is the inability to form new memories after the injury. These illustrate the biological independence of encoding and retrieval.
-
-**Chapter 7: Knowledge**
-
-- **Teachable Language Comprehender (TLC):** A network theory assuming knowledge is a node-link system where properties are stored at the highest appropriate node (**efficient filing system**) and retrieved via **spreading activation**.
-- **Feature Comparison Model (FCM):** Portrays knowledge as a semantic space where categorization involves comparing features. **Defining features** are essential for category membership (e.g., laying eggs for birds); **characterizing features** are common but not required (e.g., building nests).
-- **Connectionist Model:** A "neural network" model where activation spreads across entire patterns of connections; the strength of these connections is determined by experience and learning.
-- **Schemas and Scripts:** A **schema** is a generalized "sketch" of knowledge for objects or events; a **script** is a specialized schema for sequences of behavior (e.g., a restaurant script).
-- **Misleading Schemas:** Schemas can cause us to misrecall experiences by "filling in" missing but expected details, such as falsely remembering books in a graduate student office.
-- **Person Schemas and Stereotypes:** A **person schema** connects personality traits with expected behavior. A **stereotype** is an overgeneralized person schema applied to a whole group, which can lead to distorted memories consistent with assumptions.
-- **Expertise Principles:** Experts use **meaningful encoding** to perceive configurations as "chunks" invisible to novices and utilize **retrieval structures** between WM and LTM (long-term working memory) to speed up storage and retrieval.
+ 
 
 
 
