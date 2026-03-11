@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "f11fe864d827cbaf",
+        "id": "a8f5bb8fc2c32767",
         "type": "tabs",
         "children": [
           {
-            "id": "d029a00e8c707c4c",
+            "id": "086c9c45de7271f3",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/12_Concepts/Axon.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Axon"
+              "title": "New tab"
             }
           }
         ]
@@ -226,8 +212,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d029a00e8c707c4c",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
+    "10_GARDEN/12_Concepts/Neurotransmitters.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
+    "10_GARDEN/12_Concepts/Axon.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "assets/audio/Unconfirmed 180726.crdownload",
@@ -236,12 +227,9 @@
     "10_GARDEN/12_Concepts/Neuron.md",
     "10_GARDEN/12_Concepts/Hebbian Learning.md",
     "10_GARDEN/12_Concepts/Myelination.md",
-    "10_GARDEN/12_Concepts/Axon.md",
     "10_GARDEN/12_Concepts/Dendrite.md",
     "10_GARDEN/12_Concepts/Glial Cells.md",
     "10_GARDEN/12_Concepts/Synapse.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
     "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
@@ -261,7 +249,6 @@
     "10_GARDEN/12_Concepts/Computational Theory of Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-27.md",
     "10_GARDEN/12_Concepts/Brain.md",
-    "10_GARDEN/11_Daily_Bridge/2026-02-26.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
