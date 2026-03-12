@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "a23915682ed8e6b9",
+        "id": "e8eae056c8acdf7d",
         "type": "tabs",
         "children": [
           {
-            "id": "7db93dff294b943e",
+            "id": "372b8962f75d9582",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Desirable Difficulty.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Desirable Difficulty"
+              "title": "New tab"
             }
           }
         ]
@@ -226,7 +212,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7db93dff294b943e",
+  "active": "372b8962f75d9582",
   "lastOpenFiles": [
     "Desirable Difficulty.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
