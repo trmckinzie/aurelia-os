@@ -4,59 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "e8eae056c8acdf7d",
+        "id": "9349436bc9e892ba",
         "type": "tabs",
         "children": [
           {
-            "id": "372b8962f75d9582",
+            "id": "4092ff7bf8a73113",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Brain Divisions.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Brain Divisions"
-            }
-          },
-          {
-            "id": "6f53e381aac7ee9c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "2026-03-07"
+              "title": "New tab"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -251,13 +212,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "6f53e381aac7ee9c",
+  "active": "4092ff7bf8a73113",
   "lastOpenFiles": [
+    "Brain Divisions.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
     "10_GARDEN/12_Concepts/Deliberate Practice.md",
     "Untitled.md",
-    "Brain Divisions.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-06.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
     "Desirable Difficulty.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
