@@ -11,13 +11,40 @@
             "id": "4092ff7bf8a73113",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Brain Divisions.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Brain Divisions"
+            }
+          },
+          {
+            "id": "6ab257ef4b276d8f",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.12.7"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.12.7"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -212,15 +239,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4092ff7bf8a73113",
+  "active": "6ab257ef4b276d8f",
   "lastOpenFiles": [
+    "10_GARDEN/12_Concepts/Desirable Difficulty.md",
+    "Untitled.md",
     "Brain Divisions.md",
+    "10_GARDEN/11_Daily_Bridge/2026-03-23.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
     "10_GARDEN/12_Concepts/Deliberate Practice.md",
-    "Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-06.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
-    "Desirable Difficulty.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/12_Concepts/Axon.md",
     "10_GARDEN/12_Concepts/Neurotransmitters.md",
@@ -248,7 +276,6 @@
     "10_GARDEN/12_Concepts/Untitled.md",
     "10_GARDEN/12_Concepts/Untitled 1.md",
     "10_GARDEN/11_Daily_Bridge/2026-02-28.md",
-    "10_GARDEN/12_Concepts/Cognitive Hexagon.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
