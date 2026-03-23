@@ -30,21 +30,8 @@
               "icon": "lucide-file",
               "title": "Brain Divisions"
             }
-          },
-          {
-            "id": "6ab257ef4b276d8f",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.12.7"
-              },
-              "icon": "lucide-book-up",
-              "title": "Release Notes 1.12.7"
-            }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -239,7 +226,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "6ab257ef4b276d8f",
+  "active": "4092ff7bf8a73113",
   "lastOpenFiles": [
     "10_GARDEN/12_Concepts/Desirable Difficulty.md",
     "Untitled.md",
