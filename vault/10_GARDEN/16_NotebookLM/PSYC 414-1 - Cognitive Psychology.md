@@ -319,6 +319,63 @@ Expertise is domain-specific; being an expert in one area does not translate to 
     2. **Retrieval Structure Principle:** They attach specific cues to material for easy access from long-term memory.
     3. **Speed-up Principle:** Through practice, experts create a seamless connection between working memory and long-term memory, a process known as **long-term working memory**.
 
+# 📚 Chapter 8 - Imagery
+
+>This overview synthesizes the core theories, experimental evidence, and practical applications of mental imagery as detailed in the sources.
+
+I. The Nature and Benefits of Imagery
+
+Mental imagery is defined as perceptual experiences that occur without an external source; they are generated internally from the "mind's eye". While most commonly visual, imagery can also be auditory (hearing a song in your head), motoric (mentally rehearsing a dance), or haptic (imagining the feel of sandpaper).
+
+**Key Benefits of Imagery:**
+
+- **Wayfinding (Route Learning):** The cognitive process of navigating a spatial environment to reach a goal. For example, Micronesian navigators use "imaginary islands" called _etaks_ as reference points to track their movement across open water.
+- **Problem Solving:** Visualizing a problem can bypass logical roadblocks. For example, a riddle about a man looking at a photograph is solved by only 17% of students using logic, but success rates jump significantly when they physically imagine the characters.
+- **Memory Enhancement:** Interacting images (e.g., imagining a dog reading a book) facilitate recall significantly better than rote rehearsal or non-interacting images.
+
+II. The Coding Debate: Analog vs. Propositional
+
+A central question in cognitive psychology is how images are stored in the brain. The sources identify two primary theories:
+
+1. **Analog Code:** This view suggests images are like "mental maps" or moving pictures that preserve the continuous relationship between elements.
+    - **Evidence—Mental Scanning:** Research shows it takes longer to scan across a mental image of a map if the distance between landmarks is greater, just as it would with a physical map.
+    - **Evidence—Mental Rotation:** When asked to determine if a rotated letter is "upright," participants' response times increase linearly with the degree of rotation. This suggests we rotate images "continuously" (isomorphically) as if they were concrete objects.
+    - **Evidence—Symbolic Distance Effect:** It is faster to judge which of two objects is larger (e.g., an elephant vs. a mouse) if the size difference is significant, supporting the idea that we are "inspecting" an analog image.
+2. **Propositional Code:** This view suggests images are abstract, language-like structures or logical sentences.
+    - **Evidence—Limits of Imagery:** Unlike physical pictures, mental images are difficult to re-interpret. For example, people often fail to find "hidden figures" in their mental images that they can easily see in physical drawings.
+    - **Evidence—Ambiguity:** When mentally rotating a silhouette (like a duck that becomes a rabbit when turned), people often cannot "see" the new animal until they physically rotate the page, suggesting the image is tied to a specific "propositional" label.
+
+III. Neuropsychological Foundations
+
+Research indicates that imagery and actual perception share common brain areas and pathways.
+
+- **Hemispheric Specialization:** The right hemisphere is typically superior at performing spatial relations and mental rotation.
+- **Hemineglect:** Patients who cannot attend to the left side of their physical visual field often exhibit "imagery neglect," failing to perceive the left side of their own mental images.
+- **Imagery in the Blind:** Individuals blind from birth still show analog imagery effects (like mental scanning times proportional to distance), proving that mental rotation can operate on spatial representations that are not purely visual.
+
+IV. Dual Coding and Memory
+
+The **Dual Code Hypothesis** states that information can be represented verbally (propositional) or visually (analog).
+
+- **Concrete vs. Abstract:** Concrete words (e.g., _chalk_) are easier to remember because they have both a verbal and a visual code. Abstract words (e.g., _idea_) usually have only a verbal code.
+- **Picture Superiority Effect:** Pictures are generally better remembered than words because they automatically trigger both codes.
+- **Reality Monitoring:** This is the ability to distinguish between memories of real events and memories of imagined ones. We achieve this through **Source Monitoring**, comparing the features of a memory (like contextual detail) to our history of perceptual vs. imagined experiences.
+
+V. Individual Differences and Skills
+
+- **Visual vs. Spatial Imagery:** **Visual imagery** refers to the appearance of an object (color, shape), while **spatial imagery** refers to the relationships between parts or its location in space. Spatial ability is the better predictor of success in math, sentence understanding, and problem-solving.
+- **Eidetic Imagery:** Popularly called "photographic memory," this is the rare ability to maintain a mental image with the clarity of the original perception. It is more common in children (roughly 8%) but nearly non-existent in adults.
+
+VI. Applied Mnemonics (Memory Tools)
+
+Mnemonics are retrieval plans that use imagery to store information in long-term memory.
+
+- **Method of Loci:** Associating items with specific locations in a well-known building.
+- **Peg-Word Method:** Hanging new items on a pre-memorized rhyming "peg" list (e.g., "One is a bun").
+- **Key-Word Method:** Creating a bridge between a foreign word and an English word that sounds similar (e.g., learning _carta_ by imagining a mail carrier's _cart_).
+- **Method of Story:** Linking items together through a thematic narrative. This can increase recall by 7 times compared to rote learning.
+
+
 # 📚 Exam 2 Study Guide
 
 >This study guide response is synthesized from the provided technical sources, following the structure of your "Study Guide Exam 2" document.
