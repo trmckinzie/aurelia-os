@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "9349436bc9e892ba",
+        "id": "9ff6df9bff40344a",
         "type": "tabs",
         "children": [
           {
-            "id": "4092ff7bf8a73113",
+            "id": "5d00ad1721b92950",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "80_COURSES/81_ASU/IH-NFC-AP/materials/SPSS DATA Analysis.md",
+                "file": "2026-03-27.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "SPSS DATA Analysis"
+              "title": "2026-03-27"
             }
           }
         ]
@@ -226,12 +226,18 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4092ff7bf8a73113",
+  "active": "5d00ad1721b92950",
   "lastOpenFiles": [
-    "Brain Divisions.md",
+    "Travis.md",
+    "2026-03-27.md",
+    "10_GARDEN/12_Concepts/Skyhook.md",
+    "10_GARDEN/12_Concepts/Crane.md",
+    "10_GARDEN/15_Sources/Darwin's Dangerous Idea.md",
+    "10_GARDEN/13_Authors/Daniel Dennett.md",
+    "10_GARDEN/12_Concepts/Action Potential.md",
     "80_COURSES/81_ASU/IH-NFC-AP/materials/SPSS DATA Analysis.md",
+    "Brain Divisions.md",
     "10_GARDEN/12_Concepts/Desirable Difficulty.md",
-    "Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-23.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
     "10_GARDEN/12_Concepts/Deliberate Practice.md",
@@ -252,17 +258,11 @@
     "10_GARDEN/12_Concepts/Dendrite.md",
     "10_GARDEN/12_Concepts/Glial Cells.md",
     "10_GARDEN/12_Concepts/Synapse.md",
-    "10_GARDEN/12_Concepts/The Hard Problem of Consciousness.md",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
     "80_COURSES/81_ASU/BUS 480/BSG Checklists.pdf",
     "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf",
-    "10_GARDEN/14_Disciplines/Philosophy of Mind.md",
-    "10_GARDEN/12_Concepts/Working Memory.md",
-    "10_GARDEN/12_Concepts/Zimmerman's Model of SRL.md",
-    "10_GARDEN/12_Concepts/Untitled.md",
-    "10_GARDEN/12_Concepts/Untitled 1.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Biwer et al (2020) Fostering Effective Learning Strategies.pdf",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
