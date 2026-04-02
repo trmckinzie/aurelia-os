@@ -11,10 +11,24 @@
             "id": "13a5cb57ce92d4c4",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/12_Concepts/Cognitive Load Theory.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Cognitive Load Theory"
             }
           }
         ]
@@ -214,6 +228,8 @@
   },
   "active": "3021033a30bcfee6",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
+    "10_GARDEN/12_Concepts/Cognitive Load Theory.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-31.md",
     "Brain Divisions.md",
     "10_GARDEN/12_Concepts/Visual Imagery.md",
@@ -242,8 +258,6 @@
     "assets/audio/Unconfirmed 642938.crdownload",
     "10_GARDEN/12_Concepts/Neuron.md",
     "10_GARDEN/12_Concepts/Hebbian Learning.md",
-    "10_GARDEN/12_Concepts/Myelination.md",
-    "10_GARDEN/12_Concepts/Dendrite.md",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
