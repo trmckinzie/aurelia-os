@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9db1efeb19cbd863",
+        "id": "3edfd60885860507",
         "type": "tabs",
         "children": [
           {
-            "id": "9046551546b7e323",
+            "id": "a07d0a8aca1e4257",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -212,8 +212,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "a07d0a8aca1e4257",
   "lastOpenFiles": [
+    "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
+    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-04.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
     "10_GARDEN/12_Concepts/Cognitive Load Theory.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-31.md",
@@ -236,14 +240,10 @@
     "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
     "10_GARDEN/12_Concepts/Axon.md",
     "10_GARDEN/12_Concepts/Neurotransmitters.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-04.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-02.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "assets/audio/Unconfirmed 180726.crdownload",
     "assets/audio/PSYC_414_Exam_2_Overview.m4a",
     "assets/audio/Unconfirmed 642938.crdownload",
-    "10_GARDEN/12_Concepts/Neuron.md",
-    "10_GARDEN/12_Concepts/Hebbian Learning.md",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/Year 12 Travis Decisions.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/y11 decision-working.pdf",
     "80_COURSES/81_ASU/BUS 480/Year 11 Reports/comp-training.pdf",
