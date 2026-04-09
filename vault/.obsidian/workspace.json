@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "3edfd60885860507",
+        "id": "1ade0c52505f726b",
         "type": "tabs",
         "children": [
           {
-            "id": "a07d0a8aca1e4257",
+            "id": "1890b97e18bfc1f1",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Untitled"
             }
           }
         ]
@@ -212,8 +226,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a07d0a8aca1e4257",
+  "active": "1890b97e18bfc1f1",
   "lastOpenFiles": [
+    "Untitled.md",
+    "10_GARDEN/12_Concepts/Metacognition.md",
+    "10_GARDEN/12_Concepts/Heuristic.md",
+    "Heuristics.md",
+    "10_GARDEN/12_Concepts/Dual-Process Theory.md",
+    "10_GARDEN/12_Concepts/Schema Theory.md",
     "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-04.md",
@@ -234,12 +254,6 @@
     "80_COURSES/81_ASU/IH-NFC-AP/materials/SPSS DATA Analysis.md",
     "10_GARDEN/12_Concepts/Desirable Difficulty.md",
     "10_GARDEN/11_Daily_Bridge/2026-03-23.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-07.md",
-    "10_GARDEN/12_Concepts/Deliberate Practice.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-06.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-05.md",
-    "10_GARDEN/12_Concepts/Axon.md",
-    "10_GARDEN/12_Concepts/Neurotransmitters.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "assets/audio/Unconfirmed 180726.crdownload",
     "assets/audio/PSYC_414_Exam_2_Overview.m4a",
