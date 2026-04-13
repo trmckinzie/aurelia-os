@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "fbfbcf4f8c9652a4",
+        "id": "155cdf5510720193",
         "type": "tabs",
         "children": [
           {
-            "id": "b43cd09c6a931560",
+            "id": "0fc5d4393cb8ac36",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
+                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-13"
+              "title": "PSYC 414-1 - Cognitive Psychology"
             }
           }
         ]
@@ -226,12 +226,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "0fc5d4393cb8ac36",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
     "10_GARDEN/12_Concepts/Cognitive Bias.md",
     "10_GARDEN/12_Concepts/Cognitive Bias Codex.md",
     "10_GARDEN/12_Concepts/Schema Theory.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
     "Untitled.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-04.md",
     "10_GARDEN/12_Concepts/Metacognition.md",
