@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "9b2eedc35c556fe1",
+        "id": "b05af5b58aea20f5",
         "type": "tabs",
         "children": [
           {
-            "id": "6c1086d0aa372a47",
+            "id": "2a2f004a4acfda0e",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "PSYC 414-1 - Cognitive Psychology"
             }
           }
         ]
@@ -212,7 +226,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "2a2f004a4acfda0e",
   "lastOpenFiles": [
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
