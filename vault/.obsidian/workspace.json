@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "552e9d2124ca3349",
+        "id": "a54b5996786b679c",
         "type": "tabs",
         "children": [
           {
-            "id": "006a50c278c35688",
+            "id": "3be7882557a73f5d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Self-Consciousness.md",
+                "file": "Self-Assessment for Digital Twin.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Self-Consciousness"
+              "title": "Self-Assessment for Digital Twin"
             }
           }
         ]
@@ -226,11 +226,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "006a50c278c35688",
+  "active": "3be7882557a73f5d",
   "lastOpenFiles": [
+    "Self-Assessment for Digital Twin.md",
+    "10_GARDEN/12_Concepts/Mirror Neurons.md",
+    "10_GARDEN/12_Concepts/Self-Consciousness.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-14.md",
-    "Self-Consciousness.md",
-    "Mirror Neurons.md",
     "10_GARDEN/12_Concepts/Theory of Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-14.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
@@ -260,7 +261,6 @@
     "Brain Divisions.md",
     "10_GARDEN/12_Concepts/Visual Imagery.md",
     "Travis.md",
-    "2026-03-27.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "assets/audio/Unconfirmed 180726.crdownload",
     "assets/audio/PSYC_414_Exam_2_Overview.m4a",
