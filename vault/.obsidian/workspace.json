@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "4f97aea642d66a18",
+        "id": "ae680ce19d88693b",
         "type": "tabs",
         "children": [
           {
-            "id": "4e57ce1530cdb1e5",
+            "id": "97fcbd132dda87db",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "PSYC 414-1 - Cognitive Psychology"
             }
           }
         ]
@@ -212,10 +226,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4e57ce1530cdb1e5",
+  "active": "97fcbd132dda87db",
   "lastOpenFiles": [
-    "10_GARDEN/12_Concepts/Feynman Technique.md",
     "2026-04-17.md",
+    "10_GARDEN/12_Concepts/Feynman Technique.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "99_DROP_ZONE/PSYC_414_Exam_3_Study_Guide.m4a",
     "99_DROP_ZONE/Unconfirmed 295388.crdownload",

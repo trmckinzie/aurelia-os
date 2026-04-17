@@ -597,9 +597,150 @@ When exploring self-regulated learning or developing personal knowledge manageme
  
 
 
+# 📚 Exam 3 Study Guide
 
+>This study guide has been completed using the provided textbook materials and study guide excerpts.
 
+--------------------------------------------------------------------------------
 
+**Chapter 8: Imagery**
+
+1. **Promoting Memory with Images:** Images help memory by providing an **association or link** between items. Interacting images (e.g., a dog reading a book) result in significantly better recall than rote repetition or non-interacting images.
+
+2. **Analog vs. Propositional Codes:**
+    - **Analog Code:** Represents images as "mental maps" or moving pictures that preserve continuous relationships, such as distance and direction.
+        - _Evidence:_ Mental scanning tasks (time to "scan" an image increases linearly with distance).
+    - **Propositional Code:** Represents images as abstract, language-like structures or logical sentences.
+        - _Evidence:_ People have difficulty reinterpreting mental images (e.g., seeing a "hidden figure" in a mental image that is obvious in a physical drawing).
+    - **Analog Properties in Scanning:** Mental images appear analog because participants take longer to scan between two landmarks in their "mind's eye" if the physical distance between those landmarks is greater, preserving the spatial layout.
+
+3. **Mental Rotation:** The isomorphic process of mentally turning a 2-D or 3-D object continuously, as if it were a physical object. It is evaluated by showing participants objects at different angles and timing how long they take to decide if the object is upright or a mirror image; reaction time increases linearly with the angle of rotation.
+
+4. **Brain Areas for Spatial Tasks:** spatial tasks typically activate the **right hemisphere**. PET scans show that imagining small letters activates the **posterior occipital lobe (Area 17)**, while large letters activate the **anterior portion**.
+
+5. **Dual Code Hypothesis:** This theory states that information can be represented both verbally (propositional) and visually (analog). Concrete words (e.g., "chalk") are easier to remember because they have both codes, while abstract words (e.g., "idea") typically only have a verbal code.
+
+6. **Picture Superiority Effect:** Pictures are remembered and recognized better than words because they are automatically encoded both visually and verbally.
+
+7. **Visual vs. Spatial Imagery:**
+    - **Visual:** Refers to appearance (shape, color, brightness).
+    - **Spatial:** Refers to spatial relationships between parts or location in space (e.g., rotating objects in the **Form Board Test**).
+
+8. **Environmental Spatial Ability:** The ability to navigate new environments successfully and form accurate mental representations of large-scale spaces like cities or campuses.
+
+9. **Motoric Imagery:** The mental rehearsal of physical movements, which activates the **motor cortex** and cerebellum.
+    - **Process vs. Outcome:** Visualizing the **process** (how to perform the task) provides greater performance benefits than visualizing the **outcome** (the end goal or winning).
+    - **Internal vs. External:** Internal imagery is seeing the world from your own eyes; external is seeing yourself as if in a movie. Internal is often recommended for mastering the "feel" of a skill.
+
+10. **Visualizing Best Possible Self:** (Per study guide) Research indicates that visualizing your best possible self increases positive affect and long-term motivation.
+
+11. **TEDx "Draw Your Future" (Patti Dobrowolski):** (Per study guide) The main idea is that simple drawings of your desired future can activate the brain's creative centers to help bridge the gap between your current reality and your goals.
+
+--------------------------------------------------------------------------------
+
+**Chapter 9: Language**
+
+1. **Language Definition & Components:** A system of communication. Four components: **Message (Semantics)**, **Physical Constraints (Syntax)**, **Medium (Articulation/Gesture)**, and **Social Constraints (Pragmatics)**.
+
+2. **Qualities of Natural Language:** A person's native language must have meaning, grammatical rules, a spoken or gestured medium, and social rules for cooperation.
+
+3. **Semantics Necessity:** Semantics are the "packets of meaning"; without them, an utterance is not linguistic as it fails to convey sense.
+
+4. **Discovery Principles:**
+    - **Reference:** Words refer to objects, not the speaker's feelings.
+    - **Whole Object:** Words refer to the entire object, not just a part (e.g., a "birdie" is the whole bird, not just the wing).
+    - **Nonredundancy:** Children act as if each object has only one name.
+
+5. **Pragmatics:** The system of social rules for cooperation in communication.
+    - **Pragmatic Switching:** Changing your speech style based on the listener (e.g., "motherese" for infants vs. formal speech for adults).
+    - **Sarcasm:** Relying on pragmatic skills to understand that a speaker's intent differs from their literal words; these skills develop through social interaction.
+
+6. **Non-human Primate Research:** Animals like Washoe or Kanzi can learn signs or symbols, but their systems lack natural syntax and pragmatics.
+    - **Syntax:** Rules for arranging words into phrases to convey distinctions like tense or mood. Animal systems lack this flexibility.
+
+7. **Five Linguistic Universals:** Language itself (learned by all), Phonological (small set of sounds), Syntactic order, Language-learning benchmarks (same sequence/rate), and Biology (same brain centers).
+    - **Prosody:** The rhythm, stress, and intonation of speech. Effective use involves signaling questions, conveying emotion, and using appropriate pitch for the context.
+
+8. **Womb Sensitivity:** Fetuses in the third trimester are sensitive to sound and can be conditioned to music; they prefer their mother’s voice and native language rhythm immediately after birth.
+
+9. **Benefits of Reading:** Literacy increases general cognitive resources and comprehension; reading **fiction** specifically enhances empathy and social understanding.
+
+10. **Poverty of the Stimulus:** Chomsky’s concept that the language children hear is too limited to explain how they learn complex grammar purely through imitation, implying language is an innate cognitive mechanism.
+
+11. **First-Year Sensitivity:** Infants start able to hear all phonemes; by one year, they lose the ability to detect contrasts not used in their native language as they tune into their own linguistic environment.
+
+12. **Brain Centers:**
+    - **Angular Gyrus:** Word categorization.
+    - **Broca’s Area:** Syntactic analysis and speech production.
+    - **Wernicke’s Area:** Semantic processing and comprehension.
+
+13. **Hemispherectomy & Plasticity:** The surgical removal of a brain hemisphere. Due to **plasticity**, if this occurs before age 5, the remaining hemisphere can often successfully take over language functions.
+
+14. **Linguistic Relativity (Sapir-Whorf Hypothesis):** The theory that language shapes thought.
+    - **Part 1:** If two languages have different words for a phenomenon, speakers understand it differently.
+    - **Part 2:** If two languages have the same words, speakers understand it equivalently.
+
+--------------------------------------------------------------------------------
+
+**Chapter 10: Language and Cognitive Processing**
+
+1. **Motor Theory of Speech Perception:** Listeners identify speech by mentally simulating the creation of those sounds (analysis by synthesis). Supporting evidence includes the fact that seeing a speaker's lips significantly improves comprehension, especially in noisy environments.
+
+2. **McGurk Effect:** When visual lip movements and auditory sounds do not match, the listener perceives a third, different sound (e.g., see "ga," hear "ba," perceive "da"). It occurs because the brain integrates multimodal information into a single perception.
+
+3. **Interaction Models:**
+    - **Cohort Model:** Speech is recognized in two stages: initial sounds activate a "cohort" of possible words, which are then narrowed down by context and further sounds.
+    - **TRACE Model:** Assumes parallel processing where all available information (sounds, context) is used simultaneously to identify speech.
+
+4. **Ambiguity:** Slows down language processing because all potential meanings are carried in working memory until a **clause boundary** is reached, at which point the listener commits to one meaning.
+    - **Humor:** Often results from "garden path" sentences where a word at the end (like "alcohol" in the Tyson's punch example) forces a sudden, humorous reanalysis of the entire sentence.
+
+5. **Five Speech Acts:** **Representative** (assertion of belief), **Directive** (getting the listener to act), **Commissive** (commitment by the speaker), **Expressive** (psychological state), and **Declarative** (utterance that changes a state of affairs, e.g., "I quit").
+
+6. **Cooperative Principle:** The assumption that speaker and listener are cooperating. **Four Maxims:** **Quantity** (be informative), **Quality** (be truthful), **Relation** (be relevant), and **Manner** (be clear).
+
+7. **Matthew Effect:** In reading, early success leads to further success, while early failure leads to a widening gap over time; early exposure is essential for later school achievement.
+
+8. **Paths to Reading:**
+    - **Path 1 (Indirect Access):** Translating visual characters into subvocal speech sounds (**speech recoding**) to access the lexicon.
+    - **Path 2 (Direct Access):** Mapping the entire written word directly to its meaning in the lexicon (**visual recoding**).
+
+9. **Dual Route Hypothesis:** Readers use both paths; indirect for new or complex words, and direct for familiar words.
+    - **Skills-based (Indirect):** Rigid phonics instruction focusing on letter-sound correspondences.
+    - **Direct Access Usefulness:** Effective for languages like English with poor letter-sound correspondence (e.g., "colonel").
+    - **Whole-language:** Uses context and top-down processing alongside bottom-up word identification.
+
+10. **Neural Activity & Eye Gaze:**
+    - **Eye Gaze:** **Skilled readers** have larger saccades (jumps) and shorter fixations (pauses). **Unskilled readers** fixate longer (500ms vs 200ms) and make more regressions (moving backward).
+    - **Accuracy/Fixation:** Poor readers take as much time to process a difficult word as a skilled reader takes for an entire sentence.
+    - **Dyslexia Interventions:** Focus on building **phonemic awareness** through the indirect path.
+
+11. **Knowledge Facilitation:** Deep background knowledge in a specific area (e.g., football) can allow a "poor reader" to comprehend specialized text better than a "skilled reader" who lacks that knowledge.
+
+12. **Rita Carter TEDx:** Reading fiction builds empathy by creating "mental maps" of others' experiences. Neurologically, reading activates brain regions associated with the actual experiences described, unlike just speaking.
+
+--------------------------------------------------------------------------------
+
+**Cognitive Biases and Learning Styles**
+
+1. **Definitions & Examples:**
+    - **Confirmation bias:** Searching only for info that confirms existing beliefs.
+    - **Overconfidence bias:** Subjective confidence in one's judgments is higher than objective accuracy.
+    - **Planning fallacy:** Underestimating the time needed for a task.
+    - **Self-serving bias:** Attributing success to yourself and failure to external factors.
+    - **Groupthink:** Prioritizing group harmony over critical thinking.
+    - **Status quo:** A preference for things to remain as they currently are.
+    - **Dunning-Kruger effect:** People with low ability overestimate their own competence.
+    - **Attentional bias:** Focusing on certain stimuli while ignoring others.
+    - **Blind spot bias:** Recognizing bias in others but failing to see it in oneself.
+
+2. **Planning Fallacy Relation:** It is a specific manifestation of the **overconfidence bias**.
+
+3. **Meshing Hypothesis:** The idea that learning is optimized when the instructional style matches the student's learning style. Supporting evidence would require a "crossover interaction" where Style A learners do best with Method A and Style B learners do best with Method B.
+
+4. **Learning Styles Research:** Current scientific research finds **no empirical support** for the effectiveness of learning styles. The concept persists because of its intuitive appeal, commercial interests, and historical use in education despite the lack of evidence.
+
+ 
 # 🎙️ Audio Overview
 assets/audio/PSYC_414_Exam_3_Study_Guide.m4a
 
