@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "a54b5996786b679c",
+        "id": "ff0023bd211b0a64",
         "type": "tabs",
         "children": [
           {
-            "id": "3be7882557a73f5d",
+            "id": "9f469bb2f68621b9",
             "type": "leaf",
             "state": {
-              "type": "pdf",
-              "state": {
-                "file": "80_COURSES/81_ASU/BUS 480/HBR On Strategy.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "HBR On Strategy"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -214,7 +212,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3be7882557a73f5d",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
     "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "Self-Assessment for Digital Twin.md",
