@@ -601,7 +601,7 @@ When exploring self-regulated learning or developing personal knowledge manageme
 
 
 # 🎙️ Audio Overview
-assets/audio/Fostering_Effective_Learning_Strategies.m4a
+assets/audio/PSYC_414_Exam_3_Study_Guide.m4a
 
 # 🎥 Video Overview
 assets/video/[filename].mp4

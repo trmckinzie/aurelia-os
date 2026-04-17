@@ -4,17 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "ff0023bd211b0a64",
+        "id": "4f97aea642d66a18",
         "type": "tabs",
         "children": [
           {
-            "id": "9f469bb2f68621b9",
+            "id": "4e57ce1530cdb1e5",
             "type": "leaf",
             "state": {
-              "type": "empty",
+              "type": "graph",
               "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -212,10 +212,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "4e57ce1530cdb1e5",
   "lastOpenFiles": [
-    "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
+    "10_GARDEN/12_Concepts/Feynman Technique.md",
+    "2026-04-17.md",
+    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+    "99_DROP_ZONE/PSYC_414_Exam_3_Study_Guide.m4a",
+    "99_DROP_ZONE/Unconfirmed 295388.crdownload",
+    "70_CITADEL/Series_A/The Evolved Mind.md",
     "Self-Assessment for Digital Twin.md",
+    "10_GARDEN/16_NotebookLM/BUS 480-1 - Global Business Strategies.md",
     "10_GARDEN/12_Concepts/Mirror Neurons.md",
     "10_GARDEN/12_Concepts/Self-Consciousness.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-14.md",
@@ -231,7 +237,6 @@
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD0974.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRL2331.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD2327.tmp",
-    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
     "10_GARDEN/12_Concepts/Cognitive Bias.md",
     "10_GARDEN/12_Concepts/Cognitive Bias Codex.md",
@@ -244,12 +249,7 @@
     "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/12_Concepts/Cognitive Load Theory.md",
-    "10_GARDEN/11_Daily_Bridge/2026-03-31.md",
-    "Brain Divisions.md",
-    "10_GARDEN/12_Concepts/Visual Imagery.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
-    "assets/audio/Unconfirmed 180726.crdownload",
-    "assets/audio/PSYC_414_Exam_2_Overview.m4a",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"

@@ -3,7 +3,7 @@
   "search": "-path:vault/90_SYSTEM/92_Templates  ",
   "showTags": false,
   "showAttachments": false,
-  "hideUnresolved": false,
+  "hideUnresolved": true,
   "showOrphans": false,
   "collapse-color-groups": false,
   "colorGroups": [
@@ -11,20 +11,34 @@
       "query": "path:10_GARDEN/12_Concepts  ",
       "color": {
         "a": 1,
-        "rgb": 14701138
+        "rgb": 61941
+      }
+    },
+    {
+      "query": "path:10_GARDEN/11_Daily_Bridge  ",
+      "color": {
+        "a": 1,
+        "rgb": 15864322
+      }
+    },
+    {
+      "query": "path:10_GARDEN/13_Authors  ",
+      "color": {
+        "a": 1,
+        "rgb": 11657298
       }
     }
   ],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": 0,
-  "nodeSizeMultiplier": 1,
-  "lineSizeMultiplier": 1,
+  "textFadeMultiplier": -3,
+  "nodeSizeMultiplier": 4.75878111974766,
+  "lineSizeMultiplier": 0.873059592204574,
   "collapse-forces": false,
   "centerStrength": 0,
-  "repelStrength": 10,
-  "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 0.06479561109419668,
-  "close": false
+  "repelStrength": 20,
+  "linkStrength": 0,
+  "linkDistance": 500,
+  "scale": 0.10321463656099628,
+  "close": true
 }
