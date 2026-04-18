@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "a27e1d9647b386b6",
+        "id": "82851afa1b4f6939",
         "type": "tabs",
         "children": [
           {
-            "id": "6ff0196bd71819c6",
+            "id": "e22dc82884771fe3",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -212,8 +212,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "6ff0196bd71819c6",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "10_GARDEN/11_Daily_Bridge/2026-01-10.md",
     "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
     "Self-Assessment for Digital Twin.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
@@ -247,8 +249,6 @@
     "10_GARDEN/12_Concepts/Heuristic.md",
     "Heuristics.md",
     "10_GARDEN/12_Concepts/Dual-Process Theory.md",
-    "10_GARDEN/12_Concepts/The Cognitive Revolution.md",
-    "80_COURSES/81_ASU/AI x SRL/SSD Abstract - Self-Regulated Learning in the Age of AI.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
