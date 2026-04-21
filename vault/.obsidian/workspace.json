@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "82851afa1b4f6939",
+        "id": "da7ee3a7bc852135",
         "type": "tabs",
         "children": [
           {
-            "id": "e22dc82884771fe3",
+            "id": "41aebd6fb61d1c65",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -212,14 +212,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "41aebd6fb61d1c65",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-10.md",
-    "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
-    "Self-Assessment for Digital Twin.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
     "Impermanence.md",
+    "Self-Assessment for Digital Twin.md",
+    "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
+    "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/12_Concepts/Feynman Technique.md",
     "99_DROP_ZONE/PSYC_414_Exam_3_Study_Guide.m4a",
