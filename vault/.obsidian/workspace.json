@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "da7ee3a7bc852135",
+        "id": "6204b2f0ab13efb1",
         "type": "tabs",
         "children": [
           {
-            "id": "41aebd6fb61d1c65",
+            "id": "b398040b51ce32ad",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -189,8 +189,8 @@
             "state": {
               "type": "smart-connections-view",
               "state": {},
-              "icon": "lucide-ghost",
-              "title": "smart-connections-view"
+              "icon": "smart-connections",
+              "title": "Connections"
             }
           },
           {
@@ -202,13 +202,25 @@
               "icon": "git-pull-request",
               "title": "Source Control"
             }
+          },
+          {
+            "id": "a8e8ee5b09d00f2d",
+            "type": "leaf",
+            "state": {
+              "type": "file-properties",
+              "state": {
+                "file": "10_GARDEN/12_Concepts/Impermanence.md"
+              },
+              "icon": "lucide-info",
+              "title": "File properties for Impermanence"
+            }
           }
         ],
-        "currentTab": 7
+        "currentTab": 6
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -226,13 +238,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "41aebd6fb61d1c65",
+  "active": "b398040b51ce32ad",
   "lastOpenFiles": [
-    "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
+    "10_GARDEN/12_Concepts/Impermanence.md",
+    "10_GARDEN/16_NotebookLM/Buddhism Fundamentals.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-20.md",
-    "10_GARDEN/11_Daily_Bridge/2026-01-10.md",
-    "Impermanence.md",
     "Self-Assessment for Digital Twin.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
+    "10_GARDEN/11_Daily_Bridge/2026-01-10.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
@@ -262,7 +275,6 @@
     "10_GARDEN/12_Concepts/Schema Theory.md",
     "10_GARDEN/12_Concepts/Metacognition.md",
     "10_GARDEN/12_Concepts/Heuristic.md",
-    "Heuristics.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
