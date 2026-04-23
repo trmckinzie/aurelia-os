@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "6204b2f0ab13efb1",
+        "id": "ee93541ae93f86b5",
         "type": "tabs",
         "children": [
           {
-            "id": "b398040b51ce32ad",
+            "id": "8fa23ee1663be689",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-04-20.md",
+                "file": "2026-04-22.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-20"
+              "title": "2026-04-22"
             }
           }
         ]
@@ -238,11 +238,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b398040b51ce32ad",
+  "active": "8fa23ee1663be689",
   "lastOpenFiles": [
+    "2026-04-22.md",
+    "10_GARDEN/12_Concepts/Dukkha (Suffering).md",
+    "10_GARDEN/12_Concepts/Anatta.md",
+    "10_GARDEN/12_Concepts/Equanimity (Upekkha).md",
     "10_GARDEN/12_Concepts/Impermanence.md",
-    "10_GARDEN/16_NotebookLM/Buddhism Fundamentals.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-20.md",
+    "10_GARDEN/16_NotebookLM/Buddhism Fundamentals.md",
     "Self-Assessment for Digital Twin.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-17.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-10.md",
@@ -271,10 +275,6 @@
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD2327.tmp",
     "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
     "10_GARDEN/12_Concepts/Cognitive Bias.md",
-    "10_GARDEN/12_Concepts/Cognitive Bias Codex.md",
-    "10_GARDEN/12_Concepts/Schema Theory.md",
-    "10_GARDEN/12_Concepts/Metacognition.md",
-    "10_GARDEN/12_Concepts/Heuristic.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
