@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "32ee2d1ad270c41a",
+        "id": "01b92baac024ad08",
         "type": "tabs",
         "children": [
           {
-            "id": "41a79a60bd51bd4b",
+            "id": "56a94b53dc2ef4d2",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -224,8 +224,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "56a94b53dc2ef4d2",
   "lastOpenFiles": [
+    "Cognition (Neuroscience).md",
+    "2026-04-23.md",
+    "Neural Network.md",
+    "Neuroplasticity.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-22.md",
     "10_GARDEN/12_Concepts/Dukkha (Suffering).md",
     "10_GARDEN/12_Concepts/Anatta.md",
@@ -250,8 +254,6 @@
     "10_GARDEN/12_Concepts/Theory of Mind.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-14.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-04.md",
-    "g man.md",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Willingham et al (2015) The Scientific Status of Learning.pdf",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRL2078.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD2078.tmp",
@@ -259,8 +261,6 @@
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD0974.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRL2331.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD2327.tmp",
-    "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
-    "10_GARDEN/12_Concepts/Cognitive Bias.md",
     "assets/audio/Fostering_Effective_Learning_Strategies.m4a",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
