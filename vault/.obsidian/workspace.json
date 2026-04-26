@@ -11,10 +11,24 @@
             "id": "8b8ab10cb77db033",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-04-24"
             }
           }
         ]
@@ -224,13 +238,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8b8ab10cb77db033",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
     "00_Meta/Curriculum Modules/Month 1 - The Economics of Cognitive Bandwidth.md",
     "10_GARDEN/14_Disciplines/Evolutionary Biology & Behavioral Endocrinology.md",
     "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
     "Self-Assessment for Digital Twin.md",
-    "2026-04-24.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
     "00_Meta/Curriculum Modules",
     "90_SYSTEM/92_Templates/TPL_Curriculum_Module.md",
