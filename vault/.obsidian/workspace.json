@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "380267b47d3f9781",
+        "id": "9d89643c351f7438",
         "type": "tabs",
         "children": [
           {
-            "id": "1487da79b109b3ac",
+            "id": "b11ab470f5a2a79c",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "10_GARDEN/11_Daily_Bridge/2026-04-27.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "2026-04-27"
+              "title": "New tab"
             }
           }
         ]
@@ -238,7 +224,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "1487da79b109b3ac",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
     "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-27.md",
