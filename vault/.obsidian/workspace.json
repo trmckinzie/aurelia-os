@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "32936cf42442e40f",
+        "id": "380267b47d3f9781",
         "type": "tabs",
         "children": [
           {
-            "id": "63b70172a69dddb0",
+            "id": "1487da79b109b3ac",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/11_Daily_Bridge/2026-04-27.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-04-27"
             }
           }
         ]
@@ -224,21 +238,30 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "63b70172a69dddb0",
+  "active": "1487da79b109b3ac",
   "lastOpenFiles": [
+    "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-27.md",
+    "10_GARDEN/12_Concepts/The Limbic System.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-23.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
+    "10_GARDEN/12_Concepts/Cognitive Bias.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
+    "10_GARDEN/12_Concepts/The Amygdala.md",
+    "10_GARDEN/12_Concepts/The Prefrontal Cortex (PFC).md",
+    "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
+    "10_GARDEN/12_Concepts/Hormone.md",
     "10_GARDEN/12_Concepts/Executive Function.md",
     "10_GARDEN/12_Concepts/Sustained Stress.md",
-    "10_GARDEN/12_Concepts/Hormone.md",
     "10_GARDEN/16_NotebookLM/Evolutionary Biology & Behavioral Endocrinology NBLM.md",
     "10_GARDEN/11_Daily_Bridge/2026-01-16.md",
     "2026-01-16.md",
     "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "00_Meta/Curriculum Modules/Month 1 - The Economics of Cognitive Bandwidth.md",
     "10_GARDEN/14_Disciplines/Evolutionary Biology & Behavioral Endocrinology.md",
     "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
     "Self-Assessment for Digital Twin.md",
-    "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
     "00_Meta/Curriculum Modules",
     "90_SYSTEM/92_Templates/TPL_Curriculum_Module.md",
     "The Economics of Cognitive Bandwidth.md",
@@ -246,15 +269,6 @@
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
     "30_PORTFOLIO/31_Active_Projects/Aurelia_OS_Website.md",
-    "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
-    "10_GARDEN/13_Authors/Leda Cosmides.md",
-    "10_GARDEN/13_Authors/John Tooby.md",
-    "10_GARDEN/12_Concepts/Kin Selection.md",
-    "10_GARDEN/12_Concepts/The Amygdala.md",
-    "10_GARDEN/12_Concepts/The Prefrontal Cortex (PFC).md",
-    "10_GARDEN/12_Concepts/Dual-Process Theory.md",
-    "10_GARDEN/15_Sources/Behave.md",
-    "10_GARDEN/13_Authors/Robert Sapolsky.md",
     "99_DROP_ZONE/PSYC_414_Exam_3_Study_Guide.m4a",
     "99_DROP_ZONE/Unconfirmed 295388.crdownload",
     "80_COURSES/81_ASU/PSYC 414/pdfs/Willingham et al (2015) The Scientific Status of Learning.pdf",
