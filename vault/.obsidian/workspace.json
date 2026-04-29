@@ -11,10 +11,24 @@
             "id": "b11ab470f5a2a79c",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/11_Daily_Bridge/2026-04-28.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-04-28"
             }
           }
         ]
@@ -224,10 +238,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "b11ab470f5a2a79c",
   "lastOpenFiles": [
     "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-27.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-28.md",
     "10_GARDEN/12_Concepts/The Limbic System.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-23.md",
