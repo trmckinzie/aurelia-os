@@ -12,7 +12,7 @@ publish: true
 ---
 # ⚛️ Metacognition
 
-**🔗 Related:** [[Dual-Process Theory]], [[Deliberate Practice]], [[The Illusion of Competence]], [[Working Memory]], [[Prefrontal Cortex]], [[Dunning-Kruger Effect]]
+**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)]], [[Deliberate Practice]], [[The Illusion of Competence]], [[Working Memory]], [[Prefrontal Cortex]], [[Dunning-Kruger Effect]]
 
 ---
 
@@ -51,7 +51,7 @@ Flavell divided this "managerial" skill into two distinct components:
 
 ### ⚙️ The Bandwidth Manager (System 2's Boss)
 
-In the context of **[[Dual-Process Theory]]**, Metacognition is the alarm bell that wakes up System 2.
+In the context of **[[System 1 vs System 2 (Dual-Process Theory)]]**, Metacognition is the alarm bell that wakes up System 2.
 
 - Most of the time, we cruise on autopilot (System 1). If you lack metacognition, you will happily coast on autopilot right off a cliff, convinced you are doing great (this is the **[[Illusion of Competence]]**).
     

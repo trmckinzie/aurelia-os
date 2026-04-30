@@ -11,7 +11,7 @@ publish: true
 ---
 # ⚛️ Equanimity (Upekkha)
 
-**🔗 Related:** [[Metacognition]], [[Dual-Process Theory]], [[Dukkha (Suffering)]], [[Dual-Process Theory]], [[Viktor Frankl]], [[Neuroplasticity]]
+**🔗 Related:** [[Metacognition]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Dukkha (Suffering)]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Viktor Frankl]], [[Neuroplasticity]]
 
 ---
 

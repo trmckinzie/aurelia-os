@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "e58c5f378136a419",
+        "id": "6fd3b3a234158f19",
         "type": "tabs",
         "children": [
           {
-            "id": "42c27e50d9a24cf3",
+            "id": "ecdbf1e77d96f0cf",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "2026-04-30.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-04-30"
             }
           }
         ]
@@ -224,9 +238,17 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3021033a30bcfee6",
+  "active": "ecdbf1e77d96f0cf",
   "lastOpenFiles": [
     "10_GARDEN/11_Daily_Bridge/2026-04-28.md",
+    "2026-04-30.md",
+    "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
+    "10_GARDEN/12_Concepts/Myelination.md",
+    "10_GARDEN/12_Concepts/Long Term Depression (LTD).md",
+    "10_GARDEN/12_Concepts/Long Term Potentiation (LTP).md",
+    "10_GARDEN/12_Concepts/Nonlinear Excitation.md",
+    "10_GARDEN/12_Concepts/NMDA vs non-NMDA Receptors.md",
+    "10_GARDEN/12_Concepts/Pre vs Post Synaptic Changes.md",
     "10_GARDEN/12_Concepts/Social Hierarchy.md",
     "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
@@ -244,15 +266,7 @@
     "10_GARDEN/12_Concepts/Executive Function.md",
     "10_GARDEN/12_Concepts/Sustained Stress.md",
     "10_GARDEN/16_NotebookLM/Evolutionary Biology & Behavioral Endocrinology NBLM.md",
-    "10_GARDEN/11_Daily_Bridge/2026-01-16.md",
-    "2026-01-16.md",
-    "10_GARDEN/16_NotebookLM/Evolutionary Psychology NB.md",
-    "00_Meta/Curriculum Modules/Month 1 - The Economics of Cognitive Bandwidth.md",
-    "10_GARDEN/14_Disciplines/Evolutionary Biology & Behavioral Endocrinology.md",
-    "30_PORTFOLIO/31_Active_Projects/Oura X Psychometric Digital Twin.md",
-    "Self-Assessment for Digital Twin.md",
     "00_Meta/Curriculum Modules",
-    "90_SYSTEM/92_Templates/TPL_Curriculum_Module.md",
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
     "99_DROP_ZONE/PSYC_414_Exam_3_Study_Guide.m4a",

@@ -12,7 +12,7 @@ publish: true
 ---
 # ⚛️ Neuroplasticity
 
-**🔗 Related:** [[Neuron]], [[Hebbian Learning]], [[Myelination]], [[Deliberate Practice]], [[Dual-Process Theory]]
+**🔗 Related:** [[Neuron]], [[Hebbian Learning]], [[Myelination]], [[Deliberate Practice]], [[System 1 vs System 2 (Dual-Process Theory)]]
 
 ---
 
@@ -24,7 +24,7 @@ publish: true
 - **The Core Mechanism:** It is the biological foundation for all learning, memory, habit formation, and recovery from brain trauma.
 
 ### 📝 Key Insight
-* **The Biology of System 1:** Linking this back to your overarching theme ("The Economics of Cognitive Bandwidth"), neuroplasticity is the exact mechanism that builds **[[Dual-Process Theory|System 1]]**.
+* **The Biology of System 1:** Linking this back to your overarching theme ("The Economics of Cognitive Bandwidth"), neuroplasticity is the exact mechanism that builds **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]**.
 
 - When you first learn to drive a car, you must use **System 2** (**[[Working Memory]]**). It is exhausting because the neural pathways are weak.
     

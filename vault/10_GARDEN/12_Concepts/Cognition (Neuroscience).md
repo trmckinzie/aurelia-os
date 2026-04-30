@@ -12,7 +12,7 @@ publish: true
 ---
 # ⚛️ Cognition (Neuroscience)
 
-**🔗 Related:** [[Neural Network]], [[Working Memory]], [[Dual-Process Theory]], [[Prefrontal Cortex]], [[Information Processing Theory]], [[Emergence]]
+**🔗 Related:** [[Neural Network]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Prefrontal Cortex]], [[Information Processing Theory]], [[Emergence]]
 
 ---
 
@@ -26,7 +26,7 @@ publish: true
 ### 📝 Key Insight
 *  The Economics of Cognition: Tying this back to your vault's grand theme, true "Cognition" (conscious, deliberate thought) is the most metabolically expensive process in the human body. The brain consumes 20% of your daily caloric intake despite being only 2% of your body weight.
     
-- Because active cognition is so expensive, the brain is fundamentally designed to avoid it whenever possible. This is the biological root of **[[Cognitive Bias]]**, **[[Heuristic]]**, and **[[Dual-Process Theory]],[[System 1]]**. We only engage in true, heavy-lifting cognition when our automated survival scripts fail.
+- Because active cognition is so expensive, the brain is fundamentally designed to avoid it whenever possible. This is the biological root of **[[Cognitive Bias]]**, **[[Heuristic]]**, and **[[System 1 vs System 2 (Dual-Process Theory)]],[[System 1]]**. We only engage in true, heavy-lifting cognition when our automated survival scripts fail.
 
 
 ### 📐 The Information Processing Pipeline
