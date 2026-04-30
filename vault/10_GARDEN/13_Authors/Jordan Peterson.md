@@ -22,6 +22,6 @@ publish: true
 - [[Beyond Order]] 
 
 ### ⚛️ Core Concepts
-* **[[Dominance Hierarchy]]:** The observation that social stratification is older than trees (350 million years). It is a biological constant regulating access to resources and mates, mediated by **Serotonin**.
+* **[[Social Hierarchy]]:** The observation that social stratification is older than trees (350 million years). It is a biological constant regulating access to resources and mates, mediated by **Serotonin**.
 - **[[Order and Chaos]]:** The fundamental duality of experience. **Order** is explored territory (predictability); **Chaos** is unexplored territory (potential/danger). Consciousness (The Logos) mediates between them.
 - **[[The Shadow]]:** (Borrowed from [[Carl Jung]]) The parts of the personality that the individual refuses to acknowledge (aggression, malevolence). Peterson argues one must "integrate the monster" to be truly virtuous, rather than harmless.
