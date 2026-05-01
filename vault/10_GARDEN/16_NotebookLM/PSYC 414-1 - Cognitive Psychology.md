@@ -476,6 +476,223 @@ Unlike spoken language, reading is an "unnatural act" that is not biologically u
 - **Eye Movements:** During reading, the eye focuses on words using the **fovea** through quick jumps called **saccades**. Skilled readers typically make larger saccades and shorter **fixations** (pauses) on words, whereas poor readers require more time to process individual words and make more **regressions** (moving backward to re-read).
 - **Compensation:** Interestingly, high levels of background knowledge can compensate for poor reading skills, as individuals with deep topic knowledge can better understand and recall passages even if they have low verbal aptitude.
 
+
+# 📚 Chapter 11 - Solving Problems
+
+>This comprehensive overview of "Solving Problems" synthesizes the mechanisms of cognitive representation, problem types, strategies, and the biological foundations of human thought as detailed in Chapter 11.
+
+**I. Introduction to Problem Solving**
+
+Cognitive psychology defines a problem as a situation where there is a discrepancy between a **current state** (where you are now) and a **goal state** (where you desire to be). Problem solving is the cognitive process of transforming the current state into the goal state through various operations and strategies. This process is foundational to human cognition, integrating memory to retrieve prior solutions and language to reason through instructions and intentions. While many routine problems are solved automatically using a mental library of procedures stored in procedural memory, nonroutine problems require deliberate and conscious effort.
+
+**II. Problem Representation: The Key to Success**
+
+The most critical aspect of problem solving is how an individual represents the problem in their mind. A **representation** consists of the facts the problem specifies, the requirements it asks of the solver, and the methods available for the solution.
+
+- **Routine vs. Nonroutine:** Routine problem solving involves applying previously learned knowledge to familiar situations, while nonroutine solving requires strategies that offer a possibility of success without a guarantee.
+- **Incubation:** When faced with an impasse, taking a break—known as **incubation**—can increase solution rates significantly, provided the solver has already put in hours of initial work.
+- **Framing:** The way a problem is contextualized or worded, known as **framing**, heavily influences the representation. For example, consumers perceive meat as better if labeled "75% lean" rather than "25% fat," even though the options are logically identical.
+
+**III. Taxonomy of Problems**
+
+Problems are broadly categorized based on their structure and clarity:
+
+- **Well-Defined Problems:** These have clearly specified goals, provide all relevant information, and have a clear ending or "stop rule" where the solution is obvious once reached. Examples include cryptarithmetic codes or planning a route through a city.
+- **Ill-Defined Problems:** These are "open domain" topics with vaguely specified goals and no fixed answer, such as choosing a career or seeking happiness. Solutions to these problems are often sensitive to the values and cultural background of the reasoner.
+
+**IV. Moral Reasoning and Neuropsychology**
+
+Moral dilemmas represent a complex type of ill-defined problem. Research distinguishes between two types of reasoning:
+
+- **Impersonal Reasoning:** A calculation of the "greatest good for the greatest number" (e.g., flipping a switch to save five people at the cost of one). This activates the **dorsolateral prefrontal cortex** and parietal areas associated with working memory.
+- **Personal Reasoning:** Involves the deliberate infliction of harm through direct action (e.g., pushing someone off a bridge to stop a trolley). This triggers negative emotions and activates the **medial frontal gyrus** and **posterior cingulate gyrus**.
+
+**V. Cognitive Skills for Problem Solving**
+
+Success in problem solving requires specific monitoring skills:
+
+- **Metacognition:** The ability to monitor whether the steps of a solution are proceeding correctly; this is required for both well-defined and ill-defined problems.
+- **Epistemic Monitoring:** A skill unique to ill-defined problems where the solver evaluates whether their representation is legitimate and if the solution corresponds to their internal values.
+
+**VI. Strategies and Reasoning Models**
+
+Humans use several established strategies to navigate the "problem space"—the set of all possible moves a solver can imagine:
+
+- **Analogical Reasoning:** Solving a new problem by noticing similarities to a previously solved one. While powerful, most people fail to use analogies spontaneously unless explicitly instructed to do so.
+- **Search Strategies:**
+    - **Breadth-First:** Testing all possible options at one level before moving deeper.
+    - **Depth-First:** Following a single path to its conclusion before trying an alternative.
+- **Heuristic Methods:**
+    - **Hill Climbing:** Always moving in a direction that appears to be closer to the goal. This strategy often fails on problems requiring a "reverse direction" move, such as the **Hobbits and Orcs** problem.
+    - **Means-Ends Analysis:** Minimizing the distance between states by creating **subgoals**. This is the hallmark of sophisticated planning.
+- **Satisficing:** Choosing a "good enough" path rather than searching endlessly for an optimal one, which helps avoid being stymied by the limitations of working memory.
+
+**VII. Insight, Creativity, and Emotion**
+
+Some problems are solved through a sudden "aha!" experience called **insight**, which occurs when a solver overcomes an impasse by radically shifting their mental representation.
+
+- **Dopaminergic Theory of Positive Affect (DTPA):** This theory posits that a positive mood increases dopamine levels, which enhances **cognitive flexibility** and creativity by activating the **anterior cingulate cortex**.
+- **Functional Fixedness:** A barrier to creativity where a solver fails to see a new function for a familiar object (e.g., failing to see a box of tacks as a potential candle platform).
+
+**VIII. Rule Discovery and Bias**
+
+In scientific reasoning and rule discovery (such as the **2-4-6 task**), people often suffer from **confirmation bias**, only seeking evidence that supports their current hypothesis. Successful solvers instead use a **counterfactual strategy**, assuming their current hypothesis is wrong and testing an incompatible one to see if the original can be disconfirmed.
+
+**IX. Summary**
+
+Problem solving is a dynamic cognitive activity where the **representation** of the situation is the primary determinant of success. Whether solving a simple "routine" puzzle or a complex "ill-defined" moral dilemma, the human mind must manage limited working memory resources through strategies like **means-ends analysis** and **satisficing**. Neurologically, the **frontal lobes** are essential for this process; damage to these areas, as seen in the historical case of **Phineas Gage**, results in a profound inability to form and maintain coherent plans. Ultimately, problem solving is viewed as a search through a mental space of possibilities, a process successfully simulated by computer models like the **General Problem Solver (GPS)** and **ACT-R**.
+
+# 📚 Chapter 13 - Decision Making
+
+>Decision making is the cognitive process of selecting a course of action from among multiple alternatives. While previous chapters focused on finding solutions to problems, this chapter examines how humans actually choose which solution to implement. Although we select among actions every day—from choosing a travel route to making moral choices—human decision making is rarely flawless. While a rational person should account for the likelihood of events, people frequently base judgments on intuition, motives, and emotions rather than objective truth.
+
+--------------------------------------------------------------------------------
+
+**I. Weighing Options and Subjective Utility**
+
+The earliest formal method for decision making was Benjamin Franklin’s "moral algebra," a system of listing pros and cons for each choice and weighing them over several days.
+
+- **Limitations of Pros/Cons:** Franklin’s method assumes all choices are equally likely to occur, but in reality, the likelihood of events varies.
+- **Subjective Utility:** To make more accurate decisions, individuals must consider both the **likelihood** of an event and its **subjective utility** (the personal value of the outcome). A careful decision maker multiplies the probability of an event by its value to identify the choice with the highest "subjective expected utility".
+- **Unconscious Thought Theory (UTT):** While conscious thought is useful for simple choices, "sleeping on it" can lead to better outcomes for complex decisions (e.g., choosing an apartment). UTT suggests that unconscious thought has a higher capacity for processing information and is better at naturally weighing the relative importance of various attributes without the biased weighing typical of conscious thought.
+
+**II. Heuristics: Mental Shortcuts**
+
+Humans often use **heuristics** (rules of thumb) to reduce the load on working memory and make judgments quickly. While heuristics often lead to correct solutions, they lack the guarantee of **algorithms**, which are clearly defined sets of rules that always solve a problem given enough time.
+
+- **Representativeness:** Judging the likelihood of an event based on how similar it is to a stereotype or a known event. This often leads people to ignore **base rates** (the true proportion of a category in a sample).
+- **Availability:** Judging the frequency or probability of an event based on how easily instances come to mind. This is influenced by spectacular events or heavy media coverage, leading people to fear rare dangers (like plane crashes) while underestimating frequent ones (like diabetes).
+- **Anchoring and Adjustment:** Using an initial number or "anchor" as a starting point and failing to adjust sufficiently away from it, even when the anchor is known to be false.
+
+**III. The Dual Process System and Emotion**
+
+Decision making is viewed as a conflict between two systems.
+
+- **System 1:** Fast, automatic, heuristic-based processing associated with the **left temporal lobe**.
+- **System 2:** Slow, analytic, and controlled processing associated with the **right prefrontal cortex**.
+- **Somatic Marker Hypothesis:** This theory states that emotion-related circuitry in the **ventromedial prefrontal cortex (VM)** is essential for rational choice. Damage to this area leaves intellectual functions intact but severely impairs the ability to make personal and social decisions.
+
+**IV. Decision Fallacies**
+
+- **Sunk Cost Fallacy:** The tendency to continue an unprofitable activity or investment because of resources (time, money) already "sunk" into it. This is an erroneous belief that an initial investment is causally related to a future outcome.
+- **Gambler’s Fallacy:** The mistaken belief that past independent events will affect future outcomes (e.g., feeling "due" for a win).
+- **Monty Hall Dilemma:** A classic problem where people fail to realize that events are dependent, mistakenly believing that switching curtains does not improve their odds when it actually doubles them.
+- **Conjunction Fallacy:** Believing that the combination of two events (e.g., "feminist bank teller") is more likely than one of those events alone ("bank teller"), violating the laws of probability.
+
+**V. Base Rates and Randomness**
+
+People struggle to use **base rates** when they are presented as probabilities. However, when information is presented as **natural frequencies** (e.g., 8 out of 10 people), even children can perform complex Bayesian reasoning.
+
+In terms of randomness, humans often suffer from the **clustering illusion**, perceiving patterns in random sequences. This includes the **hot hand fallacy**, the belief that a player who has just succeeded is more likely to succeed again, despite statistical evidence showing that such "streaks" are within the bounds of chance.
+
+**VI. Prospect Theory: Gains and Losses**
+
+**Prospect Theory** explains how choices are influenced by whether they are framed as gains or losses.
+
+- **Framing Effects:** When a problem is framed in terms of **gains**, people are **risk averse** and prefer a sure thing. When framed in terms of **losses**, people become **risk seeking** to avoid the loss.
+- **Loss Aversion:** Mathematically and psychologically, **losses loom larger than gains**; the pain of losing $100 is felt more intensely than the joy of gaining $100.
+
+--------------------------------------------------------------------------------
+
+**Summary**
+
+Human decision making is a sophisticated yet fallible process. We often rely on System 1 heuristics and gut reactions because they are efficient and typically successful in everyday life. However, we frequently commit fallacies by misperceiving independent events as connected or by failing to account for base rates and the effects of framing. Achieving rational choices often requires the effortful intervention of System 2 to override these automatic biases.
+
+# 📚 Exam 1 Study Guide
+
+>This comprehensive completion of your Study Guide for Exam 1 is based on the provided technical sources and historical perspectives.
+
+**Introduction to Cognitive Psychology**
+
+- **Definition:** Cognitive psychology is the scientific study of implicit (unaware) and explicit (aware) mental processes.
+- **Six Processes & Examples:**
+    1. **Transformed:** Sensory information is processed by our brain (e.g., retinal signals transformed into a 3-D perception of a tree).
+    2. **Reduced:** Cognitive processes simplify our experiences to prevent overload.
+    3. **Elaborated:** Recollections are not perfect duplications but are filled in with consistent details during secondary elaboration.
+    4. **Stored:** Information is kept in long-term memory for future use.
+    5. **Recovered:** The ability to retrieve stored information at appropriate times.
+    6. **Used:** Applying information for language understanding, reasoning, or prospective memory.
+- **Behaviorism & Emergence:** Behaviorists argued mental events were not observable and defined psychology only as the study of behavior. This failed because "mentalistic" concepts were needed to explain complex data, leading to the 1950s Cognitive Revolution.
+- **Gestalt Psychology (Perception):** Its goal is to understand how we perceive the "whole" or configuration of things before their individual parts, following the Principle of Prägnanz.
+- **Human Factors Research:** The study of designing devices congruent with human cognitive processes. Example: Evaluating the "butterfly ballot" to see how its layout conflicted with natural left-to-right scanning and automatic reading habits.
+- **Cognitive Neuroscience:** A unified science discovering how the representational and computational capacities of the mind are structurally realized in the brain. It originated in the 1950s (notably 1956) as an interdisciplinary effort.
+- **Neuropsychology Goal:** To observe cognitive changes resulting from neurological deficits (e.g., strokes, lesions) to understand how functions are localized.
+- **George A. Miller:** He is well known for the 1956 article "The Magical Number Seven, Plus or Minus Two".
+- **Cognitive Revolution:** A "counter-revolution" that restored concepts like mind, expectation, and perception to scientific respectability, moving beyond the limits of behaviorism.
+
+--------------------------------------------------------------------------------
+
+**Chapter 2: Brain and Cognition**
+
+- **Dualism & Mind-Body Problem:** Dualism is the view (e.g., Descartes) that mind and body are separate entities. The "problem" is the mystery of how physical operations of a concrete substance like the brain evoke the mental experiences of thought.
+- **Neuron Parts:** (a) **Cell body** (processes/transmits info), (b) **Dendrites** (conduct input/detect signals), (c) **Axon** (transmits electrical impulses).
+- **Neurotransmitters:** Chemicals released at the synapse that act as switches to either promote or prevent electrical impulses in the next neuron.
+- **Five NTs Associated with Cognition:** Dopamine, Serotonin, GABA, Acetylcholine, and Glutamate.
+- **Three Major Divisions:**
+    1. **Hindbrain:** Life-support (heart rate, breathing). Includes the **cerebellum** (coordination/balance).
+    2. **Midbrain:** Sensory relay center and dopamine production (substantia nigra).
+    3. **Forebrain:** Regulates higher mental processes like language and complex thought.
+- **Lateralization:** The brain is divided into two hemispheres with different functions. Left: Language production, grammar, logic. Right: Figurative language, metaphor, and spatial recognition.
+- **Four Lobes:**
+    1. **Occipital:** Visual processing.
+    2. **Parietal:** Sensory experiences (touch/taste), spatial orientation, and mathematical thinking.
+    3. **Temporal:** Hearing, language decoding, and long-term memory.
+    4. **Frontal:** Attention, strategic thinking, problem-solving, and communication.
+- **Localization of Function:** The core assumption that different functions are performed in specific brain locations. It originated with phrenology (Gall), which, despite its errors, correctly hypothesized that mental functions were localized.
+- **Brain Plasticity:** The brain's ability to rewire itself to accommodate learning or recover from injury. This is vital for recovery after a stroke (melodic intonation therapy) and for lifelong learning.
+- **Imaging Techniques:**
+    - **EEG:** Records brain waves; answers _when_ and _where_ responses happen (Event-Related Potentials).
+    - **PET:** Maps brain activity by tracking radioactive glucose/blood flow to active areas.
+    - **fMRI:** Uses magnets to measure the BOLD response (blood oxygen levels) during specific tasks.
+- **Bi-directional Relationship:** Brain mechanisms (e.g., NT release) enable thinking, while thinking/habits (e.g., deliberate practice) can increase myelination and neural activity in those circuits.
+- **HPA Axis & Perceived Stress:** Perceived threat causes the HPA axis to release more norepinephrine (blood vessel constriction, anxiety) and high cortisol (negative cognitive/memory effects). Perceived challenge releases small surges of epinephrine (heightened energy) and low cortisol (increased focus).
+
+--------------------------------------------------------------------------------
+
+**Chapter 3: Attention**
+
+- **Oldest Metaphor:** The **container** metaphor (Plato's aviary).
+- **Definition:** The concentration of awareness directed at specific phenomena while excluding others.
+- **Limited & Selective:** Attention acts as a bottleneck because resources are finite. It is selective because we must withdraw from some things to deal effectively with others (e.g., the shadowing task).
+- **Spotlight Metaphor:** The cognitive ability to focus or sharpen attention. It moved internally (even if eyes are fixed), takes time to shift (~60 msec), and is dimmer at its periphery.
+- **Span of Apprehension:** The quantity of items we can attend to at once without incredible effort.
+- **Platform of Attention:** **Sensory storage** (or sensory register).
+- **Sensory Storage:** Capacity is unlimited, but duration is less than a second.
+- **Partial-Report Procedure:** Performance shows sensory memory holds much more info than we can report; info fades faster than it can be verbally identified.
+- **Cocktail-Party Phenomenon:** When your attention is "grabbed" by a relevant stimulus (like your name) across a noisy room.
+- **Selection Filters:** **Early-selection** filters based on physical features (pitch/loudness), while **late-selection** filters based on relevance and meaning.
+- **Dual-Processing Theory:**
+    1. **Automatic:** Rapid, low resource demands, unconscious (e.g., reading familiar words).
+    2. **Controlled:** Slow, demanding, willful/conscious (e.g., naming ink colors).
+- **Stroop Task:** Name ink color of a conflicting color name. Reveals conflict because reading is automatic and cannot be easily suppressed, slowing down the controlled task of color naming.
+- **Types of Attention:**
+    - **Selective:** Focusing on one stimulus while filtering others.
+    - **Divided:** Juggling mental tasks (e.g., driving while listening to the radio).
+- **Concepts:**
+    - **Attentional blink:** A half-second gap in identification after one target is found.
+    - **Repetition blindness:** Failure to perceive a second instance of a stimulus in a rapid stream.
+    - **Change blindness:** Difficulty detecting changes between two scenes if separated by a flash.
+    - **Inattentional blindness:** Failure to see visible but unexpected objects when attention is engaged elsewhere (e.g., the gorilla suit experiment).
+- **Deliberate Practice:** Effortful, goal-oriented practice with feedback; it increases myelination of neural circuits to move a skill from controlled to automatic.
+- **ADHD:** Characterized as an "inhibition deficit" where the spotlight contains too many stimuli. Neurologically associated with smaller basal ganglia and decreased blood flow to frontal lobes.
+- **ADHD Treatment:** Amphetamines (Ritalin) increase dopamine to fuel frontal lobe concentration and self-control.
+
+--------------------------------------------------------------------------------
+
+**Chapter 4: Pattern Recognition**
+
+- **Sensation vs. Perception:** Sensation is the raw stimulation of sense organs; perception is an act of awareness based on inference from that stimulation.
+- **Gestalt:** A German word for "whole" or "configuration"; the idea that the whole is greater than the sum of its parts.
+- **Prägnanz:** The principle that perception will be organized into as cohesive (simple/symmetrical) a figure as possible. It is the source of grouping laws like proximity and closure.
+- **Bottom-Up Processing:** Data-driven analysis proceeding from basic elements (edges/textures) to create higher understanding.
+- **Global vs. Local Features:** Global features (the "whole") are processed before local features (the "parts"), as seen in Navon figures.
+- **Template-Matching:** Identification by matching stimuli to literal stored copies; efficient for rigid patterns (bar codes) but fails for novelty (handwriting).
+- **Prototype Theory:** Identification via an "average" instance of a category; allows recognition of novel objects if they overlap with the prototype’s central properties.
+- **Top-Down Processing:** Conceptually driven analysis using expectations and context to identify patterns. Without it, perception is a "confusing blur" (e.g., the case of Virgil).
+- **Speech Comprehension:** Context (semantic/syntactic) allows us to "hear" phonemes that were never spoken if they fit the theme.
+- **Word-Superiority Effect:** Letters are easier to recognize when embedded in a word than when alone because the word activation aids letter identification.
+- **Face Recognition Region:** The **fusiform gyrus**.
+- **Prosopagnosia (Face Blindness):** Inability to recognize familiar faces despite intact vision. Sufferers have damage to the right fusiform gyrus and must rely on non-facial features (voice/hair) for identification
 # 📚 Exam 2 Study Guide
 
 >This study guide response is synthesized from the provided technical sources, following the structure of your "Study Guide Exam 2" document.
@@ -740,7 +957,9 @@ When exploring self-regulated learning or developing personal knowledge manageme
 
 4. **Learning Styles Research:** Current scientific research finds **no empirical support** for the effectiveness of learning styles. The concept persists because of its intuitive appeal, commercial interests, and historical use in education despite the lack of evidence.
 
- 
+
+
+
 # 🎙️ Audio Overview
 assets/audio/PSYC_414_Exam_3_Study_Guide.m4a
 
