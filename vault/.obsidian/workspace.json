@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
+                "file": "2026-05-04.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "System 1 vs System 2 (Dual-Process Theory)"
+              "title": "2026-05-04"
             }
           }
         ]
@@ -238,19 +238,27 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d09407d7808de93b",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
+    "10_GARDEN/12_Concepts/The Central Nervous System.md",
+    "10_GARDEN/12_Concepts/The Autonomic Nervous System (ANS).md",
+    "10_GARDEN/12_Concepts/Neurogenesis.md",
+    "10_GARDEN/12_Concepts/Dopamine (Reward Prediction Error).md",
+    "2026-05-04.md",
+    "10_GARDEN/12_Concepts/Allostatic Load.md",
+    "Social Hierarchy (Biology).md",
+    "10_GARDEN/12_Concepts/Social Hierarchy.md",
+    "10_GARDEN/12_Concepts/Neuroplasticity.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-30.md",
+    "10_GARDEN/12_Concepts/Myelination.md",
+    "10_GARDEN/12_Concepts/Long Term Potentiation (LTP).md",
+    "10_GARDEN/12_Concepts/Long Term Depression (LTD).md",
+    "10_GARDEN/12_Concepts/Nonlinear Excitation.md",
+    "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
+    "10_GARDEN/12_Concepts/Pre vs Post Synaptic Changes.md",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-28.md",
-    "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
-    "10_GARDEN/12_Concepts/Myelination.md",
-    "10_GARDEN/12_Concepts/Long Term Depression (LTD).md",
-    "10_GARDEN/12_Concepts/Long Term Potentiation (LTP).md",
-    "10_GARDEN/12_Concepts/Nonlinear Excitation.md",
     "10_GARDEN/12_Concepts/NMDA vs non-NMDA Receptors.md",
-    "10_GARDEN/12_Concepts/Pre vs Post Synaptic Changes.md",
-    "10_GARDEN/12_Concepts/Social Hierarchy.md",
     "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
@@ -258,14 +266,6 @@
     "10_GARDEN/12_Concepts/The Limbic System.md",
     "10_GARDEN/12_Concepts/Hormone.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-23.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-13.md",
-    "10_GARDEN/12_Concepts/Cognitive Bias.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-02.md",
-    "10_GARDEN/12_Concepts/The Amygdala.md",
-    "10_GARDEN/12_Concepts/The Prefrontal Cortex (PFC).md",
-    "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
-    "10_GARDEN/12_Concepts/Executive Function.md",
-    "10_GARDEN/12_Concepts/Sustained Stress.md",
     "00_Meta/Curriculum Modules",
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
