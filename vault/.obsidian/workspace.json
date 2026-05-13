@@ -228,6 +228,7 @@
   },
   "active": "94a0789bad6b252a",
   "lastOpenFiles": [
+<<<<<<< HEAD
     "00_Meta/Curriculum Modules/Month 1 - The Economics of Cognitive Bandwidth.md",
     "2026-05-12.md",
     "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
@@ -237,7 +238,12 @@
     "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
     "10_GARDEN/12_Concepts/Working Memory.md",
     "10_GARDEN/11_Daily_Bridge/2026-05-04.md",
+=======
+>>>>>>> 6acba182e4f18afe044464cd9730155fc3f9e760
     "10_GARDEN/12_Concepts/Evolutionary Brain Stratification.md",
+    "2026-05-12.md",
+    "10_GARDEN/12_Concepts/The Limbic System.md",
+    "10_GARDEN/11_Daily_Bridge/2026-05-04.md",
     "System 1 vs System 2.md",
     "10_GARDEN/12_Concepts/The Central Nervous System (CNS).md",
     "10_GARDEN/12_Concepts/Neuroenergetics.md",
@@ -256,6 +262,13 @@
     "10_GARDEN/11_Daily_Bridge/2026-04-30.md",
     "10_GARDEN/12_Concepts/The Autonomic Nervous System (ANS).md",
     "10_GARDEN/12_Concepts/Neuroplasticity.md",
+<<<<<<< HEAD
+=======
+    "10_GARDEN/12_Concepts/Long Term Potentiation (LTP).md",
+    "10_GARDEN/12_Concepts/Long Term Depression (LTD).md",
+    "10_GARDEN/12_Concepts/Nonlinear Excitation.md",
+    "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
+>>>>>>> 6acba182e4f18afe044464cd9730155fc3f9e760
     "00_Meta/Curriculum Modules",
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
