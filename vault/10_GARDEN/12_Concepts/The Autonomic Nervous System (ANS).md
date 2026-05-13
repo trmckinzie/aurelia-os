@@ -11,7 +11,7 @@ publish: true
 ---
 # ⚛️ The Autonomic Nervous System (ANS)
 
-**🔗 Related:** [[The Amygdala]], [[Adrenaline / Epinephrine]], [[Cortisol]], [[Sustained Stress]], [[System 1 vs System 2 (Dual-Process Theory)]], [[The Limbic System]], [[Allostatic Load]], [[The Central Nervous System]]
+**🔗 Related:** [[The Amygdala]], [[Adrenaline / Epinephrine]], [[Cortisol]], [[Sustained Stress]], [[System 1 vs System 2 (Dual-Process Theory)]], [[The Limbic System]], [[Allostatic Load]], [[The Central Nervous System (CNS)]]
 
 ---
 
