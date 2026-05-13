@@ -11,10 +11,24 @@
             "id": "aaa96ea251452267",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/11_Daily_Bridge/2026-05-04.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-05-04"
             }
           }
         ]
@@ -195,14 +209,14 @@
             "state": {
               "type": "file-properties",
               "state": {
-                "file": "10_GARDEN/12_Concepts/Impermanence.md"
+                "file": "10_GARDEN/11_Daily_Bridge/2026-05-04.md"
               },
               "icon": "lucide-info",
-              "title": "File properties for Impermanence"
+              "title": "File properties for 2026-05-04"
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 8
       }
     ],
     "direction": "horizontal",
@@ -224,17 +238,21 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "aaa96ea251452267",
+  "active": "3021033a30bcfee6",
   "lastOpenFiles": [
-    "2026-05-04.md",
+    "20_PROTOCOL/01_MORNING_LAUNCH.md",
+    "10_GARDEN/11_Daily_Bridge/2026-05-04.md",
+    "10_GARDEN/12_Concepts/Allostatic Load.md",
+    "10_GARDEN/12_Concepts/Neurogenesis.md",
+    "10_GARDEN/12_Concepts/Dopamine (Reward Prediction Error).md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-23.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-22.md",
     "10_GARDEN/12_Concepts/Social Hierarchy.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-28.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-30.md",
     "10_GARDEN/12_Concepts/The Central Nervous System.md",
     "10_GARDEN/12_Concepts/The Autonomic Nervous System (ANS).md",
-    "10_GARDEN/12_Concepts/Neurogenesis.md",
-    "10_GARDEN/12_Concepts/Dopamine (Reward Prediction Error).md",
-    "10_GARDEN/12_Concepts/Allostatic Load.md",
     "Social Hierarchy (Biology).md",
     "10_GARDEN/12_Concepts/Neuroplasticity.md",
     "10_GARDEN/12_Concepts/Myelination.md",
@@ -247,11 +265,7 @@
     "10_GARDEN/12_Concepts/NMDA vs non-NMDA Receptors.md",
     "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-26.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "10_GARDEN/12_Concepts/The Pareto Principle.md",
-    "10_GARDEN/12_Concepts/The Limbic System.md",
-    "10_GARDEN/12_Concepts/Hormone.md",
-    "10_GARDEN/11_Daily_Bridge/2026-04-23.md",
     "00_Meta/Curriculum Modules",
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
