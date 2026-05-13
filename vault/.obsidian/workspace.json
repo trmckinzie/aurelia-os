@@ -4,31 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "9f372b5de354c5bd",
+        "id": "9d4ff161709295ad",
         "type": "tabs",
         "children": [
           {
-            "id": "aaa96ea251452267",
+            "id": "94a0789bad6b252a",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "2026-05-12.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf"
               },
-              "icon": "lucide-file",
-              "title": "2026-05-12"
+              "icon": "lucide-file-text",
+              "title": "Wetware Stack Mini Essay #1 Meditations on Man as Machine"
             }
           }
         ]
@@ -238,13 +226,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "aaa96ea251452267",
+  "active": "94a0789bad6b252a",
   "lastOpenFiles": [
+    "00_Meta/Curriculum Modules/Month 1 - The Economics of Cognitive Bandwidth.md",
+    "2026-05-12.md",
+    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
+    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Untitled.md",
+    "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
+    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays",
+    "10_GARDEN/12_Concepts/Evolutionary Mismatch.md",
+    "10_GARDEN/12_Concepts/Working Memory.md",
     "10_GARDEN/11_Daily_Bridge/2026-05-04.md",
     "10_GARDEN/12_Concepts/Evolutionary Brain Stratification.md",
     "System 1 vs System 2.md",
     "10_GARDEN/12_Concepts/The Central Nervous System (CNS).md",
-    "2026-05-12.md",
     "10_GARDEN/12_Concepts/Neuroenergetics.md",
     "10_GARDEN/12_Concepts/Myelination.md",
     "10_GARDEN/12_Concepts/HPA.md",
@@ -261,11 +256,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-04-30.md",
     "10_GARDEN/12_Concepts/The Autonomic Nervous System (ANS).md",
     "10_GARDEN/12_Concepts/Neuroplasticity.md",
-    "10_GARDEN/12_Concepts/Long Term Potentiation (LTP).md",
-    "10_GARDEN/12_Concepts/Long Term Depression (LTD).md",
-    "10_GARDEN/12_Concepts/Nonlinear Excitation.md",
-    "10_GARDEN/12_Concepts/System 1 vs System 2 (Dual-Process Theory).md",
-    "10_GARDEN/12_Concepts/Pre vs Post Synaptic Changes.md",
     "00_Meta/Curriculum Modules",
     "00_Meta/Economics of Cognitive Bandwidth",
     "00_Meta",
@@ -274,8 +264,6 @@
     "80_COURSES/81_ASU/PSYC 414/pdfs/Willingham et al (2015) The Scientific Status of Learning.pdf",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRL2078.tmp",
     "80_COURSES/81_ASU/PSYC 414/submitted/~WRD2078.tmp",
-    "80_COURSES/81_ASU/PSYC 414/submitted/~WRL0978.tmp",
-    "80_COURSES/81_ASU/PSYC 414/submitted/~WRD0974.tmp",
     "80_COURSES/81_ASU/PSYC 498/materials/Capstone II Flyer QR.png",
     "assets/images/NotebookLM Mind Map - evo-psych.png",
     "Untitled.canvas"

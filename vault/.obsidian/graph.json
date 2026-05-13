@@ -8,37 +8,30 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:10_GARDEN/12_Concepts  ",
+      "query": "tag:#topic/wetware-stack  ",
       "color": {
         "a": 1,
-        "rgb": 61941
+        "rgb": 14701138
       }
     },
     {
       "query": "path:10_GARDEN/11_Daily_Bridge  ",
       "color": {
         "a": 1,
-        "rgb": 15864322
-      }
-    },
-    {
-      "query": "path:10_GARDEN/13_Authors  ",
-      "color": {
-        "a": 1,
-        "rgb": 11657298
+        "rgb": 5039626
       }
     }
   ],
   "collapse-display": false,
   "showArrow": false,
-  "textFadeMultiplier": -3,
-  "nodeSizeMultiplier": 4.75878111974766,
+  "textFadeMultiplier": -0.2,
+  "nodeSizeMultiplier": 5,
   "lineSizeMultiplier": 0.873059592204574,
   "collapse-forces": false,
   "centerStrength": 0,
   "repelStrength": 20,
   "linkStrength": 0,
   "linkDistance": 500,
-  "scale": 0.017267407571934484,
+  "scale": 0.0078125,
   "close": true
 }
