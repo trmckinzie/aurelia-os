@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "bfd9c3ba1eb08e78",
+        "id": "a8667147f7f76030",
         "type": "tabs",
         "children": [
           {
-            "id": "5604e56325df150f",
+            "id": "d3677dec542d601f",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -193,9 +193,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5604e56325df150f",
+  "active": "45dea2dfef84af12",
   "lastOpenFiles": [
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
-    "2026-05-12.md"
+    "10_GARDEN/11_Daily_Bridge/2026-05-12.md"
   ]
 }
