@@ -11,10 +11,24 @@
             "id": "d3677dec542d601f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "2026-06-07.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "2026-06-07"
             }
           }
         ]
@@ -193,9 +207,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "45dea2dfef84af12",
+  "active": "d3677dec542d601f",
   "lastOpenFiles": [
-    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
-    "10_GARDEN/11_Daily_Bridge/2026-05-12.md"
+    "10_GARDEN/12_Concepts/Brain.md",
+    "2026-06-07.md",
+    "10_GARDEN/12_Concepts/Neuroplasticity.md",
+    "10_GARDEN/12_Concepts/Neuron.md",
+    "10_GARDEN/12_Concepts/The Central Nervous System (CNS).md",
+    "10_GARDEN/12_Concepts/The Autonomic Nervous System (ANS).md",
+    "10_GARDEN/11_Daily_Bridge/2026-05-12.md",
+    "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md"
   ]
 }
