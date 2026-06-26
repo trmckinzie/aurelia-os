@@ -2,8 +2,5 @@
   "templater-obsidian",
   "calendar",
   "dataview",
-  "obsidian-outliner",
-  "smart-connections",
-  "obsidian-git",
-  "obsidian-zotero-desktop-connector"
+  "obsidian-git"
 ]
