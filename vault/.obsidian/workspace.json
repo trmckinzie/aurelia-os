@@ -4,31 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "e0bf8140861b30b4",
+        "id": "257111a9e03259e1",
         "type": "tabs",
         "children": [
           {
-            "id": "8535c9ecd4e95cd4",
+            "id": "ebdd8b2076b2bbb0",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2026-06-26.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "2026-06-26"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -181,8 +167,8 @@
             "state": {
               "type": "calendar",
               "state": {},
-              "icon": "lucide-ghost",
-              "title": "calendar"
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
             }
           }
         ]
@@ -201,17 +187,18 @@
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
       "templater-obsidian:Templater": false,
+      "smart-connections:Smart Connections: Open connections view": false,
+      "smart-connections:Smart Lookup: Open lookup view": false,
+      "smart-connections:Smart Connections: Open random connection": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8535c9ecd4e95cd4",
+  "active": "ebdd8b2076b2bbb0",
   "lastOpenFiles": [
-    "Morse Code.md",
-    "2026-06-26.md",
     "10_GARDEN/11_Daily_Bridge/2025-12-21.md",
     "10_GARDEN/11_Daily_Bridge/2026-06-19.md",
-    "Untitled.md",
-    "20_PROTOCOL/Operational Guides/6 Month Financial Operational Guide 2026.pdf",
+    "Morse Code.md",
+    "2026-06-26.md",
     "assets/images/NotebookLM-mindmap-psychology-biological-cognitive-foundations.png",
     "10_GARDEN/12_Concepts/Habit.md",
     "10_GARDEN/12_Concepts/Deep Work.md",
