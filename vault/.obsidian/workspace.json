@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "bfd9c3ba1eb08e78",
+        "id": "b1ebb78e6bd9adec",
         "type": "tabs",
         "children": [
           {
-            "id": "5604e56325df150f",
+            "id": "8ea495e01e9f3fc1",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -193,9 +193,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5604e56325df150f",
+  "active": "8ea495e01e9f3fc1",
   "lastOpenFiles": [
+    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
+    "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "2026-05-12.md"
   ]
 }
