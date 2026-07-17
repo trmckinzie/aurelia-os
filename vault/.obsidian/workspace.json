@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "b1ebb78e6bd9adec",
+        "id": "cc66dd55c1c3498d",
         "type": "tabs",
         "children": [
           {
-            "id": "8ea495e01e9f3fc1",
+            "id": "4380f3e3047e442f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "conflict-files-obsidian-git.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "conflict-files-obsidian-git"
             }
           }
         ]
@@ -187,14 +201,24 @@
       "command-palette:Open command palette": false,
       "bases:Create new base": false,
       "templater-obsidian:Templater": false,
-      "smart-connections:Smart Connections: Open connections view": false,
-      "smart-connections:Smart Lookup: Open lookup view": false,
-      "smart-connections:Smart Connections: Open random connection": false,
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8ea495e01e9f3fc1",
+  "active": "4380f3e3047e442f",
   "lastOpenFiles": [
+    "conflict-files-obsidian-git.md",
+    "10_GARDEN/12_Concepts/Brain.md",
+    "10_GARDEN/12_Concepts/Action Potential.md",
+    "Financial_Audit_Report.md",
+    "2026-06-26.md",
+    "Morse Code.md",
+    "20_PROTOCOL/Operational Guides/Optimization_Framework.pdf",
+    "20_PROTOCOL/Operational Guides/Concern_vs_Influence.pdf",
+    "20_PROTOCOL/Operational Guides/6 Month Financial Operational Guide 2026.pdf",
+    "20_PROTOCOL/Operational Guides",
+    "10_GARDEN/11_Daily_Bridge/2026-06-19.md",
+    "10_GARDEN/11_Daily_Bridge/2026-06-07.md",
+    "10_GARDEN/11_Daily_Bridge/2026-05-12.md",
     "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
