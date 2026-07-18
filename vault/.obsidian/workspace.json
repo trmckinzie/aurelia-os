@@ -11,24 +11,10 @@
             "id": "4380f3e3047e442f",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "conflict-files-obsidian-git.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "conflict-files-obsidian-git"
+              "title": "New tab"
             }
           }
         ]
@@ -204,14 +190,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4380f3e3047e442f",
+  "active": "45dea2dfef84af12",
   "lastOpenFiles": [
+    "10_GARDEN/18_Daily_Readings",
+    "Morse Code.md",
     "conflict-files-obsidian-git.md",
     "10_GARDEN/12_Concepts/Brain.md",
     "10_GARDEN/12_Concepts/Action Potential.md",
     "Financial_Audit_Report.md",
     "2026-06-26.md",
-    "Morse Code.md",
     "20_PROTOCOL/Operational Guides/Optimization_Framework.pdf",
     "20_PROTOCOL/Operational Guides/Concern_vs_Influence.pdf",
     "20_PROTOCOL/Operational Guides/6 Month Financial Operational Guide 2026.pdf",
