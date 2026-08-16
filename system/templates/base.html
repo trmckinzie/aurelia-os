@@ -21,7 +21,9 @@
 
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.9/lib/marked.umd.js"
+            integrity="sha384-kyb7rY2xnKgiRpRdAeNJxQ8e2SiGZy1m+FK9yME6M0eGJpg7EFaGGvf7+JSirgqE"
+            crossorigin="anonymous"></script>
     
     <script>
   tailwind.config = {
@@ -319,6 +321,14 @@
             renderResults(matches);
         });
 
+        // Vault note titles/types end up here verbatim; escape before building HTML
+        // strings with them so a stray "<" in a note can't be interpreted as a tag.
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
         function renderResults(results) {
             if(results.length === 0 && cmdInput.value.length > 0) {
                 cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-aurelia-muted">> NO_MATCHES_FOUND_IN_VAULT</div>`;
@@ -332,14 +342,14 @@
                 if(item.type === "PROJECT") typeColor = "text-aurelia-purple border-aurelia-purple/50";
                 if(item.type === "GARDEN" || item.type === "NOTE") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
                 if(item.type === "PROTOCOL") typeColor = "text-aurelia-green border-aurelia-green/50";
-                
+
                 return `
-                <a href="${item.url}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
+                <a href="${encodeURI(item.url)}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
                     <div class="flex items-center gap-3">
                         <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
-                            ${item.type}
+                            ${escapeHtml(item.type)}
                         </span>
-                        <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${item.title}</span>
+                        <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${escapeHtml(item.title)}</span>
                     </div>
                     <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
                 </a>

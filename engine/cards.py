@@ -29,7 +29,9 @@ def render_items(items, render_item, empty_html=""):
 
 
 def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text):
-    note_type = meta.get("type", "unknown").lower()
+    # str() guards against frontmatter values YAML infers as non-strings
+    # (e.g. an unquoted "type: 2026" would parse as an int, not text).
+    note_type = str(meta.get("type", "unknown")).lower()
 
     if (note_type == "unknown" or not note_type) and meta.get("tags"):
         for tag in meta["tags"]:
@@ -422,7 +424,7 @@ def generate_project_card(meta, sections, title, note_id):
 
 
 def generate_protocol_card(meta, body, title, note_id, p_id_override=None):
-    prot_id = p_id_override if p_id_override else meta.get("id", "SYS_CMD").upper()
+    prot_id = p_id_override if p_id_override else str(meta.get("id", "SYS_CMD")).upper()
     sequence = extract_protocol_sequence(body)
     logic = extract_protocol_logic(body)
 

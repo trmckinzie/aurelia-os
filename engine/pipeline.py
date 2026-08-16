@@ -1,5 +1,4 @@
 """Orchestrates the full build: scan the vault, route notes by type, render pages."""
-import json
 import os
 import re
 
@@ -15,6 +14,7 @@ from engine.config import (
 )
 from engine.content import make_id, parse_body, parse_frontmatter, process_notebooklm_media, process_wikilinks
 from engine.extractors import extract_mission_brief
+from engine.textutils import dumps_for_script_tag
 
 try:
     import markdown
@@ -41,7 +41,7 @@ def _scan_vault(user_config):
                 continue
 
             body = parse_body(content)
-            note_type = meta.get("type", "unknown").lower().strip()
+            note_type = str(meta.get("type", "unknown")).lower().strip()
             tags = meta.get("tags", [])
             title = filename.replace(".md", "").replace("_", " ")
 
@@ -81,7 +81,7 @@ def _scan_vault(user_config):
                     "id": note_id,
                     "title": title,
                     "link": f"garden.html#{note_id}",
-                    "type": meta.get("type", "NOTE").upper(),
+                    "type": str(meta.get("type", "NOTE")).upper(),
                     "tags": tags,
                     "desc": full_search_text,
                 })
@@ -197,7 +197,7 @@ def _render_pages(user_config, garden_cards, portfolio_cards, protocol_cards, tr
     ]
 
     if user_config.get('modules', {}).get('transmissions', {}).get('enabled', False):
-        transmissions_json = json.dumps(transmissions_data, default=json_serial)
+        transmissions_json = dumps_for_script_tag(transmissions_data, default=json_serial)
         pages.append(("pages/transmissionstemplate.html", "transmissions.html", {"transmissions_json": transmissions_json}))
 
     for template_name, output_name, context in pages:
@@ -240,7 +240,7 @@ def build_all():
           f"{len(protocol_cards)} Protocols, {len(transmissions_data)} Transmissions")
 
     master_index = _build_search_index(garden_cards, portfolio_cards, protocol_cards, transmissions_data)
-    json_index = json.dumps(master_index)
+    json_index = dumps_for_script_tag(master_index)
 
     _render_pages(user_config, garden_cards, portfolio_cards, protocol_cards, transmissions_data, json_index)
 

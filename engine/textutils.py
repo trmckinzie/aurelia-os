@@ -5,6 +5,7 @@ turns [[Wikilinks]] into <button>Label</button> elements. Extractors therefore
 need to recognize both the rendered <button> form and, as a fallback, raw
 [[brackets]] for text that was never run through that pass.
 """
+import json
 import re
 
 _HTML_TAG_RE = re.compile(r'<[^>]+>')
@@ -49,6 +50,16 @@ def section_after_header(text, header_pattern, stop_pattern=r'\n###|\n---'):
     if len(parts) < 2:
         return None
     return re.split(stop_pattern, parts[1])[0]
+
+
+def dumps_for_script_tag(obj, **kwargs):
+    """json.dumps(), but safe to inline inside a <script> block.
+
+    A literal "</script" substring inside a JSON string value (e.g. a note
+    title someone pastes from the web) would otherwise close the surrounding
+    <script> tag early and let the rest of the page be parsed as HTML.
+    """
+    return json.dumps(obj, **kwargs).replace('</', '<\\/')
 
 
 def first_blockquote_after(text, header_pattern):
