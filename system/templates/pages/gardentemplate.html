@@ -741,6 +741,18 @@
         pool[Math.floor(Math.random() * pool.length)].click();
     }
 
+    // --- HASH DEEP-LINKING ---
+    // garden.html#note-id opens that note directly on load -- what the
+    // command palette's results, the Random Note button's URL, and the
+    // Lobby's hub-note/review links all rely on. Re-checked on hashchange
+    // too, so an in-page link to a different note (e.g. a backlink pill
+    // that also updates the URL) keeps working the same way.
+    function openNoteFromHash() {
+        const id = location.hash.slice(1);
+        if (id && document.getElementById(id)) openNote(id);
+    }
+    window.addEventListener('hashchange', openNoteFromHash);
+
     function daysAgoLabel(ts) {
         const days = Math.floor((Date.now() - ts) / 86400000);
         if (days <= 0) return 'today';
@@ -1008,5 +1020,6 @@
     window.addEventListener('resize', () => { if (currentView === 'graph') initGraph(); });
 
     renderReviewQueue();
+    openNoteFromHash();
 </script>
 {% endblock %}

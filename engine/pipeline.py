@@ -6,6 +6,7 @@ skipped -- there's no page left for them to link to.
 """
 import os
 import re
+from collections import Counter
 
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
@@ -80,6 +81,7 @@ def _scan_vault():
             "link": f"garden.html#{p['note_id']}",
             "type": str(p["meta"].get("type", "NOTE")).upper(),
             "tags": p["meta"].get("tags", []),
+            "maturity": cards._maturity_slug(p["meta"].get("tags")),
             "desc": p["full_search_text"],
         })
 
@@ -139,6 +141,51 @@ def _build_graph_index(garden_cards):
     return {"nodes": nodes, "edges": edges}
 
 
+_DAILY_LOG_ID_RE = re.compile(r'^note-\d{4}-\d{2}-\d{2}')
+
+
+def _build_lobby_context(garden_cards, graph_index):
+    """Aggregate, size-conscious stats for the Lobby's "Cortex Status" panel.
+
+    Deliberately mirrors the size discipline of _build_search_index: no note
+    bodies, just counts, a handful of hub notes, and an id/title/maturity
+    triple per note (the "review_seed" the client needs to compute its own
+    spaced-review teaser from the same localStorage log the Garden uses --
+    that log only exists in the browser, so this can't be precomputed here).
+    """
+    maturity_counts = Counter(c['maturity'] for c in garden_cards if c['maturity'])
+
+    # Hub notes: the most-connected nodes in the wikilink graph, surfaced as
+    # "start here" entry points -- the personal-wiki equivalent of a Map of
+    # Content, derived rather than hand-maintained.
+    node_lookup = {n['id']: n for n in graph_index['nodes']}
+    degree = Counter()
+    for edge in graph_index['edges']:
+        degree[edge['source']] += 1
+        degree[edge['target']] += 1
+    hub_notes = [
+        {"id": note_id, "title": node_lookup[note_id]['title'], "type": node_lookup[note_id]['type'], "connections": count}
+        for note_id, count in degree.most_common(5)
+    ]
+
+    log_ids = sorted((c['id'] for c in garden_cards if _DAILY_LOG_ID_RE.match(c['id'])), reverse=True)
+    latest_log_date = log_ids[0].replace('note-', '', 1) if log_ids else None
+
+    review_seed = [{"id": c['id'], "title": c['title'], "maturity": c['maturity']} for c in garden_cards]
+
+    return {
+        "total_notes": len(garden_cards),
+        "maturity_counts": {
+            "seed": maturity_counts.get("seed", 0),
+            "growing": maturity_counts.get("growing", 0),
+            "evergreen": maturity_counts.get("evergreen", 0),
+        },
+        "hub_notes": hub_notes,
+        "latest_log_date": latest_log_date,
+        "review_seed": review_seed,
+    }
+
+
 def _build_search_index(garden_cards):
     master_index = [
         {"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"},
@@ -157,9 +204,9 @@ def _build_search_index(garden_cards):
     return master_index
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json):
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json):
     pages = [
-        ("pages/indextemplate.html", "index.html", {}),
+        ("pages/indextemplate.html", "index.html", {"stats": lobby_stats, "review_seed": review_seed_json}),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
         }),
@@ -202,9 +249,13 @@ def build_all():
     json_index = dumps_for_script_tag(master_index)
 
     backlinks_json = dumps_for_script_tag(_build_backlinks_index(garden_cards))
-    graph_json = dumps_for_script_tag(_build_graph_index(garden_cards))
+    graph_index = _build_graph_index(garden_cards)
+    graph_json = dumps_for_script_tag(graph_index)
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json)
+    lobby_stats = _build_lobby_context(garden_cards, graph_index)
+    review_seed_json = dumps_for_script_tag(lobby_stats.pop("review_seed"))
+
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json)
 
     # Runs last: scans the just-rendered dist/**/*.html for utility classes,
     # including ones cards.py assembled dynamically (now literal text in the

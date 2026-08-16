@@ -88,9 +88,13 @@
 
 {% block content %}
    <header class="mb-24 relative">
-        <div class="font-mono text-[14px] text-aurelia-primary mb-4 flex items-center gap-2">
+        <div class="font-mono text-[14px] text-aurelia-primary mb-4 flex items-center gap-2 flex-wrap">
             <span class="opacity-100">[ STATUS: ]</span>
             <span class="text-aurelia-primary">{{ config.status_message }}</span>
+            {% if stats.latest_log_date %}
+            <span class="text-gray-700">//</span>
+            <span class="text-gray-400 text-xs tracking-wider">LAST CULTIVATED: {{ stats.latest_log_date }}</span>
+            {% endif %}
         </div>
 
         <h1 class="text-6xl md:text-9xl font-bold text-aurelia-text tracking-tighter mb-8 uppercase leading-[0.8] glitch-wrapper">
@@ -111,18 +115,24 @@
                 > {{ config.author.role }}<br>
             </p>
             
-            <button onclick="openManifesto()" class="mt-10 group flex items-center gap-3 text-md font-mono text-aurelia-primary border border-aurelia-primary/30 bg-aurelia-primary/5 px-8 py-4 hover:bg-aurelia-primary hover:text-black transition-all">
-                <span> WHAT IS AURELIA OS? </span>
-                <span class="group-hover:translate-x-1 transition-transform">-></span>
-            </button>
-        </div>    
+            <div class="mt-10 flex flex-wrap items-center gap-4">
+                <button onclick="openManifesto()" class="group flex items-center gap-3 text-md font-mono text-aurelia-primary border border-aurelia-primary/30 bg-aurelia-primary/5 px-8 py-4 hover:bg-aurelia-primary hover:text-black transition-all">
+                    <span> WHAT IS AURELIA OS? </span>
+                    <span class="group-hover:translate-x-1 transition-transform">-></span>
+                </button>
+                <button onclick="toggleCmd()" title="Search every published note" class="group flex items-center gap-3 text-md font-mono text-gray-400 border border-gray-800 px-6 py-4 hover:border-aurelia-text hover:text-aurelia-text transition-all">
+                    <span>🔍 SEARCH THE CORTEX</span>
+                    <span class="text-[10px] border border-gray-700 rounded px-1.5 py-0.5 group-hover:border-aurelia-text">⌘K</span>
+                </button>
+            </div>
+        </div>
     </header>
 
-    <div class="grid grid-cols-1 gap-6 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
 
-    <a href="garden.html" class="group relative h-80 bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
+    <a href="garden.html" class="group relative min-h-[20rem] bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
         <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
-        
+
         <div class="relative z-10 flex flex-col h-full justify-between">
             <div>
                 <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-primary px-2 py-1 mb-4 tracking-widest rounded-sm">
@@ -132,15 +142,65 @@
                     The Garden
                 </h2>
             </div>
-            
+
             <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
                 <span class="text-aurelia-primary">></span> STATUS: VOLATILE<br>
                 <span class="text-aurelia-primary">></span> NOTES / SEEDS / RAW
             </div>
         </div>
-        
+
         <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-primary/20 transition-all"></div>
     </a>
+
+    <div class="relative min-h-[20rem] bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
+        <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
+            MOD_02 // STATUS
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight mb-4">Cortex Status</h2>
+
+        <div class="flex items-baseline gap-3 mb-4">
+            <span class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
+            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Nodes Cultivated</span>
+        </div>
+
+        <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
+            <div class="flex h-2 rounded-full overflow-hidden bg-gray-900 border border-gray-800">
+                {% if stats.total_notes %}
+                <div class="bg-yellow-500" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-emerald-600" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
+                {% endif %}
+            </div>
+            <div class="flex justify-between text-[9px] font-mono text-gray-500 mt-1.5 uppercase tracking-wider">
+                <span>🌱 {{ stats.maturity_counts.seed }} Seed</span>
+                <span>🌿 {{ stats.maturity_counts.growing }} Growing</span>
+                <span>🌳 {{ stats.maturity_counts.evergreen }} Evergreen</span>
+            </div>
+        </div>
+
+        <div class="flex-grow min-h-0">
+            <span class="text-[9px] font-bold font-mono text-gray-500 uppercase tracking-widest block mb-2" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
+                Start Here // Most-Connected Notes
+            </span>
+            <div class="flex flex-col gap-1">
+                {% for hub in stats.hub_notes %}
+                <a href="garden.html#{{ hub.id }}" class="group/hub flex items-center justify-between text-xs font-mono text-gray-300 hover:text-aurelia-accent transition-colors border-b border-gray-900 py-1">
+                    <span class="truncate">{{ hub.title }}</span>
+                    <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 ml-2">{{ hub.connections }} ⟷</span>
+                </a>
+                {% else %}
+                <span class="text-xs font-mono text-gray-600">// Link notes together to surface hubs here</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-gray-800">
+            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-white transition-colors">
+                <span>🧠 <span id="lobby-review-count">0</span> notes due for retrieval practice</span>
+                <span>→</span>
+            </a>
+        </div>
+    </div>
 
 </div>
 
@@ -311,6 +371,37 @@
 
 {% block scripts %}
 <script>
+    /* --- SPACED-REVIEW TEASER ---
+       Mirrors the maturity-weighted due calculation in garden.html, reading
+       the same aurelia_review_log localStorage key Garden writes to when a
+       note is opened. REVIEW_SEED carries only id/title/maturity (no note
+       bodies) -- see engine/pipeline.py._build_lobby_context. */
+    (function() {
+        const REVIEW_SEED = {{ review_seed | safe }};
+        const REVIEW_INTERVAL_DAYS = { seed: 1, growing: 5, evergreen: 14 };
+        const DEFAULT_INTERVAL_DAYS = 3;
+
+        let log = {};
+        try { log = JSON.parse(localStorage.getItem('aurelia_review_log') || '{}'); } catch (e) {}
+
+        const now = Date.now();
+        const dueCount = REVIEW_SEED.filter(n => {
+            const last = log[n.id];
+            if (!last) return true;
+            const intervalMs = (REVIEW_INTERVAL_DAYS[n.maturity] || DEFAULT_INTERVAL_DAYS) * 86400000;
+            return (now - last) / intervalMs >= 1;
+        }).length;
+
+        if (dueCount > 0) {
+            const teaser = document.getElementById('lobby-review-teaser');
+            const countEl = document.getElementById('lobby-review-count');
+            if (teaser && countEl) {
+                countEl.innerText = dueCount;
+                teaser.classList.remove('hidden');
+            }
+        }
+    })();
+
     /* --- DECRYPTION EFFECT ENGINE --- */
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+";
     document.querySelector(".decrypt-effect").onmouseover = event => {
