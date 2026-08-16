@@ -14,16 +14,6 @@ import subprocess
 
 from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR
 
-# Classes assembled by client-side JS after the page has already loaded (see
-# protocoltemplate.html's inline updateSystemStatus(), which derives a
-# "bg-*" indicator-dot class from a "text-*" status color at runtime) never
-# appear as literal text anywhere Tailwind can scan -- they only exist once
-# pieced together in the browser -- so their CSS must be generated unconditionally.
-_JS_RUNTIME_SAFELIST = [
-    "bg-aurelia-primary", "bg-aurelia-secondary", "bg-aurelia-tertiary", "bg-aurelia-accent",
-    "bg-gray-400", "bg-gray-500",
-]
-
 
 def generate_config():
     colors = CURRENT_THEME["colors"]
@@ -60,7 +50,6 @@ def generate_config():
  * Do not edit by hand -- edit THEME_CONFIG and rebuild instead. */
 module.exports = {{
   content: ["./dist/**/*.html"],
-  safelist: {_JS_RUNTIME_SAFELIST!r},
   theme: {{
     extend: {{
       colors: {{
