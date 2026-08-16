@@ -25,7 +25,7 @@ def test_link_pill_renders_clickable_button_for_known_target():
 def test_link_pill_renders_dimmed_text_for_dangling_target():
     html = link_pill("note-missing", "Ghost", "my-classes", known_ids={"note-a"})
     assert "onclick" not in html
-    assert "opacity-40" in html
+    assert "opacity-70" in html
     assert "Not yet published" in html
     assert "Ghost" in html
 

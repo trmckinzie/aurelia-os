@@ -44,7 +44,14 @@ def link_pill(target_id, label, classes, known_ids):
         return (f'<span onclick="openNote(\'{target_id}\'); event.stopPropagation()" '
                 f'class="{classes} cursor-pointer">{label}</span>')
     if target_id:
-        return f'<span class="{classes} opacity-40 grayscale cursor-default" title="Not yet published">{label}</span>'
+        # grayscale neutralizes whatever hue `classes` set (so a dangling
+        # link never looks like a "real," differently-colored pill); the
+        # opacity floor is well above a typical disabled-state 40% because
+        # that -- combined with grayscale already darkening/desaturating
+        # the color -- dropped well below readable contrast on light
+        # themes. 70% keeps the "this isn't clickable" signal clear
+        # without the label being hard to read.
+        return f'<span class="{classes} opacity-70 grayscale cursor-default" title="Not yet published">{label}</span>'
     return f'<span class="{classes} cursor-default">{label}</span>'
 
 
@@ -105,6 +112,14 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-3 "
                      "transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl "
                      "hover:z-10 group h-full min-h-[240px]")
+    # Overridden below for source/notebooklm: their `color` is a fixed
+    # yellow-500/indigo-500 (kept as-is -- CYBER_PRIME's exact look), but
+    # deriving the type-label's text color from that same literal via
+    # .replace('border-', 'text-') produced near-invisible text on a light
+    # theme (yellow/indigo text has too little contrast against a light
+    # background regardless of theme). The dot/border stay the fixed hue;
+    # only the label text gets a theme-aware color instead.
+    label_color = None
 
     if "daily" in note_type or "log" in note_type:
         color = "border-aurelia-tertiary"
@@ -123,19 +138,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
             <div>
                 <span class="text-[10px] font-bold font-mono text-aurelia-tertiary tracking-widest">> MISSION_OBJ:</span>
-                <p class="text-sm text-gray-100 font-mono mt-1 border-l-2 border-aurelia-tertiary/50 pl-3 leading-relaxed line-clamp-2">
+                <p class="text-sm text-aurelia-text font-mono mt-1 border-l-2 border-aurelia-tertiary/50 pl-3 leading-relaxed line-clamp-2">
                     "{mission}"
                 </p>
             </div>
 
             <div class="flex-grow">
                 <span class="text-[10px] font-bold font-mono text-aurelia-tertiary tracking-widest">> DEBRIEF:</span>
-                <p class="text-sm text-white font-sans mt-1 leading-relaxed italic line-clamp-3 opacity-90">
+                <p class="text-sm text-aurelia-text font-sans mt-1 leading-relaxed italic line-clamp-3 opacity-90">
                     {summary if summary else "// No summary data available."}
                 </p>
             </div>
 
-            <div class="mt-auto pt-3 border-t border-gray-800/50 flex flex-col gap-2">
+            <div class="mt-auto pt-3 border-t border-aurelia-dim/50 flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                     <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase truncate w-full">SRC: {source_html}</span>
                 </div>
@@ -154,7 +169,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         links_html = render_items(
             links,
-            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-gray-700 hover:border-aurelia-primary pb-0.5", known_ids),
+            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-aurelia-dim hover:border-aurelia-primary pb-0.5", known_ids),
             empty_html='<span class="opacity-30 text-[9px]">// NO_LINKS_DETECTED</span>',
         )
         card_content = f"""
@@ -162,16 +177,16 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
             <div class="relative pl-4 border-l-2 border-aurelia-primary">
                 <span class="text-[10px] font-bold font-mono text-aurelia-primary tracking-widest block mb-1">> DEFINITION:</span>
-                <p class="text-sm text-white font-sans leading-relaxed font-medium">
+                <p class="text-sm text-aurelia-text font-sans leading-relaxed font-medium">
                     "{definition}"
                 </p>
             </div>
 
             <div class="flex-grow"></div>
 
-            <div class="pt-3 border-t border-gray-800/50">
+            <div class="pt-3 border-t border-aurelia-dim/50">
                 <span class="text-[9px] font-bold font-mono text-aurelia-primary uppercase tracking-widest block mb-2">NEURAL_LINKS:</span>
-                <div class="flex flex-wrap gap-2 text-[10px] font-mono text-gray-300">
+                <div class="flex flex-wrap gap-2 text-[10px] font-mono text-aurelia-muted">
                     {links_html}
                 </div>
             </div>
@@ -193,19 +208,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-gray-300 rounded-sm hover:text-yellow-500 transition-colors", known_ids),
-            empty_html='<span class="opacity-30 text-[9px] text-gray-500 font-mono">// NO_CONCEPTS_LINKED</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-aurelia-muted rounded-sm hover:text-aurelia-tertiary transition-colors", known_ids),
+            empty_html='<span class="opacity-30 text-[9px] text-aurelia-muted font-mono">// NO_CONCEPTS_LINKED</span>',
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-3">
 
             <div class="flex justify-between items-end border-b border-yellow-500/30 pb-2">
-                <span class="text-[10px] font-bold font-mono text-yellow-500 uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
+                <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
                 <span class="text-[9px] font-bold font-mono text-black bg-yellow-500 px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
             </div>
 
             <div class="mt-1">
-                <p class="text-sm text-white font-serif leading-relaxed italic opacity-90">
+                <p class="text-sm text-aurelia-text font-serif leading-relaxed italic opacity-90">
                     "{argument}"
                 </p>
             </div>
@@ -213,13 +228,13 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             <div class="flex-grow"></div>
 
             <div class="mt-auto">
-                 <span class="text-[9px] font-bold font-mono text-yellow-500 opacity-70 uppercase tracking-widest block mb-1">DERIVED_IDEAS:</span>
+                 <span class="text-[9px] font-bold font-mono text-aurelia-tertiary opacity-70 uppercase tracking-widest block mb-1">DERIVED_IDEAS:</span>
                  <div class="flex flex-wrap gap-1.5">
                     {concepts_html}
                  </div>
             </div>
         </div>"""
-        icon = "📚"; label = "LIBRARY"
+        icon = "📚"; label = "LIBRARY"; label_color = "text-aurelia-tertiary"
 
     elif "author" in note_type:
         color = "border-aurelia-secondary"
@@ -228,19 +243,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-secondary text-black font-bold rounded-sm border border-aurelia-secondary", known_ids),
-            empty_html='<span class="text-[9px] text-white font-mono opacity-80">// NO_SYSTEMS_DETECTED</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-secondary text-aurelia-inverted font-bold rounded-sm border border-aurelia-secondary", known_ids),
+            empty_html='<span class="text-[9px] text-aurelia-text font-mono opacity-80">// NO_SYSTEMS_DETECTED</span>',
         )
         works_html = render_items(
             works,
-            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-0.5 border border-gray-400 text-white font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-0.5 border border-aurelia-dim text-aurelia-text font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
             <div class="relative pl-4 border-l-2 border-aurelia-secondary">
                 <span class="text-[10px] font-bold font-mono text-aurelia-secondary tracking-widest block mb-1">> BIO_MATRIX:</span>
-                <p class="text-sm text-white font-sans leading-relaxed font-bold">
+                <p class="text-sm text-aurelia-text font-sans leading-relaxed font-bold">
                     "{context}"
                 </p>
             </div>
@@ -254,8 +269,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </div>
             </div>
 
-            <div class="pt-2 border-t border-gray-600">
-                <span class="text-[9px] font-bold font-mono text-white uppercase tracking-widest block mb-1">BIBLIOGRAPHY:</span>
+            <div class="pt-2 border-t border-aurelia-dim">
+                <span class="text-[9px] font-bold font-mono text-aurelia-text uppercase tracking-widest block mb-1">BIBLIOGRAPHY:</span>
                 <div class="flex flex-wrap gap-1.5">
                     {works_html}
                 </div>
@@ -271,19 +286,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         pillars_html = render_items(
             pillars,
-            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-accent text-black font-extrabold rounded-sm uppercase", known_ids),
-            empty_html='<span class="text-[9px] text-gray-500 font-mono">// FOUNDATIONS_PENDING</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-accent text-aurelia-inverted font-extrabold rounded-sm uppercase", known_ids),
+            empty_html='<span class="text-[9px] text-aurelia-muted font-mono">// FOUNDATIONS_PENDING</span>',
         )
         canon_html = render_items(
             canon,
-            lambda pair: link_pill(pair[0], f"• {pair[1]}", "text-[10px] font-serif italic text-gray-300 hover:text-white transition-colors truncate", known_ids),
+            lambda pair: link_pill(pair[0], f"• {pair[1]}", "text-[10px] font-serif italic text-aurelia-muted hover:text-aurelia-text transition-colors truncate", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
             <div class="relative pl-4 border-l-4 border-aurelia-accent">
                 <span class="text-[10px] font-bold font-mono text-aurelia-accent tracking-widest block mb-1">:: FIELD_SCOPE</span>
-                <p class="text-sm text-white font-sans leading-relaxed font-bold opacity-95">
+                <p class="text-sm text-aurelia-text font-sans leading-relaxed font-bold opacity-95">
                     "{scope}"
                 </p>
             </div>
@@ -297,8 +312,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </div>
             </div>
 
-            <div class="pt-2 border-t border-gray-600">
-                <span class="text-[9px] font-bold font-mono text-white uppercase tracking-widest block mb-1">THE_CANON:</span>
+            <div class="pt-2 border-t border-aurelia-dim">
+                <span class="text-[9px] font-bold font-mono text-aurelia-text uppercase tracking-widest block mb-1">THE_CANON:</span>
                 <div class="flex flex-col gap-1">
                     {canon_html}
                 </div>
@@ -322,7 +337,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             return f"""
                     <div class="flex items-center gap-2 px-2 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-sm" title="{f.upper()}">
                         <span class="text-xs">{feature_icons.get(f, "•")}</span>
-                        <span class="text-[9px] font-mono text-indigo-300 font-bold uppercase">{f}</span>
+                        <span class="text-[9px] font-mono text-aurelia-primary font-bold uppercase">{f}</span>
                     </div>
                     """
 
@@ -335,8 +350,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         <div class="flex flex-col h-full gap-4">
 
             <div class="relative pl-4 border-l-4 border-indigo-500">
-                <span class="text-[10px] font-bold font-mono text-indigo-400 tracking-widest block mb-1">:: RESEARCH_SYNTHESIS</span>
-                <p class="text-sm text-gray-200 font-sans leading-relaxed opacity-95">
+                <span class="text-[10px] font-bold font-mono text-aurelia-primary tracking-widest block mb-1">:: RESEARCH_SYNTHESIS</span>
+                <p class="text-sm text-aurelia-text font-sans leading-relaxed opacity-95">
                     "{overview}"
                 </p>
             </div>
@@ -344,22 +359,25 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             <div class="flex-grow"></div>
 
             <div>
-                <span class="text-[9px] font-bold font-mono text-gray-500 uppercase tracking-widest block mb-2">AVAILABLE_DATA_STREAMS:</span>
+                <span class="text-[9px] font-bold font-mono text-aurelia-muted uppercase tracking-widest block mb-2">AVAILABLE_DATA_STREAMS:</span>
 
                 <div class="flex flex-wrap gap-2">
                     {features_html}
                 </div>
             </div>
         </div>"""
-        icon = "🧬"; label = "NOTEBOOK"
+        icon = "🧬"; label = "NOTEBOOK"; label_color = "text-aurelia-primary"
 
     else:
-        color = "border-gray-800"
+        color = "border-aurelia-dim"
         clean_body = re.sub(r'<[^>]+>', '', body_content)
         clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
         blurb = clean_body[:200] + "..."
-        card_content = f"""<div class="flex flex-col h-full"><p class="text-sm text-gray-400 font-sans leading-relaxed line-clamp-5">{blurb}</p></div>"""
+        card_content = f"""<div class="flex flex-col h-full"><p class="text-sm text-aurelia-muted font-sans leading-relaxed line-clamp-5">{blurb}</p></div>"""
         icon = "📄"; label = "NOTE"
+
+    if label_color is None:
+        label_color = color.replace('border-', 'text-')
 
     html_card = f"""
     <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
@@ -367,14 +385,14 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             <div>
                 <div class="flex items-center gap-2 mb-1.5">
                     <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
-                    <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
+                    <span class="text-[10px] font-mono {label_color} uppercase tracking-widest">{label}</span>
                     {maturity_html}
                 </div>
-                <h3 class="text-lg font-bold text-gray-200 font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
+                <h3 class="text-lg font-bold text-aurelia-text font-mono group-hover:text-aurelia-text transition-colors leading-tight">{title}</h3>
             </div>
             <div class="text-2xl opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-transform">{icon}</div>
         </div>
-        <div class="w-full h-px bg-gray-800/50"></div>
+        <div class="w-full h-px bg-aurelia-dim/50"></div>
         {card_content}
     </article>
     """

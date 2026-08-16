@@ -268,13 +268,13 @@
             <div class="flex items-center gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
                 
                 <div class="flex items-center bg-aurelia-bg/50 border border-aurelia-dim rounded p-1 shrink-0">
-                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded text-aurelia-primary bg-white/10 transition-all hover:text-white" title="Grid View">
+                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded text-aurelia-primary bg-aurelia-text/10 transition-all hover:text-aurelia-text" title="Grid View">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     </button>
-                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded text-aurelia-muted hover:text-white transition-all" title="Tree View">
+                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded text-aurelia-muted hover:text-aurelia-text transition-all" title="Tree View">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded text-aurelia-muted hover:text-white transition-all" title="Knowledge Graph">
+                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded text-aurelia-muted hover:text-aurelia-text transition-all" title="Knowledge Graph">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" stroke-width="2"></circle><circle cx="18" cy="6" r="2.5" stroke-width="2"></circle><circle cx="12" cy="18" r="2.5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"></path></svg>
                     </button>
                 </div>
@@ -362,7 +362,7 @@
                 </span>
                 <span id="topic-active-label" class="hidden text-[10px] font-mono text-aurelia-muted">
                     Filtering: <span id="topic-active-name" class="text-aurelia-accent"></span>
-                    <button onclick="clearTopicFilter()" class="ml-2 text-aurelia-muted hover:text-white">✕ clear</button>
+                    <button onclick="clearTopicFilter()" class="ml-2 text-aurelia-muted hover:text-aurelia-text">✕ clear</button>
                 </span>
             </div>
             <div id="topic-cloud-items" class="flex flex-wrap gap-2 items-center"></div>
@@ -445,7 +445,7 @@
                                 
                                 <div class="flex items-center gap-3 overflow-hidden">
                                     <span class="text-aurelia-muted text-[10px] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
-                                    <span class="text-sm font-mono text-aurelia-muted group-hover/node:text-white transition-colors truncate">{{ card.title }}</span>
+                                    <span class="text-sm font-mono text-aurelia-muted group-hover/node:text-aurelia-text transition-colors truncate">{{ card.title }}</span>
                                 </div>
 
                                 <div class="hidden md:flex items-center gap-4 opacity-0 group-hover/node:opacity-100 transition-all transform translate-x-2 group-hover/node:translate-x-0">
@@ -483,7 +483,7 @@
             </div>
             <div id="graph-canvas-wrap" class="relative border border-aurelia-dim bg-aurelia-bg/40 rounded-sm overflow-hidden" style="height: 70vh;">
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
-                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-sm text-xs font-mono text-white shadow-lg"></div>
+                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-sm text-xs font-mono text-aurelia-text shadow-lg"></div>
                 <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-aurelia-muted uppercase tracking-widest">No nodes match the current filter</div>
             </div>
         </div>
@@ -567,10 +567,10 @@
 
         [[btnGrid, 'grid'], [btnTree, 'tree'], [btnGraph, 'graph']].forEach(([btn, m]) => {
             if (m === mode) {
-                btn.classList.add('bg-white/10', 'text-aurelia-primary');
+                btn.classList.add('bg-aurelia-text/10', 'text-aurelia-primary');
                 btn.classList.remove('text-aurelia-muted');
             } else {
-                btn.classList.remove('bg-white/10', 'text-aurelia-primary');
+                btn.classList.remove('bg-aurelia-text/10', 'text-aurelia-primary');
                 btn.classList.add('text-aurelia-muted');
             }
         });

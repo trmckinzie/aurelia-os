@@ -66,40 +66,47 @@ THEME_CONFIG = {
         # neon horizontal-sweep scanline. See engine/theming.py fallbacks.
     },
 
-    # 2. THE_PATRIOT (Light / Americana -- a founding-document aesthetic:
-    # warm parchment, deep navy ink, the flag's actual Old Glory Blue/Red,
-    # and antique gold worked into structure -- borders, hover states, the
-    # scanline -- rather than only used as a single accent color. Every
-    # color below was picked and checked for contrast against bg_main:
-    # text_main ~14:1, text_muted ~6.4:1, primary (as text/headings)
-    # ~11.5:1, accent (as link text) ~6.9:1 -- all comfortably at or above
-    # WCAG AA for normal text (4.5:1), most at AAA (7:1).
+    # 2. THE_PATRIOT (Light / Americana). Palette grounded in the U.S. Web
+    # Design System (USWDS) -- the federal government's own design system,
+    # built and accessibility-tested (Section 508 / WCAG AA) specifically
+    # for red/white/blue/gold civic sites. Every color below is a real
+    # USWDS token value, not an eyeballed approximation:
+    #   ink (text_main), base-dark (text_muted), primary-dark (primary),
+    #   primary (accent), secondary-dark (secondary), gold-50 (tertiary),
+    #   gold-5/10/30 (backgrounds/border).
+    # USWDS's own accessibility docs are explicit that body text should be
+    # near-black ("ink"), not a tinted color -- a navy or sepia tint on the
+    # *reading* text is exactly the kind of choice that looks thematic but
+    # quietly costs contrast. The blue/red/gold identity still comes
+    # through clearly via headings, links, borders, and badges.
     "THE_PATRIOT": {
         "label": "The Patriot",
         "description": "Light / Americana",
         "colors": {
-            # Base Layer -- warm parchment, not stark white, but light
-            # enough to keep every text color well above AA contrast.
-            "bg_main": "#f8f5ec",       # Warm Parchment
+            # Base Layer -- warm gold-tinted parchment (USWDS gold-5/10),
+            # not neutral gray, but light enough to stay well above AA
+            # contrast for every text color below.
+            "bg_main": "#f5f0e6",       # USWDS gold-5 -- warm parchment
             "bg_layer_1": "#ffffff",    # Pure White (Cards) -- crisp paper-on-desk
-            "bg_layer_2": "#efe8d3",    # Soft Gold-Cream (Hovers)
+            "bg_layer_2": "#f1e5cd",    # USWDS gold-10 -- hover/modal surface
 
-            # Typography -- ink navy rather than flat black, so "Blue"
-            # carries into the reading experience itself, not just accents.
-            "text_main": "#0b1f3a",     # Deep Navy Ink
-            "text_muted": "#54617a",    # Muted Slate-Navy
+            # Typography -- near-black ink, not tinted, for maximum
+            # readability (see note above).
+            "text_main": "#1b1b1b",     # USWDS ink
+            "text_muted": "#565c65",    # USWDS base-dark
             "text_inverted": "#ffffff", # White text (for solid buttons)
 
-            # Structure -- a soft gold hairline instead of flat gray, so
-            # "Gold" shows up in every border, not only as a highlight.
-            "border_main": "#d9cfb0",   # Parchment Gold
-            "border_focus": "#1d4ed8",  # Royal Blue (keyboard focus ring)
+            # Structure -- a warm gold hairline (USWDS gold-30, chosen dark
+            # enough to stay clearly visible as a border, not just a tint).
+            "border_main": "#c7a97b",   # USWDS gold-30
+            "border_focus": "#005ea2",  # USWDS primary blue (keyboard focus ring)
 
-            # Roles -- the flag's actual colors, not a generic red/blue.
-            "primary": "#0a3161",       # Old Glory Blue (Headings, Key Data)
-            "secondary": "#b31942",     # Old Glory Red (Alerts, Emphasis)
-            "tertiary": "#8a6d1f",      # Antique Gold (Highlights, Status)
-            "accent": "#1d4ed8",        # Royal Blue (Links -- distinct from Primary's navy)
+            # Roles -- USWDS's own theme tokens for exactly these jobs.
+            "primary": "#1a4480",       # USWDS primary-dark (Headings, Key Data)
+            "secondary": "#b50909",     # USWDS secondary-dark (Alerts, Emphasis)
+            "tertiary": "#6b5947",      # USWDS gold-60 -- a full grade past gold-50's AA
+                                        # floor, since it's used as small badge/label text
+            "accent": "#005ea2",        # USWDS primary -- the standard gov-site link blue
         },
         "font_mono": "'Courier Prime', 'Courier New', monospace",  # Typewriter -- founding-document feel
         "rounded": "8px",              # Softer corners
@@ -107,15 +114,15 @@ THEME_CONFIG = {
         # A "dossier card" look instead of CYBER_PRIME's borderless glass --
         # opaque parchment-white with a gold hairline and a soft navy-tinted
         # shadow (rather than flat black, to stay in the blue family).
-        "glass_border": "1px solid #d9cfb0",
-        "glass_shadow": "0 4px 10px -2px rgba(10, 31, 61, 0.12)",
+        "glass_border": "1px solid #c7a97b",
+        "glass_shadow": "0 4px 10px -2px rgba(26, 68, 128, 0.12)",
         # Faint gold hairlines -- a paper-texture read instead of a neon
         # sweep-highlight or flat gray grid.
         "scanline_bg": (
             "repeating-linear-gradient(0deg, transparent, transparent 1px, "
-            "#d9cfb0 1px, #d9cfb0 2px)"
+            "#c7a97b 1px, #c7a97b 2px)"
         ),
-        "scanline_opacity": "0.25",
+        "scanline_opacity": "0.2",
     },
 }
 

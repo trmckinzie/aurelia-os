@@ -86,7 +86,7 @@
             </p>
             
             <div class="mt-10 flex flex-wrap items-center gap-4">
-                <button onclick="openManifesto()" class="group flex items-center gap-3 text-md font-mono text-aurelia-primary border border-aurelia-primary/30 bg-aurelia-primary/5 px-8 py-4 hover:bg-aurelia-primary hover:text-black transition-all">
+                <button onclick="openManifesto()" class="group flex items-center gap-3 text-md font-mono text-aurelia-primary border border-aurelia-primary/30 bg-aurelia-primary/5 px-8 py-4 hover:bg-aurelia-primary hover:text-aurelia-inverted transition-all">
                     <span> WHAT IS AURELIA OS? </span>
                     <span class="group-hover:translate-x-1 transition-transform">-></span>
                 </button>
@@ -105,15 +105,15 @@
 
         <div class="relative z-10 flex flex-col h-full justify-between">
             <div>
-                <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-primary px-2 py-1 mb-4 tracking-widest rounded-sm">
+                <div class="inline-block font-mono text-[10px] font-bold text-aurelia-inverted bg-aurelia-primary px-2 py-1 mb-4 tracking-widest rounded-sm">
                     MOD_01 // INPUT
                 </div>
-                <h2 class="text-4xl font-bold text-white group-hover:text-aurelia-primary transition-colors tracking-tight">
+                <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-primary transition-colors tracking-tight">
                     The Garden
                 </h2>
             </div>
 
-            <div class="font-mono text-xs text-aurelia-muted group-hover:text-white transition-colors border-l border-aurelia-dim pl-4 py-1">
+            <div class="font-mono text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-dim pl-4 py-1">
                 <span class="text-aurelia-primary">></span> STATUS: VOLATILE<br>
                 <span class="text-aurelia-primary">></span> NOTES / SEEDS / RAW
             </div>
@@ -123,10 +123,10 @@
     </a>
 
     <div class="relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
-        <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
+        <div class="inline-block font-mono text-[10px] font-bold text-aurelia-inverted bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
             MOD_02 // STATUS
         </div>
-        <h2 class="text-2xl font-bold text-white tracking-tight mb-4">Cortex Status</h2>
+        <h2 class="text-2xl font-bold text-aurelia-text tracking-tight mb-4">Cortex Status</h2>
 
         <div class="flex items-baseline gap-3 mb-4">
             <span class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
@@ -165,7 +165,7 @@
         </div>
 
         <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-dim">
-            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-white transition-colors">
+            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-aurelia-text transition-colors">
                 <span>🧠 <span id="lobby-review-count">0</span> notes due for retrieval practice</span>
                 <span>→</span>
             </a>
@@ -180,7 +180,7 @@
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
                 <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
-                <h2 class="text-3xl md:text-5xl font-mono font-black text-white tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">
+                <h2 class="text-3xl md:text-5xl font-mono font-black text-aurelia-text tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">
                     NEURAL_LOADOUT
                 </h2>
                 <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
@@ -231,7 +231,7 @@
                 <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-[linear-gradient(rgba(18,18,18,0.5)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
                     
-                    <h3 id="readout-title" class="text-2xl text-white font-mono font-bold mb-4 tracking-tight relative z-10 text-shadow-cyan">
+                    <h3 id="readout-title" class="text-2xl text-aurelia-text font-mono font-bold mb-4 tracking-tight relative z-10 text-shadow-cyan">
                         SYSTEM_READY
                     </h3>
                     <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted font-mono leading-relaxed max-w-2xl relative z-10">
@@ -307,15 +307,15 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                    <div class="bg-aurelia-text/5 p-4 rounded border border-aurelia-text/5">
                         <div class="text-aurelia-accent font-mono text-xs mb-2">LOCATION</div>
                         <div class="text-aurelia-text font-bold">{{ config.author.location }}</div>
                     </div>
-                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                    <div class="bg-aurelia-text/5 p-4 rounded border border-aurelia-text/5">
                         <div class="text-aurelia-accent font-mono text-xs mb-2">SPECIALTY</div>
                         <div class="text-aurelia-text font-bold">{{ config.author.role }}</div>
                     </div>
-                    <div class="bg-white/5 p-4 rounded border border-white/5">
+                    <div class="bg-aurelia-text/5 p-4 rounded border border-aurelia-text/5">
                         <div class="text-aurelia-accent font-mono text-xs mb-2">STATUS</div>
                         <div class="text-aurelia-text font-bold flex items-center gap-2">
                             <span class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse"></span>
@@ -532,7 +532,7 @@
                             ${tech.icon}
                         </div>
                         
-                        <h3 class="text-2xl font-bold text-white font-mono tracking-tighter mb-4 group-hover:text-aurelia-primary transition-colors">${tech.name}</h3>
+                        <h3 class="text-2xl font-bold text-aurelia-text font-mono tracking-tighter mb-4 group-hover:text-aurelia-primary transition-colors">${tech.name}</h3>
                         
                         <span class="text-[9px] font-mono text-aurelia-primary tracking-[0.2em] uppercase border border-aurelia-primary/20 px-3 py-1 bg-aurelia-primary/5 rounded-sm">
                             ${tech.type}
