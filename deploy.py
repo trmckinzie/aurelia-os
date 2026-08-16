@@ -191,6 +191,9 @@ def create_readme():
 ## ✅ Prerequisites
 - Python 3.10+
 - Node.js 18+ (used to compile the site's Tailwind CSS)
+- ffmpeg (optional) -- if installed, large audio files dropped into
+  `vault/99_DROP_ZONE` get auto-compressed before publishing. Without it,
+  they're just copied as-is.
 
 ## 🚀 Quick Start
 1. **Install dependencies (once):**

@@ -1,15 +1,70 @@
 """Asset housekeeping: drop-zone sorting and vault/system asset syncing into dist/."""
 import os
 import shutil
+import subprocess
 from datetime import date, datetime
 
 from engine.config import OUTPUT_DIR, ROOT_DIR, VAULT_PATH
+
+# NotebookLM audio exports run 30-80MB+ each and go straight into git, which
+# never shrinks on its own. Rather than rewriting existing history (risky,
+# needs a force-push), new audio above this size gets compressed on the way
+# out of the drop zone -- capping growth going forward without touching what's
+# already committed. 64k mono is a standard podcast/spoken-word target and
+# typically cuts these files by 50-70%; NotebookLM's two-host dialogue exports
+# don't rely on stereo separation, so mono isn't a perceptible loss here.
+_AUDIO_COMPRESS_THRESHOLD_BYTES = 15 * 1024 * 1024
+_AUDIO_TARGET_BITRATE = "64k"
+
+# Codec is set explicitly per extension rather than left to ffmpeg's
+# output-extension guessing, which defaults to uncompressed PCM for .wav --
+# silently producing a *larger* "compressed" file. Formats not listed here
+# just skip compression and get copied as-is (see _compress_audio).
+_AUDIO_CODEC_ARGS = {
+    ".m4a": ["-c:a", "aac"],
+    ".mp3": ["-c:a", "libmp3lame"],
+}
 
 
 def json_serial(obj):
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
     raise TypeError("Type %s not serializable" % type(obj))
+
+
+def _compress_audio(src_path, dest_path, ext):
+    """Re-encodes src_path to a smaller mono file at dest_path.
+
+    Returns True if dest_path now holds a valid, smaller compressed file.
+    Returns False (leaving dest_path untouched) if the format isn't one we
+    know how to safely compress, ffmpeg isn't installed, or the encode
+    failed or didn't actually save space -- callers fall back to a plain
+    copy/move in that case, so this is always safe to attempt.
+    """
+    codec_args = _AUDIO_CODEC_ARGS.get(ext)
+    if codec_args is None:
+        return False
+
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return False
+
+    try:
+        result = subprocess.run(
+            [ffmpeg, "-y", "-i", src_path, "-ac", "1", "-b:a", _AUDIO_TARGET_BITRATE, *codec_args, dest_path],
+            capture_output=True, text=True, timeout=600,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+    if result.returncode != 0 or not os.path.exists(dest_path):
+        return False
+
+    if os.path.getsize(dest_path) >= os.path.getsize(src_path):
+        os.remove(dest_path)  # didn't help; let the caller fall back to a plain copy
+        return False
+
+    return True
 
 
 def organize_assets():
@@ -53,6 +108,18 @@ def organize_assets():
         dest_path = os.path.join(dest_dir, f)
 
         os.makedirs(dest_dir, exist_ok=True)
+
+        if target_folder == "audio" and os.path.getsize(src_path) > _AUDIO_COMPRESS_THRESHOLD_BYTES:
+            original_mb = os.path.getsize(src_path) / 1_048_576
+            if _compress_audio(src_path, dest_path, ext):
+                os.remove(src_path)
+                saved_mb = original_mb - os.path.getsize(dest_path) / 1_048_576
+                print(f"   + [COMPRESSED] {f} -> assets/audio/ ({original_mb:.0f}MB -> saved {saved_mb:.0f}MB)")
+                moved_count += 1
+                continue
+            print(f"   ! [NOTE] {f} ({original_mb:.0f}MB) copied uncompressed -- "
+                  f"install ffmpeg for automatic compression of large audio.")
+
         shutil.move(src_path, dest_path)
         print(f"   + [MOVED] {f} -> assets/{target_folder}/")
         moved_count += 1
