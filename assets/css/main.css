@@ -32,6 +32,72 @@
     100% { transform: translateY(100vh); }
 }
 
+/* === 404: GLITCH HEADING ===
+   404.html applies this class directly (it extends base.html, not
+   indextemplate.html, so it doesn't get that page's own .glitch rules --
+   this was previously referenced with no matching definition anywhere,
+   so the "system failure" page silently had no glitch effect at all). */
+.glitch-text {
+    position: relative;
+    animation: glitch-skew 3s infinite linear alternate-reverse;
+}
+.glitch-text::before,
+.glitch-text::after {
+    content: '404';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: inherit;
+    background: transparent;
+    clip-path: inset(0 0 0 0);
+}
+.glitch-text::before {
+    left: -3px;
+    text-shadow: 2px 0 #ff0055;
+    animation: glitch-anim-1 2.2s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+    left: 3px;
+    text-shadow: -2px 0 #00f2ff;
+    animation: glitch-anim-2 2.6s infinite linear alternate-reverse;
+}
+@keyframes glitch-skew {
+    0%, 92%, 100% { transform: skewX(0deg); }
+    94% { transform: skewX(3deg); }
+    96% { transform: skewX(-2deg); }
+}
+@keyframes glitch-anim-1 {
+    0% { clip-path: inset(20% 0 65% 0); }
+    20% { clip-path: inset(60% 0 5% 0); }
+    40% { clip-path: inset(10% 0 70% 0); }
+    60% { clip-path: inset(75% 0 10% 0); }
+    80% { clip-path: inset(30% 0 55% 0); }
+    100% { clip-path: inset(50% 0 25% 0); }
+}
+@keyframes glitch-anim-2 {
+    0% { clip-path: inset(10% 0 75% 0); }
+    20% { clip-path: inset(75% 0 5% 0); }
+    40% { clip-path: inset(30% 0 55% 0); }
+    60% { clip-path: inset(55% 0 20% 0); }
+    80% { clip-path: inset(10% 0 65% 0); }
+    100% { clip-path: inset(50% 0 25% 0); }
+}
+
+/* === MOTION: respect the OS-level "reduce motion" preference ===
+   Nothing in this codebase checked for this before -- every ambient
+   animation (scanline, glitch, decrypt-scramble, the neural particle
+   canvases) ran unconditionally. This covers what CSS alone can stop;
+   the canvas/JS-driven ones are guarded in their own <script> blocks. */
+@media (prefers-reduced-motion: reduce) {
+    .scanline,
+    .glitch-text,
+    .glitch-text::before,
+    .glitch-text::after {
+        animation: none;
+    }
+}
+
 /* === AURELIA OS: GLOBAL CURSOR SYSTEM === */
 
 /* 1. DEFAULT STATE: Cyan Tactical Arrow */

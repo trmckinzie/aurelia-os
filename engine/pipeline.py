@@ -51,7 +51,11 @@ def _scan_vault():
 
             raw_search = re.sub(r'[*#_`\[\]]', '', body)
             raw_search = re.sub(r'<[^>]+>', '', raw_search)
-            full_search_text = raw_search.replace('\n', ' ').replace('"', "").replace("'", "").lower()
+            # Tags live in frontmatter, stripped out before `body` -- append
+            # them so a search for "neuroscience" finds notes tagged
+            # topic/neuroscience even if the word never appears in the prose.
+            tag_text = ' '.join(str(t) for t in meta.get("tags", []))
+            full_search_text = f"{raw_search} {tag_text}".replace('\n', ' ').replace('"', "").replace("'", "").lower()
 
             processed_body = process_wikilinks(body)
             if "notebooklm" in note_type:

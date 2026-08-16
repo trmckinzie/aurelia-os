@@ -96,6 +96,10 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     title = filename.replace(".md", "").replace("_", " ")
     maturity_slug = _maturity_slug(meta.get("tags"))
     maturity_html = _maturity_badge(maturity_slug)
+    # Space-joined so the client can filter with a plain
+    # `dataset.tags.split(' ').includes(tag)` -- powers the Garden's
+    # "Browse by Topic" cloud (topic/* tags) without a separate index.
+    tags_attr = ' '.join(str(t) for t in (meta.get("tags") or []))
 
     base_classes = ("searchable-item glass p-5 rounded-sm border border-opacity-40 "
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-3 "
@@ -358,7 +362,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         icon = "📄"; label = "NOTE"
 
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
         <div class="flex justify-between items-start">
             <div>
                 <div class="flex items-center gap-2 mb-1.5">

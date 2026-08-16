@@ -208,6 +208,8 @@
         const cmdResults = document.getElementById('cmd-results');
         const cmdCount = document.getElementById('cmd-count');
         let isOpen = false;
+        let currentResults = [];
+        let selectedIndex = -1;
 
         // Update footer count
         if(cmdCount) cmdCount.innerText = `${SYSTEM_INDEX.length} NODES CONNECTED`;
@@ -231,6 +233,8 @@
                 setTimeout(() => {
                     cmdBackdrop.classList.add('hidden');
                     cmdInput.value = ''; // Clear input
+                    currentResults = [];
+                    selectedIndex = -1;
                     renderResults([]); // Clear results
                 }, 200);
                 document.body.style.overflow = 'auto';
@@ -242,20 +246,64 @@
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();
                 toggleCmd();
+                return;
             }
-            if (e.key === 'Escape' && isOpen) toggleCmd();
+            if (!isOpen) return;
+
+            if (e.key === 'Escape') { toggleCmd(); return; }
+
+            // Arrow-key + Enter navigation through results, the way a
+            // command palette is expected to behave -- previously the only
+            // way to act on a result was to reach for the mouse.
+            if (e.key === 'ArrowDown' && currentResults.length > 0) {
+                e.preventDefault();
+                selectedIndex = (selectedIndex + 1) % currentResults.length;
+                highlightSelected();
+            } else if (e.key === 'ArrowUp' && currentResults.length > 0) {
+                e.preventDefault();
+                selectedIndex = (selectedIndex - 1 + currentResults.length) % currentResults.length;
+                highlightSelected();
+            } else if (e.key === 'Enter' && selectedIndex >= 0 && currentResults[selectedIndex]) {
+                e.preventDefault();
+                window.location.href = encodeURI(currentResults[selectedIndex].url);
+            }
         });
+
+        function highlightSelected() {
+            cmdResults.querySelectorAll('[data-result-index]').forEach(el => {
+                const isSelected = Number(el.dataset.resultIndex) === selectedIndex;
+                el.classList.toggle('bg-aurelia-text/5', isSelected);
+                el.classList.toggle('border-aurelia-cyan', isSelected);
+                if (isSelected) el.scrollIntoView({ block: 'nearest' });
+            });
+        }
 
         // Close on click outside
         cmdBackdrop.addEventListener('click', (e) => {
             if(e.target === cmdBackdrop) toggleCmd();
         });
 
-        // 4. Search Engine (UPDATED)
+        // 4. Search Engine
+        // Relevance-ranked: an exact/prefix title match is almost always
+        // what you're after and used to just tie with a random tag
+        // substring hit, both landing wherever the two happened to sort in
+        // the source index.
+        function matchRank(item, query) {
+            const title = item.title.toLowerCase();
+            if (title === query) return 0;
+            if (title.startsWith(query)) return 1;
+            if (title.includes(query)) return 2;
+            if (item.tags && item.tags.some(t => t.toLowerCase().includes(query))) return 3;
+            if (item.type.toLowerCase().includes(query)) return 4;
+            return 5; // desc-only match
+        }
+
         cmdInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            
+
             if(query.length < 1) {
+                currentResults = [];
+                selectedIndex = -1;
                 cmdResults.innerHTML = `<div class="text-center py-8 text-aurelia-muted font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
                 return;
             }
@@ -266,10 +314,12 @@
                 const typeMatch = item.type.toLowerCase().includes(query);
                 const tagMatch = item.tags && item.tags.some(t => t.toLowerCase().includes(query));
                 const descMatch = item.desc && item.desc.toLowerCase().includes(query);
-                
-                return titleMatch || typeMatch || tagMatch || descMatch;
-            }).slice(0, 8);
 
+                return titleMatch || typeMatch || tagMatch || descMatch;
+            }).sort((a, b) => matchRank(a, query) - matchRank(b, query)).slice(0, 8);
+
+            currentResults = matches;
+            selectedIndex = matches.length > 0 ? 0 : -1;
             renderResults(matches);
         });
 
@@ -287,16 +337,17 @@
                 let typeColor = "text-aurelia-muted border-aurelia-border";
                 if(item.type === "GARDEN") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
                 if(item.type === "SYSTEM") typeColor = "text-aurelia-text border-aurelia-text/30";
+                const selected = index === selectedIndex;
 
                 return `
-                <a href="${encodeURI(item.url)}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">
+                <a href="${encodeURI(item.url)}" data-result-index="${index}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 ${selected ? 'bg-aurelia-text/5 border-aurelia-cyan' : 'border-transparent'}" onmouseenter="selectedIndex = ${index}; highlightSelected();">
                     <div class="flex items-center gap-3">
                         <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
                             ${escapeHtml(item.type)}
                         </span>
                         <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${escapeHtml(item.title)}</span>
                     </div>
-                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">JUMP -></span>
+                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">${selected ? 'ENTER ↵' : 'JUMP ->'}</span>
                 </a>
                 `;
             }).join('');

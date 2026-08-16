@@ -202,6 +202,11 @@
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
+                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="flex items-center gap-2 border border-aurelia-dim bg-black/50 hover:border-aurelia-accent hover:text-aurelia-accent rounded px-3 py-2 text-xs font-mono text-gray-400 transition-colors shrink-0">
+                    <span>🏷️</span>
+                    <span class="hidden lg:inline uppercase tracking-wider">Topics</span>
+                </button>
+
                 <button onclick="openRandomNote()" title="Open a random note" class="flex items-center gap-2 border border-aurelia-dim bg-black/50 hover:border-aurelia-primary hover:text-aurelia-primary rounded px-3 py-2 text-xs font-mono text-gray-400 transition-colors shrink-0">
                     <span>🎲</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Random</span>
@@ -237,6 +242,19 @@
             <p class="text-xs font-mono text-aurelia-tertiary tracking-widest opacity-80" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
                 DUE_FOR_REVIEW: <span id="review-count" class="text-aurelia-tertiary">0</span>
             </p>
+        </div>
+
+        <div id="topic-cloud" class="hidden mb-8 border border-aurelia-dim bg-black/30 rounded-sm p-5">
+            <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+                <span class="text-[11px] font-bold font-mono text-aurelia-accent uppercase tracking-[0.2em]" title="Every topic/* tag in the vault, sized by how many notes carry it. Click one to filter; click it again to clear.">
+                    🏷️ Browse by Topic
+                </span>
+                <span id="topic-active-label" class="hidden text-[10px] font-mono text-gray-400">
+                    Filtering: <span id="topic-active-name" class="text-aurelia-accent"></span>
+                    <button onclick="clearTopicFilter()" class="ml-2 text-gray-500 hover:text-white">✕ clear</button>
+                </span>
+            </div>
+            <div id="topic-cloud-items" class="flex flex-wrap gap-2 items-center"></div>
         </div>
 
         <div id="review-queue" class="hidden mb-10 border border-aurelia-tertiary/30 bg-aurelia-tertiary/5 rounded-sm p-5">
@@ -308,9 +326,10 @@
 
                         <div class="tree-branch space-y-1 mt-2">
                             {% for card in group %}
-                            <div class="tree-node group/node cursor-pointer searchable-tree-item" 
+                            <div class="tree-node group/node cursor-pointer searchable-tree-item"
                                  onclick="openNote('{{ card.id }}')"
                                  data-type="{{ card.type|lower }}"
+                                 data-tags="{{ card.tags|join(' ') }}"
                                  data-search="{{ card.title }} {{ card.desc }}">
                                 
                                 <div class="flex items-center gap-3 overflow-hidden">
@@ -453,10 +472,13 @@
     (function() {
         const canvas = document.getElementById('neural-canvas');
         if (!canvas) return;
+        // Reduced motion: draw one static frame instead of running the
+        // particle sim on a permanent requestAnimationFrame loop.
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
-        const particleCount = 60; 
+        const particleCount = 60;
         const connectionDistance = 150; 
         const mouseDistance = 200; 
 
@@ -509,7 +531,7 @@
                     }
                 }
             }
-            requestAnimationFrame(animate);
+            if (!reduceMotion) requestAnimationFrame(animate);
         }
         animate();
     })();
@@ -517,6 +539,7 @@
     // --- 3. FILTER & SEARCH (ADDITIVE DEEP SEARCH) ---
     let currentType = 'all';
     let currentQuery = '';
+    let currentTopic = '';
     const modalBackdrop = document.getElementById('modal-backdrop');
     const modalPanel = document.getElementById('modal-panel');
     const modalContent = document.getElementById('modal-content');
@@ -635,7 +658,8 @@
         // data-search -- narrower, but far better than title-only.
         const haystack = (node.title + ' ' + (node.tags || []).join(' ')).toLowerCase();
         const searchMatch = currentQuery.length === 0 || haystack.includes(currentQuery);
-        return typeMatch && searchMatch;
+        const topicMatch = !currentTopic || (node.tags || []).includes(currentTopic);
+        return typeMatch && searchMatch && topicMatch;
     }
 
     // Shared by navigateNote and openRandomNote -- both need "whatever the
@@ -654,12 +678,14 @@
         // dataset.search now contains the FULL BODY TEXT (Deep Search)
         const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
         const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
-        
-        // ADDITIVE LOGIC: Must match Filter Button AND Search Bar
+        const itemTags = item.dataset.tags || '';
+
+        // ADDITIVE LOGIC: Must match Filter Button AND Search Bar AND Topic
         const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
         const searchMatch = itemSearch.includes(currentQuery);
+        const topicMatch = !currentTopic || itemTags.split(' ').includes(currentTopic);
 
-        return typeMatch && searchMatch;
+        return typeMatch && searchMatch && topicMatch;
     }
 
     // --- ROBUST HIGHLIGHTING ENGINE ---
@@ -830,6 +856,63 @@
         if (days <= 0) return 'today';
         if (days === 1) return '1 day ago';
         return `${days} days ago`;
+    }
+
+    // --- BROWSE BY TOPIC ---
+    // A tag cloud computed client-side from GRAPH_INDEX (no separate index
+    // needed -- tags were already added there for Related by Topic). Scoped
+    // to topic/* the same way, for the same reason: type/* and status/*
+    // tags are structural, not subject matter, and would dominate a cloud
+    // built from all tags.
+    function toggleTopicCloud() {
+        document.getElementById('topic-cloud').classList.toggle('hidden');
+        document.getElementById('btn-topics').classList.toggle('text-aurelia-accent');
+    }
+
+    function renderTopicCloud() {
+        const counts = {};
+        GRAPH_INDEX.nodes.forEach(n => {
+            (n.tags || []).forEach(t => {
+                if (t.startsWith('topic/')) counts[t] = (counts[t] || 0) + 1;
+            });
+        });
+        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 24);
+        const maxCount = sorted.length ? sorted[0][1] : 1;
+
+        document.getElementById('topic-cloud-items').innerHTML = sorted.map(([tag, count]) => {
+            const label = tag.replace('topic/', '').replace(/-/g, ' ');
+            const size = 10 + Math.round((count / maxCount) * 6); // 10-16px, frequency-weighted
+            const active = tag === currentTopic;
+            const activeClasses = active
+                ? 'border-aurelia-accent text-aurelia-accent bg-aurelia-accent/10'
+                : 'border-gray-800 text-gray-400 hover:border-aurelia-accent hover:text-aurelia-accent';
+            return `<button onclick="toggleTopicFilter('${tag}')" class="font-mono px-2.5 py-1 rounded-sm border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
+        }).join('');
+    }
+
+    function toggleTopicFilter(tag) {
+        currentTopic = (currentTopic === tag) ? '' : tag;
+        renderTopicCloud();
+        updateTopicActiveLabel();
+        updateGrid();
+    }
+
+    function clearTopicFilter() {
+        currentTopic = '';
+        renderTopicCloud();
+        updateTopicActiveLabel();
+        updateGrid();
+    }
+
+    function updateTopicActiveLabel() {
+        const label = document.getElementById('topic-active-label');
+        const name = document.getElementById('topic-active-name');
+        if (currentTopic) {
+            name.innerText = currentTopic.replace('topic/', '').replace(/-/g, ' ');
+            label.classList.remove('hidden');
+        } else {
+            label.classList.add('hidden');
+        }
     }
 
     // --- RETRIEVAL PRACTICE / SPACED REVIEW QUEUE ---
@@ -1092,6 +1175,7 @@
     window.addEventListener('resize', () => { if (currentView === 'graph') initGraph(); });
 
     renderReviewQueue();
+    renderTopicCloud();
     openNoteFromHash();
 </script>
 {% endblock %}
