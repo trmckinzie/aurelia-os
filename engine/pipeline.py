@@ -14,6 +14,7 @@ from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env, load_user_
 from engine.content import make_id, parse_body, parse_frontmatter, process_notebooklm_media, process_wikilinks
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
+from engine.theming import available_themes, default_theme_slug, generate_theme_css
 
 
 def _scan_vault():
@@ -222,6 +223,8 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
     for template_name, output_name, context in pages:
         try:
             context["theme"] = CURRENT_THEME
+            context["theme_key"] = default_theme_slug()
+            context["available_themes_json"] = dumps_for_script_tag(available_themes())
             context["search_index"] = json_index
             context["config"] = user_config
 
@@ -263,6 +266,11 @@ def build_all():
     review_seed_json = dumps_for_script_tag(lobby_stats.pop("review_seed"))
 
     _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json)
+
+    # Every theme in THEME_CONFIG, not just the default -- lets the nav's
+    # switcher change themes at runtime with a pure CSS swap, no rebuild.
+    generate_theme_css()
+    print("   + Theme variables generated for all themes.")
 
     # Runs last: scans the just-rendered dist/**/*.html for utility classes,
     # including ones cards.py assembled dynamically (now literal text in the

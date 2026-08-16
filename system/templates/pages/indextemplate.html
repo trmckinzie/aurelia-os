@@ -28,32 +28,30 @@
     }
     
 
-    .tech-readout {
-        min-height: 100px;
-        border-left: 2px solid {{ theme.colors.primary|replace("'", "") }};
-        padding-left: 1.5rem;
-        background: linear-gradient(90deg, {{ theme.colors.primary|replace("'", "") }}0D 0%, transparent 100%);
-        margin-bottom: 4rem;
-    }
-
-    /* === HYBRID PROTOCOL: DECRYPT + BIOLUMINESCENCE === */
+    /* === HYBRID PROTOCOL: DECRYPT + BIOLUMINESCENCE ===
+       Gradient now starts from the theme's own text color rather than a
+       hardcoded white -- on CYBER_PRIME that's the same #ffffff either
+       way, but a hardcoded white-to-primary gradient would render as
+       pale, low-contrast text at the top of the gradient on THE_PATRIOT's
+       light background (never noticed before because nothing could switch
+       to that theme without a rebuild). */
     .decrypt-effect {
         font-family: 'JetBrains Mono', monospace;
         cursor: pointer;
-        background: linear-gradient(to bottom, #ffffff 0%, {{ theme.colors.primary|replace("'", "") }} 100%);
+        background: linear-gradient(to bottom, var(--aurelia-text-main) 0%, var(--aurelia-primary) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         color: transparent;
-        filter: drop-shadow(0 0 15px {{ theme.colors.primary|replace("'", "") }}66);
+        filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent));
         animation: bio-pulse 4s ease-in-out infinite alternate;
     }
     @keyframes bio-pulse {
-        0% { filter: drop-shadow(0 0 10px {{ theme.colors.primary|replace("'", "") }}33); opacity: 0.8; }
-        100% { filter: drop-shadow(0 0 25px {{ theme.colors.primary|replace("'", "") }}CC); opacity: 1; }
+        0% { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--aurelia-primary) 20%, transparent)); opacity: 0.8; }
+        100% { filter: drop-shadow(0 0 25px color-mix(in srgb, var(--aurelia-primary) 80%, transparent)); opacity: 1; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .decrypt-effect { animation: none; filter: drop-shadow(0 0 15px {{ theme.colors.primary|replace("'", "") }}66); }
+        .decrypt-effect { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent)); }
     }
 </style>
 {% endblock %}

@@ -123,10 +123,12 @@
        <br> for multi-line content, unlabeled fenced code blocks, mid-body
        hr dividers -- and built on theme tokens throughout, since the old
        hardcoded hex colors would silently break if CURRENT_THEME were ever
-       switched to THE_PATRIOT's light palette. */
+       switched at runtime to THE_PATRIOT's light palette -- now it's
+       var(--aurelia-x) throughout, resolved from whatever theme is active
+       (engine/theming.py), instead of a value baked in at build time. */
     .obsidian-reader {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        color: {{ theme.colors.text_main|replace("'", "") }};
+        color: var(--aurelia-text-main);
         line-height: 1.8;
         font-size: 1.125rem;
     }
@@ -137,17 +139,17 @@
 
     .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3,
     .obsidian-reader h4, .obsidian-reader h5, .obsidian-reader h6 {
-        color: {{ theme.colors.text_main|replace("'", "") }};
+        color: var(--aurelia-text-main);
         font-weight: 700; line-height: 1.3;
         margin-top: 2em; margin-bottom: 0.75em;
     }
     .obsidian-reader h1 { font-size: 2.25rem; }
-    .obsidian-reader h2 { font-size: 1.75rem; border-bottom: 1px solid {{ theme.colors.border_main|replace("'", "") }}; padding-bottom: 0.3em; }
+    .obsidian-reader h2 { font-size: 1.75rem; border-bottom: 1px solid var(--aurelia-border-main); padding-bottom: 0.3em; }
     .obsidian-reader h3 { font-size: 1.375rem; }
     .obsidian-reader h4 { font-size: 1.125rem; }
     .obsidian-reader h5, .obsidian-reader h6 {
         font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em;
-        color: {{ theme.colors.text_muted|replace("'", "") }};
+        color: var(--aurelia-text-muted);
     }
 
     .obsidian-reader p { margin-bottom: 1.5em; }
@@ -157,40 +159,40 @@
     .obsidian-reader ul ul, .obsidian-reader ol ol, .obsidian-reader ul ol, .obsidian-reader ol ul { margin: 0.4em 0 0; }
     .obsidian-reader li { margin-bottom: 0.4em; }
     .obsidian-reader li > p { margin-bottom: 0.4em; }
-    .obsidian-reader li::marker { color: {{ theme.colors.accent|replace("'", "") }}; }
+    .obsidian-reader li::marker { color: var(--aurelia-accent); }
 
     .obsidian-reader a {
-        color: {{ theme.colors.accent|replace("'", "") }};
+        color: var(--aurelia-accent);
         text-decoration: underline;
-        text-decoration-color: {{ theme.colors.accent|replace("'", "") }}55;
+        text-decoration-color: color-mix(in srgb, var(--aurelia-accent) 33%, transparent);
         text-underline-offset: 3px;
         transition: text-decoration-color 0.2s;
     }
-    .obsidian-reader a:hover { text-decoration-color: {{ theme.colors.accent|replace("'", "") }}; }
+    .obsidian-reader a:hover { text-decoration-color: var(--aurelia-accent); }
 
-    .obsidian-reader strong { color: {{ theme.colors.text_main|replace("'", "") }}; font-weight: 800; }
-    .obsidian-reader em { color: {{ theme.colors.text_muted|replace("'", "") }}; }
-    .obsidian-reader del { color: {{ theme.colors.text_muted|replace("'", "") }}; opacity: 0.65; }
+    .obsidian-reader strong { color: var(--aurelia-text-main); font-weight: 800; }
+    .obsidian-reader em { color: var(--aurelia-text-muted); }
+    .obsidian-reader del { color: var(--aurelia-text-muted); opacity: 0.65; }
 
     .obsidian-reader blockquote {
-        border-left: 4px solid {{ theme.colors.secondary|replace("'", "") }};
-        background: {{ theme.colors.bg_layer_2|replace("'", "") }};
+        border-left: 4px solid var(--aurelia-secondary);
+        background: var(--aurelia-bg-layer-2);
         padding: 1em 1.5em; margin: 1.5em 0;
-        font-style: italic; color: {{ theme.colors.text_muted|replace("'", "") }};
+        font-style: italic; color: var(--aurelia-text-muted);
     }
     .obsidian-reader blockquote > *:last-child { margin-bottom: 0; }
 
     .obsidian-reader pre {
-        background: {{ theme.colors.bg_layer_1|replace("'", "") }};
-        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        background: var(--aurelia-bg-layer-1);
+        border: 1px solid var(--aurelia-border-main);
         border-radius: 4px; padding: 16px; margin: 1.5em 0;
         overflow-x: auto; line-height: 1.5;
     }
     .obsidian-reader code {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: var(--aurelia-font-mono);
         font-size: 0.9em;
-        background: {{ theme.colors.bg_layer_2|replace("'", "") }};
-        color: {{ theme.colors.accent|replace("'", "") }};
+        background: var(--aurelia-bg-layer-2);
+        color: var(--aurelia-accent);
         padding: 0.15em 0.4em; border-radius: 3px;
     }
     /* Fenced code blocks: undo the inline-code treatment above so a
@@ -202,13 +204,13 @@
     }
 
     .obsidian-reader hr {
-        border: none; border-top: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        border: none; border-top: 1px solid var(--aurelia-border-main);
         margin: 2.5em 0;
     }
 
     .obsidian-reader img {
         max-width: 100%; margin: 1em 0;
-        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        border: 1px solid var(--aurelia-border-main);
         border-radius: 4px;
     }
 
@@ -222,24 +224,24 @@
         border-collapse: collapse; margin: 1.5em 0; font-size: 0.95em;
     }
     .obsidian-reader th, .obsidian-reader td {
-        border: 1px solid {{ theme.colors.border_main|replace("'", "") }};
+        border: 1px solid var(--aurelia-border-main);
         padding: 0.6em 0.9em; text-align: left; vertical-align: top;
     }
     .obsidian-reader th {
-        background: {{ theme.colors.bg_layer_2|replace("'", "") }};
-        color: {{ theme.colors.text_main|replace("'", "") }};
+        background: var(--aurelia-bg-layer-2);
+        color: var(--aurelia-text-main);
         font-weight: 700;
     }
-    .obsidian-reader tr:nth-child(even) td { background: {{ theme.colors.bg_layer_1|replace("'", "") }}; }
+    .obsidian-reader tr:nth-child(even) td { background: var(--aurelia-bg-layer-1); }
 
     /* The reader's own scrollbar -- referenced via .custom-scrollbar
        elsewhere in this file with no matching definition anywhere before
        this, so it silently fell back to the browser default. */
-    .custom-scrollbar { scrollbar-width: thin; scrollbar-color: {{ theme.colors.border_main|replace("'", "") }} transparent; }
+    .custom-scrollbar { scrollbar-width: thin; scrollbar-color: var(--aurelia-border-main) transparent; }
     .custom-scrollbar::-webkit-scrollbar { width: 10px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: {{ theme.colors.border_main|replace("'", "") }}; border-radius: 5px; }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: {{ theme.colors.primary|replace("'", "") }}88; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--aurelia-border-main); border-radius: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--aurelia-primary) 53%, transparent); }
 </style>
 {% endblock %}
 
