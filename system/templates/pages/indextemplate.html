@@ -62,8 +62,8 @@
             <span class="opacity-100">[ STATUS: ]</span>
             <span class="text-aurelia-primary">{{ config.status_message }}</span>
             {% if stats.latest_log_date %}
-            <span class="text-gray-700">//</span>
-            <span class="text-gray-400 text-xs tracking-wider">LAST CULTIVATED: {{ stats.latest_log_date }}</span>
+            <span class="text-aurelia-muted">//</span>
+            <span class="text-aurelia-muted text-xs tracking-wider">LAST CULTIVATED: {{ stats.latest_log_date }}</span>
             {% endif %}
         </div>
 
@@ -90,9 +90,9 @@
                     <span> WHAT IS AURELIA OS? </span>
                     <span class="group-hover:translate-x-1 transition-transform">-></span>
                 </button>
-                <button onclick="toggleCmd()" title="Search every published note" class="group flex items-center gap-3 text-md font-mono text-gray-400 border border-gray-800 px-6 py-4 hover:border-aurelia-text hover:text-aurelia-text transition-all">
+                <button onclick="toggleCmd()" title="Search every published note" class="group flex items-center gap-3 text-md font-mono text-aurelia-muted border border-aurelia-dim px-6 py-4 hover:border-aurelia-text hover:text-aurelia-text transition-all">
                     <span>🔍 SEARCH THE CORTEX</span>
-                    <span class="text-[10px] border border-gray-700 rounded px-1.5 py-0.5 group-hover:border-aurelia-text">⌘K</span>
+                    <span class="text-[10px] border border-aurelia-dim rounded px-1.5 py-0.5 group-hover:border-aurelia-text">⌘K</span>
                 </button>
             </div>
         </div>
@@ -100,8 +100,8 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
 
-    <a href="garden.html" class="group relative min-h-[20rem] bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
-        <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
+    <a href="garden.html" class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
+        <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
 
         <div class="relative z-10 flex flex-col h-full justify-between">
             <div>
@@ -113,7 +113,7 @@
                 </h2>
             </div>
 
-            <div class="font-mono text-xs text-gray-400 group-hover:text-white transition-colors border-l border-gray-800 pl-4 py-1">
+            <div class="font-mono text-xs text-aurelia-muted group-hover:text-white transition-colors border-l border-aurelia-dim pl-4 py-1">
                 <span class="text-aurelia-primary">></span> STATUS: VOLATILE<br>
                 <span class="text-aurelia-primary">></span> NOTES / SEEDS / RAW
             </div>
@@ -122,7 +122,7 @@
         <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-primary/20 transition-all"></div>
     </a>
 
-    <div class="relative min-h-[20rem] bg-[#050505] border border-gray-900 border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
+    <div class="relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
         <div class="inline-block font-mono text-[10px] font-bold text-black bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
             MOD_02 // STATUS
         </div>
@@ -130,18 +130,18 @@
 
         <div class="flex items-baseline gap-3 mb-4">
             <span class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
-            <span class="text-xs font-mono text-gray-400 uppercase tracking-widest">Nodes Cultivated</span>
+            <span class="text-xs font-mono text-aurelia-muted uppercase tracking-widest">Nodes Cultivated</span>
         </div>
 
         <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
-            <div class="flex h-2 rounded-full overflow-hidden bg-gray-900 border border-gray-800">
+            <div class="flex h-2 rounded-full overflow-hidden bg-gray-900 border border-aurelia-dim">
                 {% if stats.total_notes %}
                 <div class="bg-yellow-500" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-emerald-600" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
                 {% endif %}
             </div>
-            <div class="flex justify-between text-[9px] font-mono text-gray-500 mt-1.5 uppercase tracking-wider">
+            <div class="flex justify-between text-[9px] font-mono text-aurelia-muted mt-1.5 uppercase tracking-wider">
                 <span>🌱 {{ stats.maturity_counts.seed }} Seed</span>
                 <span>🌿 {{ stats.maturity_counts.growing }} Growing</span>
                 <span>🌳 {{ stats.maturity_counts.evergreen }} Evergreen</span>
@@ -149,22 +149,22 @@
         </div>
 
         <div class="flex-grow min-h-0">
-            <span class="text-[9px] font-bold font-mono text-gray-500 uppercase tracking-widest block mb-2" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
+            <span class="text-[9px] font-bold font-mono text-aurelia-muted uppercase tracking-widest block mb-2" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
                 Start Here // Most-Connected Notes
             </span>
             <div class="flex flex-col gap-1">
                 {% for hub in stats.hub_notes %}
-                <a href="garden.html#{{ hub.id }}" class="group/hub flex items-center justify-between text-xs font-mono text-gray-300 hover:text-aurelia-accent transition-colors border-b border-gray-900 py-1">
+                <a href="garden.html#{{ hub.id }}" class="group/hub flex items-center justify-between text-xs font-mono text-aurelia-text/80 hover:text-aurelia-accent transition-colors border-b border-aurelia-dim py-1">
                     <span class="truncate">{{ hub.title }}</span>
                     <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 ml-2">{{ hub.connections }} ⟷</span>
                 </a>
                 {% else %}
-                <span class="text-xs font-mono text-gray-600">// Link notes together to surface hubs here</span>
+                <span class="text-xs font-mono text-aurelia-muted">// Link notes together to surface hubs here</span>
                 {% endfor %}
             </div>
         </div>
 
-        <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-gray-800">
+        <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-dim">
             <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-white transition-colors">
                 <span>🧠 <span id="lobby-review-count">0</span> notes due for retrieval practice</span>
                 <span>→</span>
@@ -198,8 +198,8 @@
         <div class="max-w-4xl mx-auto relative z-20">
             
             <div class="flex items-center justify-between mb-8 px-4 md:px-12">
-                 <button onclick="rotateCarousel(-1)" class="group flex items-center gap-3 text-gray-500 hover:text-aurelia-primary transition-colors">
-                    <div class="w-12 h-12 border border-gray-800 group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                 <button onclick="rotateCarousel(-1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors">
+                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-current"></div>
                         <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current"></div>
                         <span class="font-mono text-2xl">&lt;</span>
@@ -214,8 +214,8 @@
                     <span class="text-[8px] font-mono text-aurelia-primary tracking-[0.2em] uppercase">System_Online</span>
                 </div>
 
-                <button onclick="rotateCarousel(1)" class="group flex items-center gap-3 text-gray-500 hover:text-aurelia-primary transition-colors flex-row-reverse">
-                    <div class="w-12 h-12 border border-gray-800 group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                <button onclick="rotateCarousel(1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors flex-row-reverse">
+                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-current"></div>
                         <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current"></div>
                         <span class="font-mono text-2xl">&gt;</span>
@@ -224,83 +224,83 @@
                 </button>
             </div>
 
-            <div class="bg-[#050505] border border-gray-800 p-1 relative group">
+            <div class="bg-aurelia-bg border border-aurelia-dim p-1 relative group">
                 <div class="absolute inset-0 border border-aurelia-primary/30 opacity-50"></div>
                 <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
                 
-                <div class="bg-[#0a0a0b] p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
+                <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-[linear-gradient(rgba(18,18,18,0.5)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
                     
                     <h3 id="readout-title" class="text-2xl text-white font-mono font-bold mb-4 tracking-tight relative z-10 text-shadow-cyan">
                         SYSTEM_READY
                     </h3>
-                    <p id="readout-desc" class="text-sm md:text-base text-gray-400 font-mono leading-relaxed max-w-2xl relative z-10">
+                    <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted font-mono leading-relaxed max-w-2xl relative z-10">
                         Initiate rotation to inspect technical specifications.
                     </p>
                     
-                    <div class="absolute bottom-2 right-2 text-[8px] font-mono text-gray-700">TERM_v3.0</div>
+                    <div class="absolute bottom-2 right-2 text-[8px] font-mono text-aurelia-muted">TERM_v3.0</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div id="manifesto-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeManifesto()">
-        <div id="manifesto-panel" class="bg-[#0a0a0b] border border-aurelia-primary/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(0,242,255,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
+    <div id="manifesto-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeManifesto()">
+        <div id="manifesto-panel" class="bg-aurelia-bg border border-aurelia-primary/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(0,242,255,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center p-4 border-b border-aurelia-dim bg-aurelia-bg/50">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
                     <span class="text-[10px] font-mono text-aurelia-primary uppercase tracking-widest">SYSTEM_MANIFESTO_V3.0</span>
                 </div>
-                <button onclick="closeManifesto()" class="text-gray-500 hover:text-aurelia-text transition-colors">
+                <button onclick="closeManifesto()" class="text-aurelia-muted hover:text-aurelia-text transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-gray-300 space-y-6">
+            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-aurelia-text/80 space-y-6">
                 <div class="border-l-2 border-aurelia-primary pl-4">
                     <h2 class="text-2xl font-bold text-aurelia-text mb-1">AURELIA OS</h2>
                     <p class="font-mono text-sm text-aurelia-primary tracking-wider">Augmented Understanding via Recursive Evolutionary Logic & Intelligent Analysis</p>
                 </div>
                 <div>
-                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-2 uppercase border-b border-gray-800 pb-1 w-max">Mission Parameters</h3>
-                    <p class="text-sm text-gray-200">
+                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-2 uppercase border-b border-aurelia-dim pb-1 w-max">Mission Parameters</h3>
+                    <p class="text-sm text-aurelia-text/80">
                         AURELIA is an <strong class="font-mono text-aurelia-primary">Externalized Cortex</strong>. It is a cybernetic extension of the biological mind designed to augment human cognition through the strategic integration of digital tools, AI agents, and evolutionary knowledge management principles. Its core mission is to enhance intellectual capacity by facilitating deeper understanding, fostering creativity, and enabling efficient knowledge synthesis. By leveraging recursive logic and intelligent analysis, AURELIA serves as a dynamic second brain that evolves alongside its user, adapting to their cognitive needs and promoting continuous intellectual growth.
                     </p>
                 </div>
                 <div>
-                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-4 uppercase border-b border-gray-800 pb-1 w-max">System Definitions</h3>
+                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-4 uppercase border-b border-aurelia-dim pb-1 w-max">System Definitions</h3>
                     <ul class="space-y-4 text-sm">
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">AUGMENTED:</strong><span class="text-gray-200 block mt-1">The use of digital prosthetics to extend biological cognitive limits.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[U]</span><div><strong class="text-aurelia-text">UNDERSTANDING:</strong><span class="text-gray-200 block mt-1">The shift from raw "Data" to synthesized "Wisdom".</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[R]</span><div><strong class="text-aurelia-text">RECURSIVE:</strong><span class="text-gray-200 block mt-1">The logic of loops. Creating compound interest on knowledge.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[E]</span><div><strong class="text-aurelia-text">EVOLUTIONARY:</strong><span class="text-gray-200 block mt-1">Darwinian selection for ideas. Only "Cranes" survive.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[L]</span><div><strong class="text-aurelia-text">LOGIC:</strong><span class="text-gray-200 block mt-1">Validity is prioritized over intuition.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[I]</span><div><strong class="text-aurelia-text">INTELLIGENT:</strong><span class="text-gray-200 block mt-1">Integration of active agents (LLMs). Achieving goals under constraint.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">ANALYSIS:</strong><span class="text-gray-200 block mt-1">Atomic deconstruction of complex systems. Leveraging the Feynman Technique.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">AUGMENTED:</strong><span class="text-aurelia-text/80 block mt-1">The use of digital prosthetics to extend biological cognitive limits.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[U]</span><div><strong class="text-aurelia-text">UNDERSTANDING:</strong><span class="text-aurelia-text/80 block mt-1">The shift from raw "Data" to synthesized "Wisdom".</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[R]</span><div><strong class="text-aurelia-text">RECURSIVE:</strong><span class="text-aurelia-text/80 block mt-1">The logic of loops. Creating compound interest on knowledge.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[E]</span><div><strong class="text-aurelia-text">EVOLUTIONARY:</strong><span class="text-aurelia-text/80 block mt-1">Darwinian selection for ideas. Only "Cranes" survive.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[L]</span><div><strong class="text-aurelia-text">LOGIC:</strong><span class="text-aurelia-text/80 block mt-1">Validity is prioritized over intuition.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[I]</span><div><strong class="text-aurelia-text">INTELLIGENT:</strong><span class="text-aurelia-text/80 block mt-1">Integration of active agents (LLMs). Achieving goals under constraint.</span></div></li>
+                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">ANALYSIS:</strong><span class="text-aurelia-text/80 block mt-1">Atomic deconstruction of complex systems. Leveraging the Feynman Technique.</span></div></li>
                     </ul>
                 </div>
             </div>
-            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
-                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE // END_TRANSMISSION</span>
+            <div class="p-2 border-t border-aurelia-dim bg-aurelia-bg/50 text-center">
+                <span class="text-[9px] font-mono text-aurelia-muted">PRESS ESC TO CLOSE // END_TRANSMISSION</span>
             </div>
         </div>
     </div>
 
-    <div id="about-backdrop" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeAbout()">
-        <div id="about-panel" class="bg-[#0a0a0b] border border-aurelia-accent/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(57,255,20,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+    <div id="about-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeAbout()">
+        <div id="about-panel" class="bg-aurelia-bg border border-aurelia-accent/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(57,255,20,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
             
-            <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-black/50">
+            <div class="flex justify-between items-center p-4 border-b border-aurelia-dim bg-aurelia-bg/50">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse"></div>
                     <span class="text-[10px] font-mono text-aurelia-accent uppercase tracking-widest">OPERATOR_PROFILE // {{ config.author.short_name }}</span>
                 </div>
-                <button onclick="closeAbout()" class="text-gray-500 hover:text-aurelia-text transition-colors">
+                <button onclick="closeAbout()" class="text-aurelia-muted hover:text-aurelia-text transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
 
-            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-gray-300 space-y-6">
+            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-aurelia-text/80 space-y-6">
                 <div class="border-l-2 border-aurelia-accent pl-4">
                     <h2 class="text-2xl font-bold text-aurelia-text mb-1">{{ config.author.name | upper }}</h2>
                     <p class="font-mono text-sm text-aurelia-accent tracking-wider">{{ config.author.role }}</p>
@@ -325,15 +325,15 @@
                 </div>
 
                 <div>
-                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-2 uppercase border-b border-gray-800 pb-1 w-max">Mission Statement</h3>
-                    <p class="text-sm text-gray-200">
+                    <h3 class="font-mono text-sm text-aurelia-text font-bold mb-2 uppercase border-b border-aurelia-dim pb-1 w-max">Mission Statement</h3>
+                    <p class="text-sm text-aurelia-text/80">
                         {{ config.author.bio_long }}
                     </p>
                 </div>
             </div>
 
-            <div class="p-2 border-t border-gray-800 bg-black/50 text-center">
-                <span class="text-[9px] font-mono text-gray-600">PRESS ESC TO CLOSE // END_PROFILE</span>
+            <div class="p-2 border-t border-aurelia-dim bg-aurelia-bg/50 text-center">
+                <span class="text-[9px] font-mono text-aurelia-muted">PRESS ESC TO CLOSE // END_PROFILE</span>
             </div>
         </div>
     </div>
@@ -515,7 +515,7 @@
                 
                 // FIX 1: Added 'absolute top-0 left-0' to force them into a stack (so they can rotate)
                 // FIX 2: Added 'w-[300px] h-[400px]' to enforce size via Tailwind
-                card.className = 'absolute top-0 left-0 w-[300px] h-[400px] group bg-[#0a0a0b] border border-gray-800 hover:border-aurelia-primary/50 transition-colors duration-500 cursor-pointer rounded-sm'; 
+                card.className = 'absolute top-0 left-0 w-[300px] h-[400px] group bg-aurelia-bg border border-aurelia-dim hover:border-aurelia-primary/50 transition-colors duration-500 cursor-pointer rounded-sm'; 
                 
                 // 3D POSITIONING
                 const angle = theta * i;
@@ -538,8 +538,8 @@
                             ${tech.type}
                         </span>
                         
-                        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
-                        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-gray-800 group-hover:border-aurelia-primary transition-colors"></div>
+                        <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors"></div>
+                        <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors"></div>
                     </div>
                 `;
                 

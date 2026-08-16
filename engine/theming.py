@@ -44,10 +44,26 @@ def theme_slug(key):
     return key.lower().replace("_", "-")
 
 
-def _hex_to_rgba(hex_color, alpha):
+def _hex_channels(hex_color):
     hex_color = hex_color.lstrip("#")
-    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    return int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+
+
+def _hex_to_rgba(hex_color, alpha):
+    r, g, b = _hex_channels(hex_color)
     return f"rgba({r}, {g}, {b}, {alpha})"
+
+
+def _hex_to_rgb_triple(hex_color):
+    """'#00f2ff' -> '0 242 255' -- Tailwind's documented pattern for a
+    CSS-variable-backed color that still supports the /opacity modifier
+    (bg-aurelia-primary/10) is `rgb(var(--x-rgb) / <alpha-value>)`, which
+    needs the channels as bare numbers, not a hex string or a pre-built
+    rgb()/var() value. Without this, Tailwind can't decompose the color to
+    apply an alpha and silently omits the opacity-modifier class entirely
+    -- bg-aurelia-primary/10 would compile to nothing at all."""
+    r, g, b = _hex_channels(hex_color)
+    return f"{r} {g} {b}"
 
 
 def _cursor_default(colors):
@@ -78,6 +94,12 @@ def _variables_for(theme):
     """Builds the {css-custom-property-name: value} map for one theme."""
     colors = theme["colors"]
     variables = {f"--aurelia-{key.replace('_', '-')}": colors[key] for key in _COLOR_KEYS}
+    # RGB-channel twins of the same colors, for Tailwind's opacity-modifier
+    # utilities (see _hex_to_rgb_triple) -- the plain hex versions above are
+    # still what direct var(--aurelia-x) references in template <style>
+    # blocks use.
+    for key in _COLOR_KEYS:
+        variables[f"--aurelia-{key.replace('_', '-')}-rgb"] = _hex_to_rgb_triple(colors[key])
 
     variables["--aurelia-font-mono"] = theme.get("font_mono", _DEFAULTS["font_mono"])
     variables["--aurelia-radius"] = theme.get("rounded", _DEFAULTS["rounded"])
