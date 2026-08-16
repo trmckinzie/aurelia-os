@@ -15,7 +15,7 @@ from engine.config import (
 from engine.content import make_id, parse_body, parse_frontmatter, process_notebooklm_media, process_wikilinks
 from engine.extractors import extract_mission_brief
 from engine.tailwind_build import compile_css
-from engine.textutils import dumps_for_script_tag
+from engine.textutils import dumps_for_script_tag, truncate
 
 try:
     import markdown
@@ -176,7 +176,13 @@ def _build_search_index(garden_cards, portfolio_cards, protocol_cards, transmiss
         master_index.append({"title": "Transmissions // Signal", "url": "transmissions.html", "type": "SYSTEM", "tags": ["podcast", "audio"], "desc": "Neural Uplink"})
 
     for c in garden_cards:
-        master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN", "tags": c['tags'], "desc": c['desc']})
+        # c['desc'] is the note's *entire* body text (see full_search_text in
+        # _scan_vault) -- that's needed in full for garden.html's own
+        # data-search attribute (deep in-page search stays unaffected), but
+        # this master_index gets embedded into every page's HTML via
+        # base.html's command palette script, so duplicating full note
+        # bodies here bloated every single page. Snippet only.
+        master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN", "tags": c['tags'], "desc": truncate(c['desc'], 200)})
     for p in portfolio_cards:
         master_index.append({"title": p['title'], "url": p['link'], "type": "PROJECT", "tags": p['tags'], "desc": p['desc']})
     for prot in protocol_cards:
