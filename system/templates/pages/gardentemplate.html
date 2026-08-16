@@ -112,6 +112,9 @@
     .obsidian-reader img { max-width: 100%; border: 1px solid {{ theme.colors.border_main|replace("'", "") }}; border-radius: 4px; }
     .obsidian-reader ul, .obsidian-reader ol { padding-left: 2em; margin: 1em 0; }
 
+    /* 6.5 KNOWLEDGE GRAPH CANVAS */
+    #graph-canvas { cursor: grab; display: block; }
+
     /* 3D CARD FLIP UTILITIES FLASHCARDS */
     .perspective-1000 { perspective: 1000px; }
     .preserve-3d { transform-style: preserve-3d; }
@@ -159,6 +162,9 @@
                     </button>
                     <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded text-gray-500 hover:text-white transition-all" title="Tree View">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded text-gray-500 hover:text-white transition-all" title="Knowledge Graph">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" stroke-width="2"></circle><circle cx="18" cy="6" r="2.5" stroke-width="2"></circle><circle cx="12" cy="18" r="2.5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"></path></svg>
                     </button>
                 </div>
 
@@ -228,6 +234,19 @@
             <p class="text-md font-mono text-gray-100 tracking-widest">
                 // TOTAL_NODES: <span id="node-count" class="text-aurelia-text">{{ cards|length }}</span>
             </p>
+            <p class="text-xs font-mono text-aurelia-tertiary tracking-widest opacity-80" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
+                DUE_FOR_REVIEW: <span id="review-count" class="text-aurelia-tertiary">0</span>
+            </p>
+        </div>
+
+        <div id="review-queue" class="hidden mb-10 border border-aurelia-tertiary/30 bg-aurelia-tertiary/5 rounded-sm p-5">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[11px] font-bold font-mono text-aurelia-tertiary uppercase tracking-[0.2em]" title="Grounded in the spacing effect + retrieval practice: revisiting seeds and growing notes before they go stale helps them mature.">
+                    🧠 RETRIEVAL_QUEUE // Notes Due For Review
+                </span>
+                <span class="text-[9px] font-mono text-gray-500 uppercase tracking-wider">Click to review →</span>
+            </div>
+            <div id="review-queue-items" class="flex flex-wrap gap-2"></div>
         </div>
 
         <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 auto-rows-fr">
@@ -318,6 +337,25 @@
             </div>
         </div>
 
+        <div id="graphView" class="hidden animate-fade-in-up">
+            <div class="mb-4 flex items-center justify-between text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                <span>Scroll to zoom · drag to pan · click a node to open</span>
+                <div class="flex items-center gap-4 flex-wrap">
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-tertiary"></span>Log</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-400"></span>Source</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-secondary"></span>Author</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-accent"></span>Discipline</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span>NotebookLM</span>
+                </div>
+            </div>
+            <div id="graph-canvas-wrap" class="relative border border-aurelia-dim bg-black/40 rounded-sm overflow-hidden" style="height: 70vh;">
+                <canvas id="graph-canvas" class="w-full h-full"></canvas>
+                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-black border border-aurelia-primary/50 rounded-sm text-xs font-mono text-white shadow-lg"></div>
+                <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-gray-600 uppercase tracking-widest">No nodes match the current filter</div>
+            </div>
+        </div>
+
     </div>
 
     <div id="data-storage" style="display: none;">
@@ -335,7 +373,7 @@
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                     <span class="ml-4 text-xs font-mono text-gray-500 uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
                 </div>
-                <div class="text-[10px] font-mono text-gray-600">CMD+ESC TO CLOSE</div>
+                <div class="text-[10px] font-mono text-gray-600">[ / ] TO NAVIGATE &nbsp;·&nbsp; ESC TO CLOSE</div>
             </div>
             <div class="flex-grow overflow-y-auto bg-[#0a0a0b] custom-scrollbar">
                 <div class="max-w-5xl mx-auto px-8 py-12">
@@ -344,7 +382,12 @@
                 </div>
             </div>
             <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
-                <span>MODE: READ_ONLY</span>
+                <span id="modal-readtime">MODE: READ_ONLY</span>
+                <div class="flex items-center gap-5">
+                    <button onclick="navigateNote(-1)" title="Previous in current view ([)" class="hover:text-aurelia-primary transition-colors">← PREV</button>
+                    <span id="modal-reviewed" class="opacity-70"></span>
+                    <button onclick="navigateNote(1)" title="Next in current view (])" class="hover:text-aurelia-primary transition-colors">NEXT →</button>
+                </div>
                 <span>AURELIA_OS V3.0</span>
             </div>
         </div>
@@ -358,38 +401,43 @@
     // Powers the modal's "Referenced By" section.
     const BACKLINKS_INDEX = {{ backlinks_index | safe }};
 
+    // Node/edge data for the knowledge-graph view (id/title/type per note,
+    // deduped undirected edges), built at build time in
+    // engine/pipeline.py._build_graph_index.
+    const GRAPH_INDEX = {{ graph_index | safe }};
+
     // --- 1. VIEW SWITCHER LOGIC (NEW) ---
     const gridView = document.getElementById('cardGrid');
     const treeView = document.getElementById('treeView');
+    const graphViewEl = document.getElementById('graphView');
     const btnGrid = document.getElementById('btn-grid');
     const btnTree = document.getElementById('btn-tree');
+    const btnGraph = document.getElementById('btn-graph');
     const filterControls = document.getElementById('filter-controls');
     const viewLabel = document.getElementById('view-mode-label');
+    let currentView = 'grid';
 
     function switchView(mode) {
-        if(mode === 'grid') {
-            gridView.classList.remove('hidden');
-            treeView.classList.add('hidden');
-            
-            btnGrid.classList.add('bg-white/10', 'text-aurelia-primary');
-            btnGrid.classList.remove('text-gray-500');
-            btnTree.classList.remove('bg-white/10', 'text-aurelia-primary');
-            btnTree.classList.add('text-gray-500');
-            
-            viewLabel.innerText = "GRID_MATRIX";
-        } else {
-            gridView.classList.add('hidden');
-            treeView.classList.remove('hidden');
-            
-            btnTree.classList.add('bg-white/10', 'text-aurelia-primary');
-            btnTree.classList.remove('text-gray-500');
-            btnGrid.classList.remove('bg-white/10', 'text-aurelia-primary');
-            btnGrid.classList.add('text-gray-500');
-            
-            viewLabel.innerText = "TREE_DIRECTORY";
-        }
+        currentView = mode;
+        gridView.classList.toggle('hidden', mode !== 'grid');
+        treeView.classList.toggle('hidden', mode !== 'tree');
+        graphViewEl.classList.toggle('hidden', mode !== 'graph');
+
+        [[btnGrid, 'grid'], [btnTree, 'tree'], [btnGraph, 'graph']].forEach(([btn, m]) => {
+            if (m === mode) {
+                btn.classList.add('bg-white/10', 'text-aurelia-primary');
+                btn.classList.remove('text-gray-500');
+            } else {
+                btn.classList.remove('bg-white/10', 'text-aurelia-primary');
+                btn.classList.add('text-gray-500');
+            }
+        });
+
+        viewLabel.innerText = mode === 'grid' ? "GRID_MATRIX" : mode === 'tree' ? "TREE_DIRECTORY" : "NEURAL_GRAPH";
         // DELETED: The lines that set filterControls.style.opacity/pointerEvents
-        // Filters now remain active in both modes.
+        // Filters now remain active in every mode.
+
+        if (mode === 'graph') initGraph();
     }
 
     // --- 2. NEURAL ANIMATION (PRESERVED) ---
@@ -558,6 +606,15 @@
 
         const counter = document.getElementById('node-count');
         if (counter) counter.innerText = visibleCount;
+
+        // 4. REFRESH GRAPH DIMMING (if that's the active view)
+        if (currentView === 'graph' && graphState && graphState.laidOut) drawGraph();
+    }
+
+    function graphNodeMatches(node) {
+        const typeMatch = (currentType === 'all') || (node.type.includes(currentType));
+        const searchMatch = currentQuery.length === 0 || node.title.toLowerCase().includes(currentQuery);
+        return typeMatch && searchMatch;
     }
 
     // HELPER: Centralized Logic (The Brain)
@@ -599,6 +656,8 @@
         });
     }
 
+    let currentModalNoteId = null;
+
     function openNote(noteId) {
         const rawEl = document.getElementById(noteId);
         if (!rawEl) return;
@@ -606,9 +665,36 @@
         txt.innerHTML = rawEl.innerHTML;
         modalContent.innerHTML = marked.parse(txt.value, { breaks: true });
         renderBacklinks(noteId);
+
+        currentModalNoteId = noteId;
+        const wordCount = (modalContent.innerText || '').trim().split(/\s+/).filter(Boolean).length;
+        const minutes = Math.max(1, Math.round(wordCount / 200));
+        const readtimeEl = document.getElementById('modal-readtime');
+        if (readtimeEl) readtimeEl.innerText = `~${minutes} MIN READ // ${wordCount} WORDS`;
+
+        const previousVisit = reviewLog[noteId];
+        const reviewedEl = document.getElementById('modal-reviewed');
+        if (reviewedEl) reviewedEl.innerText = previousVisit ? `LAST SEEN: ${daysAgoLabel(previousVisit).toUpperCase()}` : 'FIRST VISIT';
+        markReviewed(noteId);
+
         modalBackdrop.classList.remove('hidden');
         setTimeout(() => { modalBackdrop.classList.remove('opacity-0'); modalPanel.classList.remove('scale-95'); modalPanel.classList.add('scale-100'); }, 10);
         document.body.style.overflow = 'hidden';
+    }
+
+    // Moves to the next/previous note within whatever's currently visible
+    // (respects the active filter/search, same pool as openRandomNote) --
+    // supports interleaved review sessions without closing the modal.
+    function navigateNote(direction) {
+        if (!currentModalNoteId) return;
+        const pool = Array.from(document.querySelectorAll('#cardGrid .searchable-item'))
+            .filter(el => el.style.display !== 'none');
+        if (pool.length === 0) return;
+        const ids = pool.map(el => el.dataset.id);
+        let idx = ids.indexOf(currentModalNoteId);
+        if (idx === -1) idx = 0;
+        idx = (idx + direction + ids.length) % ids.length;
+        openNote(ids[idx]);
     }
 
     function renderBacklinks(noteId) {
@@ -637,7 +723,13 @@
         setTimeout(() => { modalBackdrop.classList.add('hidden'); }, 300);
         document.body.style.overflow = 'auto';
     }
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeModal(); return; }
+        if (!modalBackdrop.classList.contains('hidden')) {
+            if (e.key === ']') navigateNote(1);
+            if (e.key === '[') navigateNote(-1);
+        }
+    });
 
     // --- RANDOM NOTE DISCOVERY ---
     // Picks from whatever's currently visible (respects active filter/search),
@@ -648,5 +740,273 @@
         if (pool.length === 0) return;
         pool[Math.floor(Math.random() * pool.length)].click();
     }
+
+    function daysAgoLabel(ts) {
+        const days = Math.floor((Date.now() - ts) / 86400000);
+        if (days <= 0) return 'today';
+        if (days === 1) return '1 day ago';
+        return `${days} days ago`;
+    }
+
+    // --- RETRIEVAL PRACTICE / SPACED REVIEW QUEUE ---
+    // Grounded in the spacing effect and retrieval practice: a note "comes
+    // due" on an interval keyed to its Zettelkasten maturity tag (a fresh
+    // seed needs revisiting far sooner than an evergreen note to have any
+    // chance of maturing). Tracked purely client-side via localStorage --
+    // there's no backend, so "reviewed" just means "opened the note".
+    const REVIEW_INTERVAL_DAYS = { seed: 1, growing: 5, evergreen: 14 };
+    const DEFAULT_INTERVAL_DAYS = 3;
+    const REVIEW_LOG_KEY = 'aurelia_review_log';
+
+    function loadReviewLog() {
+        try { return JSON.parse(localStorage.getItem(REVIEW_LOG_KEY) || '{}'); }
+        catch (e) { return {}; }
+    }
+    function saveReviewLog() {
+        try { localStorage.setItem(REVIEW_LOG_KEY, JSON.stringify(reviewLog)); } catch (e) {}
+    }
+    let reviewLog = loadReviewLog();
+
+    function markReviewed(noteId) {
+        reviewLog[noteId] = Date.now();
+        saveReviewLog();
+        renderReviewQueue();
+    }
+
+    function computeReviewQueue() {
+        const now = Date.now();
+        const items = Array.from(document.querySelectorAll('#cardGrid .searchable-item')).map(el => {
+            const id = el.dataset.id;
+            const last = reviewLog[id];
+            const intervalMs = (REVIEW_INTERVAL_DAYS[el.dataset.maturity] || DEFAULT_INTERVAL_DAYS) * 86400000;
+            const due = last ? (now - last) / intervalMs : Infinity;
+            const h3 = el.querySelector('h3');
+            return { id, title: h3 ? h3.innerText : id, due, last };
+        });
+        return items.filter(i => i.due >= 1).sort((a, b) => b.due - a.due).slice(0, 8);
+    }
+
+    function renderReviewQueue() {
+        const queue = computeReviewQueue();
+        const panel = document.getElementById('review-queue');
+        const container = document.getElementById('review-queue-items');
+        const counter = document.getElementById('review-count');
+        if (counter) counter.innerText = queue.length;
+        if (!panel || !container) return;
+
+        if (queue.length === 0) {
+            panel.classList.add('hidden');
+            return;
+        }
+        panel.classList.remove('hidden');
+        container.innerHTML = queue.map(item => `
+            <span onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-black/40 rounded-sm hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
+                <span>${escapeHtml(item.title)}</span>
+                <span class="opacity-50 text-[9px]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
+            </span>
+        `).join('');
+    }
+
+    // --- KNOWLEDGE GRAPH VIEW ---
+    // A lightweight force-directed layout (Fruchterman-Reingold-style),
+    // computed once client-side from GRAPH_INDEX and rendered to a single
+    // canvas. Exists to make the note graph -- what links to what -- an
+    // actual explorable picture, not just something you infer one modal
+    // click at a time.
+    let graphState = null;
+    let graphPan = { x: 0, y: 0, scale: 1, dragging: false, lastX: 0, lastY: 0 };
+
+    const GRAPH_TYPE_COLORS = {
+        concept: '#00f2ff', 'daily-bridge': '#ff8c00', log: '#ff8c00',
+        source: '#facc15', author: '#8a2be2', discipline: '#39ff14', notebooklm: '#818cf8',
+    };
+    function graphColorFor(type) {
+        for (const key in GRAPH_TYPE_COLORS) if (type.includes(key)) return GRAPH_TYPE_COLORS[key];
+        return '#6b7280';
+    }
+
+    function initGraph() {
+        const canvas = document.getElementById('graph-canvas');
+        const wrap = document.getElementById('graph-canvas-wrap');
+        if (!canvas || !wrap) return;
+        const width = wrap.clientWidth, height = wrap.clientHeight;
+        canvas.width = width; canvas.height = height;
+
+        if (!graphState) {
+            const degree = {};
+            GRAPH_INDEX.nodes.forEach(n => degree[n.id] = 0);
+            GRAPH_INDEX.edges.forEach(e => { degree[e.source] = (degree[e.source] || 0) + 1; degree[e.target] = (degree[e.target] || 0) + 1; });
+
+            const nodes = GRAPH_INDEX.nodes.map((n, i) => {
+                const angle = (i / Math.max(GRAPH_INDEX.nodes.length, 1)) * Math.PI * 2;
+                return Object.assign({}, n, { degree: degree[n.id] || 0, x: Math.cos(angle) * 200, y: Math.sin(angle) * 200 });
+            });
+            graphState = { nodes, edges: GRAPH_INDEX.edges, byId: {}, laidOut: false };
+            nodes.forEach(n => graphState.byId[n.id] = n);
+        }
+
+        if (!graphState.laidOut && graphState.nodes.length > 0) {
+            layoutGraph(width, height);
+            graphState.laidOut = true;
+        }
+
+        bindGraphInteractions(canvas);
+        drawGraph();
+    }
+
+    function layoutGraph(width, height) {
+        const nodes = graphState.nodes;
+        const edges = graphState.edges;
+        const area = width * height;
+        const k = Math.sqrt(area / Math.max(nodes.length, 1)) * 0.9;
+        let temperature = Math.max(width, height) / 8;
+        const iterations = nodes.length > 300 ? 80 : 150;
+
+        for (let iter = 0; iter < iterations; iter++) {
+            nodes.forEach(n => { n.fx = 0; n.fy = 0; });
+
+            for (let a = 0; a < nodes.length; a++) {
+                for (let b = a + 1; b < nodes.length; b++) {
+                    const dx = nodes[a].x - nodes[b].x, dy = nodes[a].y - nodes[b].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+                    const force = (k * k) / dist;
+                    const fx = (dx / dist) * force, fy = (dy / dist) * force;
+                    nodes[a].fx += fx; nodes[a].fy += fy;
+                    nodes[b].fx -= fx; nodes[b].fy -= fy;
+                }
+            }
+
+            edges.forEach(e => {
+                const s = graphState.byId[e.source], t = graphState.byId[e.target];
+                if (!s || !t) return;
+                const dx = s.x - t.x, dy = s.y - t.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+                const force = (dist * dist) / k;
+                const fx = (dx / dist) * force, fy = (dy / dist) * force;
+                s.fx -= fx; s.fy -= fy;
+                t.fx += fx; t.fy += fy;
+            });
+
+            nodes.forEach(n => {
+                n.fx -= n.x * 0.01;
+                n.fy -= n.y * 0.01;
+                const disp = Math.sqrt(n.fx * n.fx + n.fy * n.fy) || 0.01;
+                const clamped = Math.min(disp, temperature);
+                n.x += (n.fx / disp) * clamped;
+                n.y += (n.fy / disp) * clamped;
+            });
+
+            temperature *= 0.95;
+        }
+    }
+
+    function bindGraphInteractions(canvas) {
+        if (canvas.dataset.bound) return;
+        canvas.dataset.bound = '1';
+
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const factor = e.deltaY < 0 ? 1.1 : 0.9;
+            graphPan.scale = Math.min(4, Math.max(0.2, graphPan.scale * factor));
+            drawGraph();
+        }, { passive: false });
+
+        canvas.addEventListener('mousedown', (e) => {
+            graphPan.dragging = true; graphPan.lastX = e.clientX; graphPan.lastY = e.clientY;
+            canvas.style.cursor = 'grabbing';
+        });
+        window.addEventListener('mouseup', () => { graphPan.dragging = false; canvas.style.cursor = 'grab'; });
+        canvas.addEventListener('mousemove', (e) => {
+            if (graphPan.dragging) {
+                graphPan.x += e.clientX - graphPan.lastX;
+                graphPan.y += e.clientY - graphPan.lastY;
+                graphPan.lastX = e.clientX; graphPan.lastY = e.clientY;
+                drawGraph();
+                return;
+            }
+            const hit = graphNodeAt(canvas, e);
+            const tooltip = document.getElementById('graph-tooltip');
+            if (hit) {
+                canvas.style.cursor = 'pointer';
+                tooltip.classList.remove('hidden');
+                tooltip.style.left = `${e.clientX - canvas.getBoundingClientRect().left + 14}px`;
+                tooltip.style.top = `${e.clientY - canvas.getBoundingClientRect().top + 10}px`;
+                tooltip.innerHTML = `${escapeHtml(hit.title)} <span class="opacity-50">// ${escapeHtml(hit.type)}</span>`;
+            } else {
+                canvas.style.cursor = 'grab';
+                tooltip.classList.add('hidden');
+            }
+        });
+        canvas.addEventListener('mouseleave', () => { document.getElementById('graph-tooltip').classList.add('hidden'); });
+
+        canvas.addEventListener('click', (e) => {
+            const hit = graphNodeAt(canvas, e);
+            if (hit) openNote(hit.id);
+        });
+    }
+
+    function graphNodeAt(canvas, e) {
+        if (!graphState) return null;
+        const rect = canvas.getBoundingClientRect();
+        const cx = canvas.width / 2 + graphPan.x, cy = canvas.height / 2 + graphPan.y;
+        const mx = (e.clientX - rect.left - cx) / graphPan.scale;
+        const my = (e.clientY - rect.top - cy) / graphPan.scale;
+        for (const n of graphState.nodes) {
+            const r = 4 + Math.min(n.degree, 12);
+            const dx = n.x - mx, dy = n.y - my;
+            if (dx * dx + dy * dy <= (r + 4) * (r + 4)) return n;
+        }
+        return null;
+    }
+
+    function drawGraph() {
+        const canvas = document.getElementById('graph-canvas');
+        const empty = document.getElementById('graph-empty');
+        if (!canvas || !graphState) return;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width, height = canvas.height;
+        ctx.clearRect(0, 0, width, height);
+
+        const cx = width / 2 + graphPan.x, cy = height / 2 + graphPan.y;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(graphPan.scale, graphPan.scale);
+
+        const visible = new Set();
+        graphState.nodes.forEach(n => { if (graphNodeMatches(n)) visible.add(n.id); });
+        if (empty) empty.classList.toggle('hidden', visible.size > 0);
+
+        ctx.lineWidth = 1 / graphPan.scale;
+        graphState.edges.forEach(e => {
+            const s = graphState.byId[e.source], t = graphState.byId[e.target];
+            if (!s || !t) return;
+            const active = visible.has(s.id) && visible.has(t.id);
+            ctx.strokeStyle = active ? 'rgba(0, 242, 255, 0.25)' : 'rgba(107, 114, 128, 0.08)';
+            ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(t.x, t.y); ctx.stroke();
+        });
+
+        graphState.nodes.forEach(n => {
+            const active = visible.has(n.id);
+            const r = 4 + Math.min(n.degree, 12);
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+            ctx.globalAlpha = active ? 1 : 0.3;
+            ctx.fillStyle = active ? graphColorFor(n.type) : '#6b7280';
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            if (active && (graphState.nodes.length < 60 || r > 8)) {
+                ctx.font = `${11 / graphPan.scale}px 'JetBrains Mono', monospace`;
+                ctx.fillStyle = 'rgba(255,255,255,0.75)';
+                ctx.fillText(n.title, n.x + r + 4, n.y + 3);
+            }
+        });
+
+        ctx.restore();
+    }
+
+    window.addEventListener('resize', () => { if (currentView === 'graph') initGraph(); });
+
+    renderReviewQueue();
 </script>
 {% endblock %}

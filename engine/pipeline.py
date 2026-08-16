@@ -111,6 +111,34 @@ def _build_backlinks_index(garden_cards):
     return {note_id: refs for note_id, refs in backlinks.items() if refs}
 
 
+def _build_graph_index(garden_cards):
+    """Builds the node/edge data for the Garden's knowledge-graph view.
+
+    Deliberately thin (id/title/type per node, deduped undirected edges) --
+    unlike the modal's data-storage blob this gets embedded in every load of
+    garden.html, so it skips full body text (see _build_search_index for the
+    same size-conscious precedent).
+    """
+    known = {c['id'] for c in garden_cards}
+    nodes = [{"id": c['id'], "title": c['title'], "type": c['type'].lower()} for c in garden_cards]
+
+    edges = []
+    seen_pairs = set()
+    for c in garden_cards:
+        targets_seen = set()
+        for target_id in _OPEN_NOTE_RE.findall(c['body']):
+            if target_id == c['id'] or target_id not in known or target_id in targets_seen:
+                continue
+            targets_seen.add(target_id)
+            pair = tuple(sorted((c['id'], target_id)))
+            if pair in seen_pairs:
+                continue
+            seen_pairs.add(pair)
+            edges.append({"source": pair[0], "target": pair[1]})
+
+    return {"nodes": nodes, "edges": edges}
+
+
 def _build_search_index(garden_cards):
     master_index = [
         {"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"},
@@ -129,10 +157,12 @@ def _build_search_index(garden_cards):
     return master_index
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json):
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json):
     pages = [
         ("pages/indextemplate.html", "index.html", {}),
-        ("pages/gardentemplate.html", "garden.html", {"cards": garden_cards, "backlinks_index": backlinks_json}),
+        ("pages/gardentemplate.html", "garden.html", {
+            "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
+        }),
         ("404.html", "404.html", {}),
     ]
 
@@ -172,8 +202,9 @@ def build_all():
     json_index = dumps_for_script_tag(master_index)
 
     backlinks_json = dumps_for_script_tag(_build_backlinks_index(garden_cards))
+    graph_json = dumps_for_script_tag(_build_graph_index(garden_cards))
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json)
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json)
 
     # Runs last: scans the just-rendered dist/**/*.html for utility classes,
     # including ones cards.py assembled dynamically (now literal text in the

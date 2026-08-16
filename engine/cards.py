@@ -48,8 +48,24 @@ def link_pill(target_id, label, classes, known_ids):
     return f'<span class="{classes} cursor-default">{label}</span>'
 
 
-def _maturity_badge(tags):
-    """Renders a 🌱/🌿/🌳 badge from a status/<maturity> tag, if present.
+def _maturity_slug(tags):
+    """Returns 'seed'/'growing'/'evergreen' from a status/<maturity> tag, or ''.
+
+    Exposed separately from the badge HTML (see _maturity_badge) so the
+    client-side review-queue JS in gardentemplate.html can read a note's
+    maturity via a data-maturity attribute without re-parsing rendered HTML.
+    """
+    for tag in tags or []:
+        if not str(tag).startswith("status/"):
+            continue
+        slug = str(tag).split("/", 1)[1].lower()
+        if slug in _MATURITY_BADGES:
+            return slug
+    return ""
+
+
+def _maturity_badge(slug):
+    """Renders a 🌱/🌿/🌳 badge for a maturity slug (see _maturity_slug), if any.
 
     Templates already write status/seed, status/growing, status/evergreen
     (a Zettelkasten-style note-maturity convention) but previously only the
@@ -57,14 +73,11 @@ def _maturity_badge(tags):
     the same way. Silently renders nothing for notes without a maturity tag
     (e.g. status/reading, status/active) rather than showing a placeholder.
     """
-    for tag in tags or []:
-        if not str(tag).startswith("status/"):
-            continue
-        badge = _MATURITY_BADGES.get(str(tag).split("/", 1)[1].lower())
-        if badge:
-            emoji, text = badge
-            return f'<span class="text-[10px] opacity-70" title="{text}">{emoji}</span>'
-    return ""
+    badge = _MATURITY_BADGES.get(slug)
+    if not badge:
+        return ""
+    emoji, text = badge
+    return f'<span class="text-[10px] opacity-70" title="{text}">{emoji}</span>'
 
 
 def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text, known_ids=frozenset()):
@@ -81,7 +94,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         note_type = "daily-bridge"
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
-    maturity_html = _maturity_badge(meta.get("tags"))
+    maturity_slug = _maturity_slug(meta.get("tags"))
+    maturity_html = _maturity_badge(maturity_slug)
 
     base_classes = ("searchable-item glass p-5 rounded-sm border border-opacity-40 "
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-3 "
@@ -344,7 +358,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         icon = "📄"; label = "NOTE"
 
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-type="{note_type}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
         <div class="flex justify-between items-start">
             <div>
                 <div class="flex items-center gap-2 mb-1.5">
