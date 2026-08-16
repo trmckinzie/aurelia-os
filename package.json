@@ -1,0 +1,8 @@
+{
+  "name": "aurelia-os",
+  "private": true,
+  "description": "Build-time Tailwind CSS compilation for Aurelia OS (see build.py / engine/).",
+  "devDependencies": {
+    "tailwindcss": "3.4.19"
+  }
+}

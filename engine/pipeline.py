@@ -14,6 +14,7 @@ from engine.config import (
 )
 from engine.content import make_id, parse_body, parse_frontmatter, process_notebooklm_media, process_wikilinks
 from engine.extractors import extract_mission_brief
+from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag
 
 try:
@@ -243,5 +244,10 @@ def build_all():
     json_index = dumps_for_script_tag(master_index)
 
     _render_pages(user_config, garden_cards, portfolio_cards, protocol_cards, transmissions_data, json_index)
+
+    # Runs last: scans the just-rendered dist/**/*.html for utility classes,
+    # including ones cards.py assembled dynamically (now literal text in the
+    # output), and compiles the final CSS over the passthrough copy.
+    compile_css()
 
     print("\n✅ SYSTEM SYNC COMPLETE.")

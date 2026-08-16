@@ -14,6 +14,12 @@ Thumbs.db
 __pycache__/
 *.pyc
 .env
+.pytest_cache/
+
+# --- IGNORE NODE/TAILWIND BUILD FILES ---
+node_modules/
+# Regenerated from engine/config.py THEME_CONFIG on every build; not source.
+tailwind.config.js
 
 # --- IGNORE SMART CONNECTIONS PLUGIN DATA ---
 **/.smart-env/
