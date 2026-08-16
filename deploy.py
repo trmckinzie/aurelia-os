@@ -87,12 +87,26 @@ def create_structure():
 
 def copy_engine():
     print("⚙️  Cloning Logic Core...")
-    
-    # 1. Build Script (The Brain)
+
+    # 1. Build Entrypoint + Engine Package (The Brain)
     shutil.copy(os.path.join(SOURCE_DIR, "build.py"), os.path.join(TARGET_DIR, "build.py"))
-    print_step("build.py installed.")
-    
-    # 2. Config (The Soul)
+    shutil.copytree(
+        os.path.join(SOURCE_DIR, "engine"),
+        os.path.join(TARGET_DIR, "engine"),
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    print_step("build.py + engine/ installed.")
+
+    # 2. Dependency manifests (build.py needs both a Python and a Node
+    # toolchain -- Node compiles the Tailwind CSS, see engine/tailwind_build.py)
+    shutil.copy(os.path.join(SOURCE_DIR, "requirements.txt"), os.path.join(TARGET_DIR, "requirements.txt"))
+    shutil.copy(os.path.join(SOURCE_DIR, "package.json"), os.path.join(TARGET_DIR, "package.json"))
+    lockfile = os.path.join(SOURCE_DIR, "package-lock.json")
+    if os.path.exists(lockfile):
+        shutil.copy(lockfile, os.path.join(TARGET_DIR, "package-lock.json"))
+    print_step("requirements.txt + package.json installed.")
+
+    # 3. Config (The Soul)
     with open(os.path.join(TARGET_DIR, "user_config.json"), "w", encoding="utf-8") as f:
         json.dump(FACTORY_CONFIG, f, indent=4)
     print_step("Clean user_config.json generated.")
@@ -146,7 +160,7 @@ tech_stack: [Python, AI, Data]
 - **Efficiency:** Centralized tracking.
 - **Visibility:** Public-facing portfolio ready.
 """
-    with open(os.path.join(TARGET_DIR, "vault/30_PROJECTS/00_Demo_Project.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "30_PROJECTS", "00_Demo_Project.md"), "w", encoding="utf-8") as f:
         f.write(project_md)
 
     # --- B. DEMO PROTOCOL ---
@@ -166,13 +180,13 @@ tags: [system, onboarding]
 ## 🧠 System Logic
 > Protocols are 'Standard Operating Procedures'. Use them to document repeatable workflows (e.g., Grading Process, Grant Submission).
 """
-    with open(os.path.join(TARGET_DIR, "vault/20_PROTOCOL/00_Onboarding.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "20_PROTOCOL", "00_Onboarding.md"), "w", encoding="utf-8") as f:
         f.write(protocol_md)
 
     # --- C. DEMO NOTEBOOKLM (With Flashcards & References) ---
     # First, create the CSV
     csv_data = "Question,Answer\nWhat is NotebookLM?,An AI research assistant by Google.\nHow does Aurelia handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
-    with open(os.path.join(TARGET_DIR, "vault/assets/flashcards/demo_deck.csv"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8") as f:
         f.write(csv_data)
 
     notebook_md = """---
@@ -200,7 +214,7 @@ assets/flashcards/demo_deck.csv
 > - Aurelia Systems. (2026). *The Architecture of Digital Memory*.
 > - Google Research. (2024). *NotebookLM Technical Report*.
 """
-    with open(os.path.join(TARGET_DIR, "vault/10_GARDEN/NotebookLM_Demo.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "NotebookLM_Demo.md"), "w", encoding="utf-8") as f:
         f.write(notebook_md)
 
     print_step("Blueprint Notes created.")
@@ -208,15 +222,27 @@ assets/flashcards/demo_deck.csv
 def create_readme():
     readme_text = """# AURELIA // OS [FACTORY EDITION]
 
+## ✅ Prerequisites
+- Python 3.10+
+- Node.js 18+ (used to compile the site's Tailwind CSS)
+
 ## 🚀 Quick Start
-1. **Configure:** Open `user_config.json` and add your Name, Role, and Bio.
-2. **Build:** Open a terminal and run `python build.py`.
-3. **View:** Open `index.html` in your browser.
+1. **Install dependencies (once):**
+   ```
+   pip install -r requirements.txt
+   npm install
+   ```
+2. **Configure:** Open `user_config.json` and add your Name, Role, and Bio.
+3. **Build:** Open a terminal and run `python build.py`.
+4. **View:** Open `dist/index.html` in your browser.
 
 ## 📂 Folder Structure
 - `vault/`: Your Obsidian Notes go here.
 - `system/`: The HTML templates (Do not touch unless customizing).
 - `assets/`: CSS, JS, and Images.
+- `engine/`: The build logic (Do not touch unless customizing).
+- `dist/`: Generated output -- this is what you publish/deploy. Rebuilt
+  from scratch every time you run `python build.py`; don't edit it by hand.
 
 ## 🧩 Modules
 - **Projects:** Place `.md` files in `vault/30_PROJECTS`.
