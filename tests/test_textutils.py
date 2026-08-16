@@ -1,7 +1,7 @@
 from engine.textutils import (
     clean_text,
     dumps_for_script_tag,
-    extract_link_labels,
+    extract_links,
     first_blockquote_after,
     section_after_header,
     strip_html,
@@ -40,14 +40,18 @@ def test_truncate_handles_none():
     assert truncate(None, 10) == ""
 
 
-def test_extract_link_labels_prefers_rendered_buttons():
-    section = '<button onclick="openNote(\'a\')">Alpha</button> <button onclick="openNote(\'b\')">Beta</button>'
-    assert extract_link_labels(section) == ["Alpha", "Beta"]
+def test_extract_links_prefers_rendered_buttons_and_keeps_target_id():
+    section = '<button onclick="openNote(\'note-a\')">Alpha</button> <button onclick="openNote(\'note-b\')">Beta</button>'
+    assert extract_links(section) == [("note-a", "Alpha"), ("note-b", "Beta")]
 
 
-def test_extract_link_labels_falls_back_to_raw_brackets():
-    section = "[[Alpha]] and [[Target|Beta]]"
-    assert extract_link_labels(section) == ["Alpha", "Beta"]
+def test_extract_links_falls_back_to_raw_brackets_deriving_id_via_make_id():
+    section = "[[Alpha]] and [[Target Note|Beta]]"
+    assert extract_links(section) == [("note-alpha", "Alpha"), ("note-target-note", "Beta")]
+
+
+def test_extract_links_returns_empty_list_when_no_links_present():
+    assert extract_links("just plain text, no links here") == []
 
 
 def test_section_after_header_stops_at_next_header():

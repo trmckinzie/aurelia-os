@@ -11,6 +11,12 @@ from engine.extractors import (
 )
 from engine.textutils import truncate
 
+_MATURITY_BADGES = {
+    "seed": ("🌱", "Seed"),
+    "growing": ("🌿", "Growing"),
+    "evergreen": ("🌳", "Evergreen"),
+}
+
 
 def render_items(items, render_item, empty_html=""):
     """Joins rendered items, or falls back to empty_html when the list is empty.
@@ -23,7 +29,45 @@ def render_items(items, render_item, empty_html=""):
     return ''.join(render_item(i) for i in items)
 
 
-def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text):
+def link_pill(target_id, label, classes, known_ids):
+    """Renders one linked-item pill.
+
+    A real openNote() button when target_id is a published note; dimmed,
+    non-interactive text when it *was* a wikilink but the target isn't
+    published (yet); plain text when it was never a link at all (e.g. the
+    comma-separated fallback for un-linked "Related:" items). The UI should
+    never look clickable unless it actually is -- `classes` (each card
+    type's own pill styling) should not include its own cursor-* class,
+    since this owns that.
+    """
+    if target_id and target_id in known_ids:
+        return (f'<span onclick="openNote(\'{target_id}\'); event.stopPropagation()" '
+                f'class="{classes} cursor-pointer">{label}</span>')
+    if target_id:
+        return f'<span class="{classes} opacity-40 grayscale cursor-default" title="Not yet published">{label}</span>'
+    return f'<span class="{classes} cursor-default">{label}</span>'
+
+
+def _maturity_badge(tags):
+    """Renders a 🌱/🌿/🌳 badge from a status/<maturity> tag, if present.
+
+    Templates already write status/seed, status/growing, status/evergreen
+    (a Zettelkasten-style note-maturity convention) but previously only the
+    Source card type surfaced it. Shared here so every card type shows it
+    the same way. Silently renders nothing for notes without a maturity tag
+    (e.g. status/reading, status/active) rather than showing a placeholder.
+    """
+    for tag in tags or []:
+        if not str(tag).startswith("status/"):
+            continue
+        badge = _MATURITY_BADGES.get(str(tag).split("/", 1)[1].lower())
+        if badge:
+            emoji, text = badge
+            return f'<span class="text-[10px] opacity-70" title="{text}">{emoji}</span>'
+    return ""
+
+
+def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text, known_ids=frozenset()):
     # str() guards against frontmatter values YAML infers as non-strings
     # (e.g. an unquoted "type: 2026" would parse as an int, not text).
     note_type = str(meta.get("type", "unknown")).lower()
@@ -37,6 +81,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         note_type = "daily-bridge"
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
+    maturity_html = _maturity_badge(meta.get("tags"))
 
     base_classes = ("searchable-item glass p-5 rounded-sm border border-opacity-40 "
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-3 "
@@ -48,9 +93,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         mission, source, cues, summary = extract_log_data(body_content)
         summary = truncate(summary, 120)
 
+        src_id, src_label = source
+        source_html = link_pill(src_id, src_label[:40], "hover:underline decoration-dotted", known_ids)
+
         cues_html = render_items(
             cues,
-            lambda c: f'<span class="text-[10px] font-mono px-2 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/30 rounded-sm font-bold">{c}</span>',
+            lambda c: link_pill(c[0], c[1], "text-[10px] font-mono px-2 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/30 rounded-sm font-bold", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col gap-4 h-full">
@@ -71,7 +119,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
             <div class="mt-auto pt-3 border-t border-gray-800/50 flex flex-col gap-2">
                 <div class="flex justify-between items-center">
-                    <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase truncate w-full">SRC: {source[:40]}</span>
+                    <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase truncate w-full">SRC: {source_html}</span>
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                     {cues_html}
@@ -88,7 +136,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         links_html = render_items(
             links,
-            lambda l: f'<span class="hover:text-aurelia-primary transition-colors cursor-pointer border-b border-gray-700 hover:border-aurelia-primary pb-0.5">→ {l}</span>',
+            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-gray-700 hover:border-aurelia-primary pb-0.5", known_ids),
             empty_html='<span class="opacity-30 text-[9px]">// NO_LINKS_DETECTED</span>',
         )
         card_content = f"""
@@ -122,16 +170,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         argument = truncate(argument, 150)
 
+        auth_id, auth_label = author
+        author_html = link_pill(auth_id, auth_label, "hover:underline decoration-dotted", known_ids)
+
         concepts_html = render_items(
             concepts,
-            lambda c: f'<span class="text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-gray-300 rounded-sm hover:text-yellow-500 transition-colors cursor-default">{c}</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-gray-300 rounded-sm hover:text-yellow-500 transition-colors", known_ids),
             empty_html='<span class="opacity-30 text-[9px] text-gray-500 font-mono">// NO_CONCEPTS_LINKED</span>',
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-3">
 
             <div class="flex justify-between items-end border-b border-yellow-500/30 pb-2">
-                <span class="text-[10px] font-bold font-mono text-yellow-500 uppercase tracking-wider truncate mr-2">AUTH: {author}</span>
+                <span class="text-[10px] font-bold font-mono text-yellow-500 uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
                 <span class="text-[9px] font-bold font-mono text-black bg-yellow-500 px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
             </div>
 
@@ -159,12 +210,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda c: f'<span class="text-[9px] font-mono px-2 py-1 bg-aurelia-secondary text-black font-bold rounded-sm border border-aurelia-secondary">{c}</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-secondary text-black font-bold rounded-sm border border-aurelia-secondary", known_ids),
             empty_html='<span class="text-[9px] text-white font-mono opacity-80">// NO_SYSTEMS_DETECTED</span>',
         )
         works_html = render_items(
             works,
-            lambda w: f'<span class="text-[9px] font-mono px-2 py-0.5 border border-gray-400 text-white font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors cursor-default">{w}</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-0.5 border border-gray-400 text-white font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
@@ -202,12 +253,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         pillars_html = render_items(
             pillars,
-            lambda p: f'<span class="text-[9px] font-mono px-2 py-1 bg-aurelia-accent text-black font-extrabold rounded-sm uppercase">{p}</span>',
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-2 py-1 bg-aurelia-accent text-black font-extrabold rounded-sm uppercase", known_ids),
             empty_html='<span class="text-[9px] text-gray-500 font-mono">// FOUNDATIONS_PENDING</span>',
         )
         canon_html = render_items(
             canon,
-            lambda t: f'<span class="text-[10px] font-serif italic text-gray-300 hover:text-white transition-colors truncate">• {t}</span>',
+            lambda pair: link_pill(pair[0], f"• {pair[1]}", "text-[10px] font-serif italic text-gray-300 hover:text-white transition-colors truncate", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
@@ -299,6 +350,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 <div class="flex items-center gap-2 mb-1.5">
                     <span class="w-1.5 h-1.5 {color.replace('border-', 'bg-')} rounded-full"></span>
                     <span class="text-[10px] font-mono {color.replace('border-', 'text-')} uppercase tracking-widest">{label}</span>
+                    {maturity_html}
                 </div>
                 <h3 class="text-lg font-bold text-gray-200 font-mono group-hover:text-white transition-colors leading-tight">{title}</h3>
             </div>

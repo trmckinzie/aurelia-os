@@ -10,7 +10,7 @@ import re
 
 _HTML_TAG_RE = re.compile(r'<[^>]+>')
 _WIKILINK_RE = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
-_BUTTON_RE = re.compile(r'<button[^>]*>(.*?)</button>')
+_BUTTON_ID_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
 
 
 def strip_html(text):
@@ -33,14 +33,30 @@ def truncate(text, limit):
     return text[:limit] + "..." if len(text) > limit else text
 
 
-def extract_link_labels(section_text):
-    """Pulls linked note titles out of a section: rendered <button> wikilinks first,
-    falling back to raw [[brackets]] if none were found (pre-process_wikilinks text)."""
-    links = _BUTTON_RE.findall(section_text)
-    if not links:
-        raw = re.findall(r'\[\[(.*?)\]\]', section_text)
-        links = [l.split('|')[1] if '|' in l else l for l in raw]
-    return links
+def extract_links(section_text):
+    """Pulls linked items out of a section as (target_id, label) pairs: rendered
+    <button onclick="openNote('id')">Label</button> wikilinks first, falling
+    back to raw [[Target]] / [[Target|Label]] brackets (pre-process_wikilinks
+    text, target_id derived via make_id) if none were found.
+
+    target_id is preserved (rather than just the display label, which is all
+    the older extract_link_labels returned) so callers can render these as
+    real openNote() links instead of inert styled text.
+    """
+    pairs = _BUTTON_ID_RE.findall(section_text)
+    if pairs:
+        return [(target_id, label) for target_id, label in pairs]
+
+    raw = re.findall(r'\[\[(.*?)\]\]', section_text)
+    if not raw:
+        return []
+
+    from engine.content import make_id  # local import: content.py doesn't import textutils, so no cycle
+    result = []
+    for item in raw:
+        target, label = item.split('|', 1) if '|' in item else (item, item)
+        result.append((make_id(target.strip()), label.strip()))
+    return result
 
 
 def section_after_header(text, header_pattern, stop_pattern=r'\n###|\n---'):
