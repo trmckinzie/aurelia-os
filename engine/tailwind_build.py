@@ -15,12 +15,13 @@ import subprocess
 from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR
 
 # Classes assembled by client-side JS after the page has already loaded (see
-# assets/js/status.js and protocoltemplate.html's inline status script) never
+# protocoltemplate.html's inline updateSystemStatus(), which derives a
+# "bg-*" indicator-dot class from a "text-*" status color at runtime) never
 # appear as literal text anywhere Tailwind can scan -- they only exist once
 # pieced together in the browser -- so their CSS must be generated unconditionally.
 _JS_RUNTIME_SAFELIST = [
-    "bg-aurelia-orange", "bg-aurelia-cyan", "bg-aurelia-green", "bg-aurelia-purple",
-    "bg-gray-400", "bg-gray-500", "bg-gray-700",
+    "bg-aurelia-primary", "bg-aurelia-secondary", "bg-aurelia-tertiary", "bg-aurelia-accent",
+    "bg-gray-400", "bg-gray-500",
 ]
 
 
@@ -38,15 +39,16 @@ def generate_config():
         "aurelia-secondary": colors["secondary"],
         "aurelia-tertiary": colors["tertiary"],
         "aurelia-accent": colors["accent"],
-        # Pre-"semantic theme" names still referenced by status.js, the footer,
-        # and the command palette badges. They were never in this config (so
-        # they've silently rendered with no color at all) -- aliased here to
-        # their nearest semantic equivalent instead of left broken.
+        # Pre-"semantic theme" names still referenced by the footer, the
+        # command palette badges, and status indicators. They were never in
+        # this config (so they've silently rendered with no color at all) --
+        # aliased here to their nearest semantic equivalent instead of left broken.
         "aurelia-cyan": colors["primary"],
         "aurelia-orange": colors["tertiary"],
         "aurelia-green": colors["accent"],
         "aurelia-purple": colors["secondary"],
         "aurelia-dim": colors["border_main"],
+        "aurelia-dark": colors["bg_main"],
     }
     color_lines = ",\n      ".join(f"'{name}': {value}" for name, value in color_map.items())
 

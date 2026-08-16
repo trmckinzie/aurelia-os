@@ -24,6 +24,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked@18.0.9/lib/marked.umd.js"
             integrity="sha384-kyb7rY2xnKgiRpRdAeNJxQ8e2SiGZy1m+FK9yME6M0eGJpg7EFaGGvf7+JSirgqE"
             crossorigin="anonymous"></script>
+    <script src="assets/js/utils.js"></script>
 
 <style>
     /* NAV BAR GLOW UTILITIES */
@@ -283,14 +284,6 @@
 
             renderResults(matches);
         });
-
-        // Vault note titles/types end up here verbatim; escape before building HTML
-        // strings with them so a stray "<" in a note can't be interpreted as a tag.
-        function escapeHtml(str) {
-            return String(str).replace(/[&<>"']/g, (c) => ({
-                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-            }[c]));
-        }
 
         function renderResults(results) {
             if(results.length === 0 && cmdInput.value.length > 0) {
