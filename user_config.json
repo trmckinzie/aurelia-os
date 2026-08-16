@@ -34,13 +34,5 @@
         { "name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓" },
         { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍" },
         { "name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨" }
-    ],
-
-    "modules": {
-    "garden": { "enabled": true },
-    "projects": { "enabled": true },
-    "protocols": { "enabled": true },
-    "services": { "enabled": true },
-    "transmissions": { "enabled": true }  
-}
+    ]
 }

@@ -7,7 +7,6 @@ from jinja2 import Environment, FileSystemLoader
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system", "templates")
-PROTOCOL_PATH = os.path.join(VAULT_PATH, "20_PROTOCOL")
 OUTPUT_DIR = os.path.join(ROOT_DIR, "dist")
 
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
@@ -86,4 +85,4 @@ def load_user_config():
         return config
     except Exception as e:
         print(f"   ⚠️  WARNING: Could not load user_config.json. Using defaults. ({e})")
-        return {"author": {"name": "Unknown User"}, "modules": {}}
+        return {"author": {"name": "Unknown User"}}

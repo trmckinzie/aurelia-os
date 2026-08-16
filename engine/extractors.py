@@ -1,8 +1,8 @@
-"""Regex extractors that pull structured card data out of a note's markdown body.
+"""Regex extractors that pull structured card data out of a garden note's markdown body.
 
-Each note type follows its own loose convention of emoji headers and blockquotes
-(NotebookLM export format, protocol checklists, garden-note templates, ...), so
-these stay per-type rather than a single generic parser. The repeated pieces --
+Each garden note type follows its own loose convention of emoji headers and
+blockquotes (NotebookLM export format, daily-log templates, ...), so these
+stay per-type rather than a single generic parser. The repeated pieces --
 stripping rendered wikilink buttons, walking to the next header, pulling out
 linked note titles -- are factored into engine.textutils.
 """
@@ -15,27 +15,6 @@ from engine.textutils import (
     section_after_header,
     strip_html,
 )
-
-
-# --- Protocol extractors ---------------------------------------------------
-
-def extract_protocol_sequence(text):
-    """Extracts the checklist items from a Protocol."""
-    section = section_after_header(text, r'##\s*.*(?:Sequence|Checklist|Steps).*', r'\n##|\n---')
-    if section is None:
-        return []
-
-    matches = re.findall(r'-\s*\[[ x]\]\s*(.*)', section)
-    if not matches:
-        matches = re.findall(r'^\s*[-*]\s+(.*)', section, re.MULTILINE)
-
-    return [m.strip() for m in matches if m.strip()][:6]
-
-
-def extract_protocol_logic(text):
-    """Extracts the logic blockquote."""
-    logic = first_blockquote_after(text, r'##\s*.*System Logic.*')
-    return logic if logic else "Logic not defined."
 
 
 # --- Garden extractors -------------------------------------------------
@@ -145,38 +124,3 @@ def extract_notebooklm_data(text):
             active_features.append(key)
 
     return clean_overview, active_features
-
-
-# --- Project extractors -----------------------------------------------
-
-def extract_mission_brief(body):
-    if "# 🚨 Mission Brief" not in body:
-        return ""
-    part = body.split("# 🚨 Mission Brief")[1]
-    if "\n# " in part:
-        part = part.split("\n# ")[0]
-    clean_lines = [l for l in part.split('\n') if not l.strip().startswith('(') and l.strip()]
-    clean = " ".join(clean_lines)
-    clean = re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
-    return clean[:240] + "..." if len(clean) > 240 else clean
-
-
-def extract_core_logic(body):
-    if "# 🛠️ Architecture" not in body:
-        return ""
-    part = body.split("# 🛠️ Architecture")[1]
-    for line in part.split('\n'):
-        if "**Core Logic:**" in line:
-            clean = line.replace("**Core Logic:**", "").strip()
-            return re.sub(r'\*\*(.*?)\*\*', r'\1', clean)
-    return ""
-
-
-def extract_impact_metrics(body):
-    if "# ⚡ Operational Impact" not in body:
-        return []
-    part = body.split("# ⚡ Operational Impact")[1]
-    if "\n# " in part:
-        part = part.split("\n# ")[0]
-    metrics = re.findall(r'[\-\*]\s*\*\*(.*?)\*\*[:\s]', part)
-    return [m.strip() for m in metrics][:4]

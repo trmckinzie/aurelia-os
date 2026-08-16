@@ -1,4 +1,4 @@
-from engine.cards import generate_garden_card_html, generate_protocol_card, render_items
+from engine.cards import generate_garden_card_html, render_items
 
 
 def test_render_items_joins_rendered_items():
@@ -21,11 +21,3 @@ def test_generate_garden_card_html_contains_title_and_type():
     assert "Some Concept" in html
     assert "CONCEPT" in html
     assert "openNote('note-some-concept')" in html
-
-
-def test_generate_protocol_card_uses_frontmatter_id_not_filename():
-    meta = {"type": "protocol", "tags": []}
-    body = "## Sequence\n- [ ] step one\n## System Logic\n> logic here\n"
-    html = generate_protocol_card(meta, body, "01 Morning Launch", "note-01-morning-launch", p_id_override="PROT_01")
-    assert "PROT_01" in html
-    assert "openNote('PROT_01')" in html
