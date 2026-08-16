@@ -8,7 +8,10 @@
     /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
         background-color: rgba(238, 241, 30, 0.966);
-        color: white; 
+        /* Fixed bright yellow-green regardless of theme (a search-match
+           marker, not a themed surface) -- always needs dark text, not
+           white, which fails contrast against it on any theme (~1.9:1). */
+        color: #1a1a1a;
         font-weight: bold;
         border-radius: 2px;
         padding: 0 2px;
@@ -279,7 +282,7 @@
                     </button>
                 </div>
 
-                <div class="h-6 w-px bg-gray-800 shrink-0"></div>
+                <div class="h-6 w-px bg-aurelia-dim shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
                     <button onclick="setFilter('all', this)" class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all whitespace-nowrap">
@@ -294,7 +297,7 @@
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('source', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Library
                     </button>
 
@@ -306,7 +309,7 @@
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('notebooklm', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-indigo-500 hover:border-indigo-500 hover:bg-indigo-500/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('notebooklm', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         NotebookLM
                     </button>
                 </div>
@@ -325,7 +328,7 @@
 
                 <div class="flex items-center gap-3 border border-aurelia-dim bg-aurelia-bg/50 rounded px-4 py-2 w-full md:w-96">
                     <span class="text-xs opacity-50 font-mono">CMD://</span>
-                    <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-gray-200">
+                    <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -335,8 +338,8 @@
         
         <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-aurelia-dim bg-aurelia-bg h-64">
             <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
-            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
-            <div class="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, #000000 100%) z-10 opacity-50 pointer-events-none"></div>
+            <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.08)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--aurelia-bg-main)_100%)] z-10 opacity-50 pointer-events-none"></div>
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
                 <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]">DIGITAL_GARDEN</h1>
                 <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
@@ -407,10 +410,22 @@
                         {% set folder_icon = "📅" %}
                     {% endif %}
                     
-                    {% if "source" in type %} 
-                        {% set group_color = "text-yellow-400" %} 
-                        {% set group_border = "border-yellow-400" %}
+                    {% if "source" in type %}
+                        {% set group_color = "text-aurelia-highlight" %}
+                        {% set group_border = "border-aurelia-highlight" %}
                         {% set folder_icon = "📚" %}
+                    {% endif %}
+
+                    {% if "notebooklm" in type %}
+                        {% set group_color = "text-aurelia-info" %}
+                        {% set group_border = "border-aurelia-info" %}
+                        {% set folder_icon = "🧬" %}
+                    {% endif %}
+
+                    {% if "discipline" in type %}
+                        {% set group_color = "text-aurelia-accent" %}
+                        {% set group_border = "border-aurelia-accent" %}
+                        {% set folder_icon = "🧠" %}
                     {% endif %}
 
                     {% if "author" in type %} 
@@ -428,7 +443,7 @@
                                 <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type|replace('-', ' ') }}</span>
                             </div>
                             
-                            <div class="h-px bg-gray-800 flex-grow mx-4 opacity-50"></div>
+                            <div class="h-px bg-aurelia-dim flex-grow mx-4 opacity-50"></div>
                             
                             <span class="text-[10px] text-aurelia-muted font-mono border border-aurelia-dim bg-aurelia-bg px-2 py-0.5 rounded">
                                 {{ group|length }} NODES
@@ -475,10 +490,10 @@
                 <div class="flex items-center gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-tertiary"></span>Log</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-400"></span>Source</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-highlight"></span>Source</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-secondary"></span>Author</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-accent"></span>Discipline</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-400"></span>NotebookLM</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-info"></span>NotebookLM</span>
                 </div>
             </div>
             <div id="graph-canvas-wrap" class="relative border border-aurelia-dim bg-aurelia-bg/40 rounded-sm overflow-hidden" style="height: 70vh;">
@@ -698,8 +713,8 @@
                 'bg-aurelia-tertiary/10', 'text-aurelia-tertiary', 'border-aurelia-tertiary',
                 'bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary',
                 'bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent',
-                'bg-yellow-400/10', 'text-yellow-400', 'border-yellow-400',
-                'bg-indigo-400/10', 'text-indigo-400', 'border-indigo-400'
+                'bg-aurelia-highlight/10', 'text-aurelia-highlight', 'border-aurelia-highlight',
+                'bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info'
             );
 
             // Add inactive state
@@ -719,14 +734,13 @@
         if (type === 'daily-bridge') {
             target.classList.add('bg-aurelia-tertiary/10', 'text-aurelia-tertiary', 'border-aurelia-tertiary');
         } else if (type === 'source') {
-            target.classList.add('bg-yellow-400/10', 'text-yellow-400', 'border-yellow-400');
+            target.classList.add('bg-aurelia-highlight/10', 'text-aurelia-highlight', 'border-aurelia-highlight');
         } else if (type === 'author') {
             target.classList.add('bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary');
         } else if (type === 'discipline') {
             target.classList.add('bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent');
         } else if (type === 'notebooklm') {
-            // NEW: Indigo Theme for AI Research
-            target.classList.add('bg-indigo-400/10', 'text-indigo-400', 'border-indigo-400');
+            target.classList.add('bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info');
         } else {
             // Default (All, Concepts) -> Cyan
             target.classList.add('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
@@ -1119,13 +1133,25 @@
     let graphState = null;
     let graphPan = { x: 0, y: 0, scale: 1, dragging: false, lastX: 0, lastY: 0 };
 
-    const GRAPH_TYPE_COLORS = {
-        concept: '#00f2ff', 'daily-bridge': '#ff8c00', log: '#ff8c00',
-        source: '#facc15', author: '#8a2be2', discipline: '#39ff14', notebooklm: '#818cf8',
-    };
-    function graphColorFor(type) {
-        for (const key in GRAPH_TYPE_COLORS) if (type.includes(key)) return GRAPH_TYPE_COLORS[key];
-        return '#6b7280';
+    // Reads live --aurelia-* values rather than hardcoded hex -- same
+    // reasoning as the primary/text reads in drawGraph() below: a fixed
+    // color map would render CYBER_PRIME's neon palette on every theme
+    // regardless of which one is actually active.
+    function graphTypeColors(rootStyle) {
+        const v = (name, fallback) => (rootStyle.getPropertyValue(name).trim() || fallback);
+        return {
+            concept: v('--aurelia-primary', '#00f2ff'),
+            'daily-bridge': v('--aurelia-tertiary', '#ff8c00'),
+            log: v('--aurelia-tertiary', '#ff8c00'),
+            source: v('--aurelia-highlight', '#facc15'),
+            author: v('--aurelia-secondary', '#8a2be2'),
+            discipline: v('--aurelia-accent', '#39ff14'),
+            notebooklm: v('--aurelia-info', '#818cf8'),
+        };
+    }
+    function graphColorFor(type, typeColors, fallback) {
+        for (const key in typeColors) if (type.includes(key)) return typeColors[key];
+        return fallback;
     }
 
     function initGraph() {
@@ -1285,13 +1311,15 @@
         const rootStyle = getComputedStyle(document.documentElement);
         const primaryRgb = (rootStyle.getPropertyValue('--aurelia-primary-rgb').trim() || '0 242 255').replace(/\s+/g, ', ');
         const textRgb = (rootStyle.getPropertyValue('--aurelia-text-main-rgb').trim() || '255 255 255').replace(/\s+/g, ', ');
+        const mutedRgb = (rootStyle.getPropertyValue('--aurelia-text-muted-rgb').trim() || '107 114 128').replace(/\s+/g, ', ');
+        const typeColors = graphTypeColors(rootStyle);
 
         ctx.lineWidth = 1 / graphPan.scale;
         graphState.edges.forEach(e => {
             const s = graphState.byId[e.source], t = graphState.byId[e.target];
             if (!s || !t) return;
             const active = visible.has(s.id) && visible.has(t.id);
-            ctx.strokeStyle = active ? `rgba(${primaryRgb}, 0.25)` : 'rgba(107, 114, 128, 0.08)';
+            ctx.strokeStyle = active ? `rgba(${primaryRgb}, 0.25)` : `rgba(${mutedRgb}, 0.08)`;
             ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(t.x, t.y); ctx.stroke();
         });
 
@@ -1301,7 +1329,7 @@
             ctx.beginPath();
             ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
             ctx.globalAlpha = active ? 1 : 0.3;
-            ctx.fillStyle = active ? graphColorFor(n.type) : '#6b7280';
+            ctx.fillStyle = active ? graphColorFor(n.type, typeColors, `rgb(${mutedRgb})`) : `rgb(${mutedRgb})`;
             ctx.fill();
             ctx.globalAlpha = 1;
 

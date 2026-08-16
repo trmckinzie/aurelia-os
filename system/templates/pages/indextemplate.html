@@ -100,7 +100,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
 
-    <a href="garden.html" class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,242,255,0.15)] hover:border-aurelia-primary/50">
+    <a href="garden.html" class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--aurelia-primary)_15%,transparent)] hover:border-aurelia-primary/50">
         <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
 
         <div class="relative z-10 flex flex-col h-full justify-between">
@@ -134,7 +134,7 @@
         </div>
 
         <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
-            <div class="flex h-2 rounded-full overflow-hidden bg-gray-900 border border-aurelia-dim">
+            <div class="flex h-2 rounded-full overflow-hidden bg-aurelia-surface border border-aurelia-dim">
                 {% if stats.total_notes %}
                 <div class="bg-yellow-500" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
@@ -175,12 +175,12 @@
 </div>
 
     <section class="w-full max-w-[1400px] mx-auto mt-40 relative px-6">
-        <div class="absolute inset-0 bg-[linear-gradient(rgba(0,242,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,242,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
 
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
                 <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
-                <h2 class="text-3xl md:text-5xl font-mono font-black text-aurelia-text tracking-tighter uppercase drop-shadow-[0_0_10px_rgba(0,242,255,0.5)]">
+                <h2 class="text-3xl md:text-5xl font-mono font-black text-aurelia-text tracking-tighter uppercase drop-shadow-[0_0_10px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
                     NEURAL_LOADOUT
                 </h2>
                 <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
@@ -208,8 +208,8 @@
                 </button>
 
                 <div class="flex flex-col items-center gap-2">
-                    <div class="w-24 h-px bg-gray-800 relative">
-                        <div class="absolute inset-0 bg-aurelia-primary w-full animate-pulse shadow-[0_0_8px_#00f2ff]"></div>
+                    <div class="w-24 h-px bg-aurelia-dim relative">
+                        <div class="absolute inset-0 bg-aurelia-primary w-full animate-pulse shadow-[0_0_8px_var(--aurelia-primary)]"></div>
                     </div>
                     <span class="text-[8px] font-mono text-aurelia-primary tracking-[0.2em] uppercase">System_Online</span>
                 </div>
@@ -229,7 +229,7 @@
                 <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
                 
                 <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[linear-gradient(rgba(18,18,18,0.5)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
+                    <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
                     
                     <h3 id="readout-title" class="text-2xl text-aurelia-text font-mono font-bold mb-4 tracking-tight relative z-10 text-shadow-cyan">
                         SYSTEM_READY
@@ -245,7 +245,7 @@
     </section>
 
     <div id="manifesto-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeManifesto()">
-        <div id="manifesto-panel" class="bg-aurelia-bg border border-aurelia-primary/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(0,242,255,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        <div id="manifesto-panel" class="bg-aurelia-bg border border-aurelia-primary/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_color-mix(in_srgb,var(--aurelia-primary)_10%,transparent)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center p-4 border-b border-aurelia-dim bg-aurelia-bg/50">
                 <div class="flex items-center gap-2">
                     <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
@@ -288,7 +288,7 @@
     </div>
 
     <div id="about-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeAbout()">
-        <div id="about-panel" class="bg-aurelia-bg border border-aurelia-accent/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_rgba(57,255,20,0.1)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        <div id="about-panel" class="bg-aurelia-bg border border-aurelia-accent/30 w-full max-w-4xl max-h-[85vh] rounded-lg shadow-[0_0_50px_color-mix(in_srgb,var(--aurelia-accent)_10%,transparent)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
             
             <div class="flex justify-between items-center p-4 border-b border-aurelia-dim bg-aurelia-bg/50">
                 <div class="flex items-center gap-2">
@@ -528,7 +528,7 @@
                         
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_rgba(0,242,255,0.2)] transform group-hover:drop-shadow-[0_0_30px_rgba(0,242,255,0.6)] transition-all duration-500">
+                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_20%,transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_60%,transparent)] transition-all duration-500">
                             ${tech.icon}
                         </div>
                         

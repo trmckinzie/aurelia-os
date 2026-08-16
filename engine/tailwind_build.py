@@ -49,6 +49,8 @@ def generate_config():
         "aurelia-secondary": "secondary",
         "aurelia-tertiary": "tertiary",
         "aurelia-accent": "accent",
+        "aurelia-highlight": "highlight",
+        "aurelia-info": "info",
         "aurelia-cyan": "primary",
         "aurelia-dim": "border-main",
         "aurelia-dark": "bg-main",

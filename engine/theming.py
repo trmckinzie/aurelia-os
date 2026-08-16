@@ -21,6 +21,7 @@ _COLOR_KEYS = [
     "text_main", "text_muted", "text_inverted",
     "border_main", "border_focus",
     "primary", "secondary", "tertiary", "accent",
+    "highlight", "info",
 ]
 
 # Optional per-theme keys and what applies when a theme omits them -- see

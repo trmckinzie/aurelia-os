@@ -58,6 +58,8 @@ THEME_CONFIG = {
             "secondary": "#8a2be2",     # Purple (Creative, Portfolio)
             "tertiary": "#ff8c00",      # Orange (Commerce, Alerts)
             "accent": "#39ff14",        # Green (Success, Terminal)
+            "highlight": "#eab308",     # Yellow (Source/Library card identity)
+            "info": "#6366f1",          # Indigo (NotebookLM/Research card identity)
         },
         "font_mono": "'JetBrains Mono', monospace",
         "rounded": "2px",              # Sharp corners
@@ -107,6 +109,12 @@ THEME_CONFIG = {
             "tertiary": "#6b5947",      # USWDS gold-60 -- a full grade past gold-50's AA
                                         # floor, since it's used as small badge/label text
             "accent": "#005ea2",        # USWDS primary -- the standard gov-site link blue
+            "highlight": "#8a6416",     # Antique brass/gold (Source/Library card identity) --
+                                        # distinct from tertiary's grayer gold-60, dark enough
+                                        # for AA text contrast on the parchment background.
+            "info": "#2f4b6b",          # Deep navy-slate (NotebookLM/Research card identity) --
+                                        # stays in the blue family but reads as its own hue
+                                        # next to primary/accent.
         },
         "font_mono": "'Courier Prime', 'Courier New', monospace",  # Typewriter -- founding-document feel
         "rounded": "8px",              # Softer corners

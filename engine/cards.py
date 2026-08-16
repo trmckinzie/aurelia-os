@@ -112,13 +112,11 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-3 "
                      "transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl "
                      "hover:z-10 group h-full min-h-[240px]")
-    # Overridden below for source/notebooklm: their `color` is a fixed
-    # yellow-500/indigo-500 (kept as-is -- CYBER_PRIME's exact look), but
-    # deriving the type-label's text color from that same literal via
-    # .replace('border-', 'text-') produced near-invisible text on a light
-    # theme (yellow/indigo text has too little contrast against a light
-    # background regardless of theme). The dot/border stay the fixed hue;
-    # only the label text gets a theme-aware color instead.
+    # Overridden below for source/notebooklm: their top-badge label keeps the
+    # exact color CYBER_PRIME always showed (tertiary/orange, primary/cyan)
+    # even though the card's own identity color (highlight/info) differs --
+    # changing it would be a visible CYBER_PRIME regression for no reason,
+    # since the badge text was never derived from the card's border color.
     label_color = None
 
     if "daily" in note_type or "log" in note_type:
@@ -194,7 +192,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         icon = "⚛️"; label = "CONCEPT"
 
     elif "source" in note_type:
-        color = "border-yellow-500"
+        color = "border-aurelia-highlight"
         author, argument, concepts = extract_source_data(body_content)
 
         status = "ARCHIVED"
@@ -208,15 +206,15 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-1.5 py-0.5 border border-yellow-500/40 text-aurelia-muted rounded-sm hover:text-aurelia-tertiary transition-colors", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "text-[9px] font-mono px-1.5 py-0.5 border border-aurelia-highlight/40 text-aurelia-muted rounded-sm hover:text-aurelia-highlight transition-colors", known_ids),
             empty_html='<span class="opacity-30 text-[9px] text-aurelia-muted font-mono">// NO_CONCEPTS_LINKED</span>',
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-3">
 
-            <div class="flex justify-between items-end border-b border-yellow-500/30 pb-2">
-                <span class="text-[10px] font-bold font-mono text-aurelia-tertiary uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
-                <span class="text-[9px] font-bold font-mono text-black bg-yellow-500 px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
+            <div class="flex justify-between items-end border-b border-aurelia-highlight/30 pb-2">
+                <span class="text-[10px] font-bold font-mono text-aurelia-highlight uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
+                <span class="text-[9px] font-bold font-mono text-aurelia-inverted bg-aurelia-highlight px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
             </div>
 
             <div class="mt-1">
@@ -228,7 +226,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             <div class="flex-grow"></div>
 
             <div class="mt-auto">
-                 <span class="text-[9px] font-bold font-mono text-aurelia-tertiary opacity-70 uppercase tracking-widest block mb-1">DERIVED_IDEAS:</span>
+                 <span class="text-[9px] font-bold font-mono text-aurelia-highlight uppercase tracking-widest block mb-1">DERIVED_IDEAS:</span>
                  <div class="flex flex-wrap gap-1.5">
                     {concepts_html}
                  </div>
@@ -323,7 +321,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         icon = "🧠"; label = "FIELD"
 
     elif "notebooklm" in note_type:
-        color = "border-indigo-500"
+        color = "border-aurelia-info"
         overview, active_features = extract_notebooklm_data(body_content)
         overview = truncate(overview, 160)
 
@@ -335,7 +333,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         def render_feature(f):
             return f"""
-                    <div class="flex items-center gap-2 px-2 py-1 bg-indigo-500/10 border border-indigo-500/30 rounded-sm" title="{f.upper()}">
+                    <div class="flex items-center gap-2 px-2 py-1 bg-aurelia-info/10 border border-aurelia-info/30 rounded-sm" title="{f.upper()}">
                         <span class="text-xs">{feature_icons.get(f, "•")}</span>
                         <span class="text-[9px] font-mono text-aurelia-primary font-bold uppercase">{f}</span>
                     </div>
@@ -344,12 +342,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         features_html = render_items(
             active_features,
             render_feature,
-            empty_html='<span class="text-[9px] text-gray-600 font-mono">// NO_MODULES_ONLINE</span>',
+            empty_html='<span class="text-[9px] text-aurelia-muted font-mono">// NO_MODULES_ONLINE</span>',
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
-            <div class="relative pl-4 border-l-4 border-indigo-500">
+            <div class="relative pl-4 border-l-4 border-aurelia-info">
                 <span class="text-[10px] font-bold font-mono text-aurelia-primary tracking-widest block mb-1">:: RESEARCH_SYNTHESIS</span>
                 <p class="text-sm text-aurelia-text font-sans leading-relaxed opacity-95">
                     "{overview}"

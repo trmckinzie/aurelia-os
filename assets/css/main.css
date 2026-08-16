@@ -149,8 +149,24 @@ body {
    gets `none` for both (see engine/theming.py's _DEFAULTS). */
 .glass {
     background: var(--aurelia-glass-bg);
-    border: var(--aurelia-glass-border);
     box-shadow: var(--aurelia-glass-shadow);
+}
+/* The border lives in its own :where() rule, which contributes ZERO
+   specificity -- every .glass card in cards.py also carries an explicit
+   border-aurelia-{color} utility for its type identity (cyan/purple/
+   gold/etc.), and without :where() here, this rule's normal class-level
+   specificity plus its later position in the compiled stylesheet (this
+   file's hand-written CSS is textually after `@tailwind utilities`, so it
+   wins ties) silently overrode every card's border-color AND border-style
+   with this theme's glass default -- on CYBER_PRIME (glass_border: none)
+   that meant `border-style: none`, erasing the colored border entirely;
+   on THE_PATRIOT it meant every card showed the same flat gold border
+   regardless of type. :where(.glass) still supplies width/style/color as
+   a real default for the one card type with no override of its own
+   (border-aurelia-dim), but a type-color utility elsewhere on the same
+   element now always wins. */
+:where(.glass) {
+    border: var(--aurelia-glass-border);
 }
 
 /* The scanline overlay's look is theme-driven too (CYBER_PRIME: a soft
