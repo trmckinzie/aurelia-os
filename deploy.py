@@ -9,7 +9,7 @@ TARGET_DIR_NAME = "Aurelia_Factory_v1"
 TARGET_DIR = os.path.join(SOURCE_DIR, TARGET_DIR_NAME)
 
 # --- 2. THE "WHITE LABEL" IDENTITY ---
-# This config allows the client to toggle modules easily.
+# Ships a Garden + Lobby product -- matches what engine/ actually builds.
 FACTORY_CONFIG = {
     "system_name": "AURELIA // OS",
     "system_version": "v1.0.0 (Factory)",
@@ -32,14 +32,7 @@ FACTORY_CONFIG = {
         { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "Neural Core.", "icon": "💎" },
         { "name": "Zotero", "type": "RESEARCH // CITATION", "desc": "Reference Library.", "icon": "📚" },
         { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Build Engine.", "icon": "🐍" }
-    ],
-    "modules": {
-        "garden": { "enabled": True, "desc": "The main knowledge graph." },
-        "projects": { "enabled": True, "desc": "Active work dossiers." },
-        "protocols": { "enabled": True, "desc": "Standard Operating Procedures." },
-        "notebooklm": { "enabled": True, "desc": "AI Research Synthesis." },
-        "transmissions": { "enabled": False, "desc": "Podcast/Video feed." }
-    }
+    ]
 }
 
 def print_step(msg):
@@ -55,9 +48,6 @@ def create_structure():
         f"{TARGET_DIR}/vault",
         f"{TARGET_DIR}/vault/00_LOBBY",
         f"{TARGET_DIR}/vault/10_GARDEN",
-        f"{TARGET_DIR}/vault/20_PROTOCOL",
-        f"{TARGET_DIR}/vault/30_PROJECTS",
-        f"{TARGET_DIR}/vault/40_TRANSMISSIONS",
         f"{TARGET_DIR}/vault/assets",
         f"{TARGET_DIR}/vault/assets/images",
         f"{TARGET_DIR}/vault/assets/audio",
@@ -140,50 +130,26 @@ def copy_frontend():
 def generate_blueprints():
     print("📝  Generating Blueprint Data...")
 
-    # --- A. DEMO PROJECT ---
-    project_md = """---
-type: project
+    # --- A. DEMO CONCEPT (the simplest garden note type -- a good first example) ---
+    concept_md = """---
+type: concept
 publish: true
-status: active
-role: Lead Researcher
-tech_stack: [Python, AI, Data]
+tags: [onboarding]
 ---
-# 🚨 Mission Brief
-**Objective:** This is a sample project card. Use this to track active research grants, book drafts, or software builds.
+### Definition
+> This is a sample Concept note. Use this note type for definitions, ideas, or
+> terms you want to build a personal glossary of.
 
-# 🛠️ Architecture
-**Core Logic:** The 'Project' card type is designed for high-level overviews.
-- **Status Indicators:** Change 'status: active' to 'archived' in the YAML to change the visual indicator.
-- **Tech Stack:** The tags in the YAML appear as chips on the card.
+**🔗 Related:** Digital Garden, Zettelkasten
 
-# ⚡ Operational Impact
-- **Efficiency:** Centralized tracking.
-- **Visibility:** Public-facing portfolio ready.
+Change `type:` in the frontmatter to switch note types: `concept`, `source`,
+`author`, `discipline`, or `notebooklm` (see the NotebookLM demo below) all
+render as different card layouts on the Garden page automatically.
 """
-    with open(os.path.join(TARGET_DIR, "vault", "30_PROJECTS", "00_Demo_Project.md"), "w", encoding="utf-8") as f:
-        f.write(project_md)
+    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "00_Demo_Concept.md"), "w", encoding="utf-8") as f:
+        f.write(concept_md)
 
-    # --- B. DEMO PROTOCOL ---
-    protocol_md = """---
-type: protocol
-publish: true
-id: PROT_001
-tags: [system, onboarding]
----
-# ⚙️ SYSTEM_ONBOARDING
-## 📋 The Sequence
-- [ ] Install VS Code and Python.
-- [ ] Open 'user_config.json' and update your Bio.
-- [ ] Drop your personal photo into 'assets/images/'.
-- [ ] Run 'python build.py' to deploy the site.
-
-## 🧠 System Logic
-> Protocols are 'Standard Operating Procedures'. Use them to document repeatable workflows (e.g., Grading Process, Grant Submission).
-"""
-    with open(os.path.join(TARGET_DIR, "vault", "20_PROTOCOL", "00_Onboarding.md"), "w", encoding="utf-8") as f:
-        f.write(protocol_md)
-
-    # --- C. DEMO NOTEBOOKLM (With Flashcards & References) ---
+    # --- B. DEMO NOTEBOOKLM (With Flashcards & References) ---
     # First, create the CSV
     csv_data = "Question,Answer\nWhat is NotebookLM?,An AI research assistant by Google.\nHow does Aurelia handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
     with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8") as f:
@@ -244,10 +210,20 @@ def create_readme():
 - `dist/`: Generated output -- this is what you publish/deploy. Rebuilt
   from scratch every time you run `python build.py`; don't edit it by hand.
 
-## 🧩 Modules
-- **Projects:** Place `.md` files in `vault/30_PROJECTS`.
-- **Protocols:** Place `.md` files in `vault/20_PROTOCOL`.
-- **NotebookLM:** Use the `type: notebooklm` frontmatter (see demo).
+## 🧩 Product
+This edition ships two pages: the Lobby (`index.html`) and the Garden
+(`garden.html`), your knowledge base. Every published note in `vault/`
+becomes a card there. Set `type:` in a note's frontmatter to choose its card
+layout:
+- **concept** -- definitions, ideas, terms (see demo)
+- **source** -- books, articles, papers you're drawing on
+- **author** -- profiles of people whose work you cite
+- **discipline** -- fields of study
+- **notebooklm** -- Google NotebookLM exports, with Audio Overview, Flashcard
+  (CSV), and Mind Map support (see demo)
+- anything else (or no `type:` at all) renders as a plain note card
+
+A note only appears on the site once its frontmatter has `publish: true`.
 """
     with open(os.path.join(TARGET_DIR, "README.md"), "w", encoding="utf-8") as f:
         f.write(readme_text)
