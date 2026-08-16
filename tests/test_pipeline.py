@@ -1,50 +1,74 @@
-from engine.pipeline import _build_backlinks_index, _build_lobby_context
+from engine.pipeline import _build_graph_index, _build_link_graph, _build_lobby_context
 
 
-def _card(note_id, title, body):
-    return {"id": note_id, "title": title, "body": body}
+def _card(note_id, title, body, tags=None):
+    return {"id": note_id, "title": title, "body": body, "type": "CONCEPT", "tags": tags or []}
 
 
 def _lobby_card(note_id, title, maturity=""):
     return {"id": note_id, "title": title, "maturity": maturity}
 
 
-def test_backlinks_index_maps_target_to_referencing_notes():
+def test_link_graph_backlinks_maps_target_to_referencing_notes():
     cards = [
         _card("note-a", "A", "links to <button onclick=\"openNote('note-b')\">B</button>"),
         _card("note-b", "B", "no links here"),
         _card("note-c", "C", "also links to <button onclick=\"openNote('note-b')\">B</button>"),
     ]
-    index = _build_backlinks_index(cards)
-    assert index == {"note-b": [{"id": "note-a", "title": "A"}, {"id": "note-c", "title": "C"}]}
+    backlinks, _ = _build_link_graph(cards)
+    assert backlinks == {"note-b": [{"id": "note-a", "title": "A"}, {"id": "note-c", "title": "C"}]}
 
 
-def test_backlinks_index_omits_notes_with_no_incoming_links():
+def test_link_graph_omits_notes_with_no_incoming_links():
     cards = [_card("note-a", "A", "no links"), _card("note-b", "B", "also no links")]
-    assert _build_backlinks_index(cards) == {}
+    backlinks, edges = _build_link_graph(cards)
+    assert backlinks == {}
+    assert edges == []
 
 
-def test_backlinks_index_ignores_self_links():
+def test_link_graph_ignores_self_links():
     cards = [_card("note-a", "A", "links to itself: <button onclick=\"openNote('note-a')\">A</button>")]
-    assert _build_backlinks_index(cards) == {}
+    backlinks, edges = _build_link_graph(cards)
+    assert backlinks == {}
+    assert edges == []
 
 
-def test_backlinks_index_ignores_links_to_unpublished_notes():
+def test_link_graph_ignores_links_to_unpublished_notes():
     # note-ghost isn't in the card list at all (e.g. unpublished or a
-    # scrapped page type), so it can't appear as a backlink target.
+    # scrapped page type), so it can't appear as a backlink target or edge.
     cards = [_card("note-a", "A", "links to <button onclick=\"openNote('note-ghost')\">Ghost</button>")]
-    assert _build_backlinks_index(cards) == {}
+    backlinks, edges = _build_link_graph(cards)
+    assert backlinks == {}
+    assert edges == []
 
 
-def test_backlinks_index_dedupes_multiple_links_from_the_same_note():
+def test_link_graph_dedupes_multiple_links_from_the_same_note():
     cards = [
         _card("note-a", "A", "mentions B twice: "
               "<button onclick=\"openNote('note-b')\">B</button> and again "
               "<button onclick=\"openNote('note-b')\">B</button>"),
         _card("note-b", "B", "no links"),
     ]
-    index = _build_backlinks_index(cards)
-    assert index == {"note-b": [{"id": "note-a", "title": "A"}]}
+    backlinks, edges = _build_link_graph(cards)
+    assert backlinks == {"note-b": [{"id": "note-a", "title": "A"}]}
+    assert edges == [{"source": "note-a", "target": "note-b"}]
+
+
+def test_link_graph_edges_are_deduped_undirected_pairs():
+    # A links to B and B links back to A -- one edge, not two.
+    cards = [
+        _card("note-a", "A", "<button onclick=\"openNote('note-b')\">B</button>"),
+        _card("note-b", "B", "<button onclick=\"openNote('note-a')\">A</button>"),
+    ]
+    _, edges = _build_link_graph(cards)
+    assert edges == [{"source": "note-a", "target": "note-b"}]
+
+
+def test_graph_index_nodes_carry_id_title_type_tags():
+    cards = [_card("note-a", "A", "", tags=["topic/x"])]
+    index = _build_graph_index(cards, edges=[])
+    assert index["nodes"] == [{"id": "note-a", "title": "A", "type": "concept", "tags": ["topic/x"]}]
+    assert index["edges"] == []
 
 
 def test_lobby_context_counts_notes_and_maturity():

@@ -2,7 +2,6 @@
 import os
 import shutil
 import subprocess
-from datetime import date, datetime
 
 from engine.config import OUTPUT_DIR, ROOT_DIR, VAULT_PATH
 
@@ -24,12 +23,6 @@ _AUDIO_CODEC_ARGS = {
     ".m4a": ["-c:a", "aac"],
     ".mp3": ["-c:a", "libmp3lame"],
 }
-
-
-def json_serial(obj):
-    if isinstance(obj, (datetime, date)):
-        return obj.isoformat()
-    raise TypeError("Type %s not serializable" % type(obj))
 
 
 def _compress_audio(src_path, dest_path, ext):

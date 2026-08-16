@@ -171,31 +171,31 @@
                 <div class="h-6 w-px bg-gray-800 shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
-                    <button onclick="setFilter('all')" class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all whitespace-nowrap">
+                    <button onclick="setFilter('all', this)" class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all whitespace-nowrap">
                         All_Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('concept', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('source', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-yellow-400 hover:border-yellow-400 hover:bg-yellow-400/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Library
                     </button>
 
-                    <button onclick="setFilter('author')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('author', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('discipline', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('notebooklm')" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-indigo-500 hover:border-indigo-500 hover:bg-indigo-500/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('notebooklm', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-gray-800 text-gray-500 hover:text-indigo-500 hover:border-indigo-500 hover:bg-indigo-500/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         NotebookLM
                     </button>
                 </div>
@@ -248,6 +248,8 @@
             </div>
             <div id="review-queue-items" class="flex flex-wrap gap-2"></div>
         </div>
+
+        <div id="grid-empty" class="hidden text-center py-20 text-xs font-mono text-gray-600 uppercase tracking-widest">No nodes match the current filter</div>
 
         <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 auto-rows-fr">
             {% for card in cards %}
@@ -379,6 +381,7 @@
                 <div class="max-w-5xl mx-auto px-8 py-12">
                     <div id="modal-content" class="obsidian-reader max-w-3xl mx-auto"></div>
                     <div id="modal-backlinks" class="max-w-3xl mx-auto"></div>
+                    <div id="modal-related" class="max-w-3xl mx-auto"></div>
                 </div>
             </div>
             <div class="px-4 py-2 border-t border-gray-800 bg-[#111111] flex justify-between items-center text-[10px] font-mono text-gray-600">
@@ -405,6 +408,12 @@
     // deduped undirected edges), built at build time in
     // engine/pipeline.py._build_graph_index.
     const GRAPH_INDEX = {{ graph_index | safe }};
+
+    // id -> {id, title, type, tags} for every published note, built once
+    // from GRAPH_INDEX.nodes (already loaded for the graph view) so
+    // "Related by Topic" doesn't need its own separate embedded index.
+    const NODE_BY_ID = {};
+    GRAPH_INDEX.nodes.forEach(n => { NODE_BY_ID[n.id] = n; });
 
     // --- 1. VIEW SWITCHER LOGIC (NEW) ---
     const gridView = document.getElementById('cardGrid');
@@ -518,14 +527,14 @@
         updateGrid();
     }
 
-    function setFilter(type) {
+    function setFilter(type, btn) {
         currentType = type;
-        
+
         // 1. Reset All Buttons
         document.querySelectorAll('.filter-btn').forEach(btn => {
             // Remove generic active styles
             btn.classList.remove('active');
-            
+
             // Remove color-specific active styles (Clean Sweep)
             btn.classList.remove(
                 'bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary',
@@ -541,7 +550,11 @@
         });
 
         // 2. Activate Target Button
-        const target = event.target; // Using the global event object from onclick
+        // btn is passed explicitly from onclick="setFilter(type, this)" --
+        // previously read from the implicit global `event` object, which
+        // only worked because every call site happened to be a live click
+        // and would break if setFilter were ever called programmatically.
+        const target = btn;
         target.classList.remove('border-gray-800', 'text-gray-500');
         target.classList.add('active');
 
@@ -607,14 +620,33 @@
         const counter = document.getElementById('node-count');
         if (counter) counter.innerText = visibleCount;
 
+        const gridEmpty = document.getElementById('grid-empty');
+        if (gridEmpty) gridEmpty.classList.toggle('hidden', visibleCount > 0);
+
         // 4. REFRESH GRAPH DIMMING (if that's the active view)
         if (currentView === 'graph' && graphState && graphState.laidOut) drawGraph();
     }
 
     function graphNodeMatches(node) {
         const typeMatch = (currentType === 'all') || (node.type.includes(currentType));
-        const searchMatch = currentQuery.length === 0 || node.title.toLowerCase().includes(currentQuery);
+        // Graph nodes don't carry full body text (see _build_graph_index's
+        // size-conscious design), so search here matches title + tags
+        // rather than the full-text match the grid/tree get from
+        // data-search -- narrower, but far better than title-only.
+        const haystack = (node.title + ' ' + (node.tags || []).join(' ')).toLowerCase();
+        const searchMatch = currentQuery.length === 0 || haystack.includes(currentQuery);
         return typeMatch && searchMatch;
+    }
+
+    // Shared by navigateNote and openRandomNote -- both need "whatever the
+    // current filter/search leaves visible in the grid," previously
+    // re-queried and re-filtered independently in each place. Deliberately
+    // NOT used by computeReviewQueue: spaced review should scan every note
+    // regardless of the active filter, not just what's currently shown.
+    function getVisibleNoteIds() {
+        return Array.from(document.querySelectorAll('#cardGrid .searchable-item'))
+            .filter(el => el.style.display !== 'none')
+            .map(el => el.dataset.id);
     }
 
     // HELPER: Centralized Logic (The Brain)
@@ -665,6 +697,7 @@
         txt.innerHTML = rawEl.innerHTML;
         modalContent.innerHTML = marked.parse(txt.value, { breaks: true });
         renderBacklinks(noteId);
+        renderRelatedByTopic(noteId);
 
         currentModalNoteId = noteId;
         const wordCount = (modalContent.innerText || '').trim().split(/\s+/).filter(Boolean).length;
@@ -687,10 +720,8 @@
     // supports interleaved review sessions without closing the modal.
     function navigateNote(direction) {
         if (!currentModalNoteId) return;
-        const pool = Array.from(document.querySelectorAll('#cardGrid .searchable-item'))
-            .filter(el => el.style.display !== 'none');
-        if (pool.length === 0) return;
-        const ids = pool.map(el => el.dataset.id);
+        const ids = getVisibleNoteIds();
+        if (ids.length === 0) return;
         let idx = ids.indexOf(currentModalNoteId);
         if (idx === -1) idx = 0;
         idx = (idx + direction + ids.length) % ids.length;
@@ -716,6 +747,48 @@
         `;
     }
 
+    // Implicit connections via shared tags, as opposed to renderBacklinks'
+    // explicit wikilinks -- this is what makes tagging pay compound
+    // interest: an old note becomes newly discoverable the moment a later
+    // note reuses one of its tags, with no manual re-linking required.
+    function renderRelatedByTopic(noteId) {
+        const container = document.getElementById('modal-related');
+        const current = NODE_BY_ID[noteId];
+        // Only "topic/*" tags signal subject matter -- "type/*" and
+        // "status/*" are structural (note type, maturity/reading state) and
+        // would otherwise dominate the overlap score: type/concept and
+        // status/seed alone cover roughly half the vault, which would make
+        // this section mean "other concept notes" instead of "related".
+        const topicTags = current ? (current.tags || []).filter(t => t.startsWith('topic/')) : [];
+        if (topicTags.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        const tagSet = new Set(topicTags);
+
+        const related = Object.values(NODE_BY_ID)
+            .filter(n => n.id !== noteId)
+            .map(n => ({ node: n, shared: (n.tags || []).filter(t => tagSet.has(t)).length }))
+            .filter(r => r.shared > 0)
+            .sort((a, b) => b.shared - a.shared || a.node.title.localeCompare(b.node.title))
+            .slice(0, 5);
+
+        if (related.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = `
+            <div class="mt-6 pt-6 border-t border-gray-800">
+                <span class="text-[10px] font-bold font-mono text-aurelia-accent uppercase tracking-widest block mb-3">✦ Related by Topic</span>
+                <div class="flex flex-wrap gap-2">
+                    ${related.map(r => `
+                    <span onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-sm hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</span>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
     function closeModal() {
         modalBackdrop.classList.add('opacity-0');
         modalPanel.classList.remove('scale-100');
@@ -735,10 +808,9 @@
     // Picks from whatever's currently visible (respects active filter/search),
     // so "surprise me" stays scoped to what you're actually browsing.
     function openRandomNote() {
-        const pool = Array.from(document.querySelectorAll('#cardGrid .searchable-item'))
-            .filter(el => el.style.display !== 'none');
-        if (pool.length === 0) return;
-        pool[Math.floor(Math.random() * pool.length)].click();
+        const ids = getVisibleNoteIds();
+        if (ids.length === 0) return;
+        openNote(ids[Math.floor(Math.random() * ids.length)]);
     }
 
     // --- HASH DEEP-LINKING ---

@@ -91,53 +91,55 @@ def _scan_vault():
 _OPEN_NOTE_RE = re.compile(r"openNote\('([^']+)'\)")
 
 
-def _build_backlinks_index(garden_cards):
-    """Maps note_id -> [{id, title}, ...] for every other garden note whose
-    body links to it -- the reverse of the forward wikilinks already in each
-    note's rendered body. This is what powers the modal's "Referenced By"
-    section (see gardentemplate.html), the core personal-wiki feature of
-    being able to discover a note from what points at it, not just what it
-    points to.
-    """
-    id_to_title = {c['id']: c['title'] for c in garden_cards}
-    backlinks = {c['id']: [] for c in garden_cards}
+def _build_link_graph(garden_cards):
+    """Single pass over every note body extracting openNote() targets, used
+    to derive both the backlinks index and the knowledge-graph edges --
+    these used to be two separate functions each doing their own regex scan
+    and per-source dedup over the same data, which meant a build with N
+    notes paid for that scan twice for no reason.
 
-    for c in garden_cards:
-        targets_seen = set()
-        for target_id in _OPEN_NOTE_RE.findall(c['body']):
-            if target_id == c['id'] or target_id not in backlinks or target_id in targets_seen:
-                continue
-            targets_seen.add(target_id)
-            backlinks[target_id].append({"id": c['id'], "title": id_to_title[c['id']]})
-
-    return {note_id: refs for note_id, refs in backlinks.items() if refs}
-
-
-def _build_graph_index(garden_cards):
-    """Builds the node/edge data for the Garden's knowledge-graph view.
-
-    Deliberately thin (id/title/type per node, deduped undirected edges) --
-    unlike the modal's data-storage blob this gets embedded in every load of
-    garden.html, so it skips full body text (see _build_search_index for the
-    same size-conscious precedent).
+    Returns (backlinks, edges):
+      backlinks: {note_id: [{id, title}, ...]} for every note with at least
+        one incoming link, in referencing order. Powers the modal's
+        "Referenced By" section (gardentemplate.html) -- the core
+        personal-wiki feature of discovering a note from what points at it,
+        not just what it points to.
+      edges: [{source, target}] deduped undirected pairs, feeding the
+        knowledge-graph view.
     """
     known = {c['id'] for c in garden_cards}
-    nodes = [{"id": c['id'], "title": c['title'], "type": c['type'].lower()} for c in garden_cards]
-
+    id_to_title = {c['id']: c['title'] for c in garden_cards}
+    backlinks = {c['id']: [] for c in garden_cards}
     edges = []
     seen_pairs = set()
+
     for c in garden_cards:
         targets_seen = set()
         for target_id in _OPEN_NOTE_RE.findall(c['body']):
             if target_id == c['id'] or target_id not in known or target_id in targets_seen:
                 continue
             targets_seen.add(target_id)
-            pair = tuple(sorted((c['id'], target_id)))
-            if pair in seen_pairs:
-                continue
-            seen_pairs.add(pair)
-            edges.append({"source": pair[0], "target": pair[1]})
+            backlinks[target_id].append({"id": c['id'], "title": id_to_title[c['id']]})
 
+            pair = tuple(sorted((c['id'], target_id)))
+            if pair not in seen_pairs:
+                seen_pairs.add(pair)
+                edges.append({"source": pair[0], "target": pair[1]})
+
+    backlinks = {note_id: refs for note_id, refs in backlinks.items() if refs}
+    return backlinks, edges
+
+
+def _build_graph_index(garden_cards, edges):
+    """Builds the node/edge data for the Garden's knowledge-graph view and
+    the modal's "Related by Topic" section.
+
+    Nodes carry id/title/type/tags -- deliberately still no body text (see
+    _build_search_index for the same size-conscious precedent), but tags
+    are small and let the client compute topic overlap between notes
+    without a second embedded index.
+    """
+    nodes = [{"id": c['id'], "title": c['title'], "type": c['type'].lower(), "tags": c['tags']} for c in garden_cards]
     return {"nodes": nodes, "edges": edges}
 
 
@@ -248,8 +250,9 @@ def build_all():
     master_index = _build_search_index(garden_cards)
     json_index = dumps_for_script_tag(master_index)
 
-    backlinks_json = dumps_for_script_tag(_build_backlinks_index(garden_cards))
-    graph_index = _build_graph_index(garden_cards)
+    backlinks, edges = _build_link_graph(garden_cards)
+    backlinks_json = dumps_for_script_tag(backlinks)
+    graph_index = _build_graph_index(garden_cards, edges)
     graph_json = dumps_for_script_tag(graph_index)
 
     lobby_stats = _build_lobby_context(garden_cards, graph_index)

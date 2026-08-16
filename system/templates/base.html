@@ -29,9 +29,6 @@
 <style>
     /* NAV BAR GLOW UTILITIES */
     .text-shadow-cyan { text-shadow: 0 0 10px {{ theme.colors.primary|replace("'", "") }}80; }
-    .text-shadow-green { text-shadow: 0 0 10px {{ theme.colors.accent|replace("'", "") }}80; }
-    .text-shadow-purple { text-shadow: 0 0 10px {{ theme.colors.secondary|replace("'", "") }}80; }
-    .text-shadow-orange { text-shadow: 0 0 10px {{ theme.colors.tertiary|replace("'", "") }}80; }
     .text-shadow-white { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
     /* GLOBAL RESET */
@@ -142,9 +139,15 @@
 
             </div>
             
-            <button class="md:hidden text-aurelia-text">
+            <button onclick="toggleMobileMenu()" id="mobile-menu-btn" class="md:hidden text-aurelia-text" aria-label="Toggle navigation menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden flex flex-col gap-1 px-6 pb-4 bg-aurelia-bg/95 border-t border-aurelia-border/40">
+            <a href="index.html" class="py-3 {% if active_page == 'index' %}text-aurelia-text{% else %}text-aurelia-muted{% endif %}">00_LOBBY</a>
+            <a href="garden.html" class="py-3 {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">01_GARDEN</a>
+            <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left text-aurelia-muted">🔍 SEARCH // ⌘K</button>
         </div>
     </nav>
 
@@ -190,6 +193,11 @@
     </div>
 
     <script>
+        /* --- MOBILE NAV --- */
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
         /* --- COMMAND PALETTE LOGIC --- */
         // 1. Ingest the Python-generated Index (Safe injection)
         const SYSTEM_INDEX = {{ search_index | safe }}; 
@@ -274,10 +282,11 @@
             // Render List
             cmdResults.innerHTML = results.map((item, index) => {
                 // Color coding based on type
+                // Only SYSTEM (Lobby/Garden) and GARDEN (notes) are ever
+                // indexed -- see engine/pipeline.py._build_search_index.
                 let typeColor = "text-aurelia-muted border-aurelia-border";
-                if(item.type === "PROJECT") typeColor = "text-aurelia-purple border-aurelia-purple/50";
-                if(item.type === "GARDEN" || item.type === "NOTE") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
-                if(item.type === "PROTOCOL") typeColor = "text-aurelia-green border-aurelia-green/50";
+                if(item.type === "GARDEN") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
+                if(item.type === "SYSTEM") typeColor = "text-aurelia-text border-aurelia-text/30";
 
                 return `
                 <a href="${encodeURI(item.url)}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-all border-l-2 border-transparent">

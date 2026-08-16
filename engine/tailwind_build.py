@@ -29,14 +29,13 @@ def generate_config():
         "aurelia-secondary": colors["secondary"],
         "aurelia-tertiary": colors["tertiary"],
         "aurelia-accent": colors["accent"],
-        # Pre-"semantic theme" names still referenced by the footer, the
-        # command palette badges, and status indicators. They were never in
-        # this config (so they've silently rendered with no color at all) --
-        # aliased here to their nearest semantic equivalent instead of left broken.
+        # Pre-"semantic theme" names still used by the nav dot, footer, and
+        # the Garden's atmosphere overlay (border-aurelia-dim, bg-aurelia-dark).
+        # aurelia-orange/green/purple were the same kind of alias but ended up
+        # with zero remaining call sites once the Project/Protocol pages were
+        # deleted (see CLAUDE.md "Recent history") -- removed rather than kept
+        # as unused config.
         "aurelia-cyan": colors["primary"],
-        "aurelia-orange": colors["tertiary"],
-        "aurelia-green": colors["accent"],
-        "aurelia-purple": colors["secondary"],
         "aurelia-dim": colors["border_main"],
         "aurelia-dark": colors["bg_main"],
     }
