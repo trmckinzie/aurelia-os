@@ -201,6 +201,79 @@ THEME_CONFIG = {
         ),
         "scanline_opacity": "0.15",
     },
+
+    # 4. GRIZZ (Dark / Collegiate). Adams State University's official
+    # Grizzlies colors are just two: green (Pantone 3435 C / #00452A) and
+    # white -- confirmed via teamcolorcodes.com and brandcolorcode.com.
+    # #00452A itself is print-dark: at ~0.044 relative luminance it manages
+    # only ~1.8:1 against a near-black background, nowhere near AA's 4.5:1,
+    # because it was never meant to sit on black -- it's a color for print
+    # and jerseys, not on-dark UI text. Rather than use it directly and fail
+    # the brief's own "extremely readable" requirement, the true brand hex
+    # is kept as a decorative anchor (glass_shadow's tint, blended faintly
+    # into the card backgrounds) while every role that doubles as text/link
+    # color is a brighter on-dark tint of the same hue, hand-verified >=4.5:1
+    # against bg_main. True to the brief's four-color limit (green, black,
+    # white, grey) -- no hue outside that family appears anywhere; card
+    # types are told apart by shade/saturation within green and grey rather
+    # than by switching hue, the way a team's own gear stays on-brand while
+    # still varying (jersey green vs. away white vs. helmet steel).
+    "GRIZZ": {
+        "label": "Grizz",
+        "description": "Dark / Collegiate",
+        "colors": {
+            # Base Layer -- true black, not neutral: each layer step blends
+            # a whisper more of the brand green in as surfaces get closer to
+            # the reader (cards, modals), like standing further under
+            # stadium lights.
+            "bg_main": "#0a0d0a",       # Near-black, faint green undertone
+            "bg_layer_1": "#0f1712",    # Pine-black (Cards)
+            "bg_layer_2": "#161f19",    # Deeper pine (Hovers / Modals)
+
+            # Typography -- literal white and black, the two non-green
+            # brand colors, at maximum contrast against each other and the
+            # near-black background.
+            "text_main": "#ffffff",     # White text
+            "text_muted": "#9aa39d",    # Steel-sage gray -- muted but still
+                                        # a comfortable 7.5:1, since "extremely
+                                        # readable" was explicit in the brief
+            "text_inverted": "#000000", # Black text (for buttons on bright bgs)
+
+            # Structure -- a dark green-charcoal hairline; the focus ring
+            # borrows the brightest green so it's unmistakable.
+            "border_main": "#242c26",   # Forest-charcoal border
+            "border_focus": "#4ade80",  # Bright kelly green (keyboard focus ring)
+
+            # Roles -- three greens at different intensities (a bright
+            # signature "Grizzly Green," a deeper "Pine" for emphasis, and
+            # the brightest "Kelly" for success/terminal) plus three grays
+            # (a warm Silver, a cool Gunmetal, and Sage -- a green-gray
+            # hybrid) so every card type is still visually distinct without
+            # ever leaving the green/black/white/grey family.
+            "primary": "#3bb273",       # Grizzly Green (Headings, Key Data)
+            "secondary": "#23945a",     # Deep Pine (Alerts, Emphasis)
+            "tertiary": "#b7bab4",      # Silver (Commerce, Alerts)
+            "accent": "#4ade80",        # Bright Kelly (Success, Terminal)
+            "highlight": "#8a9089",     # Gunmetal (Source/Library card identity)
+            "info": "#7c9484",          # Sage (NotebookLM/Research card identity)
+        },
+        "font_mono": "'Oswald', 'Arial Narrow', sans-serif",  # Condensed collegiate/scoreboard voice
+        "rounded": "4px",              # Clean, structured -- a jersey number plate, not a terminal or a tablet
+        "glass_opacity": "0.75",       # Solid panel, between CYBER_PRIME's glass and the two paper/marble themes
+        "glass_border": "1px solid #1f2e24",
+        # The one place the *true* brand hex (#00452A) appears directly --
+        # a low, wide shadow tinted with the real Pantone 3435 C rather than
+        # a generic black, so cards read as "green-lit" even before you
+        # notice any green text.
+        "glass_shadow": "0 4px 20px -4px rgba(0, 69, 42, 0.35)",
+        # A green sweep-highlight (CYBER_PRIME's own mechanic, re-tinted)
+        # rather than a neutral highlight or hairline texture -- "under the
+        # lights" rather than a neon scan or a paper/stone grain.
+        "scanline_bg": (
+            "linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(59,178,115,0.5) 50%, rgba(0,0,0,0) 100%)"
+        ),
+        "scanline_opacity": "0.12",
+    },
 }
 
 # The default theme: what a first-time visitor sees (before any localStorage
