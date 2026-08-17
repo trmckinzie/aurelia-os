@@ -132,6 +132,75 @@ THEME_CONFIG = {
         ),
         "scanline_opacity": "0.2",
     },
+
+    # 3. THE_STOA (Light / Stoic Greco-Roman + Swiss). Named for the Stoa
+    # Poikile, the painted colonnade in Athens where Zeno of Citium taught --
+    # a word that's simultaneously the origin of "Stoic" and a piece of
+    # classical architecture (a repeating colonnade reads a lot like a
+    # Helvetica grid). The palette is grounded in real pigments/materials of
+    # Greco-Roman antiquity rather than eyeballed "ancient-looking" colors:
+    # Carrara marble (backgrounds), oxidized bronze statuary (primary),
+    # Pompeian/Herculaneum fresco red (secondary), laurel-leaf olive
+    # (tertiary), Tyrian imperial purple -- reserved for emperors and senators
+    # (accent), gold leaf (highlight), and lapis lazuli pigment (info). The
+    # typographic voice is the other half of the brief: Helvetica Neue itself
+    # (or its universal system fallback, Arial -- both ship on effectively
+    # every OS, so this needs no webfont load), in place of every other
+    # theme's monospace "terminal" voice -- cold, rational, grid-precise
+    # Swiss lettering standing in for a colonnade's own discipline. Every
+    # role color is deliberately darkened past a hand-checked WCAG AA
+    # floor (>=4.5:1 against bg_main) since several of them (primary,
+    # highlight) are also used as label/link text, not just decoration.
+    "THE_STOA": {
+        "label": "The Stoa",
+        "description": "Stoic / Helvetic",
+        "colors": {
+            # Base Layer -- Carrara marble, not neutral gray: a warm,
+            # faintly stone-toned white that keeps every text color below
+            # comfortably above AA.
+            "bg_main": "#f3f1ea",       # Marble -- quarried stone, not paper
+            "bg_layer_1": "#fbfaf6",    # Polished marble (Cards)
+            "bg_layer_2": "#e7e3d6",    # Deeper stone (Hovers / Modals)
+
+            # Typography -- ink-black, not a tinted "classical" hue, for the
+            # same reason THE_PATRIOT keeps its body text near-black: a
+            # thematic tint on reading text quietly costs contrast.
+            "text_main": "#1c1b18",     # Carved-inscription black
+            "text_muted": "#6b6a61",    # Weathered stone gray
+            "text_inverted": "#ffffff", # White text (for solid buttons)
+
+            # Structure -- a limestone hairline; the focus ring borrows the
+            # accent purple so it reads as unmistakably "select this," not
+            # just another structural line.
+            "border_main": "#c7c2b0",   # Limestone
+            "border_focus": "#5b3a6b",  # Tyrian purple (keyboard focus ring)
+
+            # Roles -- real antiquity pigments/materials, each hand-darkened
+            # for AA text contrast on the marble background.
+            "primary": "#6b5228",       # Oxidized bronze (Headings, Key Data)
+            "secondary": "#8a3324",     # Pompeian red (Alerts, Emphasis)
+            "tertiary": "#5b6b3f",      # Laurel olive (Commerce, Alerts)
+            "accent": "#5b3a6b",        # Tyrian imperial purple (Success, Terminal)
+            "highlight": "#7a5f1a",     # Gold leaf (Source/Library card identity)
+            "info": "#3d5266",          # Lapis lazuli (NotebookLM/Research card identity)
+        },
+        "font_mono": "'Helvetica Neue', Helvetica, Arial, sans-serif",  # Swiss grid, not typewriter
+        "rounded": "1px",              # Almost square -- architectural, not soft
+        "glass_opacity": "0.96",       # Solid marble-slab look (like Patriot, unlike CYBER_PRIME's glass)
+        # An engraved-tablet look: opaque stone with a limestone hairline
+        # and a warm, low, neutral shadow (not colored/glowing) -- marble
+        # doesn't glow.
+        "glass_border": "1px solid #c7c2b0",
+        "glass_shadow": "0 4px 12px -2px rgba(45, 42, 32, 0.14)",
+        # Fluted-column lines rather than a neon sweep or paper hairlines --
+        # wider-spaced than THE_PATRIOT's texture so the two light themes
+        # don't read as the same surface at a glance.
+        "scanline_bg": (
+            "repeating-linear-gradient(0deg, transparent, transparent 3px, "
+            "#c7c2b0 3px, #c7c2b0 4px)"
+        ),
+        "scanline_opacity": "0.15",
+    },
 }
 
 # The default theme: what a first-time visitor sees (before any localStorage
