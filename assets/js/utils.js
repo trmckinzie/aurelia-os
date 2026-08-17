@@ -5,8 +5,8 @@
  */
 
 // Vault note titles/tags/references end up interpolated into innerHTML
-// strings in a few places (command palette, transmissions sidebar/refs
-// list). Escape them first so a stray "<" in a note can't be read as a tag.
+// strings in a few places (command palette, note modal backlinks/related
+// lists). Escape them first so a stray "<" in a note can't be read as a tag.
 function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'

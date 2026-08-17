@@ -136,9 +136,9 @@
         <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
             <div class="flex h-2 rounded-full overflow-hidden bg-aurelia-surface border border-aurelia-dim">
                 {% if stats.total_notes %}
-                <div class="bg-yellow-500" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-highlight" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
-                <div class="bg-emerald-600" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-secondary" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
                 {% endif %}
             </div>
             <div class="flex justify-between text-[9px] font-mono text-aurelia-muted mt-1.5 uppercase tracking-wider">

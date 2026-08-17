@@ -123,12 +123,12 @@ def _render_audio(path):
     if path.endswith(".wav"):
         mime = "audio/wav"
     return f"""
-<div class="my-6 p-4 border-l-2 border-indigo-500 bg-indigo-500/5 rounded-r-sm">
+<div class="my-6 p-4 border-l-2 border-aurelia-info bg-aurelia-info/5 rounded-r-sm">
 <div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
-<span class="text-[10px] font-mono text-indigo-500 animate-pulse">● LIVE_ASSET</span>
+<span class="text-[10px] font-bold font-mono text-aurelia-info uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
+<span class="text-[10px] font-mono text-aurelia-info animate-pulse">● LIVE_ASSET</span>
 </div>
-<audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity" style="filter: hue-rotate(20deg) invert(0);">
+<audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity">
 <source src="{path}" type="{mime}">
 </audio>
 </div>"""
@@ -136,10 +136,10 @@ def _render_audio(path):
 
 def _render_video(path):
     return f"""
-<div class="my-6 border border-gray-800 rounded-sm overflow-hidden bg-black">
-<div class="p-2 border-b border-gray-800 bg-gray-900/50 flex items-center gap-2">
-<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-<span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">VISUAL_FEED</span>
+<div class="my-6 border border-aurelia-dim rounded-sm overflow-hidden bg-aurelia-bg">
+<div class="p-2 border-b border-aurelia-dim bg-aurelia-card/50 flex items-center gap-2">
+<span class="w-2 h-2 bg-aurelia-info rounded-full animate-pulse"></span>
+<span class="text-[10px] font-mono text-aurelia-muted uppercase tracking-widest">VISUAL_FEED</span>
 </div>
 <video controls class="w-full max-h-[400px]">
 <source src="{path}" type="video/mp4">
@@ -149,9 +149,9 @@ def _render_video(path):
 
 def _render_image(path):
     return f"""
-<div class="my-6 group relative border border-gray-800 rounded-sm overflow-hidden bg-black/50 hover:border-indigo-500/50 transition-colors">
+<div class="my-6 group relative border border-aurelia-dim rounded-sm overflow-hidden bg-aurelia-bg/50 hover:border-aurelia-info/50 transition-colors">
 <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-<a href="{path}" target="_blank" class="px-2 py-1 bg-black/80 text-[10px] font-mono text-white border border-gray-700 rounded hover:bg-indigo-600">ENLARGE</a>
+<a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-dim rounded hover:bg-aurelia-info hover:text-aurelia-inverted">ENLARGE</a>
 </div>
 <img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="NotebookLM Asset">
 </div>"""
@@ -162,7 +162,7 @@ def _render_flashcards(path):
     if not os.path.exists(csv_path):
         csv_path = os.path.join(ROOT_DIR, path)
     if not os.path.exists(csv_path):
-        return f'<div class="text-red-500 font-mono text-xs">⚠️ CSV NOT FOUND: {path}</div>'
+        return f'<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV NOT FOUND: {path}</div>'
 
     cards_html = ""
     try:
@@ -175,25 +175,25 @@ def _render_flashcards(path):
             cards_html += f"""
 <div class="snap-center shrink-0 w-64 h-40 relative group perspective-1000 cursor-pointer" onclick="this.querySelector('.inner-card').classList.toggle('rotate-y-180')">
 <div class="inner-card w-full h-full relative preserve-3d transition-transform duration-500 shadow-lg">
-<div class="absolute inset-0 backface-hidden bg-[#0f0f12] border border-indigo-500/30 p-4 flex flex-col items-center justify-center text-center rounded-sm group-hover:border-indigo-500 transition-colors">
-<span class="text-[9px] font-mono text-indigo-400 uppercase tracking-widest absolute top-2 left-2">Q_NODE // 0{i+1}</span>
-<p class="text-xs font-bold text-white font-sans leading-relaxed">{q}</p>
-<span class="text-[9px] text-gray-600 absolute bottom-2 animate-pulse">TAP TO DECRYPT</span>
+<div class="absolute inset-0 backface-hidden bg-aurelia-card border border-aurelia-info/30 p-4 flex flex-col items-center justify-center text-center rounded-sm group-hover:border-aurelia-info transition-colors">
+<span class="text-[9px] font-mono text-aurelia-info uppercase tracking-widest absolute top-2 left-2">Q_NODE // 0{i+1}</span>
+<p class="text-xs font-bold text-aurelia-text font-sans leading-relaxed">{q}</p>
+<span class="text-[9px] text-aurelia-muted absolute bottom-2 animate-pulse">TAP TO DECRYPT</span>
 </div>
-<div class="absolute inset-0 backface-hidden rotate-y-180 bg-indigo-900/20 border border-indigo-500 p-4 flex flex-col items-center justify-center text-center rounded-sm bg-black">
-<span class="text-[9px] font-mono text-indigo-300 uppercase tracking-widest absolute top-2 left-2">A_DATA</span>
-<p class="text-xs text-gray-200 font-mono leading-relaxed">{a}</p>
+<div class="absolute inset-0 backface-hidden rotate-y-180 bg-aurelia-info/10 border border-aurelia-info p-4 flex flex-col items-center justify-center text-center rounded-sm">
+<span class="text-[9px] font-mono text-aurelia-info uppercase tracking-widest absolute top-2 left-2">A_DATA</span>
+<p class="text-xs text-aurelia-text/80 font-mono leading-relaxed">{a}</p>
 </div>
 </div>
 </div>"""
     except Exception as e:
-        return f'<div class="text-red-500 font-mono text-xs">⚠️ CSV ERROR: {e}</div>'
+        return f'<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV ERROR: {e}</div>'
 
     return f"""
 <div class="my-6">
 <div class="flex items-center gap-2 mb-3">
-<span class="text-[10px] font-bold font-mono text-indigo-400 uppercase tracking-widest">:: MEMORY_BANK_LOADED</span>
-<div class="h-px bg-indigo-500/30 flex-grow"></div>
+<span class="text-[10px] font-bold font-mono text-aurelia-info uppercase tracking-widest">:: MEMORY_BANK_LOADED</span>
+<div class="h-px bg-aurelia-info/30 flex-grow"></div>
 </div>
 <div class="flex gap-4 overflow-x-auto pb-6 pt-2 px-1 snap-x no-scrollbar">
 {cards_html}
