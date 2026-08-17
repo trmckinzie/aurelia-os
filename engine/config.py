@@ -210,69 +210,96 @@ THEME_CONFIG = {
     # because it was never meant to sit on black -- it's a color for print
     # and jerseys, not on-dark UI text. Rather than use it directly and fail
     # the brief's own "extremely readable" requirement, the true brand hex
-    # is kept as a decorative anchor (glass_shadow's tint, blended faintly
-    # into the card backgrounds) while every role that doubles as text/link
-    # color is a brighter on-dark tint of the same hue, hand-verified >=4.5:1
-    # against bg_main. True to the brief's four-color limit (green, black,
-    # white, grey) -- no hue outside that family appears anywhere; card
-    # types are told apart by shade/saturation within green and grey rather
-    # than by switching hue, the way a team's own gear stays on-brand while
-    # still varying (jersey green vs. away white vs. helmet steel).
+    # is kept as a decorative anchor (glass_shadow's tint) while every role
+    # that doubles as text/link color is a brighter on-dark tint of the same
+    # hue, hand-verified >=4.5:1 against bg_main. True to the brief's
+    # four-color limit (green, black, white, grey) -- no hue outside that
+    # family appears anywhere; card types are told apart by shade/saturation
+    # within green and grey rather than by switching hue, the way a team's
+    # own gear stays on-brand while still varying (jersey green vs. away
+    # white vs. helmet steel).
+    #
+    # REVISION: the first pass used a near-black (#0a0d0a) just three RGB
+    # units off CYBER_PRIME's own (#0a0a0b) -- imperceptible side by side --
+    # and reused CYBER_PRIME's own glowing-glass-on-black mechanic (0.6-ish
+    # opacity cards, a soft radial sweep-highlight), just recolored. Two dark
+    # themes sharing an identical ground plane and the same glow-on-glass
+    # visual language will always read as "the same theme, different accent"
+    # no matter how carefully the accent hexes differ -- confirmed correct
+    # in isolation (contrast, cascade, font-loading all checked out) but the
+    # wrong fix, since the actual complaint was that it didn't *feel*
+    # distinct. This pass changes the structural language, not just the
+    # palette: a genuinely dark forest-green ground plane (not a
+    # near-invisible tint), solid opaque panels instead of translucent glass
+    # (a jersey/scoreboard panel, not a neon terminal), and a diagonal
+    # stripe texture (goal-line paint) in place of the soft glow-sweep every
+    # other theme uses.
     "GRIZZ": {
         "label": "Grizz",
         "description": "Dark / Collegiate",
         "colors": {
-            # Base Layer -- true black, not neutral: each layer step blends
-            # a whisper more of the brand green in as surfaces get closer to
-            # the reader (cards, modals), like standing further under
-            # stadium lights.
-            "bg_main": "#0a0d0a",       # Near-black, faint green undertone
-            "bg_layer_1": "#0f1712",    # Pine-black (Cards)
-            "bg_layer_2": "#161f19",    # Deeper pine (Hovers / Modals)
+            # Base Layer -- a genuinely dark FOREST green-black, not a
+            # near-neutral near-black: each layer step gets visibly richer
+            # as surfaces come closer to the reader (cards, modals), like
+            # standing further under stadium lights. Still dark-mode-dark
+            # (bg_main's relative luminance is ~0.008, in the same
+            # near-black band as every other dark UI) but unmistakably
+            # green rather than neutral charcoal.
+            "bg_main": "#031a0d",       # Deep forest-black
+            "bg_layer_1": "#082414",    # Richer forest (Cards)
+            "bg_layer_2": "#0f331d",    # Deepest forest (Hovers / Modals)
 
             # Typography -- literal white and black, the two non-green
             # brand colors, at maximum contrast against each other and the
             # near-black background.
             "text_main": "#ffffff",     # White text
             "text_muted": "#9aa39d",    # Steel-sage gray -- muted but still
-                                        # a comfortable 7.5:1, since "extremely
+                                        # a comfortable 7:1, since "extremely
                                         # readable" was explicit in the brief
             "text_inverted": "#000000", # Black text (for buttons on bright bgs)
 
-            # Structure -- a dark green-charcoal hairline; the focus ring
-            # borrows the brightest green so it's unmistakable.
-            "border_main": "#242c26",   # Forest-charcoal border
+            # Structure -- a genuinely visible forest-steel hairline (not a
+            # near-invisible charcoal-on-charcoal line like CYBER_PRIME's
+            # deliberately borderless look) -- GRIZZ cards are meant to read
+            # as bordered panels, not floating glass. Focus ring borrows the
+            # brightest green so it's unmistakable.
+            "border_main": "#2f4536",   # Forest-steel border
             "border_focus": "#4ade80",  # Bright kelly green (keyboard focus ring)
 
-            # Roles -- three greens at different intensities (a bright
-            # signature "Grizzly Green," a deeper "Pine" for emphasis, and
+            # Roles -- three greens at different intensities (a true
+            # grass/kelly "Grizzly Green," a deeper "Pine" for emphasis, and
             # the brightest "Kelly" for success/terminal) plus three grays
             # (a warm Silver, a cool Gunmetal, and Sage -- a green-gray
             # hybrid) so every card type is still visually distinct without
-            # ever leaving the green/black/white/grey family.
-            "primary": "#3bb273",       # Grizzly Green (Headings, Key Data)
-            "secondary": "#23945a",     # Deep Pine (Alerts, Emphasis)
+            # ever leaving the green/black/white/grey family. Primary is a
+            # true grass green (hue ~132) rather than the first pass's
+            # sea-green (hue ~152), which read closer to CYBER_PRIME's own
+            # cyan than a team green should.
+            "primary": "#22b04c",       # Grizzly Green (Headings, Key Data)
+            "secondary": "#1f9a55",     # Deep Pine (Alerts, Emphasis)
             "tertiary": "#b7bab4",      # Silver (Commerce, Alerts)
             "accent": "#4ade80",        # Bright Kelly (Success, Terminal)
             "highlight": "#8a9089",     # Gunmetal (Source/Library card identity)
             "info": "#7c9484",          # Sage (NotebookLM/Research card identity)
         },
         "font_mono": "'Oswald', 'Arial Narrow', sans-serif",  # Condensed collegiate/scoreboard voice
-        "rounded": "4px",              # Clean, structured -- a jersey number plate, not a terminal or a tablet
-        "glass_opacity": "0.75",       # Solid panel, between CYBER_PRIME's glass and the two paper/marble themes
-        "glass_border": "1px solid #1f2e24",
+        "rounded": "6px",              # Clean, structured -- a jersey number plate, not a terminal or a tablet
+        "glass_opacity": "0.92",       # Solid panel -- a painted jersey surface, not translucent glass
+        "glass_border": "1px solid #2f4536",
         # The one place the *true* brand hex (#00452A) appears directly --
-        # a low, wide shadow tinted with the real Pantone 3435 C rather than
-        # a generic black, so cards read as "green-lit" even before you
-        # notice any green text.
-        "glass_shadow": "0 4px 20px -4px rgba(0, 69, 42, 0.35)",
-        # A green sweep-highlight (CYBER_PRIME's own mechanic, re-tinted)
-        # rather than a neutral highlight or hairline texture -- "under the
-        # lights" rather than a neon scan or a paper/stone grain.
+        # a wide, visible shadow tinted with the real Pantone 3435 C rather
+        # than a generic black, so cards read as "green-lit" even before
+        # you notice any green text.
+        "glass_shadow": "0 6px 24px -4px rgba(0, 69, 42, 0.5)",
+        # Diagonal stripe texture -- goal-line/end-zone paint -- instead of
+        # every other theme's soft radial glow-sweep. Same moving band
+        # (main.css's shared .scanline mechanic), completely different
+        # material: a structured stripe passing through, not a glow.
         "scanline_bg": (
-            "linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(59,178,115,0.5) 50%, rgba(0,0,0,0) 100%)"
+            "repeating-linear-gradient(135deg, transparent, transparent 8px, "
+            "rgba(34, 176, 76, 0.4) 8px, rgba(34, 176, 76, 0.4) 16px)"
         ),
-        "scanline_opacity": "0.12",
+        "scanline_opacity": "0.15",
     },
 }
 
