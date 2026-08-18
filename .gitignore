@@ -24,5 +24,13 @@ tailwind.config.js
 # --- IGNORE SMART CONNECTIONS PLUGIN DATA ---
 **/.smart-env/
 
+# --- IGNORE GIT CREDENTIAL SCRATCH FILES (obsidian-git plugin askpass IPC) ---
+# The plugin writes here when it needs credentials interactively for a git
+# operation -- currently just the empty prompt template, but this is exactly
+# the kind of path that could carry a real token in a future session, so it
+# should never be tracked.
+**/obsidian-git/git_credentials_input
+**/obsidian-git/git_credentials_input.response
+
 # --- IGNORE BUILD ARTIFACTS (CRITICAL) ---
 dist/
