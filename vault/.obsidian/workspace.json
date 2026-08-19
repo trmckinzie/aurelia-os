@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "cc66dd55c1c3498d",
+        "id": "228c12e274c9c064",
         "type": "tabs",
         "children": [
           {
-            "id": "4380f3e3047e442f",
+            "id": "cf57de083964843a",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -190,8 +190,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "45dea2dfef84af12",
+  "active": "cf57de083964843a",
   "lastOpenFiles": [
+    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
+    "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/18_Daily_Readings",
     "Morse Code.md",
     "conflict-files-obsidian-git.md",
@@ -206,7 +208,6 @@
     "10_GARDEN/11_Daily_Bridge/2026-06-19.md",
     "10_GARDEN/11_Daily_Bridge/2026-06-07.md",
     "10_GARDEN/11_Daily_Bridge/2026-05-12.md",
-    "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
     "10_GARDEN/16_NotebookLM/PSYC 414-1 - Cognitive Psychology.md",
     "10_GARDEN/11_Daily_Bridge/2026-04-24.md",
     "2026-05-12.md"
