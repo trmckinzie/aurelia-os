@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "228c12e274c9c064",
+        "id": "edfd9b3b6a6d958c",
         "type": "tabs",
         "children": [
           {
-            "id": "cf57de083964843a",
+            "id": "41e77a02e46a378b",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -37,7 +37,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -190,7 +192,7 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "cf57de083964843a",
+  "active": "41e77a02e46a378b",
   "lastOpenFiles": [
     "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
