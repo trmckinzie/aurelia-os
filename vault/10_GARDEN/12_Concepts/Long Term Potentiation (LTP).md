@@ -2,10 +2,14 @@
 created: 2026-04-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/learning
   - topic/wetware-stack
   - topic/neuroscience
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Long Term Potentiation (LTP)

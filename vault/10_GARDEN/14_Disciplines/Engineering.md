@@ -2,13 +2,16 @@
 created: 2026-02-11
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/engineering
   - topic/systems-engineering
   - topic/systems-theory
-  - topic/systems-thinking
   - topic/design
   - topic/problem-solving
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Engineering

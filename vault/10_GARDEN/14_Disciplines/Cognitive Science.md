@@ -2,10 +2,14 @@
 created: 2026-01-04
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/cognitive-science
   - topic/artificial-intelligence
   - topic/phil-mind
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Cognitive Science

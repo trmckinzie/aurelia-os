@@ -2,11 +2,15 @@
 created: 2025-12-27
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/computation
   - topic/systems
   - topic/learning
-  - status/seed
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Information Retrieval

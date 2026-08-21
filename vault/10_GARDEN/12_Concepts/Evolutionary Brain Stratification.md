@@ -2,10 +2,14 @@
 created: 2026-05-12
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/wetware-stack
   - topic/evolutionary-biology
   - topic/biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Evolutionary Brain Stratification

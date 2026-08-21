@@ -2,10 +2,15 @@
 created: 2026-01-30
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/pragmatism
   - topic/functionalism
   - person/philosopher
   - person/psychologist
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 William James

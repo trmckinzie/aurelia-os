@@ -2,13 +2,17 @@
 created: 2026-01-13
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evolutionary-biology
   - topic/game-theory
   - topic/behavioral-ecology
   - topic/systems
   - topic/biology
   - topic/ethics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Evolutionary Stable Strategy

@@ -2,13 +2,17 @@
 created: 2026-01-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/phil-mind
   - topic/psychology
   - topic/cognitive-science
   - topic/neuroscience
   - topic/consciousness
-publish:
+type: concept
+maturity: seed
+status: active
+publish: false
 ---
 # ⚛️ Mind
 

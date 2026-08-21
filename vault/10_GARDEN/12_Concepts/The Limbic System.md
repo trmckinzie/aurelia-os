@@ -2,10 +2,14 @@
 created: 2026-04-27
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/wetware-stack
   - topic/neuroscience
   - topic/evolutionary-biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ The Limbic System

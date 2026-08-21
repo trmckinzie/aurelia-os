@@ -2,9 +2,13 @@
 created: 2026-01-04
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/evolution
   - topic/biology
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 On the Origin of Species

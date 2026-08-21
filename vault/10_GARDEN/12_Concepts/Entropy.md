@@ -2,11 +2,15 @@
 created: 2026-01-29
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/physics
   - topic/information-processing-theory
   - topic/thermodynamics
   - topic/complexity-theory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Entropy

@@ -2,9 +2,13 @@
 created: 2026-01-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/logic
   - topic/rhetoric
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Reductio Ad Absurdum

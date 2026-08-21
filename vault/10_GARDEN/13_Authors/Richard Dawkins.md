@@ -2,9 +2,14 @@
 created: 2025-12-24
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/biology
   - topic/evolution
   - topic/memetics
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Richard Dawkins

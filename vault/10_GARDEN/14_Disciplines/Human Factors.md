@@ -2,13 +2,17 @@
 created: 2026-01-23
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/psychology
   - topic/ergonomics
   - topic/systems
   - topic/systems-engineering
   - topic/design
   - topic/human-factors
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Human Factors

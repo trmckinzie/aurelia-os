@@ -2,11 +2,15 @@
 created: 2026-03-11
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/learning
   - topic/learning-theory
   - topic/cognitive-science
   - topic/cognitive-psychology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Desirable Difficulty

@@ -1,8 +1,9 @@
 ---
-type: notebooklm
-publish: true
-status: active
+created: 2026-01-16
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
   - topic/political-psychology
@@ -11,8 +12,10 @@ tags:
   - topic/social-psychology
   - topic/evo-psych
   - topic/dual-process-theories
-created: 2026-01-16
-cover_image: ""
+type: notebooklm
+maturity: growing
+status: active
+publish: true
 ---
 ---
 

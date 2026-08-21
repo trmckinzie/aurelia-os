@@ -2,11 +2,15 @@
 created: 2026-03-10
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/neuroanatomy
   - topic/cellular-biology
   - topic/electricity
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Axon

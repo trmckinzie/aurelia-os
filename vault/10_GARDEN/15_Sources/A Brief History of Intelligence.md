@@ -2,10 +2,14 @@
 created: 2026-01-03
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/evo-psych
   - topic/artificial-intelligence
   - topic/cognitive-science
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 A Brief History of Intelligence

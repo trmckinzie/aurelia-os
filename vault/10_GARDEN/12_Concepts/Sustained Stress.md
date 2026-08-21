@@ -2,11 +2,15 @@
 created: 2026-04-26
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/behavioral-endocrinology
   - topic/wetware-stack
   - topic/mental-health
   - topic/health
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Sustained Stress

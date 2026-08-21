@@ -2,11 +2,15 @@
 created: 2026-03-31
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
   - topic/neuroscience
   - topic/perception
   - topic/mental-models
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Visual Imagery

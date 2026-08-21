@@ -2,7 +2,8 @@
 created: 2026-01-26
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/neuroanatomy
   - topic/neuroscience
   - topic/cognitive-neuroscience
@@ -14,6 +15,9 @@ tags:
   - topic/evolution
   - topic/determinism
   - topic/psychology
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Neuroanatomy

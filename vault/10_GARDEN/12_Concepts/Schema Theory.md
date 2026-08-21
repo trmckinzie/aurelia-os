@@ -2,11 +2,15 @@
 created: 2026-04-05
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
   - topic/memory
   - topic/mental-models
-  - topic/learning-science
+  - topic/learning-theory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Schema Theory

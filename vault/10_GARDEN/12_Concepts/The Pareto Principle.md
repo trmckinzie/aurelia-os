@@ -2,10 +2,14 @@
 created: 2026-04-29
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/systems-theory
   - topic/software-stack
   - topic/behavioral-economics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ The Pareto Principle

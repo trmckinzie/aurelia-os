@@ -2,13 +2,17 @@
 created: 2026-03-04
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/phil-mind
   - topic/cognitive-science
   - topic/psychology
   - topic/neuroscience
   - topic/metaphysics
   - topic/consciousness
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Philosophy of Mind

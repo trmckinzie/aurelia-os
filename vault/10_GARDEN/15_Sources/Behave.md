@@ -2,6 +2,8 @@
 created: 2025-12-31
 tags:
   - type/source/book
+  - maturity/growing
+  - status/reading
   - topic/biology
   - topic/systems
   - topic/evo-psych
@@ -12,7 +14,9 @@ tags:
   - topic/neuroscience
   - topic/cognitive-science
   - topic/determinism
-  - status/reading
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 Behave

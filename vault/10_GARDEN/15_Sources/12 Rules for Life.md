@@ -2,12 +2,16 @@
 created: 2025-12-31
 tags:
   - type/source/book
+  - maturity/growing
+  - status/archive
   - topic/mythology
   - topic/logos
   - topic/psychology
   - topic/morality
   - topic/christianity
-  - status/archive
+type: source/book
+maturity: growing
+status: archive
 publish: true
 ---
 # 📖 12 Rules for Life

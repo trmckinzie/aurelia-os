@@ -2,10 +2,14 @@
 created: 2025-12-24
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/evolution
   - topic/memetics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Natural Selection

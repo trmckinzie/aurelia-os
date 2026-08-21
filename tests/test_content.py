@@ -1,4 +1,4 @@
-from engine.content import make_id, parse_body, parse_frontmatter, process_wikilinks
+from engine.content import get_malformed_count, make_id, parse_body, parse_frontmatter, process_wikilinks, reset_malformed_count
 
 
 def test_make_id_slugifies_filename():
@@ -123,6 +123,25 @@ body
     meta = parse_frontmatter(content)
     assert meta["publish"] is False
     assert meta["type"] == "unknown"
+
+
+def test_malformed_frontmatter_increments_shared_counter():
+    # pipeline.py reads this counter to print a build-log summary line when
+    # a bulk vault edit silently drops notes for bad YAML -- see
+    # get_malformed_count/reset_malformed_count in content.py.
+    reset_malformed_count()
+    assert get_malformed_count() == 0
+    parse_frontmatter("---\ncitekey: {{citekey}}\n---\nbody")
+    parse_frontmatter("---\ncitekey: {{citekey}}\n---\nbody")
+    assert get_malformed_count() == 2
+    reset_malformed_count()
+    assert get_malformed_count() == 0
+
+
+def test_well_formed_frontmatter_does_not_increment_counter():
+    reset_malformed_count()
+    parse_frontmatter("---\npublish: true\n---\nbody")
+    assert get_malformed_count() == 0
 
 
 def test_parse_body_returns_content_after_frontmatter():

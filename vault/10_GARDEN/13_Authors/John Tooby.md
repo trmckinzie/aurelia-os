@@ -2,9 +2,14 @@
 created: 2026-04-24
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/evolutionary-biology
   - topic/evolutionary-anthropology
   - topic/wetware-stack
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 John Tooby

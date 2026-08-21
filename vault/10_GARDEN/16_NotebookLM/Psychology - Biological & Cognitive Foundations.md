@@ -1,8 +1,9 @@
 ---
-type: notebooklm
-publish: true
-status: active
+created: 2026-01-16
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
   - topic/evolutionary-biology
@@ -14,8 +15,10 @@ tags:
   - topic/phil-mind
   - topic/psychology
   - topic/history-of-science
-created: 2026-01-16
-cover_image: ""
+type: notebooklm
+maturity: growing
+status: active
+publish: true
 ---
 ---
 

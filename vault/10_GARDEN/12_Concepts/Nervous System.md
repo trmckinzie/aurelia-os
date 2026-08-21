@@ -2,10 +2,14 @@
 created: 2026-01-03
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/biology
   - topic/systems
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Nervous System

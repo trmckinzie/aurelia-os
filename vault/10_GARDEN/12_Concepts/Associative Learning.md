@@ -2,7 +2,8 @@
 created: 2026-01-03
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/learning
   - topic/systems
@@ -14,6 +15,9 @@ tags:
   - topic/adaptation
   - topic/neuroscience
   - topic/cognitive-science
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Associative Learning

@@ -2,12 +2,16 @@
 created: 2026-01-22
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/educational-psychology
   - topic/cognitive-science
   - topic/learning
   - topic/metacognition
   - topic/srl
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Zimmerman's Model of SRL

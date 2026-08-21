@@ -2,12 +2,16 @@
 created: 2026-04-05
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
   - topic/heuristic
   - topic/behavioral-economics
   - topic/decision-making
   - topic/software-stack
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ System 1 vs System 2 (Dual-Process Theory)

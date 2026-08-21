@@ -2,11 +2,15 @@
 created: 2026-01-19
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/biology
   - topic/systems
   - topic/psychophysics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Sensation

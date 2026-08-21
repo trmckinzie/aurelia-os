@@ -1,10 +1,15 @@
 ---
-publish: true
 created: 2025-12-24
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/evolution
+type: concept
+maturity: seed
+status: active
+publish: true
 ---
 # ⚛️ DNA
 

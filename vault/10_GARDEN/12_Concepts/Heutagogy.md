@@ -2,11 +2,15 @@
 created: 2026-01-22
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/educational-psychology
   - topic/learning
   - topic/autodidactism
   - topic/complexity-theory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Heutagogy

@@ -2,10 +2,14 @@
 created: 2026-04-24
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/evolutionary-biology
   - topic/neuroscience
   - topic/wetware-stack
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Evolutionary Biology & Behavioral Endocrinology

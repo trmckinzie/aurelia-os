@@ -37,7 +37,7 @@ In Spring 2025, I was commissioned by **Chris Kam** to investigate strategies fo
 
 * **Module A: AI-Augmented Learning (NotebookLM):** I used NotebookLM not to write, but to *understand*. I uploaded my curated Zotero PDFs to generate **Audio Overviews, Mindmaps, and Flashcards**, allowing me to rapidly synthesize complex literature on Moral Foundations and Group Dynamics.
 
-**Search for "IH-NFC-AP" in the digital garden to access these learning materials**  [[IH-NFC-AP]]
+**Search for "IH-NFC-AP" in the digital garden to access these learning materials**  [[Intellectual Humility, NFC & Affective Polarization]]
 
 * **Module B: Analog Writing (reMarkable 2):** To avoid the temptation of generative AI hallucinations, I wrote the actual manuscript on a **reMarkable 2 Type Folio**. This ensured the cognitive load remained on me, preserving the "human loop" in the creative process.
 

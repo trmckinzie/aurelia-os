@@ -2,11 +2,15 @@
 created: 2026-04-22
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/buddhism
   - topic/phil-mind
   - topic/neuroscience
   - topic/phenomenology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Anatta

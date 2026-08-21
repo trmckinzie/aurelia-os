@@ -2,11 +2,15 @@
 created: 2026-01-08
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/productivity
   - topic/deep-work
   - topic/cognitive-science
   - topic/attention-economy
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Task Switching

@@ -2,12 +2,16 @@
 created: 2026-01-12
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/neuroscience
   - topic/biology
   - topic/anatomy
   - topic/systems
   - topic/cognitive-science
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Neuroscience

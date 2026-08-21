@@ -2,11 +2,15 @@
 created: 2026-01-27
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/biochemistry
   - topic/psychopharmacology
   - topic/mental-health
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neurotransmitters

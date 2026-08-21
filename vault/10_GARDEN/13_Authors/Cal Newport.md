@@ -2,12 +2,17 @@
 created: 2026-01-08
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/productivity
   - topic/computer-science
   - topic/phil-technology
   - topic/career-development
   - topic/focus
   - topic/peak-performance
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Cal Newport

@@ -2,10 +2,14 @@
 created: 2026-04-24
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evolutionary-biology
   - topic/wetware-stack
   - topic/behavioral-economics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Kin Selection

@@ -2,12 +2,16 @@
 created: 2026-01-16
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/computer-science
   - topic/engineering
   - topic/software-engineering
   - topic/systems
   - topic/project-management
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Software Engineering

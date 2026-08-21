@@ -2,10 +2,14 @@
 created: 2026-04-26
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/behavioral-endocrinology
   - topic/evolutionary-biology
   - topic/wetware-stack
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Hormone

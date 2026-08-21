@@ -2,11 +2,15 @@
 created: 2025-12-24
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/biology
   - topic/evolution
   - topic/memetics
   - topic/phil-mind
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 The Selfish Gene

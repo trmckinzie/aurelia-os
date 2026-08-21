@@ -2,10 +2,15 @@
 created: 2026-01-03
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/rationality
   - topic/science
   - topic/enlightenment
+type: concept
+maturity: seed
+status: active
+publish: false
 ---
 # ⚛️ Rationality
 

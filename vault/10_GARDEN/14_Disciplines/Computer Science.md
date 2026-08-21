@@ -2,7 +2,8 @@
 created: 2026-01-23
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/computer-science
   - topic/computation
   - topic/complexity-theory
@@ -10,6 +11,9 @@ tags:
   - topic/mathematics
   - topic/information-processing-theory
   - topic/cognitive-science
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Computer Science

@@ -2,12 +2,17 @@
 created: 2026-01-11
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/social-psychology
   - topic/politics
   - topic/political-psychology
   - topic/moral-psychology
   - topic/morality
   - topic/ethics
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Jonathan Haidt

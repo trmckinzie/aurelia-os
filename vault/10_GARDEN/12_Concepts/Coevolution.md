@@ -2,12 +2,16 @@
 created: 2025-12-27
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/evolution
   - topic/adaptation
   - topic/systems
   - topic/cognitive-science
-  - status/seed
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Coevolution

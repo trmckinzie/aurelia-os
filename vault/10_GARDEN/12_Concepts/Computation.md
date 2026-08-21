@@ -2,12 +2,16 @@
 created: 2026-01-11
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/computer-science
   - topic/systems
   - topic/information-processing-theory
   - topic/logic
   - topic/mathematics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Computation

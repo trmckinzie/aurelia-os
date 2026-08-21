@@ -2,10 +2,14 @@
 created: 2026-04-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/wetware-stack
   - topic/learning
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Long Term Depression (LTD)

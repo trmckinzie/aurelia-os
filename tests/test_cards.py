@@ -64,13 +64,60 @@ def test_concept_card_related_link_is_dimmed_when_target_unpublished():
     assert "Not yet published" in html
 
 
-def test_maturity_badge_shown_for_evergreen_status_tag():
-    meta = {"type": "concept", "tags": ["status/evergreen"]}
+def test_maturity_badge_shown_for_maturity_key():
+    meta = {"type": "concept", "maturity": "evergreen", "tags": []}
     html = generate_garden_card_html(meta, "Some Concept.md", "note-some-concept", "body", "search")
     assert "🌳" in html
 
 
-def test_maturity_badge_absent_without_status_tag():
+def test_maturity_badge_shown_for_maturity_tag_fallback():
+    # No `maturity:` key -- falls back to a maturity/* tag, same precedence
+    # pattern as `type` resolution (key wins, tag is the fallback for notes
+    # edited without it).
+    meta = {"type": "concept", "tags": ["maturity/growing"]}
+    html = generate_garden_card_html(meta, "Some Concept.md", "note-some-concept", "body", "search")
+    assert "🌿" in html
+
+
+def test_maturity_badge_ignores_status_tag():
+    # status/* is the separate lifecycle axis now (active/reading/queued/
+    # archive) -- it must NOT be read as a maturity signal, even though it
+    # used to be, back when the two axes shared one tag namespace.
+    meta = {"type": "concept", "tags": ["status/evergreen"]}
+    html = generate_garden_card_html(meta, "Some Concept.md", "note-some-concept", "body", "search")
+    assert "🌱" not in html and "🌿" not in html and "🌳" not in html
+
+
+def test_maturity_badge_absent_without_maturity_signal():
     meta = {"type": "concept", "tags": ["topic/foo"]}
     html = generate_garden_card_html(meta, "Some Concept.md", "note-some-concept", "body", "search")
     assert "🌱" not in html and "🌿" not in html and "🌳" not in html
+
+
+def test_source_card_status_badge_reads_status_key():
+    meta = {"type": "source", "status": "reading", "tags": []}
+    html = generate_garden_card_html(meta, "A Book.md", "note-a-book", "body", "search")
+    assert ">READING<" in html
+
+
+def test_source_card_status_badge_falls_back_to_status_tag():
+    # No `status:` key -- falls back to a status/* tag, same precedence
+    # pattern as maturity resolution.
+    meta = {"type": "source", "tags": ["status/queued"]}
+    html = generate_garden_card_html(meta, "A Book.md", "note-a-book", "body", "search")
+    assert ">QUEUED<" in html
+
+
+def test_source_card_status_badge_defaults_to_archived():
+    meta = {"type": "source", "tags": []}
+    html = generate_garden_card_html(meta, "A Book.md", "note-a-book", "body", "search")
+    assert ">ARCHIVED<" in html
+
+
+def test_source_card_status_badge_ignores_unrelated_tag_substrings():
+    # Regression guard for the bug this replaced: a tag merely CONTAINING
+    # "reading" or "seed" (e.g. a topic tag) must not flip the badge the way
+    # a naive `"seed" in str(tags)` substring check used to.
+    meta = {"type": "source", "tags": ["topic/reading-list", "topic/seedling"]}
+    html = generate_garden_card_html(meta, "A Book.md", "note-a-book", "body", "search")
+    assert ">ARCHIVED<" in html

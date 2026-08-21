@@ -1,15 +1,18 @@
 ---
-type: notebooklm
-publish: true
-status: active
+created: 2026-04-26
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
   - topic/evolutionary-biology
   - topic/behavioral-economics
   - topic/behavioral-endocrinology
-created: 2026-04-26
-cover_image: ""
+type: notebooklm
+maturity: growing
+status: active
+publish: true
 ---
 ---
 

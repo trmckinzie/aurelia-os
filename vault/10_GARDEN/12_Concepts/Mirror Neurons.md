@@ -2,11 +2,15 @@
 created: 2026-04-15
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/social-cognition
   - topic/motor-learning
   - topic/empathy
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Mirror Neurons

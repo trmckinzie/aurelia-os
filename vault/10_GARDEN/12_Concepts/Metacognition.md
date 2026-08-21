@@ -2,12 +2,16 @@
 created: 2026-04-05
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
-  - topic/learning-science
+  - topic/learning-theory
   - topic/self-regulation
   - topic/srl
   - topic/executive-function
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Metacognition

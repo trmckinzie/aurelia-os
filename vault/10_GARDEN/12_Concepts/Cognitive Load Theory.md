@@ -2,11 +2,15 @@
 created: 2026-04-02
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/cognitive-psychology
   - topic/learning-theory
   - topic/phil-mind
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Cognitive Load Theory

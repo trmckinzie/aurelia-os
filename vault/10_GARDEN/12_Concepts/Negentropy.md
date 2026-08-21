@@ -2,10 +2,14 @@
 created: 2026-01-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/physics
   - topic/systems
-  - information-theory
+  - topic/information-theory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Negentropy

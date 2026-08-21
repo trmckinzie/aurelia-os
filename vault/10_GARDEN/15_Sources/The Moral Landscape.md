@@ -2,10 +2,14 @@
 created: 2026-01-03
 tags:
   - type/source/book
+  - maturity/growing
   - status/archive
   - topic/morality
   - topic/phil-mind
   - topic/rationality
+type: source/book
+maturity: growing
+status: archive
 publish: true
 ---
 # 📖 The Moral Landscape

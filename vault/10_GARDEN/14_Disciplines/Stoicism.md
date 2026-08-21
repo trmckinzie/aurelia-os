@@ -2,11 +2,15 @@
 created: 2026-01-04
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/logos
   - topic/phil-mind
   - topic/philosophy
   - topic/psychology
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🏛️ Stoicism

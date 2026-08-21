@@ -2,12 +2,16 @@
 created: 2026-01-21
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/psychology
   - topic/cognitive-science
   - topic/learning
   - topic/evo-psych
   - topic/phil-mind
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Cognitive Psychology

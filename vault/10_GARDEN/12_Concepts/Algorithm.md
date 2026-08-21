@@ -2,8 +2,11 @@
 created: 2025-12-30
 tags:
   - type/concept
-  - topic/
-  - status/seed
+  - maturity/seed
+  - status/active
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Algorithm

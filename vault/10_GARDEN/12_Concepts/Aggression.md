@@ -2,11 +2,15 @@
 created: 2026-01-13
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evo-psych
   - topic/human-nature
   - topic/ethology
   - topic/social-psychology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Aggression

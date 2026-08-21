@@ -2,10 +2,14 @@
 created: 2025-12-27
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/engineering
   - topic/computation
   - topic/systems
-  - status/seed
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Transistor

@@ -2,10 +2,14 @@
 created: 2026-04-22
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/buddhism
   - topic/wisdom
   - topic/mindfulness
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Impermanence (Annica)

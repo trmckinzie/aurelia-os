@@ -2,13 +2,15 @@
 created: 2026-06-19
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/software-stack
-  - topic/habit-formation
   - topic/habit
   - topic/behavioral-psychology
-  - topic/
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Habit

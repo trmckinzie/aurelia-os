@@ -2,10 +2,14 @@
 created: 2026-01-03
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/systems
   - topic/phil-mind
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Analogy

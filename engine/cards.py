@@ -55,15 +55,26 @@ def link_pill(target_id, label, classes, known_ids):
     return f'<span class="{classes} cursor-default">{label}</span>'
 
 
-def _maturity_slug(tags):
-    """Returns 'seed'/'growing'/'evergreen' from a status/<maturity> tag, or ''.
+def _maturity_slug(meta):
+    """Returns 'seed'/'growing'/'evergreen' for a note, or ''.
+
+    Prefers the frontmatter `maturity:` key (mirroring how `type` resolution
+    prefers its own key -- see generate_garden_card_html), falling back to a
+    `maturity/*` tag for notes edited without the key. This used to read a
+    status/<maturity> tag, back when maturity and lifecycle status shared one
+    tag namespace -- they're now two separate axes (status/* is lifecycle:
+    active/reading/queued/archive; maturity/* is seed/growing/evergreen), so
+    a status/* tag is no longer a maturity signal at all.
 
     Exposed separately from the badge HTML (see _maturity_badge) so the
     client-side review-queue JS in gardentemplate.html can read a note's
     maturity via a data-maturity attribute without re-parsing rendered HTML.
     """
-    for tag in tags or []:
-        if not str(tag).startswith("status/"):
+    slug = str(meta.get("maturity", "")).lower().strip()
+    if slug in _MATURITY_BADGES:
+        return slug
+    for tag in meta.get("tags") or []:
+        if not str(tag).startswith("maturity/"):
             continue
         slug = str(tag).split("/", 1)[1].lower()
         if slug in _MATURITY_BADGES:
@@ -101,7 +112,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         note_type = "daily-bridge"
     meta["type"] = note_type
     title = filename.replace(".md", "").replace("_", " ")
-    maturity_slug = _maturity_slug(meta.get("tags"))
+    maturity_slug = _maturity_slug(meta)
     maturity_html = _maturity_badge(maturity_slug)
     # Space-joined so the client can filter with a plain
     # `dataset.tags.split(' ').includes(tag)` -- powers the Garden's
@@ -195,9 +206,21 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         color = "border-aurelia-highlight"
         author, argument, concepts = extract_source_data(body_content)
 
-        status = "ARCHIVED"
-        if "reading" in str(meta.get("tags")): status = "READING"
-        if "seed" in str(meta.get("tags")): status = "QUEUED"
+        # Reads the lifecycle `status:` key itself (falling back to a
+        # status/* tag, same precedence as _maturity_slug/type resolution),
+        # not a substring test against the tag list rendered to a string --
+        # that used to key "QUEUED" off the same "seed" substring that also
+        # drove maturity. The two are separate axes now: status/* is
+        # lifecycle (active/reading/queued/archive), maturity/* is
+        # seed/growing/evergreen (see _maturity_slug).
+        status_lifecycle = str(meta.get("status", "")).lower().strip()
+        if status_lifecycle not in ("reading", "queued", "archive"):
+            status_lifecycle = ""
+            for tag in meta.get("tags") or []:
+                if str(tag).startswith("status/"):
+                    status_lifecycle = str(tag).split("/", 1)[1].lower()
+                    break
+        status = {"reading": "READING", "queued": "QUEUED", "archive": "ARCHIVED"}.get(status_lifecycle, "ARCHIVED")
 
         argument = truncate(argument, 150)
 

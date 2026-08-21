@@ -2,11 +2,15 @@
 created: 2026-02-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evo-psych
   - topic/cognitive-science
   - topic/modularity
   - topic/adaptationism
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ EPM

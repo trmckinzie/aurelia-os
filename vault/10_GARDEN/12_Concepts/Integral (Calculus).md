@@ -2,11 +2,15 @@
 created: 2026-02-12
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/calculus
   - topic/mathematics
   - topic/accumulation
   - topic/mental-models
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Integral

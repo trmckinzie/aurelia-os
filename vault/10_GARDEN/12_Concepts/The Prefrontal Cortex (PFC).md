@@ -2,10 +2,14 @@
 created: 2026-04-24
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/wetware-stack
   - topic/evolutionary-biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ The Prefrontal Cortex (PFC)

@@ -2,12 +2,16 @@
 created: 2026-01-16
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/computer-science
   - topic/programming-languages
   - topic/programming
   - topic/software-engineering
   - topic/career-development
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Coding Languages

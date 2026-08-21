@@ -2,12 +2,15 @@
 created: 2026-01-23
 tags:
   - type/discipline
-  - status/evergreen
-  - topic/
+  - maturity/evergreen
+  - status/active
   - topic/computer-science
   - topic/cognitive-science
   - topic/machine-learning
   - topic/artificial-intelligence
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Artificial Intelligence

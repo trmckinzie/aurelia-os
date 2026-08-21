@@ -2,11 +2,15 @@
 created: 2025-12-30
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/psychology
   - topic/evo-psych
   - topic/cognitive-science
   - topic/computation
-  - status/seed
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Heuristic

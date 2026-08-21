@@ -2,7 +2,8 @@
 created: 2026-02-23
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/cognitive-psychology
   - topic/neuroscience
@@ -13,6 +14,9 @@ tags:
   - topic/anthropology
   - topic/psychology
   - topic/history-of-science
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ The Cognitive Revolution

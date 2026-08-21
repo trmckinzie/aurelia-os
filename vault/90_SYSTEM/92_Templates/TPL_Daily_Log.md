@@ -2,9 +2,13 @@
 created: <% tp.date.now("YYYY-MM-DD") %>
 tags:
   - type/daily-bridge
+  - maturity/seed
   - status/active
-  - topic
-publish:
+  # - topic/example (add one or more)
+type: daily-bridge
+maturity: seed
+status: active
+publish: false
 ---
 # 📅 [[<% tp.date.now("YYYY-MM-DD") %>]]
 

@@ -2,7 +2,11 @@
 created: 2026-05-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Dopamine (Reward Prediction Error)

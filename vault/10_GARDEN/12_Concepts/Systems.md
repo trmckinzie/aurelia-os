@@ -2,7 +2,8 @@
 created: 2026-01-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/systems
   - topic/systems-engineering
   - topic/systems-theory
@@ -10,6 +11,9 @@ tags:
   - topic/philosophy
   - topic/engineering
   - topic/cybernetics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Systems

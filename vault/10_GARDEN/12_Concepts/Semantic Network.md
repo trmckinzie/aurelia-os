@@ -2,10 +2,14 @@
 created: 2026-01-08
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/artificial-intelligence
   - topic/cognitive-science
   - topic/knowledge-management
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Semantic Network

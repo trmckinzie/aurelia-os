@@ -1,8 +1,9 @@
 ---
-type: notebooklm
-publish: true
-status: active
+created: 2026-01-16
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
   - topic/computer-science
@@ -12,8 +13,10 @@ tags:
   - topic/programming-languages
   - topic/phil-mind
   - topic/artificial-intelligence
-created: 2026-01-16
-cover_image: ""
+type: notebooklm
+maturity: growing
+status: active
+publish: true
 ---
 ---
 

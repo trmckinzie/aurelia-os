@@ -2,10 +2,14 @@
 created: 2026-01-02
 tags:
   - type/source/book
-  - topic/spirtuality
+  - maturity/growing
+  - status/reading
+  - topic/spirituality
   - topic/meditation
   - topic/neuroscience
-  - status/reading
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 Waking Up

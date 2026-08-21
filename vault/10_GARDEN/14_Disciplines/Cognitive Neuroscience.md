@@ -2,13 +2,17 @@
 created: 2026-01-23
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/cognitive-science
   - topic/cognitive-neuroscience
   - topic/psychology
   - topic/neuroscience
   - topic/neuroanatomy
   - topic/research-methods
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Cognitive Neuroscience

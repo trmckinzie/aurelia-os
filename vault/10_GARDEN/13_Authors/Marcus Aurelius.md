@@ -2,10 +2,15 @@
 created: 2026-01-03
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/stoicism
   - topic/logos
   - topic/morality
-  - topic/spirtuality
+  - topic/spirituality
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Marcus Aurelius

@@ -2,8 +2,11 @@
 created: 2026-01-08
 tags:
   - type/concept
-  - status/seed
-  - topic/
+  - maturity/seed
+  - status/active
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Semantics

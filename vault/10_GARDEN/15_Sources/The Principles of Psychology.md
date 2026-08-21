@@ -2,11 +2,15 @@
 created: 2026-01-30
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/psychology
   - topic/phil-mind
   - topic/functionalism
   - topic/consciousness
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 The Principles of Psychology

@@ -2,14 +2,19 @@
 created: 2026-01-02
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/morality
   - topic/evo-psych
   - topic/evolution
-  - topic/spirtuality
+  - topic/spirituality
   - topic/meditation
   - topic/determinism
   - topic/neuroscience
   - topic/phil-mind
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Sam Harris

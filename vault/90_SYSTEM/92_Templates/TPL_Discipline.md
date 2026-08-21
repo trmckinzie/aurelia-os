@@ -2,9 +2,13 @@
 created: <% tp.date.now("YYYY-MM-DD") %>
 tags:
   - type/discipline
-  - topic/
-  - status/evergreen
-publish:
+  - maturity/evergreen
+  - status/active
+  # - topic/example (add one or more)
+type: discipline
+maturity: evergreen
+status: active
+publish: false
 ---
 # 🧠 <% tp.file.title %>
 

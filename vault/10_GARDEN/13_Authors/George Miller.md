@@ -2,10 +2,15 @@
 created: 2026-02-23
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - person/psychologist
   - topic/cognitive-science
   - topic/information-processing-theory
   - topic/memory
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 George Miller

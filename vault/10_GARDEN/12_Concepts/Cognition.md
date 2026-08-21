@@ -2,7 +2,8 @@
 created: 2026-01-06
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/computer-science
   - topic/systems
   - topic/simulation
@@ -10,6 +11,9 @@ tags:
   - topic/cognitive-science
   - topic/phil-mind
   - topic/artificial-intelligence
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Cognition

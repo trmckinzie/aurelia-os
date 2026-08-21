@@ -2,12 +2,16 @@
 created: 2026-05-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/wetware-stack
   - topic/neuroscience
   - topic/neuroplasticity
   - topic/neuroanatomy
   - topic/biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neurogenesis

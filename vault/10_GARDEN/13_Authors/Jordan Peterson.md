@@ -2,11 +2,16 @@
 created: 2025-12-31
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/psychology
   - topic/mythology
   - topic/christianity
   - topic/logos
   - topic/morality
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Jordan Peterson

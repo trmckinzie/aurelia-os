@@ -2,11 +2,15 @@
 created: 2026-02-21
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/perception
   - topic/memory
   - topic/heuristic
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Pattern Recognition

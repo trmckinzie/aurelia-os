@@ -1,14 +1,17 @@
 ---
-type: notebooklm
-publish: true
-status: active
+created: 2026-01-16
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
   - topic/cognitive-psychology
   - topic/cognitive-science
-created: 2026-01-16
-cover_image: ""
+type: notebooklm
+maturity: growing
+status: active
+publish: true
 ---
 ---
 

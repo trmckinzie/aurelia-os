@@ -2,6 +2,7 @@
 created: 2025-12-24
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/language
   - topic/evo-psych
@@ -12,6 +13,9 @@ tags:
   - topic/phil-mind
   - topic/naturalism
   - topic/learning
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 The Blank Slate

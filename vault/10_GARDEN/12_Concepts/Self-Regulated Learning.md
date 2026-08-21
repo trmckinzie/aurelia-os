@@ -2,14 +2,18 @@
 created: 2026-01-22
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/learning
   - topic/systems
   - topic/psychology
   - topic/metacognition
   - topic/educational-psychology
-  - Research
+  - topic/research
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Self-Regulated Learning

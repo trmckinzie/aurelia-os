@@ -2,11 +2,15 @@
 created: 2026-03-10
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/learning
   - topic/neuroplasticity
   - topic/learning-theory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Hebbian Learning

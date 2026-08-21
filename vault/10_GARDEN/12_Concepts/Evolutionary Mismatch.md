@@ -2,11 +2,15 @@
 created: 2026-04-24
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evolutionary-biology
   - topic/wetware-stack
-  - topic/evolutionary-psychology
+  - topic/evo-psych
   - topic/cognitive-psychology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Evolutionary Mismatch

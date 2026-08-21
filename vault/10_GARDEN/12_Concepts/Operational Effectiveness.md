@@ -2,9 +2,12 @@
 created: 2026-02-11
 tags:
   - type/concept
-  - topic/
-  - status/seed
-publish:
+  - maturity/seed
+  - status/active
+type: concept
+maturity: seed
+status: active
+publish: false
 ---
 # ⚛️ Operational Effectiveness
 

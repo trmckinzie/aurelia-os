@@ -2,11 +2,15 @@
 created: 2026-01-11
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/systems
   - topic/control-theory
   - topic/information-processing-theory
   - topic/history-of-science
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # ⚙️ Cybernetics

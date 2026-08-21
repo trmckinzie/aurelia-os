@@ -2,11 +2,15 @@
 created: 2026-01-03
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/phil-mind
   - topic/stoicism
   - topic/morality
   - topic/logos
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 Meditations

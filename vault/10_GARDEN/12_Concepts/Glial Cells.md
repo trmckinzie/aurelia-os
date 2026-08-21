@@ -2,13 +2,17 @@
 created: 2026-03-10
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroanatomy
   - topic/neuroscience
   - topic/anatomy
   - topic/biology
   - topic/cellular-biology
   - topic/neuroplasticity
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Glial Cells

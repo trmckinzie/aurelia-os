@@ -2,11 +2,15 @@
 created: 2026-03-10
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cellular-biology
   - topic/neuroscience
   - topic/neuroanatomy
   - topic/learning
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Dendrite

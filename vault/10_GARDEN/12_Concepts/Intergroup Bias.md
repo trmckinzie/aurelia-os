@@ -2,7 +2,11 @@
 created: 2026-01-27
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Intergroup Bias

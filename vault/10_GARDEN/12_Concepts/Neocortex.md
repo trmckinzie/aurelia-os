@@ -2,11 +2,15 @@
 created: 2026-01-12
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/learning
   - topic/phil-mind
   - topic/cognitive-science
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neocortex

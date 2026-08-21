@@ -2,13 +2,17 @@
 created: 2026-02-04
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/evo-psych
   - topic/biology
   - topic/evolutionary-biology
   - topic/evolution
   - topic/anthropology
   - topic/human-nature
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Evolutionary Psychology
@@ -47,4 +51,4 @@ publish: true
 - The Rapid Evolution Debate:_ Have we evolved significantly _since_ the Stone Age? (e.g., Lactose tolerance evolved in just a few thousand years). Are we more "modern" than Evo Psych admits?
 
 
-Notebook LM --> [[Evolutionary Psychology NB]]
+Notebook LM --> [[Evolutionary Psychology (NotebookLM)]]

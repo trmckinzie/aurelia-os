@@ -2,12 +2,16 @@
 created: 2026-01-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evolutionary-biology
   - topic/genetics
   - topic/population-genetics
   - topic/biodiversity
-publish:
+type: concept
+maturity: seed
+status: active
+publish: false
 ---
 # ⚛️ Genetic Variation
 

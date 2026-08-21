@@ -2,8 +2,11 @@
 created: 2025-12-27
 tags:
   - type/discipline
-  - topic/
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧬 Evolutionary Biology

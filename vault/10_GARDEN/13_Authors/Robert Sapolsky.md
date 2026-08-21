@@ -2,6 +2,8 @@
 created: 2025-12-31
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/biology
   - topic/systems
   - topic/evolution
@@ -9,6 +11,9 @@ tags:
   - topic/phil-mind
   - topic/neuroscience
   - topic/determinism
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Robert Sapolsky

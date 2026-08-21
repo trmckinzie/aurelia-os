@@ -2,12 +2,15 @@
 created: 2026-04-23
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
-  - topic/learning-science
+  - topic/learning-theory
   - topic/biology
   - topic/habit
-  - topic/habit-formation
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neuroplasticity

@@ -2,12 +2,16 @@
 created: 2026-02-21
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-science
   - topic/cognitive-psychology
   - topic/psychology
   - topic/executive-function
   - topic/memory
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Working Memory

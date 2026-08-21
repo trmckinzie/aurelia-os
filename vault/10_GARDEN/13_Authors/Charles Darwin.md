@@ -2,10 +2,15 @@
 created: 2026-01-04
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/evolution
   - topic/biology
   - topic/adaptation
   - topic/naturalism
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Charles Darwin

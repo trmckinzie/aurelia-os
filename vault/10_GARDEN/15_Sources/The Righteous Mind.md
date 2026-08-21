@@ -2,12 +2,16 @@
 created: 2026-01-11
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/morality
   - topic/moral-psychology
   - topic/politics
   - topic/political-phil
   - topic/political-psychology
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 The Righteous Mind

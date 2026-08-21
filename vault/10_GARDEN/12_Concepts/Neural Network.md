@@ -2,11 +2,15 @@
 created: 2026-04-23
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/systems-theory
-  - topic/information-processing
+  - topic/information-processing-theory
   - topic/artificial-intelligence
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neural Network (Biological)

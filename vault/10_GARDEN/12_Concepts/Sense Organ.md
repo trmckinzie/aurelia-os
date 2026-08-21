@@ -2,11 +2,15 @@
 created: 2025-12-31
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/sensory-systems
   - topic/neuroscience
   - topic/neuroanatomy
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Sense Organ

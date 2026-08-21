@@ -2,12 +2,16 @@
 created: 2026-04-15
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
   - topic/phil-mind
   - topic/cognitive-science
   - topic/psychology
   - topic/metacognition
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Self-Consciousness

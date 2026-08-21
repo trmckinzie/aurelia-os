@@ -2,10 +2,14 @@
 created: 2026-01-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/cognitive-science
   - topic/biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Action Potential

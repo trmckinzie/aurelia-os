@@ -2,11 +2,15 @@
 created: 2025-12-27
 tags:
   - type/concept
+  - maturity/growing
+  - status/active
   - topic/biology
   - topic/naturalism
   - topic/evolution
   - topic/phil-mind
-  - status/sapling
+type: concept
+maturity: growing
+status: active
 publish: true
 ---
 # ⚛️ Evolution

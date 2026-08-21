@@ -15,6 +15,23 @@ def make_id(text):
     return f"note-{slug}"
 
 
+# Counts notes skipped for malformed YAML frontmatter (see the except branch
+# in parse_frontmatter below). The per-note console warning is easy to miss
+# in build output; pipeline.py reads this via get_malformed_count() to print
+# a build-log summary line instead, so a bulk vault edit that breaks YAML
+# somewhere surfaces loudly rather than only as a scroll-back warning.
+_malformed_count = 0
+
+
+def get_malformed_count():
+    return _malformed_count
+
+
+def reset_malformed_count():
+    global _malformed_count
+    _malformed_count = 0
+
+
 def parse_frontmatter(content):
     """Parses the YAML frontmatter block of a note into a metadata dict.
 
@@ -35,6 +52,8 @@ def parse_frontmatter(content):
     except yaml.YAMLError as e:
         # Templater note templates often contain unfilled {{placeholder}} syntax
         # that isn't valid YAML; treat them as unpublished rather than crashing.
+        global _malformed_count
+        _malformed_count += 1
         print(f"   ⚠️  Skipping malformed frontmatter: {str(e).splitlines()[0]}")
         return meta
 

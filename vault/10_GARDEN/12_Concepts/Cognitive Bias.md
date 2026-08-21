@@ -2,11 +2,15 @@
 created: 2026-04-13
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/behavioral-economics
   - topic/cognitive-psychology
   - topic/decision-making
-  - topic/evolutionary-psychology
+  - topic/evo-psych
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Cognitive Bias

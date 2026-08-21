@@ -1,13 +1,15 @@
 ---
-type: notebooklm
-publish: false
-status: active
+created: <% tp.date.now("YYYY-MM-DD") %>
 tags:
+  - type/notebooklm
+  - maturity/growing
+  - status/active
   - topic/research
   - source/notebooklm
-created: 2026-01-16
-cover_image: ""
----
+type: notebooklm
+maturity: growing
+status: active
+publish: false
 ---
 
 # 📚 Lit Review Overview

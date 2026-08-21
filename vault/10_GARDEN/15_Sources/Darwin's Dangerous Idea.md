@@ -2,12 +2,16 @@
 created: 2025-12-24
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/biology
   - topic/evolution
   - topic/memetics
   - topic/phil-mind
   - topic/cognitive-science
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 Darwin's Dangerous Idea

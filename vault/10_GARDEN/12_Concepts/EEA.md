@@ -2,11 +2,15 @@
 created: 2026-01-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/evolution
   - topic/evo-psych
   - topic/anthropology
   - topic/human-nature
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ EEA

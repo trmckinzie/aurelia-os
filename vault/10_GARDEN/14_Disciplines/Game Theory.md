@@ -2,13 +2,17 @@
 created: 2026-01-13
 tags:
   - type/discipline
-  - status/evergreen
+  - maturity/evergreen
+  - status/active
   - topic/evolution
   - topic/systems
   - topic/game-theory
   - topic/economics
   - topic/strategy
   - topic/evolutionary-biology
+type: discipline
+maturity: evergreen
+status: active
 publish: true
 ---
 # 🧠 Game Theory

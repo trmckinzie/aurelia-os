@@ -2,11 +2,15 @@
 created: 2025-12-24
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/learning
   - topic/cognitive-science
   - topic/phil-mind
   - topic/memetics
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 [[Intuition Pumps and Other Tools for Thinking]]

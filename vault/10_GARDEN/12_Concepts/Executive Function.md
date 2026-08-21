@@ -2,10 +2,14 @@
 created: 2026-04-26
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/cognitive-psychology
   - topic/wetware-stack
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Executive Function

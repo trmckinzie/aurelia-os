@@ -2,9 +2,14 @@
 created: 2025-12-24
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/phil-mind
   - topic/cognitive-science
   - topic/evolution
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Daniel Dennett

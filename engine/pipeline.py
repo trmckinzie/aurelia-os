@@ -11,7 +11,15 @@ from collections import Counter
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env, load_user_config
-from engine.content import make_id, parse_body, parse_frontmatter, process_notebooklm_media, process_wikilinks
+from engine.content import (
+    get_malformed_count,
+    make_id,
+    parse_body,
+    parse_frontmatter,
+    process_notebooklm_media,
+    process_wikilinks,
+    reset_malformed_count,
+)
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_themes, default_theme_slug, generate_theme_css
@@ -26,6 +34,7 @@ def _scan_vault():
     Related/Concepts/Key Works pill would have no way to know whether its
     target is real -- see cards.link_pill().
     """
+    reset_malformed_count()
     pending = []
 
     for root, _, files in os.walk(VAULT_PATH):
@@ -86,7 +95,7 @@ def _scan_vault():
             "link": f"garden.html#{p['note_id']}",
             "type": str(p["meta"].get("type", "NOTE")).upper(),
             "tags": p["meta"].get("tags", []),
-            "maturity": cards._maturity_slug(p["meta"].get("tags")),
+            "maturity": cards._maturity_slug(p["meta"]),
             "desc": p["full_search_text"],
         })
 
@@ -253,6 +262,13 @@ def build_all():
     garden_cards.sort(key=lambda x: x['title'].lower())
 
     print(f"   + Indexing: {len(garden_cards)} Notes")
+    malformed = get_malformed_count()
+    if malformed:
+        # Loud on purpose: a bulk vault edit (e.g. a frontmatter migration)
+        # that breaks YAML somewhere silently drops that note from the site
+        # with nothing but the per-note warning above -- easy to miss in
+        # scroll-back. This line is the summary a human will actually see.
+        print(f"   ⚠️  {malformed} note(s) skipped for malformed frontmatter -- see warnings above")
 
     master_index = _build_search_index(garden_cards)
     json_index = dumps_for_script_tag(master_index)

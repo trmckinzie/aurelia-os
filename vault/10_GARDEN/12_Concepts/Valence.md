@@ -2,12 +2,17 @@
 created: 2025-12-31
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/systems
   - topic/adaptation
   - topic/cognitive-science
   - topic/computation
   - topic/learning
   - topic/phil-mind
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Valence

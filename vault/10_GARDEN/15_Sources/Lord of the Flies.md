@@ -2,11 +2,15 @@
 created: 2026-01-11
 tags:
   - type/source/book
+  - maturity/growing
   - status/reading
   - topic/literature
   - topic/allegory
   - topic/human-nature
   - topic/political-phil
+type: source/book
+maturity: growing
+status: reading
 publish: true
 ---
 # 📖 Lord of the Flies

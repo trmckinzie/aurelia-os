@@ -2,7 +2,8 @@
 created: 2026-01-26
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroanatomy
   - topic/neuroscience
   - topic/cognitive-neuroscience
@@ -10,6 +11,9 @@ tags:
   - topic/psychology
   - topic/cellular-biology
   - topic/pharmacology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Synapse

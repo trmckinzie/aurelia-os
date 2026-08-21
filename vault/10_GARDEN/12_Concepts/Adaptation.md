@@ -2,11 +2,15 @@
 created: 2026-01-03
 tags:
   - type/concept
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/systems
   - topic/evolution
   - topic/adaptation
-  - status/seed
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Adaptation

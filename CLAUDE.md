@@ -161,12 +161,21 @@ time (see `tailwind_build.py` above). The color palette (`aurelia-bg`, `aurelia-
 ### Content model (vault conventions)
 
 Garden note types are set via YAML frontmatter `type:` (or a `type/xxx` tag as fallback) and a note
-only publishes with `publish: true`. Types: `concept`, `source`, `author`, `discipline`,
+only publishes with `publish: true`. Types: `concept`, `source/book`, `author`, `discipline`,
 `notebooklm`, daily logs (detected by a `YYYY-MM-DD`-shaped filename, or `type: daily-bridge`/`log`),
 and anything else falls through to a generic card. Templater templates for each type live in
-`vault/90_SYSTEM/92_Templates/`. Notes are also tagged `status/seed|growing|evergreen` (maturity,
-shown as a badge) and various `status/reading|active|archive` states (type-specific, e.g. Source
-cards show READING/QUEUED/ARCHIVED).
+`vault/90_SYSTEM/92_Templates/`.
+
+Every published `10_GARDEN` note follows one canonical frontmatter schema (`created, tags, type,
+maturity, status, publish`), standardized across all 6 types in a 2026 migration — see
+`tools/validate_vault_schema.py` (also runs under `pytest`) for the enforced contract. Two axes that
+used to share one `status/*` tag namespace (and, for maturity, were largely just absent) are now
+separate: `maturity: seed|growing|evergreen` (the 🌱/🌿/🌳 badge) and `status: active|reading|
+queued|archive` (lifecycle; Source cards show READING/QUEUED/ARCHIVED from this). Both keys are
+mirrored as `maturity/*`/`status/*` tags (alongside the existing `type/*` tag) so Obsidian's own tag
+pane, graph view, and Dataview/Bases queries stay in sync — `cards._maturity_slug()` and the Source
+card's status badge both read the frontmatter key first, falling back to the tag for notes edited by
+hand without it, the same precedence `type` resolution already used.
 
 `type: project`, `type: protocol`, and `type: transmission` notes are recognized and explicitly
 skipped in `_scan_vault()` — the templates/card generators for them were deleted, not just disabled.
@@ -210,6 +219,16 @@ knowing so you don't "fix" something that was a deliberate decision:
 7. **"Make the personal wiki actually work" pass.** Card-face link pills looked clickable but
    weren't (see "Link system" above) — fixed at the extractor level. Added backlinks, uniform
    maturity badges, and a random-note discovery button.
+8. **Vault frontmatter standardization.** `status/growing` was used zero times anywhere in the
+   vault (maturity and lifecycle status shared one tag namespace, and most notes had no maturity
+   signal at all), 16_NotebookLM had four incompatible filename schemes, one published daily log
+   sat outside `10_GARDEN` entirely, and a Source card's status badge was derived by
+   substring-matching `str(tags)`. Every `10_GARDEN` note was migrated to the canonical schema
+   described in "Content model" above (frontmatter rewritten via targeted line replacement, not a
+   full YAML round-trip, to keep the vault's existing formatting and diffs clean); 5 files were
+   renamed/moved (with vault-wide wikilink text fixed up, since Obsidian's auto-relink only fires on
+   an in-app rename); ~15 `topic/*` tags were de-typo'd/merged; and `tools/validate_vault_schema.py`
+   was added to keep it from drifting again.
 
 ## Known gaps / deliberately not done
 

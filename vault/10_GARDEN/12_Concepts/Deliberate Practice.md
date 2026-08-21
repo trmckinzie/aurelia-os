@@ -2,10 +2,14 @@
 created: 2026-01-08
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/learning
-  - topic/skilll-acquisition
+  - topic/skill-acquisition
   - topic/peak-performance
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Deliberate Practice

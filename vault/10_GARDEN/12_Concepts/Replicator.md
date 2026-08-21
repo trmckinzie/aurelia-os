@@ -2,10 +2,14 @@
 created: 2025-12-24
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/biology
   - topic/memetics
   - topic/evolution
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Replicator

@@ -2,7 +2,8 @@
 created: 2026-01-19
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/cognitive-science
   - topic/biology
@@ -10,6 +11,9 @@ tags:
   - topic/evo-psych
   - topic/psychology
   - topic/phenomenology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Perception

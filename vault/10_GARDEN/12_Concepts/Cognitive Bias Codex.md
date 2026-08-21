@@ -2,12 +2,16 @@
 created: 2026-04-13
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/cognitive-psychology
   - topic/mental-models
   - topic/decision-making
   - topic/behavioral-economics
   - topic/information-design
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Cognitive Bias Codex

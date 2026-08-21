@@ -2,9 +2,13 @@
 created: 2026-04-30
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/wetware-stack
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Pre vs Post Synaptic Changes

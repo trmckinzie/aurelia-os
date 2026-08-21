@@ -2,10 +2,14 @@
 created: 2026-05-12
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/neuroscience
   - topic/wetware-stack
   - topic/biology
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Neuroenergetics

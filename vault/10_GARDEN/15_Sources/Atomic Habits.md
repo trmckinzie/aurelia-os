@@ -2,11 +2,15 @@
 created: 2026-02-02
 tags:
   - type/source/book
+  - maturity/growing
   - status/archive
   - topic/habit
   - topic/psychology
   - topic/productivity
   - topic/systems
+type: source/book
+maturity: growing
+status: archive
 publish: true
 ---
 # 📖 Atomic Habits

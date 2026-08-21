@@ -2,11 +2,15 @@
 created: 2026-03-04
 tags:
   - type/concept
-  - status/seed
+  - maturity/seed
+  - status/active
   - topic/phil-mind
   - topic/neuroscience
   - topic/consciousness
   - topic/metaphysics
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ The Hard Problem of Consciousness

@@ -2,12 +2,16 @@
 created: 2026-01-08
 tags:
   - type/concept
-  - status/seed
-  - topic/flowstate
+  - maturity/seed
+  - status/active
+  - topic/flow
   - topic/psychology
   - topic/positive-psych
   - topic/peak-performance
   - topic/cognitive-science
+type: concept
+maturity: seed
+status: active
 publish: true
 ---
 # ⚛️ Flow State

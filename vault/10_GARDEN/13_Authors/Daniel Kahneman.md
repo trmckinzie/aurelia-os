@@ -2,11 +2,16 @@
 created: 2026-01-06
 tags:
   - type/author
+  - maturity/evergreen
+  - status/active
   - topic/psychology
   - topic/systems
   - topic/computation
   - topic/phil-mind
   - topic/cognitive-science
+type: author
+maturity: evergreen
+status: active
 publish: true
 ---
 # 👤 Daniel Kahneman
