@@ -19,8 +19,11 @@ styled, and published as a real website with the link graph itself made visible 
   single CSS-variable source of truth), each with its own palette, typography, and material
   language: `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA`
   (Stoic Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State University green/black/white).
-- NotebookLM export support: audio/video overviews, flashcard decks, and other synthesis assets
-  are auto-detected and rendered as interactive widgets.
+- NotebookLM export support: audio/video overviews, flashcard decks, mind maps and other synthesis
+  assets are auto-detected from the export's headers and rendered as interactive widgets.
+  **Note:** the media files themselves are no longer committed to this repo (see [Media](#media)),
+  so the audio and image widgets currently render without their sources. Flashcard decks still
+  work — those are small CSVs.
 
 ## Stack
 
@@ -83,6 +86,11 @@ the site. It is not an access control, and it never was:
 The same applies to the `documents` carve-out in `engine/assets_pipeline.py`: not syncing a folder
 into `dist/` keeps it off the *website*, not out of the *repository*.
 
+One further caveat, learned the hard way: `publish:` and the sync carve-out both govern the
+*current* build. Git keeps every past version of every committed file, so anything committed once
+stays readable in history even after it is deleted — removing it for real requires rewriting
+history, not a delete commit.
+
 If you fork this or run it on your own vault, decide up front which of these you want:
 
 1. **Public vault** (what this repo does today) — treat every file you commit as published, whatever
@@ -90,6 +98,21 @@ If you fork this or run it on your own vault, decide up front which of these you
 2. **Private vault, public site** — keep the vault in a private repo and have CI push only the
    built `dist/` to a separate public Pages repo. This is the only arrangement in which
    `publish: false` actually means private.
+
+## Media
+
+**No audio, video, or image files are committed to this repository.** `vault/assets/` holds empty
+`audio/`, `images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input
+CSS, one shared JS file, and five small flashcard CSVs.
+
+NotebookLM audio exports ran 64–79 MB each and had grown to ~858 MB, which pushed the published
+site to 88% of GitHub Pages' 1 GB ceiling and made every clone and CI checkout pay for all of it.
+They were removed from the repository and its history in 2026; `dist/` went from ~882 MB to
+~5.7 MB. Media of that size belongs in object storage, linked from the notes rather than bundled
+into the site — that's the intended direction, not yet built.
+
+`engine/assets_pipeline.py` still compresses drop-zone audio over 15 MB via ffmpeg when it's
+installed, which is what keeps new media from re-inflating the repo in the meantime.
 
 ## License
 

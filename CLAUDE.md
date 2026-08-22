@@ -60,9 +60,16 @@ will not fail the build or block a deploy. Run them manually before committing.
 real logic lives in `engine/`:
 
 - **`config.py`** — paths (`VAULT_PATH`, `TEMPLATE_DIR`, `OUTPUT_DIR`), the Jinja2 `env`, the theme
-  system (`THEME_CONFIG` dict with `CYBER_PRIME` dark/neon and `THE_PATRIOT` light/academic presets;
-  `CURRENT_THEME` is hardcoded to `CYBER_PRIME` — there's no runtime theme switch), and
-  `load_user_config()` (reads `user_config.json`).
+  system (`THEME_CONFIG`, currently four presets: `CYBER_PRIME` dark/neon, `THE_PATRIOT`
+  light/civic, `THE_STOA` Stoic/Helvetic, `GRIZZ` dark/collegiate), and `load_user_config()`
+  (reads `user_config.json`). `CURRENT_THEME` selects the *default* only — every theme is shipped
+  and switchable at runtime (see `theming.py`). Adding a theme means adding a dict entry here and
+  nothing else: the CSS generator, the Tailwind config, and the switcher UI all derive from these
+  keys.
+
+  `env` is built as `Environment(loader=FileSystemLoader(TEMPLATE_DIR))` — **autoescape is off**
+  (Jinja's default), so every `{{ }}` in every template emits raw. See "Known gaps" before
+  assuming template output is escaped.
 - **`content.py`** — markdown-level parsing: `parse_frontmatter()` (real YAML via PyYAML, not regex),
   `parse_body()`, `make_id()` (filename → slug), `process_wikilinks()` (`[[Target]]` /
   `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`), and
@@ -86,17 +93,25 @@ real logic lives in `engine/`:
   matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
   target note id is in the `known_ids` set passed in, dimmed non-interactive text (with a "Not yet
   published" tooltip) if it was a wikilink to something that doesn't exist/isn't published, or plain
-  text if it was never a link at all. `_maturity_badge()` renders a 🌱/🌿/🌳 badge from a
-  `status/seed|growing|evergreen` tag, shown uniformly across every card type.
+  text if it was never a link at all. `_maturity_badge()` renders a 🌱/🌿/🌳 badge from the frontmatter
+  `maturity:` key (falling back to a `maturity/*` tag — see "Content model" below), shown
+  uniformly across every card type.
 - **`assets_pipeline.py`** — `organize_assets()` (sorts `vault/99_DROP_ZONE` into
   `vault/assets/{images,audio,video,flashcards,documents}` by extension; audio over 15MB gets
-  auto-compressed via ffmpeg if it's installed, otherwise copied as-is with a warning — a
-  deliberate choice to cap git growth going forward without rewriting history, see "Recent history"
-  item 6), `prepare_dist()` (wipes and recreates `dist/`), `sync_vault_assets()` (copies
-  `vault/assets/{audio,video,images,flashcards}` into `dist/assets/` — note `documents` is
-  deliberately *not* synced, so anything sorted there stays off the **website**. It does *not* stay
-  private: the repo is public, so `vault/assets/documents/` is publicly readable on GitHub like the
-  rest of the vault. See "Privacy model" below.
+  auto-compressed via ffmpeg if it's installed, otherwise copied as-is with a warning),
+  `prepare_dist()` (wipes and recreates `dist/`), `sync_vault_assets()` (copies
+  `vault/assets/{audio,video,images,flashcards}` into `dist/assets/` — `documents` is deliberately
+  *not* synced, so anything sorted there stays off the **website**; it does *not* thereby become
+  private, see "Privacy model" below).
+
+  **No media is currently committed.** `vault/assets/` holds empty `audio/`, `images/`, and
+  `flashcards/` directories; the only tracked assets are `assets/css`, `assets/js`, and five
+  flashcard CSVs. All NotebookLM audio and mind-map images were removed from the repo *and its
+  history* in 2026 (see "Recent history" item 9), so 15 notes still reference `assets/audio/...`
+  and `assets/images/...` paths that no longer resolve — those widgets render as dead players
+  until media hosting is re-established off-repo. The compression path above still works and is
+  what keeps new drop-zone audio from re-inflating the repo, but the intended long-term answer is
+  object storage linked from the notes, not files in git.
 - **`tailwind_build.py`** — generates `tailwind.config.js` (gitignored) from `THEME_CONFIG` and runs
   the Tailwind CLI. Runs **last**, after pages are rendered, scanning `dist/**/*.html` rather than
   the Python/Jinja source — this matters because `cards.py` builds some class names dynamically
@@ -107,6 +122,12 @@ real logic lives in `engine/`:
   (rather than server-side in Python, which the `dist/**/*.html` scan already covers), those classes
   will need a `safelist` entry added back — the content scanner can't see anything that only exists
   once client-side JS runs.
+- **`theming.py`** — turns `THEME_CONFIG` into `dist/assets/css/theme-vars.css`: one
+  `:root[data-theme="<slug>"]` block per theme defining every `--aurelia-*` custom property, plus a
+  bare `:root` block mirroring the default so the first paint isn't unstyled before the switcher's
+  init script runs. Also emits `-rgb` channel twins of each color (Tailwind's opacity modifiers
+  like `bg-aurelia-primary/10` need decomposable channels, not a hex string) and the per-theme
+  cursor SVGs. `available_themes()` feeds the nav switcher's embedded JSON.
 - **`pipeline.py`** — orchestrates everything. `_scan_vault()` is **two-pass**: pass one walks
   `vault/`, reads every published garden note, and computes its `note_id`, building the full
   `known_ids` set; pass two calls `cards.generate_garden_card_html()` for each note with that set
@@ -159,10 +180,19 @@ here). Both page templates `{% extends "base.html" %}`.
 hand-written CSS: cursor SVGs, the `@keyframes scanline` atmosphere effect, the `.scanline` baseline
 rule shared across every page). It is **not** loaded from a CDN — Tailwind compiles it at build
 time (see `tailwind_build.py` above). The color palette (`aurelia-bg`, `aurelia-primary`,
-`aurelia-secondary`, etc., plus legacy aliases `aurelia-cyan`/`aurelia-orange`/`aurelia-green`/
-`aurelia-purple`/`aurelia-dim`/`aurelia-dark` mapped onto the semantic ones) is generated into
-`tailwind.config.js` from `THEME_CONFIG`, so **theme colors have exactly one source of truth**:
-`engine/config.py`. Don't hand-edit `tailwind.config.js` — it's regenerated and gitignored.
+`aurelia-secondary`, etc., plus the three surviving legacy aliases `aurelia-cyan`/`aurelia-dim`/
+`aurelia-dark` mapped onto semantic ones — `aurelia-orange`/`green`/`purple` were dropped once the
+Protocol/Portfolio pages went and left them with zero call sites) is split across two generated
+files:
+
+- `tailwind.config.js` (from `tailwind_build.py`) maps each utility class to
+  `rgb(var(--aurelia-x-rgb) / <alpha-value>)` — **theme-independent**, only needs regenerating when
+  the *set* of class names changes.
+- `dist/assets/css/theme-vars.css` (from `theming.py`) holds the actual per-theme values.
+
+So **theme colors still have exactly one source of truth** — `THEME_CONFIG` in `engine/config.py` —
+but it reaches the page through those two files rather than being baked into the Tailwind config.
+Don't hand-edit either; both are regenerated, and `tailwind.config.js` is gitignored.
 
 ### Privacy model (read before touching anything vault-related)
 
@@ -238,10 +268,11 @@ knowing so you don't "fix" something that was a deliberate decision:
    Garden entries in the index now carry a 200-char snippet; `garden.html`'s own in-page deep search
    is unaffected since it uses a separate `data-search` HTML attribute per card, not this index.
 6. **Audio growth capped going forward.** `assets/audio/` (NotebookLM exports) was ~714MB and
-   growing; rewriting git history to fix it was explicitly ruled out as too risky. Instead,
-   `organize_assets()` now compresses large (>15MB) audio via ffmpeg on its way out of the drop
+   growing; rewriting git history to fix it was ruled out at the time as too risky. Instead,
+   `organize_assets()` began compressing large (>15MB) audio via ffmpeg on its way out of the drop
    zone, before it's ever committed — optional (falls back to a plain copy if ffmpeg isn't
-   installed), never blocks the build.
+   installed), never blocks the build. *Superseded by item 9: the history rewrite was eventually
+   done deliberately, and the audio is gone entirely.*
 7. **"Make the personal wiki actually work" pass.** Card-face link pills looked clickable but
    weren't (see "Link system" above) — fixed at the extractor level. Added backlinks, uniform
    maturity badges, and a random-note discovery button.
@@ -255,6 +286,25 @@ knowing so you don't "fix" something that was a deliberate decision:
    renamed/moved (with vault-wide wikilink text fixed up, since Obsidian's auto-relink only fires on
    an in-app rename); ~15 `topic/*` tags were de-typo'd/merged; and `tools/validate_vault_schema.py`
    was added to keep it from drifting again.
+9. **Security/privacy audit and history purge (2026-08).** An architectural audit found that the
+   documented privacy model was simply false: the repo is public, so *everything* in `vault/` was
+   world-readable regardless of `publish:`. Exposed and since removed: the author's résumé (which
+   an older `dist/`-committing deploy had actually **served live** from the Pages site), an
+   academic transcript, IRB paperwork and unpublished capstone results, instructor assessments and
+   submitted coursework, 11 textbook chapters and 3 trade ebooks (~396MB of documents in total).
+   No credentials were ever exposed — that was checked across all history.
+
+   Three `git filter-repo` passes plus deletion of a stale `gh-pages` branch (a legacy deploy
+   target holding a second public copy of the vault, including Smart Connections embeddings)
+   brought the repo from **1.09 GiB to 24.57 MiB** and `dist/` from **882MB to 5.7MB**, which also
+   retired the looming GitHub Pages 1GB site-size ceiling. Each pass was rehearsed on a throwaway
+   clone first — that rehearsal is what caught the résumé, which sat at a second path
+   (`assets/docs/`) that the first path list missed. Worth internalizing: `git rev-list --objects`
+   lists each blob **once** under a single name, so a file duplicated across paths looks like one
+   file. Enumerate with `git log --all --name-only` instead. Recon before the rewrite confirmed no
+   Wayback captures, no search indexing, and zero forks.
+
+   The audit's *code* findings were deliberately **not** fixed in the same pass — see "Known gaps".
 
 ## Known gaps / deliberately not done
 
@@ -280,6 +330,40 @@ knowing so you don't "fix" something that was a deliberate decision:
   instant-open modal (no network request needed). Known, not addressed — fixing it means trading
   instant-open for a fetch-on-click UX, which wasn't chosen without discussing the tradeoff first.
 - No automated accessibility, performance (Lighthouse), or visual-regression testing.
+
+### Open security findings (from the 2026-08 audit — none of these are fixed)
+
+These are real and reproducible, confirmed by running payloads through the actual functions. The
+practical risk is bounded (single-author site, content the author pastes in himself), but there is
+**no output-encoding layer anywhere** in the generator — the one `escapeHtml()` in
+`assets/js/utils.js` is client-side and covers roughly six of ~40 sinks.
+
+- **Jinja2 autoescape is off** (`engine/config.py`, the `Environment(...)` call). Every `{{ }}` in
+  every template emits raw. The `|safe` filters in `gardentemplate.html` were never opting out of
+  anything, because nothing was being escaped to begin with. Turning it on is one line and is the
+  single highest-leverage fix — but expect to audit every existing `|safe` afterwards.
+- **Note bodies are injected raw into the live DOM.** `gardentemplate.html`'s `#data-storage` block
+  emits `{{ card.body | safe }}` per note. `class="hidden"` is `display:none`, which stops
+  *rendering*, not *parsing* — a `<script>` in a note executes at page load. `openNote()` then
+  passes the same content through `marked.parse()`, which does not sanitize (the `sanitize` option
+  was removed in marked v5).
+- **Attribute breakout via frontmatter tags.** `cards.py` builds `data-tags`/`data-search` by raw
+  f-string interpolation; a tag containing `"` closes the attribute and lands a live event handler
+  on the `<article>`. Wikilink *labels* and CSV cell contents reach HTML unescaped by the same
+  route. (Prose fields are safe — the extractors run `clean_text()` on those — which is exactly why
+  this went unnoticed.)
+- **Path traversal in the flashcard resolver.** `content.py`'s flashcards matcher uses `assets/.*?`
+  where the other three media matchers use a bounded character class, so `.*?` matches `/`. Combined
+  with an `os.path.join` that has no containment check, a note can name a `.csv` anywhere on the
+  build machine and have its contents embedded in a published page. Fix is resolve-then-verify with
+  `os.path.realpath`, not a tighter regex alone.
+- **The build cannot fail.** `pipeline.py`'s `_render_pages()` catches every render exception per
+  page, prints `❌`, and returns normally — so `python build.py` exits 0 and CI deploys a `dist/`
+  that is silently missing a page. Same for the malformed-frontmatter counter: it warns, then exits
+  0 while notes vanish from the site.
+- **Client-side:** the topic-cloud `onclick` interpolates a raw tag into a JS string, and
+  `highlightText()` builds `new RegExp()` from unescaped search input — the latter is a live
+  functional bug today, since typing `(` throws and silently kills search.
 
 ## `deploy.py` — a second, separate product
 
