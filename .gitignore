@@ -1,9 +1,14 @@
 # --- IGNORE OBSIDIAN CONFIGS (Crucial for Sync) ---
-# We ignore the workspace (scroll position) but KEEP plugins/settings
-.obsidian/workspace
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.obsidian/workspaces.json
+# We ignore the workspace (scroll position) but KEEP plugins/settings.
+# NOTE: these need the `**/` prefix. A pattern containing a slash is anchored
+# to the directory holding the .gitignore, so a bare `.obsidian/workspace.json`
+# only ever matched <repo-root>/.obsidian/ -- never vault/.obsidian/, which is
+# the only place these files actually live. Without the prefix the vault's
+# workspace.json stayed tracked and showed up dirty on every single build.
+**/.obsidian/workspace
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+**/.obsidian/workspaces.json
 
 # --- IGNORE SYSTEM FILES ---
 .DS_Store

@@ -11,7 +11,8 @@ styled, and published as a real website with the link graph itself made visible 
 
 - Converts Obsidian markdown notes (with YAML frontmatter and `[[wikilinks]]`) into a published,
   searchable, browsable garden — grid, tree, and force-directed knowledge-graph views.
-- Only notes tagged `publish: true` go live; everything else stays private in the vault.
+- Only notes tagged `publish: true` are *rendered into the site*. This controls rendering, not
+  access — see [Privacy model](#privacy-model) below before assuming anything in `vault/` is private.
 - Real backlinks, note-maturity badges (🌱 seed / 🌿 growing / 🌳 evergreen), topic browsing, a
   command palette (⌘K), spaced-review surfacing, and a random-note discovery button.
 - Four runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
@@ -64,6 +65,32 @@ tools/                  Standalone scripts (e.g. vault frontmatter schema valida
 deploy.py               Generates a white-labeled clone of the tooling for someone else to reuse
 ```
 
+## Privacy model
+
+**This repository is public, so everything committed to `vault/` is publicly readable — including
+notes marked `publish: false`.**
+
+`publish:` is a *rendering* flag consumed by `engine/pipeline.py`. It decides what becomes a card on
+the site. It is not an access control, and it never was:
+
+| | Rendered into `dist/` | Readable on GitHub |
+|---|---|---|
+| `publish: true` note | yes | yes |
+| `publish: false` note | no | **yes** |
+| `vault/assets/documents/` | no (not synced) | **yes** |
+| Anything else in `vault/` | no | **yes** |
+
+The same applies to the `documents` carve-out in `engine/assets_pipeline.py`: not syncing a folder
+into `dist/` keeps it off the *website*, not out of the *repository*.
+
+If you fork this or run it on your own vault, decide up front which of these you want:
+
+1. **Public vault** (what this repo does today) — treat every file you commit as published, whatever
+   its frontmatter says.
+2. **Private vault, public site** — keep the vault in a private repo and have CI push only the
+   built `dist/` to a separate public Pages repo. This is the only arrangement in which
+   `publish: false` actually means private.
+
 ## License
 
 The generator code (`engine/`, `system/`, `assets/`, `build.py`, `deploy.py`, `tests/`, and other
@@ -73,6 +100,11 @@ The contents of `vault/` are the author's personal notes, journal entries, and o
 They are **not** covered by that license, remain all rights reserved, and are not licensed for
 reuse or republication. See the scope note at the bottom of [LICENSE](LICENSE) for the exact
 carve-out.
+
+Reserving rights is a statement about *reuse*, not about *visibility* — see
+[Privacy model](#privacy-model). Note also that this carve-out covers only the author's own
+writing; it does not, and cannot, extend a license to any third-party material that happens to
+sit in the vault.
 
 ## Security
 

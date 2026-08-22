@@ -94,7 +94,9 @@ real logic lives in `engine/`:
   deliberate choice to cap git growth going forward without rewriting history, see "Recent history"
   item 6), `prepare_dist()` (wipes and recreates `dist/`), `sync_vault_assets()` (copies
   `vault/assets/{audio,video,images,flashcards}` into `dist/assets/` — note `documents` is
-  deliberately *not* synced, so anything sorted there stays private).
+  deliberately *not* synced, so anything sorted there stays off the **website**. It does *not* stay
+  private: the repo is public, so `vault/assets/documents/` is publicly readable on GitHub like the
+  rest of the vault. See "Privacy model" below.
 - **`tailwind_build.py`** — generates `tailwind.config.js` (gitignored) from `THEME_CONFIG` and runs
   the Tailwind CLI. Runs **last**, after pages are rendered, scanning `dist/**/*.html` rather than
   the Python/Jinja source — this matters because `cards.py` builds some class names dynamically
@@ -161,6 +163,26 @@ time (see `tailwind_build.py` above). The color palette (`aurelia-bg`, `aurelia-
 `aurelia-purple`/`aurelia-dim`/`aurelia-dark` mapped onto the semantic ones) is generated into
 `tailwind.config.js` from `THEME_CONFIG`, so **theme colors have exactly one source of truth**:
 `engine/config.py`. Don't hand-edit `tailwind.config.js` — it's regenerated and gitignored.
+
+### Privacy model (read before touching anything vault-related)
+
+**The GitHub repo is public, and the entire `vault/` directory is committed to it.** Everything in
+the vault is therefore publicly readable, *including* notes with `publish: false`.
+
+`publish:` is a rendering flag read by `_scan_vault()` — it decides what becomes a card in `dist/`.
+It is not an access control and never has been. Neither is the `documents` sync carve-out in
+`assets_pipeline.py`. Both keep content off the *website*; neither keeps it out of the *repository*.
+
+Two consequences worth holding onto when working here:
+
+- Don't describe anything in the vault as "private" in code comments, docs, or commit messages.
+  Earlier revisions of this file and README.md did, and it was wrong.
+- `_scan_vault()` walks the whole vault with no folder restriction, so a stray `publish: true`
+  anywhere — `80_COURSES`, `99_DROP_ZONE`, a plugin's bundled markdown — publishes that note to the
+  live site. The publish surface is one boolean, unbounded by directory.
+
+Making `publish: false` genuinely mean private requires a structural change, not a code fix: vault
+in a private repo, CI pushing only built `dist/` to a separate public Pages repo.
 
 ### Content model (vault conventions)
 
