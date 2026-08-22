@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "edfd9b3b6a6d958c",
+        "id": "883e5d05300570ee",
         "type": "tabs",
         "children": [
           {
-            "id": "41e77a02e46a378b",
+            "id": "848dd322aa585ecc",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "10_GARDEN/15_Sources/12 Rules for Life.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "12 Rules for Life"
             }
           }
         ]
@@ -192,15 +206,26 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "41e77a02e46a378b",
+  "active": "848dd322aa585ecc",
   "lastOpenFiles": [
+    "assets/pdfs/12-Rules-for-Life.pdf",
+    "assets/pdfs/Unconfirmed 103556.crdownload",
+    "assets/pdfs",
+    "assets/New folder",
+    "New folder",
+    "00_Meta/Economics of Cognitive Bandwidth/The Economics of Cognitive Bandwidth.md",
+    "90_SYSTEM/92_Templates/TPL_Daily_Log.md",
+    "90_SYSTEM/92_Templates/Zotero Template.md",
+    "90_SYSTEM/92_Templates/TPL_Curriculum_Module.md",
+    "90_SYSTEM/92_Templates/TPL_Concept.md",
+    "10_GARDEN/12_Concepts/Active Recall.md",
+    "10_GARDEN/12_Concepts/Action Potential.md",
     "00_Meta/Economics of Cognitive Bandwidth/Mini Essays/Wetware Stack Mini Essay #1 Meditations on Man as Machine.pdf",
     "10_GARDEN/15_Sources/The Principles of Psychology.md",
     "10_GARDEN/18_Daily_Readings",
     "Morse Code.md",
     "conflict-files-obsidian-git.md",
     "10_GARDEN/12_Concepts/Brain.md",
-    "10_GARDEN/12_Concepts/Action Potential.md",
     "Financial_Audit_Report.md",
     "2026-06-26.md",
     "20_PROTOCOL/Operational Guides/Optimization_Framework.pdf",
