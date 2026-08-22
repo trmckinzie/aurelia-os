@@ -42,7 +42,10 @@ python build.py
 python -m pytest tests/ -q
 
 # Lint
-python -m pyflakes engine/*.py build.py deploy.py tests/*.py
+python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
+
+# Validate every published vault note against the canonical frontmatter schema
+python tools/validate_vault_schema.py
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the full architecture writeup — build pipeline, the wikilink/backlink
@@ -57,6 +60,7 @@ system/templates/       Jinja2 templates (base + Lobby + Garden + 404)
 assets/                 Tailwind input CSS, shared client JS
 vault/                  The Obsidian vault itself -- source content, not source code (see License)
 tests/                  pytest suite
+tools/                  Standalone scripts (e.g. vault frontmatter schema validator)
 deploy.py               Generates a white-labeled clone of the tooling for someone else to reuse
 ```
 

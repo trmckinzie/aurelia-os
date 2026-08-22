@@ -29,12 +29,16 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (60 tests as of this writing)
+python -m pytest tests/ -q             # full suite (87 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
 # Lint (no linter config beyond this; pyflakes catches unused imports/names)
-python -m pyflakes engine/*.py build.py deploy.py tests/*.py
+python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
+
+# Validate every published vault/10_GARDEN note against the canonical
+# frontmatter schema (see "Content model" below) -- also runs under pytest
+python tools/validate_vault_schema.py
 
 # Factory clone (see "deploy.py" below) -- generates ./Aurelia_Factory_v1/, not committed
 python deploy.py
@@ -242,8 +246,9 @@ knowing so you don't "fix" something that was a deliberate decision:
 - **`vault/90_SYSTEM/92_Templates/TPL_Synthesis_Note.md`** is a richer note-taking template (a
   "Crane not Skyhook" mechanistic Input/Processing/Logic/Output framework) with no YAML frontmatter
   at all, so notes written from it never publish and there's no card type that could render its
-  structure even if they did. One real note exists using it
-  (`vault/10_GARDEN/17_Gemini_Synthesis/Lit Review Pipeline.md`) and has never appeared on the site.
+  structure even if they did. The one real note that used it
+  (`vault/10_GARDEN/17_Gemini_Synthesis/Lit Review Pipeline.md`) was later deleted from the vault;
+  no note currently uses this template.
 - **A raw-Tailwind-class → semantic `aurelia-*` migration is incomplete.** A one-off script
   (`refactor.py`) describing this exact mapping (`text-white` → `text-aurelia-text`, `bg-black` →
   `bg-aurelia-bg`, etc.) was found and deleted as dead code (it was never runnable and unreferenced
