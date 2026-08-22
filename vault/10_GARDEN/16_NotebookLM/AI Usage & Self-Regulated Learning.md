@@ -126,32 +126,6 @@ Effective learning also requires **"desirable difficulties"**—strategies that
 Conclusion: Synthesizing AI, Frameworks, and Habits
 
 Synthesizing the evidence across these sources suggests that the goal of using AI in learning is not to find answers faster, but to **augment human intelligence and agency**. Better self-directed learning habits are formed when you use **SRL frameworks** to stay organized, **active strategies** like practice testing to ensure deep understanding, and **AI tools** as a supportive "cognitive coach" rather than a replacement for effort. The ideal learning habit involves **double-loop reflection**, where you not only check your answers but also reflect on why you chose a particular strategy and how you can improve your approach in the future. Ultimately, by combining the structure of proven psychological models with the interactive capabilities of AI, you can move toward **heutagogy**—a state of full autonomy where you are capable of navigating an AI-driven world with critical thinking, ethical awareness, and resilient study habits.
-# 🎙️ Audio Overview
-assets/audio/AI_Usage_SRL.m4a
-
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/NotebookLM-mindmap-ai-usage-srl.png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/flashcards/flashcards-ai-usage-srl.csv
-
-# 📝 Quiz
-assets/images/[filename].
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 > Alvarez, R. P., Jivet, I., Perez-Sanagustin, M., Scheffel, M., & Verbert, K. (2022). Tools Designed to Support Self-Regulated Learning in Online Learning Environments: A Systematic Review. _IEEE Transactions on Learning Technologies_, _15_(4), 508–522. [https://doi.org/10.1109/TLT.2022.3193271](https://doi.org/10.1109/TLT.2022.3193271)
