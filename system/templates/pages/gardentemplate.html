@@ -263,9 +263,15 @@
 {% endblock %}
 
 {% block content %}
-   <div class="scanline"></div>
 
-    <div class="fixed top-14 left-0 w-full z-50 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+    <!-- z-40, deliberately BELOW base.html's nav (z-50) rather than tied with
+        it. Both were z-50, and this bar comes later in the DOM, so it won the
+        tie and painted over the top ~83px of the nav's theme dropdown (and the
+        mobile nav drawer) -- the first two theme options were unclickable on
+        this page only. A page-level sub-nav belongs under the global nav; it's
+        still above all in-flow content, and the note modal (z-[60]) and command
+        palette (z-[100]) still sit above both. -->
+    <div class="fixed top-14 left-0 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             
             <div class="flex items-center gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">

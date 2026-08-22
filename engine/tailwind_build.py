@@ -74,7 +74,7 @@ module.exports = {{
         sans: ['Inter', 'sans-serif'],
         mono: ['var(--aurelia-font-mono)', 'monospace'],
       }},
-      animation: {{ 'scanline': 'scanline 8s linear infinite' }},
+      animation: {{ 'scanline': 'scanline 8s linear 1 forwards' }},
     }}
   }}
 }}

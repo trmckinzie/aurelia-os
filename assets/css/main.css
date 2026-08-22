@@ -17,14 +17,21 @@
    The <div class="scanline"> in base.html's <body> gets this styling on
    every page. Structural rules only -- background/opacity are theme-driven
    (--aurelia-scanline-*) and set further down in this file, next to the
-   other theme-consuming globals, rather than duplicated here. */
+   other theme-consuming globals, rather than duplicated here.
+
+   One pass per page load, not a loop: the band sweeps down once and leaves.
+   `forwards` is load-bearing, not decoration -- without it the animation ends
+   and the element snaps back to its un-transformed base style, which on a
+   `position: fixed` element with no `top` parks a 100px textured band across
+   the top of the viewport permanently. The fill keeps the final
+   translateY(100vh), so "gone" actually means gone. */
 .scanline {
     width: 100%;
     height: 100px;
     z-index: 40;
     position: fixed;
     pointer-events: none;
-    animation: scanline 8s linear infinite;
+    animation: scanline 8s linear 1 forwards;
 }
 @keyframes scanline {
     0% { transform: translateY(-100px); }
@@ -89,11 +96,19 @@
    canvases) ran unconditionally. This covers what CSS alone can stop;
    the canvas/JS-driven ones are guarded in their own <script> blocks. */
 @media (prefers-reduced-motion: reduce) {
-    .scanline,
     .glitch-text,
     .glitch-text::before,
     .glitch-text::after {
         animation: none;
+    }
+    /* The scanline is hidden outright rather than merely un-animated. Killing
+       only the animation leaves it at its un-transformed base position -- the
+       same static top-of-viewport band described above, permanently, which is
+       worse than the effect it's meant to soften. Since the band's intended
+       end state is now "off-screen and gone", never showing it at all is the
+       faithful reduced-motion equivalent. */
+    .scanline {
+        display: none;
     }
 }
 
