@@ -2,7 +2,7 @@
 
 A personal static-site generator that turns an [Obsidian](https://obsidian.md) vault into a
 published digital garden — an **external cortex**: atomic notes (concepts, sources, authors,
-disciplines, daily logs, NotebookLM syntheses) linked the way a Zettelkasten links, rendered,
+disciplines, daily logs, NotebookLM syntheses, deep dives) linked the way a Zettelkasten links, rendered,
 styled, and published as a real website with the link graph itself made visible and navigable.
 
 **Live site:** [trmckinzie.github.io/aurelia-os](https://trmckinzie.github.io/aurelia-os/)

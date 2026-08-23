@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Aurelia OS is a personal static-site generator: it turns an Obsidian vault (`vault/`) into a
 published GitHub Pages site (`https://trmckinzie.github.io/aurelia-os/`) for Travis McKinzie. The
 stated purpose is an **"external cortex"** — a personal wiki/digital garden where atomic notes
-(concepts, sources, authors, disciplines, daily logs, NotebookLM syntheses) link to each other the
+(concepts, sources, authors, disciplines, daily logs, NotebookLM syntheses, deep dives) link to each other the
 way a Zettelkasten does, captured in Obsidian and then rendered, styled, and published as a real
 website. The design goal is not just "notes on the web" — it's making the *graph* (what links to
 what, note maturity, discoverability) actually visible and navigable in the published site, not
@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (87 tests as of this writing)
+python -m pytest tests/ -q             # full suite (94 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -77,7 +77,7 @@ real logic lives in `engine/`:
   embedded `<audio>`/`<video>`/flashcard-CSV widgets).
 - **`extractors.py`** — regex extractors that pull structured data out of a garden note's body per
   type (`extract_log_data`, `extract_concept_data`, `extract_source_data`, `extract_author_data`,
-  `extract_discipline_data`, `extract_notebooklm_data`). These depend on emoji-prefixed markdown
+  `extract_discipline_data`, `extract_notebooklm_data`, `extract_deep_dive_data`). These depend on emoji-prefixed markdown
   headers matching loosely (e.g. `r'###\s*.*Definition.*'` matches regardless of exact emoji), but
   **exact-string fields** (like `**🔗 Related:**`) are fragile — change the literal text in a
   template and extraction silently returns nothing for that field. Every extractor that returns
@@ -89,8 +89,8 @@ real logic lives in `engine/`:
   `dumps_for_script_tag` (JSON-dumps but escapes `</script` so embedded JSON can't break out of its
   `<script>` tag).
 - **`cards.py`** — `generate_garden_card_html()` is the single card-rendering function; it branches
-  on note type (daily-log, concept, source, author, discipline, notebooklm, default) and calls the
-  matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
+  on note type (daily-log, concept, source, author, discipline, notebooklm, deep-dive, default) and
+  calls the matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
   target note id is in the `known_ids` set passed in, dimmed non-interactive text (with a "Not yet
   published" tooltip) if it was a wikilink to something that doesn't exist/isn't published, or plain
   text if it was never a link at all. `_maturity_badge()` renders a 🌱/🌿/🌳 badge from the frontmatter
@@ -218,12 +218,23 @@ in a private repo, CI pushing only built `dist/` to a separate public Pages repo
 
 Garden note types are set via YAML frontmatter `type:` (or a `type/xxx` tag as fallback) and a note
 only publishes with `publish: true`. Types: `concept`, `source/book`, `author`, `discipline`,
-`notebooklm`, daily logs (detected by a `YYYY-MM-DD`-shaped filename, or `type: daily-bridge`/`log`),
-and anything else falls through to a generic card. Templater templates for each type live in
-`vault/90_SYSTEM/92_Templates/`.
+`notebooklm`, `deep-dive`, daily logs (detected by a `YYYY-MM-DD`-shaped filename, or
+`type: daily-bridge`/`log`), and anything else falls through to a generic card. Templater templates
+for each type live in `vault/90_SYSTEM/92_Templates/`.
+
+`deep-dive` (`10_GARDEN/17_Deep_Dives/`, added 2026-08) is structurally unlike the other six: a Deep
+Dive is pasted in whole from elsewhere (an AI chat, an essay draft) rather than filled in piecemeal,
+so `extract_deep_dive_data()` (`extractors.py`) depends on only two conventions instead of a full set
+of headers — a standalone `*italic*`/`_italic_` line under the title (the card's premise/dek) and a
+`## Part 3` header (the plain-English summary excerpt), both documented in
+`TPL_Deep_Dive.md`'s own HTML-comment contract rather than enforced by the schema validator. Its card
+identity is `aurelia-insight` (magenta/rose in CYBER_PRIME), the one color role added since the
+original six — see `THEME_CONFIG` in `config.py` for the per-theme values and reasoning; GRIZZ's in
+particular was hand-picked rather than derived, since the theme's own brief caps it at exactly two
+hues (green + grey) and a 7th shade there was already the tight end of that budget.
 
 Every published `10_GARDEN` note follows one canonical frontmatter schema (`created, tags, type,
-maturity, status, publish`), standardized across all 6 types in a 2026 migration — see
+maturity, status, publish`), standardized across all 6 original types in a 2026 migration — see
 `tools/validate_vault_schema.py` (also runs under `pytest`) for the enforced contract. Two axes that
 used to share one `status/*` tag namespace (and, for maturity, were largely just absent) are now
 separate: `maturity: seed|growing|evergreen` (the 🌱/🌿/🌳 badge) and `status: active|reading|
@@ -305,6 +316,14 @@ knowing so you don't "fix" something that was a deliberate decision:
    Wayback captures, no search indexing, and zero forks.
 
    The audit's *code* findings were deliberately **not** fixed in the same pass — see "Known gaps".
+10. **Added the `deep-dive` type (2026-08).** A 7th garden note type for long-form explainers pasted
+    in whole rather than filled in piecemeal — see "Content model" above for how its extractor and
+    card differ from the other six. Required a new theme color role (`aurelia-insight`), the first
+    added since the original six identity colors; every `THEME_CONFIG` entry, `theming.py`'s
+    `_COLOR_KEYS`, `tailwind_build.py`'s `color_map`, and `gardentemplate.html`'s filter button/
+    legend/graph-node-coloring all needed a matching addition, since nothing about the type→color
+    mapping is generic — each of the previous six was hand-wired the same way. `tools/
+    validate_vault_schema.py`'s `FOLDER_TYPE` picked up `"17_Deep_Dives": "deep-dive"` alongside it.
 
 ## Known gaps / deliberately not done
 

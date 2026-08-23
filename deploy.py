@@ -143,8 +143,8 @@ tags: [onboarding]
 **🔗 Related:** Digital Garden, Zettelkasten
 
 Change `type:` in the frontmatter to switch note types: `concept`, `source`,
-`author`, `discipline`, or `notebooklm` (see the NotebookLM demo below) all
-render as different card layouts on the Garden page automatically.
+`author`, `discipline`, `notebooklm` (see the NotebookLM demo below), or
+`deep-dive` all render as different card layouts on the Garden page automatically.
 """
     with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "00_Demo_Concept.md"), "w", encoding="utf-8") as f:
         f.write(concept_md)
@@ -224,6 +224,8 @@ layout:
 - **discipline** -- fields of study
 - **notebooklm** -- Google NotebookLM exports, with Audio Overview, Flashcard
   (CSV), and Mind Map support (see demo)
+- **deep-dive** -- long-form explainers pasted in whole rather than filled in
+  piecemeal; the card pulls a premise line and a summary excerpt automatically
 - anything else (or no `type:` at all) renders as a plain note card
 
 A note only appears on the site once its frontmatter has `publish: true`.

@@ -121,3 +121,35 @@ def test_source_card_status_badge_ignores_unrelated_tag_substrings():
     meta = {"type": "source", "tags": ["topic/reading-list", "topic/seedling"]}
     html = generate_garden_card_html(meta, "A Book.md", "note-a-book", "body", "search")
     assert ">ARCHIVED<" in html
+
+
+def test_deep_dive_card_renders_premise_synthesis_and_related():
+    meta = {"type": "deep-dive", "maturity": "growing", "tags": []}
+    body = """**🔗 Related:** <button onclick="openNote('note-idea')">Idea</button>
+
+---
+
+# A Deep Dive
+
+*A short premise line*
+
+---
+
+## Part 3: The Plain-English Summary
+
+The synthesis text goes here.
+"""
+    html = generate_garden_card_html(meta, "A Deep Dive.md", "note-a-deep-dive", body, "search", known_ids={"note-idea"})
+    assert 'data-type="deep-dive"' in html
+    assert "DEEP DIVE" in html
+    assert "border-aurelia-insight" in html
+    assert "A short premise line" in html
+    assert "The synthesis text goes here." in html
+    assert "onclick=\"openNote('note-idea'); event.stopPropagation()\"" in html
+
+
+def test_deep_dive_card_shows_no_links_placeholder_when_related_empty():
+    meta = {"type": "deep-dive", "maturity": "seed", "tags": []}
+    body = "*A premise*\n\n## Part 3: Summary\n\nSome text.\n"
+    html = generate_garden_card_html(meta, "N.md", "note-n", body, "search")
+    assert "NO_LINKS_DETECTED" in html
