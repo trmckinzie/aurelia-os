@@ -318,6 +318,10 @@
                     <button onclick="setFilter('notebooklm', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
                         NotebookLM
                     </button>
+
+                    <button onclick="setFilter('deep-dive', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Deep Dive
+                    </button>
                 </div>
             </div>
 
@@ -500,6 +504,7 @@
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-secondary"></span>Author</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-accent"></span>Discipline</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-info"></span>NotebookLM</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-insight"></span>Deep Dive</span>
                 </div>
             </div>
             <div id="graph-canvas-wrap" class="relative border border-aurelia-dim bg-aurelia-bg/40 rounded-sm overflow-hidden" style="height: 70vh;">
@@ -1153,6 +1158,7 @@
             author: v('--aurelia-secondary', '#8a2be2'),
             discipline: v('--aurelia-accent', '#39ff14'),
             notebooklm: v('--aurelia-info', '#818cf8'),
+            'deep-dive': v('--aurelia-insight', '#ff2d78'),
         };
     }
     function graphColorFor(type, typeColors, fallback) {

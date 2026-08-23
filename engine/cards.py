@@ -4,6 +4,7 @@ import re
 from engine.extractors import (
     extract_author_data,
     extract_concept_data,
+    extract_deep_dive_data,
     extract_discipline_data,
     extract_log_data,
     extract_notebooklm_data,
@@ -388,6 +389,45 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             </div>
         </div>"""
         icon = "🧬"; label = "NOTEBOOK"; label_color = "text-aurelia-primary"
+
+    elif "deep-dive" in note_type or "deep_dive" in note_type:
+        color = "border-aurelia-insight"
+        premise, synthesis, related = extract_deep_dive_data(body_content)
+        premise = truncate(premise, 140)
+        synthesis = truncate(synthesis, 160)
+
+        related_html = render_items(
+            related,
+            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-insight transition-colors border-b border-aurelia-dim hover:border-aurelia-insight pb-0.5", known_ids),
+            empty_html='<span class="opacity-30 text-[9px]">// NO_LINKS_DETECTED</span>',
+        )
+        card_content = f"""
+        <div class="flex flex-col h-full gap-4">
+
+            <div class="relative pl-4 border-l-2 border-aurelia-insight">
+                <span class="text-[10px] font-bold font-mono text-aurelia-insight tracking-widest block mb-1">> PREMISE:</span>
+                <p class="text-sm text-aurelia-text font-sans leading-relaxed font-medium italic">
+                    "{premise}"
+                </p>
+            </div>
+
+            <div>
+                <span class="text-[9px] font-bold font-mono text-aurelia-insight uppercase tracking-widest block mb-1">:: SYNTHESIS</span>
+                <p class="text-xs text-aurelia-muted font-sans leading-relaxed line-clamp-3">
+                    {synthesis}
+                </p>
+            </div>
+
+            <div class="flex-grow"></div>
+
+            <div class="pt-3 border-t border-aurelia-dim/50">
+                <span class="text-[9px] font-bold font-mono text-aurelia-insight uppercase tracking-widest block mb-2">SEE_ALSO:</span>
+                <div class="flex flex-wrap gap-2 text-[10px] font-mono text-aurelia-muted">
+                    {related_html}
+                </div>
+            </div>
+        </div>"""
+        icon = "🔎"; label = "DEEP DIVE"
 
     else:
         color = "border-aurelia-dim"

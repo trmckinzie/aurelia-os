@@ -60,6 +60,7 @@ THEME_CONFIG = {
             "accent": "#39ff14",        # Green (Success, Terminal)
             "highlight": "#eab308",     # Yellow (Source/Library card identity)
             "info": "#6366f1",          # Indigo (NotebookLM/Research card identity)
+            "insight": "#ff2d78",       # Magenta/Rose (Deep Dive card identity)
         },
         "font_mono": "'JetBrains Mono', monospace",
         "rounded": "2px",              # Sharp corners
@@ -115,6 +116,11 @@ THEME_CONFIG = {
             "info": "#2f4b6b",          # Deep navy-slate (NotebookLM/Research card identity) --
                                         # stays in the blue family but reads as its own hue
                                         # next to primary/accent.
+            "insight": "#265c35",       # Deep civic green (Deep Dive card identity) -- hand-picked
+                                        # in the palette's spirit (a fourth USWDS-family hue, forest
+                                        # rather than gold/blue/red) and hand-darkened for AA text
+                                        # contrast on parchment; not a cited USWDS token like the
+                                        # other six, since none was confirmed at exactly this grade.
         },
         "font_mono": "'Courier Prime', 'Courier New', monospace",  # Typewriter -- founding-document feel
         "rounded": "8px",              # Softer corners
@@ -183,6 +189,9 @@ THEME_CONFIG = {
             "accent": "#5b3a6b",        # Tyrian imperial purple (Success, Terminal)
             "highlight": "#7a5f1a",     # Gold leaf (Source/Library card identity)
             "info": "#3d5266",          # Lapis lazuli (NotebookLM/Research card identity)
+            "insight": "#1f6b5c",       # Verdigris (Deep Dive card identity) -- the blue-green
+                                        # patina that forms on oxidized bronze, the same real
+                                        # antiquity material primary already draws on
         },
         "font_mono": "'Helvetica Neue', Helvetica, Arial, sans-serif",  # Swiss grid, not typewriter
         "rounded": "1px",              # Almost square -- architectural, not soft
@@ -281,6 +290,10 @@ THEME_CONFIG = {
             "accent": "#4ade80",        # Bright Kelly (Success, Terminal)
             "highlight": "#8a9089",     # Gunmetal (Source/Library card identity)
             "info": "#7c9484",          # Sage (NotebookLM/Research card identity)
+            "insight": "#3fae82",       # Teal-spruce (Deep Dive card identity) -- a fourth green,
+                                        # shifted bluer (hue ~160) than primary/secondary/accent's
+                                        # yellow-greens (hue ~132-152) so it reads as distinct while
+                                        # staying inside the brief's green/black/white/grey family
         },
         "font_mono": "'Oswald', 'Arial Narrow', sans-serif",  # Condensed collegiate/scoreboard voice
         "rounded": "6px",              # Clean, structured -- a jersey number plate, not a terminal or a tablet

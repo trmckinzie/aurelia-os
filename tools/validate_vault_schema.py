@@ -43,6 +43,7 @@ FOLDER_TYPE = {
     "14_Disciplines": "discipline",
     "15_Sources": "source/book",
     "16_NotebookLM": "notebooklm",
+    "17_Deep_Dives": "deep-dive",
 }
 
 VALID_MATURITY = {"seed", "growing", "evergreen"}

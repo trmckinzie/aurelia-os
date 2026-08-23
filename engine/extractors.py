@@ -157,3 +157,49 @@ def extract_notebooklm_data(text):
             active_features.append(key)
 
     return clean_overview, active_features
+
+
+def extract_deep_dive_data(text):
+    """Parses a Deep Dive for its italic premise line, the "Part 3" plain-
+    English summary excerpt, and any manually wikilinked related notes.
+
+    Deep Dives are pasted in whole from elsewhere (an AI chat, an essay
+    draft), not filled in piecemeal the way other types are, so this only
+    depends on two structural conventions the template documents: a single
+    standalone *italic* line under the title (the premise -- matched via a
+    backreference so `*...*` and `_..._` both work, but a `**bold**` run
+    never does, since its doubled delimiter can't satisfy the single-char
+    backreference), and a "Part 3" header (the plain-English summary).
+    Related is (target_id, label) pairs, same as every other type's manual
+    link field.
+    """
+    premise_match = re.search(r'^(\*|_)([^*_\n]+)\1\s*$', text, re.MULTILINE)
+    premise = clean_text(premise_match.group(2)).strip() if premise_match else "No premise line found."
+
+    summary_section = section_after_header(text, r'##\s*Part 3.*')
+    # Deliberately not narrowed to the first paragraph: Part 3 often opens
+    # with a short setup line ("If you remember one thing...") before the
+    # actual substance, so grabbing paragraph[0] tends to surface the
+    # throat-clearing instead of the summary -- the whole section, cleaned
+    # and left for cards.py's truncate() to cut to size, is more reliably
+    # meaningful than a "first paragraph" heuristic, and matches how every
+    # other extractor in this module hands off to truncate() rather than
+    # pre-trimming itself. Unlike those other extractors' single-line
+    # blockquote sources, though, a multi-paragraph section carries blank
+    # lines that clean_text() doesn't touch -- collapsed here rather than
+    # left to reach the rendered <p> as literal double-newlines.
+    if summary_section:
+        # clean_text() only strips wikilinks/HTML; the other extractors
+        # never needed more since a single blockquote line rarely carries
+        # markdown emphasis, but a multi-paragraph prose section routinely
+        # does (**bold**, `code`, ### stray headers) -- stripped the same
+        # blunt way cards.py's own generic-fallback card already does.
+        summary = re.sub(r'[*_`#]', '', clean_text(summary_section))
+        summary = re.sub(r'\s+', ' ', summary).strip()
+    else:
+        summary = "No summary section found."
+
+    related_match = re.search(r'\*\*🔗 Related:\*\*\s*(.*)', text)
+    related = extract_links(related_match.group(1)) if related_match else []
+
+    return premise, summary, related[:4]

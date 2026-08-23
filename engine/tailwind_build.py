@@ -51,6 +51,7 @@ def generate_config():
         "aurelia-accent": "accent",
         "aurelia-highlight": "highlight",
         "aurelia-info": "info",
+        "aurelia-insight": "insight",
         "aurelia-cyan": "primary",
         "aurelia-dim": "border-main",
         "aurelia-dark": "bg-main",
