@@ -13,6 +13,13 @@
         "a": 1,
         "rgb": 5431387
       }
+    },
+    {
+      "query": "path:10_GARDEN/12_Concepts  ",
+      "color": {
+        "a": 1,
+        "rgb": 5431504
+      }
     }
   ],
   "collapse-display": true,
@@ -25,6 +32,6 @@
   "repelStrength": 18.9965397923875,
   "linkStrength": 0,
   "linkDistance": 500,
-  "scale": 0.029307267771878795,
+  "scale": 0.10064772201573435,
   "close": true
 }
