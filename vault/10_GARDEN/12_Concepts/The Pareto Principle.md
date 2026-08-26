@@ -4,7 +4,7 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
-  - topic/systems-theory
+  - topic/systems
   - topic/software-stack
   - topic/behavioral-economics
 type: concept

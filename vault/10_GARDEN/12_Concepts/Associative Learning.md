@@ -22,7 +22,7 @@ publish: true
 ---
 # ⚛️ Associative Learning
 
-**🔗 Related:** [[Classical Conditioning]], [[Operant Conditioning]], [[Hebbian Learning]], [[Neural Networks]], [[Prediction Error]], [[Pattern Recognition]]
+**🔗 Related:** [[Classical Conditioning]], [[Operant Conditioning]], [[Hebbian Learning]], [[Neural Network|Neural Networks]], [[Prediction Error]], [[Pattern Recognition]]
 
 ---
 

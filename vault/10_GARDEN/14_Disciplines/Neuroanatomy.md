@@ -28,13 +28,13 @@ publish: true
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-#### **I. The Forebrain (Prosencephalon)**
+**I. The Forebrain (Prosencephalon)**
 
 - **Telencephalon (Cerebrum)**
     
     - **Cerebral Cortex (The Lobes):**
         
-        - _Frontal Lobe:_ **Prefrontal Cortex** (Executive function), **Primary Motor Cortex** (M1/Precentral Gyrus), **Broca’s Area** (Speech production).
+        - _Frontal Lobe:_ **[[The Prefrontal Cortex (PFC)|Prefrontal Cortex]]** (Executive function), **Primary Motor Cortex** (M1/Precentral Gyrus), **Broca’s Area** (Speech production).
             
         - _Parietal Lobe:_ **Primary Somatosensory Cortex** (S1/Postcentral Gyrus), **Posterior Parietal Cortex** (Spatial mapping).
             
@@ -54,11 +54,11 @@ publish: true
             
         - _Subthalamic Nucleus (STN)._
             
-    - **Limbic System (Emotion & Memory):**
+    - **[[The Limbic System|Limbic System]] (Emotion & Memory):**
         
         - _Hippocampus:_ **Dentate Gyrus**, **Cornu Ammonis** (CA1, CA2, CA3), **Subiculum**.
             
-        - _Amygdala:_ Basolateral Nuclei (Fear learning), Central Nucleus (Output).
+        - _[[The Amygdala|Amygdala]]:_ Basolateral Nuclei (Fear learning), Central Nucleus (Output).
             
         - _Cingulate Gyrus:_ Anterior (ACC - Error detection) and Posterior (PCC - Default Mode).
             
@@ -81,7 +81,7 @@ publish: true
     - **Epithalamus:** Contains the **Pineal Gland** (Melatonin/Circadian rhythm).
         
 
-#### **II. The Brainstem**
+**II. The Brainstem**
 
 - **Mesencephalon (Midbrain)**
     
@@ -102,7 +102,7 @@ publish: true
 - **Myelencephalon**
     
     - **Medulla Oblongata:** The life support center. Controls autonomic functions (Breathing, Heart rate, Vomiting). Contains the **Pyramids** (where motor tracts cross/decussate).
-#### **III. The Support Systems**
+**III. The Support Systems**
 
 - **Meninges (Protective Layers):**
     
@@ -121,7 +121,7 @@ publish: true
     - _Anterior Cerebral Artery (ACA)_, _Middle Cerebral Artery (MCA)_, _Posterior Cerebral Artery (PCA)_.
         
 
-#### **IV. The Cranial Nerves (12 Pairs)**
+**IV. The Cranial Nerves (12 Pairs)**
 
 1. **Olfactory** (Smell)
     

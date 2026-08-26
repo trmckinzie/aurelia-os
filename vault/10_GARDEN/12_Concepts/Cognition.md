@@ -18,7 +18,7 @@ publish: true
 ---
 # ⚛️ Cognition
 
-**🔗 Related:** [[Information Processing Theory]], [[Perception]], [[Memory]], [[Decision Making]], [[Functionalism]], [[Metacognition]], [[Embodied Cognition]], [[Artificial Intelligence]]
+**🔗 Related:** [[Information Processing Theory]], [[Perception]], [[Memory]], [[Decision Making]], [[Functionalism]], [[Metacognition]], [[Embodied Cognition]], [[Artificial Intelligence]], [[Cognition (Neuroscience)]]
 
 ### 💡 Definition
 > The mental action or process of acquiring knowledge and understanding through thought, experience, and the senses. In its broadest, substrate-independent sense, cognition is **[[Information Processing]]**. It is the set of [[Algorithm]]s that transforms raw data (Input) into actionable models or decisions (Output).

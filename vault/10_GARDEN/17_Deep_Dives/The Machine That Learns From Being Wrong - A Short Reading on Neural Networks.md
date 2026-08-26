@@ -4,16 +4,19 @@ tags:
   - type/deep-dive
   - maturity/growing
   - status/active
+  - topic/artificial-intelligence
 type: deep-dive
 maturity: growing
 status: active
 publish: true
 ---
-**🔗 Related:** 
+**🔗 Related:** [[Neural Network]], [[Credit Assignment Problem]]
 
 ---
 
 # The Machine That Learns From Being Wrong
+
+*A short read on how a neural network actually learns — one wrong guess at a time.*
 
 Think about the last time you spotted a friend in a crowded room. You didn't consciously measure the distance between their eyes or calculate the angle of their jaw — recognition just happened, instantly and effortlessly. That ease is deceptive. Your brain didn't come pre-loaded with your friend's face; it learned to recognize them through years of exposure, using specialized visual circuitry that got better with every glance. Somewhere behind that instant recognition is a process of trial, error, and adjustment, repeated so many times it now feels automatic.
 
@@ -53,6 +56,6 @@ This same loop — guess, measure error, adjust, repeat — scales up to remarka
 
 The throughline across all three: it's never a different *kind* of intelligence for each task. It's the identical learning loop — prediction, error, adjustment — pointed at pixels, words, or viewing histories instead of house prices.
 
-## The Takeaway
+## Part 3: The Takeaway
 
 A neural network is never told the right answer directly — it's only ever told how wrong its last guess was, and it uses that single piece of feedback, applied millions of times over, to get a little less wrong each time. That's not understanding in any human sense. It's persistence, encoded in math — which turns out to be enough to recognize a face, translate a sentence, or guess what you'll want to watch next.

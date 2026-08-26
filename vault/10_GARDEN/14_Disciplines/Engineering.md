@@ -5,8 +5,7 @@ tags:
   - maturity/evergreen
   - status/active
   - topic/engineering
-  - topic/systems-engineering
-  - topic/systems-theory
+  - topic/systems
   - topic/design
   - topic/problem-solving
 type: discipline

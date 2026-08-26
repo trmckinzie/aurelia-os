@@ -16,7 +16,7 @@ publish: true
 ---
 # ⚛️ Cognitive Bias Codex
 
-**🔗 Related:** [[Cognitive Bias]], [[Heuristics]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Evolutionary Mismatch]], [[Schema Theory]]
+**🔗 Related:** [[Cognitive Bias]], [[Heuristic|Heuristics]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Evolutionary Mismatch]], [[Schema Theory]]
 
 ---
 

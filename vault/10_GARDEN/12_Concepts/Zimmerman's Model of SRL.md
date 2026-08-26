@@ -16,7 +16,7 @@ publish: true
 ---
 # ⚛️ Zimmerman's Model of SRL
 
-**🔗 Related:** [[Self Regulated Learning]], [[Metacognition]], [[Feedback Loops]], [[Growth Mindset]], [[Goal Setting Theory]], [[Attribution Theory]]
+**🔗 Related:** [[Self-Regulated Learning]], [[Metacognition]], [[Feedback Loops]], [[Growth Mindset]], [[Goal Setting Theory]], [[Attribution Theory]]
 
 ---
 

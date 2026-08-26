@@ -27,7 +27,7 @@ publish: true
 - **The Mechanism:** Computation involves manipulating mental representations (symbols) according to strict, formal rules (syntax). When you "think," your brain is executing a biological algorithm.
 
 ### 📝 Key Insight
-- Killing the "Ghost in the Machine":** Historically, CTM was revolutionary because it finally solved Descartes' Mind-Body problem. For centuries, philosophers couldn't explain how an immaterial "thought" could move a physical "arm" without relying on magic or a soul. CTM provided the answer: The mind isn't a ghost; it's a program. It made the mind safe for rigorous, materialistic science.
+- **Killing the "Ghost in the Machine":** Historically, CTM was revolutionary because it finally solved Descartes' Mind-Body problem. For centuries, philosophers couldn't explain how an immaterial "thought" could move a physical "arm" without relying on magic or a soul. CTM provided the answer: The mind isn't a ghost; it's a program. It made the mind safe for rigorous, materialistic science.
 
 ### 🏛️ The Three Pillars of the Theory
 

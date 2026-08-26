@@ -20,7 +20,7 @@ publish: true
 
 **Part 1: Mathematical Concepts**
 
-This section outlines the foundational mathematical frameworks and quantification methods derived from information theory and thermodynamics that serve as the basis for understanding complex systems.
+This section outlines the foundational mathematical frameworks and quantification methods derived from [[Information Theory|information theory]] and thermodynamics that serve as the basis for understanding complex systems.
 
 **1. Information Entropy and Surprisal**
 

@@ -13,7 +13,7 @@ publish: true
 ---
 # 📖 On the Origin of Species
 
-**👤 Author:** [[ ]]
+**👤 Author:** [[Charles Darwin]]
 **🔑 Zotero Key:** **📍 Full Notes:** 
 
 ---

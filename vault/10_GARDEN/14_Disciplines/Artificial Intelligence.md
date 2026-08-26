@@ -6,7 +6,6 @@ tags:
   - status/active
   - topic/computer-science
   - topic/cognitive-science
-  - topic/machine-learning
   - topic/artificial-intelligence
 type: discipline
 maturity: evergreen

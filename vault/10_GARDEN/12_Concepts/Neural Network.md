@@ -5,7 +5,7 @@ tags:
   - maturity/seed
   - status/active
   - topic/neuroscience
-  - topic/systems-theory
+  - topic/systems
   - topic/information-processing-theory
   - topic/artificial-intelligence
 type: concept

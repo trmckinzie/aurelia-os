@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Hebbian Learning
 
-**🔗 Related:** [[Neuroplasticity]], [[Long-Term Potentiation (LTP)]], [[Synapse]], [[Dendrite]], [[Connectionism]], [[Donald Hebb]]
+**🔗 Related:** [[Neuroplasticity]], [[Long Term Potentiation (LTP)|Long-Term Potentiation (LTP)]], [[Synapse]], [[Dendrite]], [[Connectionism]], [[Donald Hebb]]
 
 ---
 

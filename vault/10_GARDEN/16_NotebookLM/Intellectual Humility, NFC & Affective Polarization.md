@@ -20,7 +20,7 @@ publish: true
 ---
 
 # 📚 Lit Review Overview
-> The following structured overview provides a thematic synthesis of the 24 primary sources (and supporting materials) provided, focusing on the psychological and sociopolitical variables of **Intellectual Humility (IH)**, **Need for Cognitive Closure (NFC)**, and **Affective Polarization (AP)**.
+> The following structured overview provides a thematic synthesis of the 24 primary sources (and supporting materials) provided, focusing on the [[Psychology|psychological]] and sociopolitical variables of **Intellectual Humility (IH)**, **Need for Cognitive Closure (NFC)**, and **Affective Polarization (AP)**.
 
 **I. Affective Polarization (AP): Definition, Trends, and Drivers**
 

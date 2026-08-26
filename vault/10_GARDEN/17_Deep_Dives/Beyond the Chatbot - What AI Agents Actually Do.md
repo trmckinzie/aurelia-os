@@ -4,16 +4,19 @@ tags:
   - type/deep-dive
   - maturity/growing
   - status/active
+  - topic/artificial-intelligence
 type: deep-dive
 maturity: growing
 status: active
 publish: true
 ---
 
-**🔗 Related:** 
+**🔗 Related:** [[Artificial Intelligence]]
 
 ---
 # Beyond the Chatbot - What AI Agents Actually Do
+
+*A short read on what actually separates an AI agent from a chatbot — and where that autonomy breaks down.*
 
 Picture two people trying to plan the same work trip.
 
@@ -61,6 +64,6 @@ Klarna offers the clearest real-world lesson here. In early 2024, the company an
 
 There's also a straightforward cost problem — each step in that loop is another model call, another few seconds, another few cents, and that adds up fast on long tasks. And there's security: agents that browse the web or read untrusted documents can be manipulated by hidden instructions planted in that content, a problem — prompt injection — that the security community still considers largely unsolved. None of this is a reason to avoid agents. It's a reason to keep a human reviewing the important decisions, and to scope what an agent is allowed to do before it starts.
 
-## Where This Is Headed
+## Part 3: Where This Is Headed
 
 Research from METR in 2025 found that the length of task an AI agent can complete reliably has been roughly doubling every seven months or so — a snapshot, not a fixed law, but a genuine trend. What that means in practice is less dramatic than it sounds: not robots replacing jobs overnight, but the boundary of "things worth delegating instead of doing yourself" creeping steadily outward. A year ago that might have meant delegating a web search. Today it might mean delegating a whole bug fix. The skill that's going to matter most isn't writing the perfect prompt — it's learning to scope a task well enough that an agent can run with it, and knowing exactly where to draw the line and check its work before you trust the result.

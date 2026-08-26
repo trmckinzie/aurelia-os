@@ -7,7 +7,7 @@ tags:
   - topic/neuroscience
   - topic/cognitive-neuroscience
   - topic/cognitive-psychology
-  - topic/systems-theory
+  - topic/systems
   - topic/information-processing-theory
 type: concept
 maturity: seed
@@ -16,12 +16,12 @@ publish: true
 ---
 # ⚛️ Cognition (Neuroscience)
 
-**🔗 Related:** [[Neural Network]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Prefrontal Cortex]], [[Information Processing Theory]], [[Emergence]]
+**🔗 Related:** [[Neural Network]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)]], [[Prefrontal Cortex]], [[Information Processing Theory]], [[Emergence]], [[Cognition]]
 
 ---
 
 ### 💡 Definition
-> The mental action or process of acquiring knowledge and understanding through thought, experience, and the senses. In the context of neuroscience, cognition is not a mystical force; it is the high-level, functional output of billions of interconnected neurons computing information in parallel.
+> The neuroscience half of [[Cognition]]: not a mystical force, but the high-level, functional output of billions of interconnected neurons computing information in parallel — the brain's own machinery for turning raw sensation into thought, memory, and decision.
 
 - **The Metaphor:** If the brain is the physical computer hardware, and the **[[Neural Network]]** is the operating system architecture, then Cognition is the active software application running on the screen.
     

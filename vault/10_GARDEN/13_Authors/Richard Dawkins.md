@@ -27,7 +27,7 @@ publish: true
 - The God Delusion
 
 ### ⚛️ Core Concepts
-- Gene-Centered View of [[Evolution]]** — Selection understood at the level of replicators.
+- **Gene-Centered View of [[Evolution]]** — Selection understood at the level of replicators.
 - **[[Replicator]]** — Entities that make copies of themselves across generations.
 - **[[Survival Machines]]** — Organisms as vehicles for genes.
 - **Extended Phenotype** — Gene effects extending beyond the body.

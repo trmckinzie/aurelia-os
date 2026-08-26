@@ -7,7 +7,6 @@ tags:
   - topic/psychology
   - topic/ergonomics
   - topic/systems
-  - topic/systems-engineering
   - topic/design
   - topic/human-factors
 type: discipline

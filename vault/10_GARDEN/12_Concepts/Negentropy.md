@@ -6,7 +6,7 @@ tags:
   - status/active
   - topic/physics
   - topic/systems
-  - topic/information-theory
+  - topic/information-processing-theory
 type: concept
 maturity: seed
 status: active

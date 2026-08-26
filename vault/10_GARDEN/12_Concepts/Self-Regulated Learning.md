@@ -18,7 +18,7 @@ publish: true
 ---
 # ⚛️ Self-Regulated Learning
 
-**🔗 Related:** [[AI Usage & Self-Regulated Learning]], [[Learning]], [[Zimmerman's Model of SRL]], [[Cognition]], [[Cognitive Science]], [[Cognitive Psychology]], [[Deep Work]], [[Metacognition]], [[Executive Function]], [[Feedback Loops]], [[Growth Mindset]], [[Desirable Difficulties]]
+**🔗 Related:** [[AI Usage & Self-Regulated Learning]], [[Learning]], [[Zimmerman's Model of SRL]], [[Cognition]], [[Cognitive Science]], [[Cognitive Psychology]], [[Deep Work]], [[Metacognition]], [[Executive Function]], [[Feedback Loops]], [[Growth Mindset]], [[Desirable Difficulty|Desirable Difficulties]]
 
 ---
 

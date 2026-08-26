@@ -31,7 +31,7 @@ publish: true
 - **The Logic:** If a task is too easy, the brain doesn't have to work to "encode" or "retrieve" the information, so it doesn't bother building the permanent neural architecture for it.
 
 ### 📝 Key Insight
-* The Illusion of Fluency:** When material is easy to read or a lecture is "smooth," students feel like they are learning a lot. This is a trap. Fluency is often a sign that you are simply recognizing information, not learning it.
+- **The Illusion of Fluency:** When material is easy to read or a lecture is "smooth," students feel like they are learning a lot. This is a trap. Fluency is often a sign that you are simply recognizing information, not learning it.
     
 - **The Zone of Proximal Development:** The difficulty must be "desirable." If a task is so hard that the learner consistently fails, it leads to frustration and "Learned Helplessness." The goal is to find the "sweet spot" where the brain is strained but successful.
 

@@ -10,7 +10,7 @@ maturity: growing
 status: active
 publish: true
 ---
-**🔗 Related:** <!-- optional, link relevant Concept/Discipline notes once written -->
+**🔗 Related:** [[Artificial Intelligence]]
 
 ---
 

@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Theory of Mind
 
-**🔗 Related:** [[Metacognition]], [[Cognitive Empathy]], [[Sally-Anne Test]], [[Mirror Neuron]], [[Egocentrism]], [[The Curse of Knowledge]]
+**🔗 Related:** [[Metacognition]], [[Cognitive Empathy]], [[Sally-Anne Test]], [[Mirror Neurons|Mirror Neuron]], [[Egocentrism]], [[The Curse of Knowledge]]
 
 ---
 

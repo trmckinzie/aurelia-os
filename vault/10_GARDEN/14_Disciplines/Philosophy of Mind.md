@@ -25,7 +25,7 @@ publish: true
 ---
 
 ### 🔑 Core Concepts (The Bricks)
-- **[[The Hard Problem of Consciousness]] : The overarching debate about what the mind is made of.
+- **[[The Hard Problem of Consciousness]]:** The overarching debate about what the mind is made of.
     
     - _Dualism (Descartes):_ The mind and the body are two completely different kinds of "stuff." The body is physical; the mind is immaterial (a soul).
         

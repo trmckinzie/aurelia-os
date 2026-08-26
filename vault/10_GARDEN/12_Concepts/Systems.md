@@ -5,8 +5,6 @@ tags:
   - maturity/seed
   - status/active
   - topic/systems
-  - topic/systems-engineering
-  - topic/systems-theory
   - topic/complexity-theory
   - topic/philosophy
   - topic/engineering
