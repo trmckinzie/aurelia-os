@@ -201,33 +201,6 @@ Quantitative Overview of Bandwidth Constraints
 
 The integration of these factors suggests that "willpower" is better defined as the current availability of glucose in the PFC and the absence of inhibitory glucocorticoid signaling from the amygdala. The "Economics of Cognitive Bandwidth" is thus the ultimate unifying theory of human behavioral biology, bridging the gap between the metabolic bit and the moral choice.[1, 22, 23, 32]
 
-# 🎙️ Audio Overview
-assets/audio/[filename].wav
-
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/[filename].png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
-
 # 📚 Sources
 1. The metabolic cost of neural information - ResearchGate, [https://www.researchgate.net/publication/13103307_The_metabolic_cost_of_neural_information](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.researchgate.net%2Fpublication%2F13103307_The_metabolic_cost_of_neural_information)
 2. Metabolic Cost of Dendritic Ca2+ Action Potentials in Layer 5 Pyramidal Neurons - PMC, [https://pmc.ncbi.nlm.nih.gov/articles/PMC6861219/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC6861219%2F)

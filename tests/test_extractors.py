@@ -33,6 +33,21 @@ def test_extract_concept_data_falls_back_to_plain_related_text():
     assert links == [(None, "Idea One"), (None, "Idea Two")]
 
 
+def test_extract_concept_data_keeps_up_to_twelve_related_links():
+    buttons = ", ".join(
+        f"<button onclick=\"openNote('note-{i}')\">Idea {i}</button>" for i in range(15)
+    )
+    text = f"""
+### Definition
+> A concept is a unit of thought.
+
+**🔗 Related:** {buttons}
+"""
+    _, links = extract_concept_data(text)
+    assert len(links) == 12
+    assert links[0] == ("note-0", "Idea 0")
+
+
 def test_extract_source_data_author_and_argument():
     text = """
 **Author:** <button onclick="openNote('note-jordan-peterson')">Jordan Peterson</button>
@@ -54,6 +69,18 @@ def test_extract_source_data_missing_author_defaults_to_unknown():
     assert author == (None, "UNKNOWN")
 
 
+def test_extract_source_data_keeps_up_to_twelve_concepts():
+    buttons = "\n".join(
+        f"<button onclick=\"openNote('note-{i}')\">Concept {i}</button>" for i in range(15)
+    )
+    text = f"""
+### Concepts Extracted
+{buttons}
+"""
+    _, _, concepts = extract_source_data(text)
+    assert len(concepts) == 12
+
+
 def test_extract_author_data_works_and_concepts():
     text = """
 ### Profile & Context
@@ -71,6 +98,25 @@ def test_extract_author_data_works_and_concepts():
     assert concepts == [("note-idea", "Idea")]
 
 
+def test_extract_author_data_keeps_up_to_six_works_and_eight_concepts():
+    works_buttons = "\n".join(
+        f"<button onclick=\"openNote('note-w{i}')\">Work {i}</button>" for i in range(8)
+    )
+    concepts_buttons = "\n".join(
+        f"<button onclick=\"openNote('note-c{i}')\">Concept {i}</button>" for i in range(10)
+    )
+    text = f"""
+### Key Works
+{works_buttons}
+
+### Core Concepts
+{concepts_buttons}
+"""
+    _, works, concepts = extract_author_data(text)
+    assert len(works) == 6
+    assert len(concepts) == 8
+
+
 def test_extract_discipline_data_pillars_and_canon():
     text = """
 ### Definition
@@ -86,6 +132,25 @@ def test_extract_discipline_data_pillars_and_canon():
     assert scope == "The scope of the field."
     assert pillars == [("note-pillar", "Pillar")]
     assert canon == [("note-text", "The Text")]
+
+
+def test_extract_discipline_data_keeps_up_to_ten_pillars_and_texts():
+    pillars_buttons = "\n".join(
+        f"<button onclick=\"openNote('note-p{i}')\">Pillar {i}</button>" for i in range(12)
+    )
+    canon_buttons = "\n".join(
+        f"<button onclick=\"openNote('note-t{i}')\">Text {i}</button>" for i in range(12)
+    )
+    text = f"""
+### Core Concepts
+{pillars_buttons}
+
+### Foundational Texts
+{canon_buttons}
+"""
+    _, pillars, canon = extract_discipline_data(text)
+    assert len(pillars) == 10
+    assert len(canon) == 10
 
 
 def test_extract_log_data_source_and_concepts_are_link_aware():

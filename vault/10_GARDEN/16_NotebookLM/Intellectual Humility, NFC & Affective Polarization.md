@@ -75,29 +75,11 @@ publish: true
 # 🎙️ Audio Overview
 assets/audio/Intellectual_Humility_Reduces_Political_Hatred.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM-mindmap-ih-nfc-ap.png
 
-# 📄 Reports
-assets/images/[filename].png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-ih-nfc-ap.csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 > **References**

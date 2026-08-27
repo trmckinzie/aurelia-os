@@ -71,7 +71,11 @@ def extract_concept_data(text):
             items = clean_text(raw_line).split(',')
             links = [(None, i.strip()) for i in items if i.strip()]
 
-    return definition, links[:4]
+    # Cap raised from 4 -> 12 (2026-08 audit): a survey of the 122 published
+    # Concept notes found an average of 6 Related links and a max of 12, so
+    # the old cap of 4 was silently dropping content from nearly every card
+    # on the live site, not just guarding against a rare outlier.
+    return definition, links[:12]
 
 
 def extract_source_data(text):
@@ -93,7 +97,9 @@ def extract_source_data(text):
     section = section_after_header(text, r'###\s*.*Concepts Extracted.*')
     concepts = extract_links(section) if section else []
 
-    return author, argument, concepts[:5]
+    # Cap raised from 5 -> 12 (2026-08 audit): 6 of the 15 published Source
+    # notes exceeded the old cap (max observed: 12).
+    return author, argument, concepts[:12]
 
 
 def extract_author_data(text):
@@ -110,7 +116,9 @@ def extract_author_data(text):
     concepts_section = section_after_header(text, r'###\s*.*Core Concepts.*')
     concepts = extract_links(concepts_section) if concepts_section else []
 
-    return context, works[:4], concepts[:4]
+    # Caps raised from 4/4 -> 6/8 (2026-08 audit): observed max across the 16
+    # published Author notes was 5 Key Works and 7 Core Concepts.
+    return context, works[:6], concepts[:8]
 
 
 def extract_discipline_data(text):
@@ -127,7 +135,10 @@ def extract_discipline_data(text):
     canon_section = section_after_header(text, r'###\s*.*Foundational Texts.*')
     canon = extract_links(canon_section) if canon_section else []
 
-    return scope, pillars[:4], canon[:3]
+    # Caps raised from 4/3 -> 10/10 (2026-08 audit): observed max across the
+    # 19 published Discipline notes was 9 Core Concepts and 10 Foundational
+    # Texts -- every single note exceeded the old Foundational Texts cap of 3.
+    return scope, pillars[:10], canon[:10]
 
 
 def extract_notebooklm_data(text):

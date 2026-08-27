@@ -26,29 +26,8 @@ publish: true
 # 🎙️ Audio Overview
 assets/audio/AI_Career_Roadmap_and_Coding_Disciplines.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM-mindmap-modern-software-engineering.png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].png
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 > [Zotero Data Placeholder]

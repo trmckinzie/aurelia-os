@@ -135,29 +135,5 @@ This section details how the mathematical concepts above are implemented in biol
 # 🎙️ Audio Overview
 assets/audio/Information_Theory_Deep_Dive.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/[filename].png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
-
 # 📚 Sources
 > [Zotero Data Placeholder]

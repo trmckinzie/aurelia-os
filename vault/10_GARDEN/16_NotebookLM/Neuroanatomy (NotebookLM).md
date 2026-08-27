@@ -218,29 +218,8 @@ A functional mental model of the human nervous system is predicated on the integ
 # 🎙️ Audio Overview
 assets/audio/Neuroanatomy_Overview.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM-mindmap-functional-neuroanatomy.png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 

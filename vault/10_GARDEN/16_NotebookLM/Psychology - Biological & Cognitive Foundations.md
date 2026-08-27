@@ -142,29 +142,8 @@ The functional specialization of brain regions is often revealed through **lesi
 # 🎙️ Audio Overview
 assets/audio/Your_Brain_Constructs_Reality_In_The_Dark.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM-mindmap-psychology-biological-cognitive-foundations.png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].png
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 > [Zotero Data Placeholder]

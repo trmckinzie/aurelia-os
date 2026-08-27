@@ -221,33 +221,6 @@ Mindfulness meditation, in its dual aspects of _Vipassana_ and _Metta_, serve
 
 Ultimately, the Buddhist path suggests that enlightenment is not a destination in a different realm but a profound shift in how one relates to the present moment. By understanding the causes of suffering and cultivating the factors of awakening, the practitioner can move from the "burning house" of delusion to the "unconditioned ease" of Nirvana, manifesting a life of wisdom, compassion, and unshakeable peace.
 
-# 🎙️ Audio Overview
-assets/audio/[filename].wav
-
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/[filename].png
-
-# 📄 Reports
-assets/images/[filename].png
-
-# 🃏 Flashcards
-assets/images/[filename].csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
-
 # 📚 Sources
 1. Four Noble Truths - Wikipedia, [https://en.wikipedia.org/wiki/Four_Noble_Truths](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFour_Noble_Truths)
 2. The Three Different Paths of Buddhism | Namchak Community, [https://www.namchak.org/community/blog/three-different-paths-theravada-mahayana-and-vajrayana/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.namchak.org%2Fcommunity%2Fblog%2Fthree-different-paths-theravada-mahayana-and-vajrayana%2F)

@@ -292,29 +292,14 @@ As the field continues to mature, its primary strength lies in its "consilient" 
 # 🎙️ Audio Overview
 assets/audio/Evo_Psych_Overview.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM Mind Map - evo-psych.png
-
-# 📄 Reports
-assets/images/[filename].png
 
 # 🃏 Flashcards
 assets/flashcards/flashcards-evo-psych.csv
 
-# 📝 Quiz
-assets/images/[filename].png
-
 # 📊 Infographic
 assets/flashcards/flashcards.csv
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 1. Darwin's Legacy to Comparative Psychology and Ethology - Ovid, [https://www.ovid.com/journals/ampsy/pdf/10.1037/a0013385~darwins-legacy-to-comparative-psychology-and-ethology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ovid.com%2Fjournals%2Fampsy%2Fpdf%2F10.1037%2Fa0013385~darwins-legacy-to-comparative-psychology-and-ethology)

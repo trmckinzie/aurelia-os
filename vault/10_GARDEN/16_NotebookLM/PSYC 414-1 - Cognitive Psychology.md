@@ -479,7 +479,6 @@ Unlike spoken language, reading is an "unnatural act" that is not biologically u
 - **Eye Movements:** During reading, the eye focuses on words using the **fovea** through quick jumps called **saccades**. Skilled readers typically make larger saccades and shorter **fixations** (pauses) on words, whereas poor readers require more time to process individual words and make more **regressions** (moving backward to re-read).
 - **Compensation:** Interestingly, high levels of background knowledge can compensate for poor reading skills, as individuals with deep topic knowledge can better understand and recall passages even if they have low verbal aptitude.
 
-
 # 📚 Chapter 11 - Solving Problems
 
 >This comprehensive overview of "Solving Problems" synthesizes the mechanisms of cognitive representation, problem types, strategies, and the biological foundations of human thought as detailed in Chapter 11.
@@ -745,7 +744,6 @@ Human decision making is a sophisticated yet fallible process. We often rely on 
 - **Person Schemas and Stereotypes:** A **person schema** connects personality traits with expected behavior. A **stereotype** is an overgeneralized person schema applied to a whole group, which can lead to distorted memories consistent with assumptions.
 - **Expertise Principles:** Experts use **meaningful encoding** to perceive configurations as "chunks" invisible to novices and utilize **retrieval structures** between WM and LTM (long-term working memory) to speed up storage and retrieval.
 
-
 **Cognitive Load Theory & Metacognition**
 
 >To understand CLT, you first have to look at how it maps onto the standard information processing model of the mind.
@@ -815,7 +813,6 @@ When exploring self-regulated learning or developing personal knowledge manageme
     - **Source Monitoring:** Identifying the origin of our memories (e.g., "did I see this or hear it?").
     - **Effective Strategies:** Strategies like **retrieval practice** (practice testing) and **distributed practice** (spacing) are high-utility methods supported by metacognitive research.
  
-
 
 # 📚 Exam 3 Study Guide
 
@@ -1338,29 +1335,8 @@ Cognitive psychology is the study of limits and the remarkable workarounds the b
 # 🎙️ Audio Overview
 assets/audio/PSYC_414_Exam_3_Study_Guide.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/[filename].png
-
-# 📄 Reports
-assets/images/[filename].png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-cog-psyc-overview-1.csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 > [Zotero Data Placeholder]

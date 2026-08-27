@@ -653,29 +653,11 @@ By applying these principles with consistency and rigur, the management team at 
 # 🎙️ Audio Overview
 assets/audio/BSG_Players_Manual_Overview.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
 # 🧠 Mind Map
 assets/images/NotebookLM Mind Map - BSG_Overview.png
 
-# 📄 Reports
-assets/images/[filename].png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-BSG-overview.csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 

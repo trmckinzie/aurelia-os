@@ -234,33 +234,11 @@ By adhering to this framework, the autodidact transforms from a passive recipien
 
 --------------------------------------------------------------------------------
 
-
 # 🎙️ Audio Overview
 assets/audio/Autodidactic_Learning_Overview.m4a
 
-# 🎥 Video Overview
-assets/video/[filename].mp4
-
-# 🧠 Mind Map
-assets/images/[filename].png
-
-# 📄 Reports
-assets/images/[filename].png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-autodidactic_learning.csv
-
-# 📝 Quiz
-assets/images/[filename].png
-
-# 📊 Infographic
-assets/images/[filename].png
-
-# 📽️ Slide Deck
-assets/images/[filename].png
-
-# 📉 Data Table
-assets/images/[filename].png
 
 # 📚 Sources
 
