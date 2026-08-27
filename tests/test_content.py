@@ -1,4 +1,4 @@
-from engine.content import get_malformed_count, make_id, parse_body, parse_frontmatter, process_wikilinks, reset_malformed_count
+from engine.content import dim_dangling_links, get_malformed_count, make_id, parse_body, parse_frontmatter, process_wikilinks, reset_malformed_count
 
 
 def test_make_id_slugifies_filename():
@@ -163,3 +163,25 @@ def test_process_wikilinks_piped_label():
     html = process_wikilinks("[[Target Note|Custom Label]]")
     assert "openNote('note-target-note')" in html
     assert ">Custom Label</button>" in html
+
+
+def test_dim_dangling_links_leaves_known_target_untouched():
+    html = process_wikilinks("See [[Some Note]] for detail")
+    result = dim_dangling_links(html, known_ids={"note-some-note"})
+    assert result == html
+
+
+def test_dim_dangling_links_rewrites_unknown_target():
+    html = process_wikilinks("See [[Some Note]] for detail")
+    result = dim_dangling_links(html, known_ids=set())
+    assert "openNote(" not in result
+    assert '<span class="opacity-70 grayscale cursor-default" title="Not yet published">Some Note</span>' in result
+
+
+def test_dim_dangling_links_handles_mixed_known_and_unknown():
+    html = process_wikilinks("[[Real Note]] and [[Ghost Note]]")
+    result = dim_dangling_links(html, known_ids={"note-real-note"})
+    assert "openNote('note-real-note')" in result
+    assert ">Real Note</button>" in result
+    assert "openNote('note-ghost-note')" not in result
+    assert '<span class="opacity-70 grayscale cursor-default" title="Not yet published">Ghost Note</span>' in result

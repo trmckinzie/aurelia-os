@@ -104,6 +104,26 @@ def process_wikilinks(text):
     return re.sub(r'\[\[(.*?)\]\]', replace_link, text)
 
 
+_WIKILINK_BUTTON_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
+
+
+def dim_dangling_links(html, known_ids):
+    """Rewrites process_wikilinks() output so links to unpublished/nonexistent
+    notes render as inert, visually muted text instead of a live-looking button --
+    mirrors the live/dangling contract cards.link_pill() already applies to
+    structured fields (Related, Core Concepts, ...), extended here to cover plain
+    in-prose wikilinks, which link_pill() never sees since it only runs on
+    extractor-parsed fields, not a note's full body.
+    """
+    def replace(match):
+        target_id, label = match.group(1), match.group(2)
+        if target_id in known_ids:
+            return match.group(0)
+        return f'<span class="opacity-70 grayscale cursor-default" title="Not yet published">{label}</span>'
+
+    return _WIKILINK_BUTTON_RE.sub(replace, html)
+
+
 # --- NotebookLM media widgets ---------------------------------------------
 #
 # NotebookLM export notes carry a fixed set of headers (Audio Overview, Video

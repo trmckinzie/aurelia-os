@@ -12,6 +12,7 @@ from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env, load_user_config
 from engine.content import (
+    dim_dangling_links,
     get_malformed_count,
     make_id,
     parse_body,
@@ -89,7 +90,7 @@ def _scan_vault():
         )
         garden_cards.append({
             "html": card_html,
-            "body": p["processed_body"],
+            "body": dim_dangling_links(p["processed_body"], known_ids),
             "id": p["note_id"],
             "title": p["title"],
             "link": f"garden.html#{p['note_id']}",
