@@ -4,6 +4,9 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/neuroscience
+  - topic/cognitive-neuroscience
+  - topic/behavioral-economics
 type: concept
 maturity: seed
 status: active

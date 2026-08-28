@@ -4,6 +4,9 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/computation
+  - topic/algorithms
+  - topic/naturalism
 type: concept
 maturity: seed
 status: active

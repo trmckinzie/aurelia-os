@@ -4,6 +4,8 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/social-psychology
+  - topic/psychology
 type: concept
 maturity: seed
 status: active

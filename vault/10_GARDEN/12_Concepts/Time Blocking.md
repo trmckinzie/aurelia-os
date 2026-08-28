@@ -4,6 +4,9 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/productivity
+  - topic/deep-work
+  - topic/focus
 type: concept
 maturity: seed
 status: active

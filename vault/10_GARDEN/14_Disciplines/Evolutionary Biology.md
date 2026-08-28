@@ -4,6 +4,9 @@ tags:
   - type/discipline
   - maturity/evergreen
   - status/active
+  - topic/evolutionary-biology
+  - topic/biology
+  - topic/evolution
 type: discipline
 maturity: evergreen
 status: active

@@ -4,6 +4,9 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/semantics
+  - topic/phil-mind
+  - topic/language
 type: concept
 maturity: seed
 status: active
