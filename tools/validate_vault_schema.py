@@ -54,6 +54,10 @@ def _tag_set(meta):
     return {str(t).strip() for t in (meta.get("tags") or [])}
 
 
+def _has_topic_tag(tags):
+    return any(str(t).startswith("topic/") for t in tags)
+
+
 def check_note(path, folder, meta):
     """Returns a list of violation strings for one published note (empty if clean)."""
     problems = []
@@ -88,14 +92,21 @@ def check_note(path, folder, meta):
 def check_vault():
     """Walks 10_GARDEN, validates every published note.
 
-    Returns (violations, empty_files) where violations is a list of
-    (relpath, [problem, ...]) for notes that fail, and empty_files is a list
-    of zero-byte .md paths found (reported separately -- not a schema
-    violation, since an empty file is never published anyway, but worth
-    surfacing as vault hygiene).
+    Returns (violations, empty_files, untagged_notes):
+      violations: (relpath, [problem, ...]) for notes that fail the schema.
+      empty_files: zero-byte .md paths found (reported separately -- not a
+        schema violation, since an empty file is never published anyway,
+        but worth surfacing as vault hygiene).
+      untagged_notes: relpaths of published notes with no `topic/*` tag.
+        Also informational, not a violation -- topic assignment is a
+        content judgment call, not something this validator should fail a
+        build over -- but worth surfacing since "Related by Topic" and the
+        Garden's tag cloud (both in gardentemplate.html) are invisible to a
+        note with no topic tag at all.
     """
     violations = []
     empty_files = []
+    untagged_notes = []
 
     for folder in FOLDER_TYPE:
         folder_path = os.path.join(GARDEN, folder)
@@ -116,17 +127,25 @@ def check_vault():
             problems = check_note(path, folder, meta)
             if problems:
                 violations.append((os.path.relpath(path, VAULT_PATH), problems))
+            if not _has_topic_tag(_tag_set(meta)):
+                untagged_notes.append(os.path.relpath(path, VAULT_PATH))
 
-    return violations, empty_files
+    return violations, empty_files, untagged_notes
 
 
 def main():
-    violations, empty_files = check_vault()
+    violations, empty_files, untagged_notes = check_vault()
 
     if empty_files:
         print(f"ℹ️  {len(empty_files)} zero-byte note(s) found (unpublished, not a schema violation):")
         for p in empty_files:
             print(f"     {os.path.relpath(p, VAULT_PATH)}")
+
+    if untagged_notes:
+        print(f"ℹ️  {len(untagged_notes)} published note(s) have no topic/* tag (not a schema violation, "
+              f"but invisible to 'Related by Topic' and the tag cloud):")
+        for p in untagged_notes:
+            print(f"     {p}")
 
     if not violations:
         print("✅ Every published 10_GARDEN note matches the canonical schema.")

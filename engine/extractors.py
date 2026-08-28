@@ -19,6 +19,29 @@ from engine.textutils import (
 
 # --- Garden extractors -------------------------------------------------
 
+_CONTRASTS_RE = re.compile(r'\*\*⚡ Contrasts With:\*\*\s*(.*)')
+
+
+def _extract_contrasts(text, cap):
+    """Parses an optional "**⚡ Contrasts With:**" line -- the tension/
+    friction counterpart to a note's "Related" links (which are always
+    symmetric agreement/association). Same parsing shape as Related: prefer
+    wikilinks, fall back to plain comma-separated labels.
+
+    New field (2026-08); capped at 6 pending real usage data -- unlike
+    Related's audit-derived 12/10 caps above, there's no existing vault
+    content yet to survey a realistic maximum from.
+    """
+    match = _CONTRASTS_RE.search(text)
+    if not match:
+        return []
+    raw_line = match.group(1)
+    tensions = extract_links(raw_line)
+    if not tensions:
+        items = clean_text(raw_line).split(',')
+        tensions = [(None, i.strip()) for i in items if i.strip()]
+    return tensions[:cap]
+
 def extract_log_data(text):
     """Parses Daily Log for GOAL, SOURCE, CONCEPTS, and SUMMARY.
 
@@ -75,7 +98,7 @@ def extract_concept_data(text):
     # Concept notes found an average of 6 Related links and a max of 12, so
     # the old cap of 4 was silently dropping content from nearly every card
     # on the live site, not just guarding against a rare outlier.
-    return definition, links[:12]
+    return definition, links[:12], _extract_contrasts(text, 6)
 
 
 def extract_source_data(text):
@@ -138,7 +161,7 @@ def extract_discipline_data(text):
     # Caps raised from 4/3 -> 10/10 (2026-08 audit): observed max across the
     # 19 published Discipline notes was 9 Core Concepts and 10 Foundational
     # Texts -- every single note exceeded the old Foundational Texts cap of 3.
-    return scope, pillars[:10], canon[:10]
+    return scope, pillars[:10], canon[:10], _extract_contrasts(text, 6)
 
 
 def extract_notebooklm_data(text):

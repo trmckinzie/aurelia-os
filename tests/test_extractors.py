@@ -15,7 +15,7 @@ def test_extract_concept_data_with_wikilinked_related():
 
 **🔗 Related:** <button onclick="openNote('note-idea-one')">Idea One</button>, <button onclick="openNote('note-idea-two')">Idea Two</button>
 """
-    definition, links = extract_concept_data(text)
+    definition, links, _ = extract_concept_data(text)
     assert definition == "A concept is a unit of thought."
     assert links == [("note-idea-one", "Idea One"), ("note-idea-two", "Idea Two")]
 
@@ -28,7 +28,7 @@ def test_extract_concept_data_falls_back_to_plain_related_text():
 
 **🔗 Related:** Idea One, Idea Two
 """
-    definition, links = extract_concept_data(text)
+    definition, links, _ = extract_concept_data(text)
     assert definition == "A concept is a unit of thought."
     assert links == [(None, "Idea One"), (None, "Idea Two")]
 
@@ -43,9 +43,38 @@ def test_extract_concept_data_keeps_up_to_twelve_related_links():
 
 **🔗 Related:** {buttons}
 """
-    _, links = extract_concept_data(text)
+    _, links, _ = extract_concept_data(text)
     assert len(links) == 12
     assert links[0] == ("note-0", "Idea 0")
+
+
+def test_extract_concept_data_with_wikilinked_contrasts():
+    text = """
+### Definition
+> A concept is a unit of thought.
+
+**⚡ Contrasts With:** <button onclick="openNote('note-opposing-idea')">Opposing Idea</button>
+"""
+    _, _, tensions = extract_concept_data(text)
+    assert tensions == [("note-opposing-idea", "Opposing Idea")]
+
+
+def test_extract_concept_data_no_contrasts_field_returns_empty_list():
+    text = """
+### Definition
+> A concept is a unit of thought.
+"""
+    _, _, tensions = extract_concept_data(text)
+    assert tensions == []
+
+
+def test_extract_concept_data_keeps_up_to_six_contrasts():
+    buttons = ", ".join(
+        f"<button onclick=\"openNote('note-{i}')\">Idea {i}</button>" for i in range(9)
+    )
+    text = f"**⚡ Contrasts With:** {buttons}"
+    _, _, tensions = extract_concept_data(text)
+    assert len(tensions) == 6
 
 
 def test_extract_source_data_author_and_argument():
@@ -128,7 +157,7 @@ def test_extract_discipline_data_pillars_and_canon():
 ### Foundational Texts
 <button onclick="openNote('note-text')">The Text</button>
 """
-    scope, pillars, canon = extract_discipline_data(text)
+    scope, pillars, canon, _ = extract_discipline_data(text)
     assert scope == "The scope of the field."
     assert pillars == [("note-pillar", "Pillar")]
     assert canon == [("note-text", "The Text")]
@@ -148,9 +177,38 @@ def test_extract_discipline_data_keeps_up_to_ten_pillars_and_texts():
 ### Foundational Texts
 {canon_buttons}
 """
-    _, pillars, canon = extract_discipline_data(text)
+    _, pillars, canon, _ = extract_discipline_data(text)
     assert len(pillars) == 10
     assert len(canon) == 10
+
+
+def test_extract_discipline_data_with_wikilinked_contrasts():
+    text = """
+### Definition
+> The scope of the field.
+
+**⚡ Contrasts With:** <button onclick="openNote('note-rival-field')">Rival Field</button>
+"""
+    _, _, _, tensions = extract_discipline_data(text)
+    assert tensions == [("note-rival-field", "Rival Field")]
+
+
+def test_extract_discipline_data_no_contrasts_field_returns_empty_list():
+    text = """
+### Definition
+> The scope of the field.
+"""
+    _, _, _, tensions = extract_discipline_data(text)
+    assert tensions == []
+
+
+def test_extract_discipline_data_keeps_up_to_six_contrasts():
+    buttons = ", ".join(
+        f"<button onclick=\"openNote('note-{i}')\">Field {i}</button>" for i in range(9)
+    )
+    text = f"**⚡ Contrasts With:** {buttons}"
+    _, _, _, tensions = extract_discipline_data(text)
+    assert len(tensions) == 6
 
 
 def test_extract_log_data_source_and_concepts_are_link_aware():

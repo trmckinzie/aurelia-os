@@ -12,6 +12,10 @@ status: active
 publish: false
 ---
 <!--
+Zettelkasten role: LITERATURE note. A synthesis pulled from source material,
+not your own atomic thinking yet -- ideas worth keeping still belong in
+their own Concept notes, same as a Source note's Concepts Extracted.
+
 NotebookLM contract (engine/extractors.py::extract_notebooklm_data) -- keep
 these exact:
   1. A "# ... Lit Review Overview ..." header -- everything until the next

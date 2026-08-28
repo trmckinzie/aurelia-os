@@ -11,6 +11,10 @@ status: active
 publish: false
 ---
 <!--
+Zettelkasten role: FLEETING note. A quick, low-effort capture meant to be
+processed same-day -- its Atomic Extraction cues are the bridge into a real
+Concept (permanent) note, not a destination in themselves.
+
 Daily Log contract (engine/extractors.py::extract_log_data) -- keep these
 exact:
   1. "**GOAL:**" followed by text on the same line.

@@ -174,7 +174,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
     elif "concept" in note_type:
         color = "border-aurelia-primary"
-        definition, links = extract_concept_data(body_content)
+        definition, links, tensions = extract_concept_data(body_content)
         definition = truncate(definition, 160)
 
         links_html = render_items(
@@ -182,6 +182,24 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-aurelia-dim hover:border-aurelia-primary pb-0.5", known_ids),
             empty_html='<span class="opacity-30 text-[9px]">// NO_LINKS_DETECTED</span>',
         )
+        # Built conditionally rather than via render_items' empty_html
+        # placeholder: every existing Concept note has no Contrasts field
+        # yet, so an always-visible "no tensions" row would add clutter to
+        # every current card for a field nobody's used. tensions_block stays
+        # "" (a true no-op) until a note actually fills the field in.
+        tensions_block = ""
+        if tensions:
+            tensions_html = render_items(
+                tensions,
+                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[9px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-sm hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
+            )
+            tensions_block = f"""
+            <div class="pt-2 border-t border-aurelia-dim">
+                <span class="text-[9px] font-bold font-mono text-aurelia-tertiary uppercase tracking-widest block mb-1">CONTRASTS_WITH:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    {tensions_html}
+                </div>
+            </div>"""
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
@@ -200,6 +218,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                     {links_html}
                 </div>
             </div>
+            {tensions_block}
         </div>"""
         icon = "⚛️"; label = "CONCEPT"
 
@@ -303,7 +322,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
     elif "discipline" in note_type:
         color = "border-aurelia-accent"
-        scope, pillars, canon = extract_discipline_data(body_content)
+        scope, pillars, canon, tensions = extract_discipline_data(body_content)
         scope = truncate(scope, 160)
 
         pillars_html = render_items(
@@ -315,6 +334,21 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             canon,
             lambda pair: link_pill(pair[0], f"• {pair[1]}", "text-[10px] font-serif italic text-aurelia-muted hover:text-aurelia-text transition-colors truncate", known_ids),
         )
+        # See the Concept card above for why this is conditional rather than
+        # an empty_html placeholder: a true no-op for every existing note.
+        tensions_block = ""
+        if tensions:
+            tensions_html = render_items(
+                tensions,
+                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[9px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-sm hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
+            )
+            tensions_block = f"""
+            <div class="pt-2 border-t border-aurelia-dim">
+                <span class="text-[9px] font-bold font-mono text-aurelia-tertiary uppercase tracking-widest block mb-1">CONTRASTS_WITH:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    {tensions_html}
+                </div>
+            </div>"""
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
@@ -340,7 +374,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                     {canon_html}
                 </div>
             </div>
-
+            {tensions_block}
         </div>"""
         icon = "🧠"; label = "FIELD"
 

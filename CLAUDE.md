@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (94 tests as of this writing)
+python -m pytest tests/ -q             # full suite (118 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -39,6 +39,11 @@ python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 # Validate every published vault/10_GARDEN note against the canonical
 # frontmatter schema (see "Content model" below) -- also runs under pytest
 python tools/validate_vault_schema.py
+
+# Advisory vault-health reports (pending-atomization queue, orphaned notes,
+# maturity-promotion candidates) -- read-only, never edits the vault; see
+# "Content model" below for the promotion heuristic and tools/vault_health.py
+python tools/vault_health.py
 
 # Factory clone (see "deploy.py" below) -- generates ./Aurelia_Factory_v1/, not committed
 python deploy.py
@@ -243,6 +248,15 @@ mirrored as `maturity/*`/`status/*` tags (alongside the existing `type/*` tag) s
 pane, graph view, and Dataview/Bases queries stay in sync — `cards._maturity_slug()` and the Source
 card's status badge both read the frontmatter key first, falling back to the tag for notes edited by
 hand without it, the same precedence `type` resolution already used.
+
+Maturity promotion is a manual, human call — nothing auto-edits a note's `maturity:` key — but as of
+the 2026-08 zettelkasten audit there's a written heuristic to judge candidates by, instead of pure gut
+feel: promote **seed → growing** once a note has accumulated 2+ backlinks (it's actually being used,
+not just sitting there), and **growing → evergreen** once it's referenced from 2+ distinct Discipline
+notes (it's load-bearing across more than one structure note, not just locally popular).
+`tools/vault_health.py --report promotion` surfaces candidates against this rule using the same
+backlink graph `_build_link_graph()` already computes for the knowledge-graph view — advisory only,
+never applies anything.
 
 `type: project`, `type: protocol`, and `type: transmission` notes are recognized and explicitly
 skipped in `_scan_vault()` — the templates/card generators for them were deleted, not just disabled.

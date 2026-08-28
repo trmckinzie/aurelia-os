@@ -11,6 +11,10 @@ status: active
 publish: false
 ---
 <!--
+Zettelkasten role: CONTEXT note. Anchors a person behind the ideas -- not
+atomic itself, but the hub that ties their Key Works and Core Concepts
+together.
+
 Author contract (engine/extractors.py::extract_author_data) -- keep these
 three conventions exact:
   1. A "### ... Profile & Context ..." header followed immediately by a

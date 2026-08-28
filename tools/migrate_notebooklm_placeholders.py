@@ -66,7 +66,7 @@ def strip_unfilled_sections(text):
         )
 
         def _maybe_strip(m):
-            header_line, body = m.group(1), m.group(2)
+            body = m.group(2)
             if PLACEHOLDER_LINE.match(body.strip()):
                 return ''  # drop the header and its placeholder body entirely
             return m.group(0)

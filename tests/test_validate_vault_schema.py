@@ -7,11 +7,11 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 
-from validate_vault_schema import check_note, check_vault  # noqa: E402
+from validate_vault_schema import check_note, check_vault, _has_topic_tag  # noqa: E402
 
 
 def test_real_vault_10_garden_matches_canonical_schema():
-    violations, _ = check_vault()
+    violations, _, _ = check_vault()
     assert violations == [], (
         f"{len(violations)} note(s) violate the canonical schema -- "
         f"run `python tools/validate_vault_schema.py` for details: {violations[:3]}"
@@ -62,3 +62,11 @@ def test_check_note_flags_stray_empty_topic_tag():
     }
     problems = check_note("x.md", "12_Concepts", meta)
     assert any("stray empty/bare topic tag" in p for p in problems)
+
+
+def test_has_topic_tag_true_when_any_topic_tag_present():
+    assert _has_topic_tag(["type/concept", "topic/neuroscience"]) is True
+
+
+def test_has_topic_tag_false_when_no_topic_tag():
+    assert _has_topic_tag(["type/concept", "maturity/seed"]) is False

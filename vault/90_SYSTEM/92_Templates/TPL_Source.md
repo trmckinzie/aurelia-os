@@ -11,6 +11,11 @@ status: queued
 publish: false
 ---
 <!--
+Zettelkasten role: LITERATURE note. Notes taken while reading, tied to a
+specific source -- temporary scaffolding, not the destination. Its
+"Concepts Extracted" bullets are a queue: each one worth keeping should
+eventually become its own Concept (permanent) note.
+
 Source contract (engine/extractors.py::extract_source_data) -- keep these
 three conventions exact:
   1. A line containing "Author:" followed by a wikilink -- label is
