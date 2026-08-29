@@ -39,6 +39,15 @@
     <script src="https://cdn.jsdelivr.net/npm/marked@18.0.9/lib/marked.umd.js"
             integrity="sha384-kyb7rY2xnKgiRpRdAeNJxQ8e2SiGZy1m+FK9yME6M0eGJpg7EFaGGvf7+JSirgqE"
             crossorigin="anonymous"></script>
+    <!-- Motion (motion.dev), for UI/animation work. No build tool in this project,
+         so it's loaded the same way as marked.js above: a pinned CDN version with an
+         SRI hash rather than an npm dependency. Exposes `window.Motion` -- e.g.
+         `const { animate } = Motion; animate(".card", { opacity: [0, 1] })`.
+         Bump the version deliberately, not via a "latest" tag, and recompute the
+         hash when you do (`curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A`). -->
+    <script src="https://cdn.jsdelivr.net/npm/motion@13.1.1/dist/motion.js"
+            integrity="sha384-H2nNDydHmZprp4CMCumnXEUZpWPr9ifgL1W1PkhJj8awdAZ3QfvsGho12tqLeeBI"
+            crossorigin="anonymous"></script>
     <script src="assets/js/utils.js"></script>
 
     {% block head_extra %}{% endblock %}
