@@ -42,7 +42,7 @@ FOLDER_TYPE = {
     "13_Authors": "author",
     "14_Disciplines": "discipline",
     "15_Sources": "source/book",
-    "16_NotebookLM": "notebooklm",
+    "16_Gemini_Notebook": "gemini-notebook",
     "17_Deep_Dives": "deep-dive",
 }
 

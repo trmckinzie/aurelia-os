@@ -1,15 +1,15 @@
 ---
 created: 2026-04-26
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/growing
   - status/active
   - topic/research
-  - source/notebooklm
+  - source/gemini-notebook
   - topic/evolutionary-biology
   - topic/behavioral-economics
   - topic/behavioral-endocrinology
-type: notebooklm
+type: gemini-notebook
 maturity: growing
 status: active
 publish: true

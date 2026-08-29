@@ -143,27 +143,27 @@ tags: [onboarding]
 **🔗 Related:** Digital Garden, Zettelkasten
 
 Change `type:` in the frontmatter to switch note types: `concept`, `source`,
-`author`, `discipline`, `notebooklm` (see the NotebookLM demo below), or
+`author`, `discipline`, `gemini-notebook` (see the Gemini Notebook demo below), or
 `deep-dive` all render as different card layouts on the Garden page automatically.
 """
     with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "00_Demo_Concept.md"), "w", encoding="utf-8") as f:
         f.write(concept_md)
 
-    # --- B. DEMO NOTEBOOKLM (With Flashcards & References) ---
+    # --- B. DEMO GEMINI NOTEBOOK (With Flashcards & References) ---
     # First, create the CSV
-    csv_data = "Question,Answer\nWhat is NotebookLM?,An AI research assistant by Google.\nHow does Aurelia handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
+    csv_data = "Question,Answer\nWhat is Gemini Notebook?,An AI research assistant by Google.\nHow does Aurelia handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
     with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8") as f:
         f.write(csv_data)
 
     notebook_md = """---
-type: notebooklm
+type: gemini-notebook
 publish: true
 status: active
 tags: [research, AI]
 created: 2026-01-01
 ---
 # 📚 Lit Review Overview
-> **This is a NotebookLM Card.** It is designed to house deep research. It supports Audio Overviews, Flashcard Decks (via CSV), and Mind Maps.
+> **This is a Gemini Notebook Card.** It is designed to house deep research. It supports Audio Overviews, Flashcard Decks (via CSV), and Mind Maps.
 
 # 🎙️ Audio Overview
 assets/audio/placeholder.mp3
@@ -178,9 +178,9 @@ assets/flashcards/demo_deck.csv
 # 📚 Sources
 > **References**
 > - Aurelia Systems. (2026). *The Architecture of Digital Memory*.
-> - Google Research. (2024). *NotebookLM Technical Report*.
+> - Google Research. (2024). *Gemini Notebook Technical Report*.
 """
-    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "NotebookLM_Demo.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "Gemini_Notebook_Demo.md"), "w", encoding="utf-8") as f:
         f.write(notebook_md)
 
     print_step("Blueprint Notes created.")
@@ -222,7 +222,7 @@ layout:
 - **source** -- books, articles, papers you're drawing on
 - **author** -- profiles of people whose work you cite
 - **discipline** -- fields of study
-- **notebooklm** -- Google NotebookLM exports, with Audio Overview, Flashcard
+- **gemini-notebook** -- Gemini Notebook exports, with Audio Overview, Flashcard
   (CSV), and Mind Map support (see demo)
 - **deep-dive** -- long-form explainers pasted in whole rather than filled in
   piecemeal; the card pulls a premise line and a summary excerpt automatically

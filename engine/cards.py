@@ -6,8 +6,8 @@ from engine.extractors import (
     extract_concept_data,
     extract_deep_dive_data,
     extract_discipline_data,
+    extract_gemini_notebook_data,
     extract_log_data,
-    extract_notebooklm_data,
     extract_source_data,
 )
 from engine.textutils import truncate
@@ -139,7 +139,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                      "hover:border-opacity-100 cursor-pointer flex flex-col gap-4 "
                      "transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl "
                      "hover:z-10 group h-full min-h-[240px]")
-    # Overridden below for source/notebooklm: their top-badge label keeps the
+    # Overridden below for source/gemini-notebook: their top-badge label keeps the
     # exact color CYBER_PRIME always showed (tertiary/orange, primary/cyan)
     # even though the card's own identity color (highlight/info) differs --
     # changing it would be a visible CYBER_PRIME regression for no reason,
@@ -393,9 +393,9 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         </div>"""
         icon = "🧠"; label = "FIELD"
 
-    elif "notebooklm" in note_type:
+    elif "gemini-notebook" in note_type:
         color = "border-aurelia-info"
-        overview, active_features = extract_notebooklm_data(body_content)
+        overview, active_features = extract_gemini_notebook_data(body_content)
         overview = truncate(overview, 160)
 
         feature_icons = {
@@ -437,7 +437,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </div>
             </div>
         </div>"""
-        icon = "🧬"; label = "NOTEBOOK"; label_color = "text-aurelia-primary"
+        icon = "🧬"; label = "GEMINI NOTEBOOK"; label_color = "text-aurelia-primary"
 
     elif "deep-dive" in note_type or "deep_dive" in note_type:
         color = "border-aurelia-insight"

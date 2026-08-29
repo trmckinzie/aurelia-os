@@ -34,7 +34,7 @@ publish: true
 - Language Instinct —[[ Language]] as an evolved, biologically grounded human capacity.
 - Modularity of Mind — The mind composed of specialized, evolved mechanisms.
 - Psycholinguistics — Scientific study of how language is represented and processed.
-- [[Evolutionary Psychology (NotebookLM)]] — Explaining [[Cognition]] and behavior through adaptive function.
+- [[Evolutionary Psychology (Gemini Notebook)]] — Explaining [[Cognition]] and behavior through adaptive function.
 - Anti-Blank Slate — Rejection of the view that the mind is infinitely malleable.
 - Innateness — Inborn cognitive structures shaped by [[Evolution]].
 - Mental Computation — Mind as an information-processing system.

@@ -1,18 +1,18 @@
 ---
 created: 2026-01-16
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/evergreen
   - status/active
   - topic/research
-  - source/notebooklm
+  - source/gemini-notebook
   - topic/evo-psych
   - topic/evolutionary-biology
   - topic/biology
   - topic/neuroscience
   - topic/cognitive-science
   - topic/phil-mind
-type: notebooklm
+type: gemini-notebook
 maturity: evergreen
 status: active
 publish: true

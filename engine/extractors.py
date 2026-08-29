@@ -1,7 +1,7 @@
 """Regex extractors that pull structured card data out of a garden note's markdown body.
 
 Each garden note type follows its own loose convention of emoji headers and
-blockquotes (NotebookLM export format, daily-log templates, ...), so these
+blockquotes (Gemini Notebook export format, daily-log templates, ...), so these
 stay per-type rather than a single generic parser. The repeated pieces --
 stripping rendered wikilink buttons, walking to the next header, pulling out
 linked note titles -- are factored into engine.textutils.
@@ -164,8 +164,8 @@ def extract_discipline_data(text):
     return scope, pillars[:10], canon[:10], _extract_contrasts(text, 6)
 
 
-def extract_notebooklm_data(text):
-    """Parses NotebookLM Note for Overview and Active Studio Features."""
+def extract_gemini_notebook_data(text):
+    """Parses a Gemini Notebook note for Overview and Active Studio Features."""
     overview_match = re.search(r'#\s*.*Lit Review Overview.*\n([\s\S]*?)(?=\n#|$)', text)
     raw_overview = overview_match.group(1).strip() if overview_match else "Synthesis data pending."
     clean_overview = clean_text(raw_overview).replace('>', '').strip()

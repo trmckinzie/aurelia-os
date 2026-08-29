@@ -1,4 +1,4 @@
-"""Markdown note parsing: frontmatter, wikilinks, and NotebookLM media blocks."""
+"""Markdown note parsing: frontmatter, wikilinks, and Gemini Notebook media blocks."""
 import csv
 import os
 import re
@@ -124,12 +124,12 @@ def dim_dangling_links(html, known_ids):
     return _WIKILINK_BUTTON_RE.sub(replace, html)
 
 
-# --- NotebookLM media widgets ---------------------------------------------
+# --- Gemini Notebook media widgets -----------------------------------------
 #
-# NotebookLM export notes carry a fixed set of headers (Audio Overview, Video
-# Overview, Flashcards, ...) followed by a bare asset path. This scans each
-# recognized header's section for a matching asset path and swaps it for the
-# corresponding interactive HTML widget.
+# Gemini Notebook export notes carry a fixed set of headers (Audio Overview,
+# Video Overview, Flashcards, ...) followed by a bare asset path. This scans
+# each recognized header's section for a matching asset path and swaps it for
+# the corresponding interactive HTML widget.
 
 _MEDIA_MAP = [
     {
@@ -192,7 +192,7 @@ def _render_image(path):
 <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
 <a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-dim rounded hover:bg-aurelia-info hover:text-aurelia-inverted">ENLARGE</a>
 </div>
-<img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="NotebookLM Asset">
+<img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="Gemini Notebook Asset">
 </div>"""
 
 
@@ -248,9 +248,10 @@ _MEDIA_RENDERERS = {
 }
 
 
-def process_notebooklm_media(text):
-    """Scans NotebookLM headers and converts bare asset paths into interactive
-    HTML media (audio players, video, flashcard decks, enlargeable images)."""
+def process_gemini_notebook_media(text):
+    """Scans Gemini Notebook headers and converts bare asset paths into
+    interactive HTML media (audio players, video, flashcard decks,
+    enlargeable images)."""
     processed_text = text
     for item in _MEDIA_MAP:
         pattern = f"({item['header']}\\s*\\n)([\\s\\S]*?)(?=\\n#|$)"
@@ -269,3 +270,46 @@ def process_notebooklm_media(text):
         processed_text = re.sub(pattern, replacement_logic, processed_text, flags=re.IGNORECASE)
 
     return processed_text
+
+
+_SECTION_HEADER_RE = re.compile(r'^#\s+(.+)$', re.MULTILINE)
+
+
+def wrap_gemini_notebook_sections(text):
+    """Wraps each top-level `# Header` section of a Gemini Notebook note in a
+    collapsible <details>/<summary> block, so a long note (real ones run to
+    15+ sections) can be scanned by header and expanded on demand in the
+    modal reader, instead of one long scroll.
+
+    Only the first section starts open (the Lit Review Overview, by
+    convention always first) -- everything else starts collapsed.
+
+    A blank line separates <summary>...</summary> from the section body, and
+    another precedes the closing </details>: CommonMark (and marked.js, which
+    renders this client-side in openNote()) treats <details>/<summary> as a
+    raw-HTML block that ends at a blank line, so markdown *inside* the gap --
+    bold, bullet lists, and the audio/video/flashcard widget HTML
+    process_gemini_notebook_media() already injected -- still gets parsed
+    normally, while the collapse/expand chrome itself is just plain HTML.
+    This is the same pattern GitHub-flavored markdown uses for collapsible
+    sections.
+    """
+    matches = list(_SECTION_HEADER_RE.finditer(text))
+    if not matches:
+        return text
+
+    pieces = [text[:matches[0].start()]]
+    for i, match in enumerate(matches):
+        header_text = match.group(1).strip()
+        start = match.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        section_body = text[start:end].strip()
+        open_attr = " open" if i == 0 else ""
+        pieces.append(
+            f'\n\n<details{open_attr} class="gemini-note-section">\n'
+            f'<summary class="gemini-note-summary"><span class="folder-arrow">▶</span> {header_text}</summary>\n\n'
+            f'{section_body}\n\n'
+            f'</details>\n\n'
+        )
+
+    return "".join(pieces)

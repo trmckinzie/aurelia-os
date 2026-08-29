@@ -59,7 +59,7 @@ THEME_CONFIG = {
             "tertiary": "#ff8c00",      # Orange (Commerce, Alerts)
             "accent": "#39ff14",        # Green (Success, Terminal)
             "highlight": "#eab308",     # Yellow (Source/Library card identity)
-            "info": "#6366f1",          # Indigo (NotebookLM/Research card identity)
+            "info": "#6366f1",          # Indigo (Gemini Notebook/Research card identity)
             "insight": "#ff2d78",       # Magenta/Rose (Deep Dive card identity)
         },
         "font_mono": "'JetBrains Mono', monospace",
@@ -113,7 +113,7 @@ THEME_CONFIG = {
             "highlight": "#8a6416",     # Antique brass/gold (Source/Library card identity) --
                                         # distinct from tertiary's grayer gold-60, dark enough
                                         # for AA text contrast on the parchment background.
-            "info": "#2f4b6b",          # Deep navy-slate (NotebookLM/Research card identity) --
+            "info": "#2f4b6b",          # Deep navy-slate (Gemini Notebook/Research card identity) --
                                         # stays in the blue family but reads as its own hue
                                         # next to primary/accent.
             "insight": "#265c35",       # Deep civic green (Deep Dive card identity) -- hand-picked
@@ -209,7 +209,7 @@ THEME_CONFIG = {
             "tertiary": "#5b6b3f",      # Laurel olive (Commerce, Alerts)
             "accent": "#5b3a6b",        # Tyrian imperial purple (Success, Terminal)
             "highlight": "#7a5f1a",     # Gold leaf (Source/Library card identity)
-            "info": "#3d5266",          # Lapis lazuli (NotebookLM/Research card identity)
+            "info": "#3d5266",          # Lapis lazuli (Gemini Notebook/Research card identity)
             "insight": "#1f6b5c",       # Verdigris (Deep Dive card identity) -- the blue-green
                                         # patina that forms on oxidized bronze, the same real
                                         # antiquity material primary already draws on
@@ -310,7 +310,7 @@ THEME_CONFIG = {
             "tertiary": "#b7bab4",      # Silver (Commerce, Alerts)
             "accent": "#4ade80",        # Bright Kelly (Success, Terminal)
             "highlight": "#8a9089",     # Gunmetal (Source/Library card identity)
-            "info": "#7c9484",          # Sage (NotebookLM/Research card identity)
+            "info": "#7c9484",          # Sage (Gemini Notebook/Research card identity)
             "insight": "#3fae82",       # Teal-spruce (Deep Dive card identity) -- a fourth green,
                                         # shifted bluer (hue ~160) than primary/secondary/accent's
                                         # yellow-greens (hue ~132-152) so it reads as distinct while

@@ -61,6 +61,28 @@
     details[open] > summary .folder-arrow { transform: rotate(90deg); }
     details[open] > summary { margin-bottom: 0.5rem; }
 
+    /* 5b. GEMINI NOTEBOOK COLLAPSIBLE SECTIONS (in the modal reader)
+       Reuses the details/summary + .folder-arrow rules above (they're
+       unscoped, not tied to .tree-container) -- this just adds the spacing/
+       border a note-body section needs that a tree-view folder row doesn't. */
+    .gemini-note-section {
+        margin: 1rem 0;
+        border: 1px solid var(--aurelia-border-main);
+        border-radius: 4px;
+        padding: 0.25rem 0.75rem;
+    }
+    .gemini-note-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        font-weight: bold;
+    }
+    .gemini-note-section[open] > .gemini-note-summary {
+        border-bottom: 1px solid var(--aurelia-border-main);
+        margin-bottom: 0.75rem;
+    }
+
     /* The Vertical Circuit Line */
     .tree-branch {
         position: relative;
@@ -315,8 +337,8 @@
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('notebooklm', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
-                        NotebookLM
+                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                        Gemini Notebook
                     </button>
 
                     <button onclick="setFilter('deep-dive', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
@@ -426,7 +448,7 @@
                         {% set folder_icon = "📚" %}
                     {% endif %}
 
-                    {% if "notebooklm" in type %}
+                    {% if "gemini-notebook" in type %}
                         {% set group_color = "text-aurelia-info" %}
                         {% set group_border = "border-aurelia-info" %}
                         {% set folder_icon = "🧬" %}
@@ -503,7 +525,7 @@
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-highlight"></span>Source</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-secondary"></span>Author</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-accent"></span>Discipline</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-info"></span>NotebookLM</span>
+                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-info"></span>Gemini Notebook</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-insight"></span>Deep Dive</span>
                 </div>
             </div>
@@ -750,7 +772,7 @@
             target.classList.add('bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary');
         } else if (type === 'discipline') {
             target.classList.add('bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent');
-        } else if (type === 'notebooklm') {
+        } else if (type === 'gemini-notebook') {
             target.classList.add('bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info');
         } else {
             // Default (All, Concepts) -> Cyan
@@ -1157,7 +1179,7 @@
             source: v('--aurelia-highlight', '#facc15'),
             author: v('--aurelia-secondary', '#8a2be2'),
             discipline: v('--aurelia-accent', '#39ff14'),
-            notebooklm: v('--aurelia-info', '#818cf8'),
+            'gemini-notebook': v('--aurelia-info', '#818cf8'),
             'deep-dive': v('--aurelia-insight', '#ff2d78'),
         };
     }

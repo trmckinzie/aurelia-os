@@ -1,11 +1,11 @@
 ---
 created: 2026-01-16
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/growing
   - status/active
   - topic/research
-  - source/notebooklm
+  - source/gemini-notebook
   - topic/computer-science
   - topic/cognitive-science
   - topic/software-engineering
@@ -13,7 +13,7 @@ tags:
   - topic/programming-languages
   - topic/phil-mind
   - topic/artificial-intelligence
-type: notebooklm
+type: gemini-notebook
 maturity: growing
 status: active
 publish: true

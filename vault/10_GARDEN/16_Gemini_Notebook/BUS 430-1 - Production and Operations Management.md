@@ -1,16 +1,16 @@
 ---
 created: 2026-01-16
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/growing
   - status/active
   - topic/research
-  - source/notebooklm
+  - source/gemini-notebook
   - topic/business
   - topic/strategy
   - topic/project-management
   - topic/career-capital
-type: notebooklm
+type: gemini-notebook
 maturity: growing
 status: active
 publish: true

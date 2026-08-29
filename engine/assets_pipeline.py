@@ -5,13 +5,14 @@ import subprocess
 
 from engine.config import OUTPUT_DIR, ROOT_DIR, VAULT_PATH
 
-# NotebookLM audio exports run 30-80MB+ each and go straight into git, which
-# never shrinks on its own. Rather than rewriting existing history (risky,
-# needs a force-push), new audio above this size gets compressed on the way
-# out of the drop zone -- capping growth going forward without touching what's
-# already committed. 64k mono is a standard podcast/spoken-word target and
-# typically cuts these files by 50-70%; NotebookLM's two-host dialogue exports
-# don't rely on stereo separation, so mono isn't a perceptible loss here.
+# Gemini Notebook audio exports run 30-80MB+ each and go straight into git,
+# which never shrinks on its own. Rather than rewriting existing history
+# (risky, needs a force-push), new audio above this size gets compressed on
+# the way out of the drop zone -- capping growth going forward without
+# touching what's already committed. 64k mono is a standard podcast/
+# spoken-word target and typically cuts these files by 50-70%; Gemini
+# Notebook's two-host dialogue exports don't rely on stereo separation, so
+# mono isn't a perceptible loss here.
 _AUDIO_COMPRESS_THRESHOLD_BYTES = 15 * 1024 * 1024
 _AUDIO_TARGET_BITRATE = "64k"
 

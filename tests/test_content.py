@@ -1,4 +1,13 @@
-from engine.content import dim_dangling_links, get_malformed_count, make_id, parse_body, parse_frontmatter, process_wikilinks, reset_malformed_count
+from engine.content import (
+    dim_dangling_links,
+    get_malformed_count,
+    make_id,
+    parse_body,
+    parse_frontmatter,
+    process_wikilinks,
+    reset_malformed_count,
+    wrap_gemini_notebook_sections,
+)
 
 
 def test_make_id_slugifies_filename():
@@ -185,3 +194,33 @@ def test_dim_dangling_links_handles_mixed_known_and_unknown():
     assert ">Real Note</button>" in result
     assert "openNote('note-ghost-note')" not in result
     assert '<span class="opacity-70 grayscale cursor-default" title="Not yet published">Ghost Note</span>' in result
+
+
+def test_wrap_gemini_notebook_sections_wraps_each_header():
+    text = """# 📚 Lit Review Overview
+Overview text.
+
+# 🎙️ Audio Overview
+Some audio widget HTML.
+
+# 📚 Sources
+> A citation.
+"""
+    result = wrap_gemini_notebook_sections(text)
+    assert result.count("<details") == 3
+    assert '<summary class="gemini-note-summary"><span class="folder-arrow">▶</span> 📚 Lit Review Overview</summary>' in result
+    assert "Overview text." in result
+    assert "Some audio widget HTML." in result
+    assert "> A citation." in result
+
+
+def test_wrap_gemini_notebook_sections_only_first_section_starts_open():
+    text = "# First\nBody one.\n\n# Second\nBody two.\n"
+    result = wrap_gemini_notebook_sections(text)
+    first_details, second_details = result.split("<details", 2)[1:]
+    assert first_details.startswith(" open")
+    assert not second_details.startswith(" open")
+
+
+def test_wrap_gemini_notebook_sections_no_headers_returns_text_unchanged():
+    assert wrap_gemini_notebook_sections("Just plain text, no headers.") == "Just plain text, no headers."

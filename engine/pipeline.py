@@ -17,9 +17,10 @@ from engine.content import (
     make_id,
     parse_body,
     parse_frontmatter,
-    process_notebooklm_media,
+    process_gemini_notebook_media,
     process_wikilinks,
     reset_malformed_count,
+    wrap_gemini_notebook_sections,
 )
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
@@ -69,8 +70,9 @@ def _scan_vault():
             full_search_text = f"{raw_search} {tag_text}".replace('\n', ' ').replace('"', "").replace("'", "").lower()
 
             processed_body = process_wikilinks(body)
-            if "notebooklm" in note_type:
-                processed_body = process_notebooklm_media(processed_body)
+            if "gemini-notebook" in note_type:
+                processed_body = process_gemini_notebook_media(processed_body)
+                processed_body = wrap_gemini_notebook_sections(processed_body)
 
             pending.append({
                 "meta": meta,

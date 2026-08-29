@@ -1,18 +1,18 @@
 ---
 created: 2026-01-16
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/growing
   - status/active
   - topic/research
-  - source/notebooklm
+  - source/gemini-notebook
   - topic/political-psychology
   - topic/political-phil
   - topic/psychology
   - topic/social-psychology
   - topic/evo-psych
   - topic/dual-process-theories
-type: notebooklm
+type: gemini-notebook
 maturity: growing
 status: active
 publish: true

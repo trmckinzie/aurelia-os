@@ -51,4 +51,4 @@ publish: true
 - The Rapid Evolution Debate:_ Have we evolved significantly _since_ the Stone Age? (e.g., Lactose tolerance evolved in just a few thousand years). Are we more "modern" than Evo Psych admits?
 
 
-Notebook LM --> [[Evolutionary Psychology (NotebookLM)]]
+Gemini Notebook --> [[Evolutionary Psychology (Gemini Notebook)]]

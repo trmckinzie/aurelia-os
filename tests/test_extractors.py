@@ -3,6 +3,7 @@ from engine.extractors import (
     extract_concept_data,
     extract_deep_dive_data,
     extract_discipline_data,
+    extract_gemini_notebook_data,
     extract_log_data,
     extract_source_data,
 )
@@ -236,6 +237,47 @@ def test_extract_log_data_defaults_when_fields_missing():
     assert source == (None, "Internal Log")
     assert concepts == []
     assert summary == ""
+
+
+def test_extract_gemini_notebook_data_overview_and_active_features():
+    text = """
+# 📚 Lit Review Overview
+> The core synthesis text.
+
+# 🎙️ Audio Overview
+assets/audio/example.m4a
+
+# 🧠 Mind Map
+assets/images/example.png
+
+# 🃏 Flashcards
+assets/flashcards/example.csv
+"""
+    overview, active_features = extract_gemini_notebook_data(text)
+    assert overview == "The core synthesis text."
+    assert set(active_features) == {"audio", "mindmap", "flashcards"}
+
+
+def test_extract_gemini_notebook_data_defaults_when_overview_missing():
+    overview, active_features = extract_gemini_notebook_data("nothing here")
+    assert overview == "Synthesis data pending."
+    assert active_features == []
+
+
+def test_extract_gemini_notebook_data_ignores_headers_with_no_content():
+    # Regression guard for the bug TPL_Gemini_Notebook.md's own contract
+    # warns about: an unfilled placeholder header must not count as "active".
+    text = """
+# 📚 Lit Review Overview
+> Overview text.
+
+# 🎥 Video Overview
+
+# 🎙️ Audio Overview
+assets/audio/example.m4a
+"""
+    _, active_features = extract_gemini_notebook_data(text)
+    assert active_features == ["audio"]
 
 
 def test_extract_deep_dive_data_with_wikilinked_related():

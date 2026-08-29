@@ -140,6 +140,21 @@ def test_source_card_status_badge_ignores_unrelated_tag_substrings():
     assert ">ARCHIVED<" in html
 
 
+def test_gemini_notebook_card_renders_label_type_and_color():
+    body = """
+# 📚 Lit Review Overview
+> A synthesis of the source material.
+
+# 🎙️ Audio Overview
+assets/audio/example.m4a
+"""
+    meta = {"type": "gemini-notebook", "tags": []}
+    html = generate_garden_card_html(meta, "A Notebook.md", "note-a-notebook", body, "search")
+    assert "GEMINI NOTEBOOK" in html
+    assert 'data-type="gemini-notebook"' in html
+    assert "border-aurelia-info" in html
+
+
 def test_deep_dive_card_renders_premise_synthesis_and_related():
     meta = {"type": "deep-dive", "maturity": "growing", "tags": []}
     body = """**🔗 Related:** <button onclick="openNote('note-idea')">Idea</button>

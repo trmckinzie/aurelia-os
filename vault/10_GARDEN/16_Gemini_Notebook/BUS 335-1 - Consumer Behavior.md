@@ -1,12 +1,12 @@
 ---
 created: 2026-01-16
 tags:
-  - type/notebooklm
+  - type/gemini-notebook
   - maturity/growing
   - status/active
   - topic/research
-  - source/notebooklm
-type: notebooklm
+  - source/gemini-notebook
+type: gemini-notebook
 maturity: growing
 status: active
 publish: true

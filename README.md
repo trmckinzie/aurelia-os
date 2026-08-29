@@ -2,7 +2,7 @@
 
 A personal static-site generator that turns an [Obsidian](https://obsidian.md) vault into a
 published digital garden — an **external cortex**: atomic notes (concepts, sources, authors,
-disciplines, daily logs, NotebookLM syntheses, deep dives) linked the way a Zettelkasten links, rendered,
+disciplines, daily logs, Gemini Notebook syntheses, deep dives) linked the way a Zettelkasten links, rendered,
 styled, and published as a real website with the link graph itself made visible and navigable.
 
 **Live site:** [trmckinzie.github.io/aurelia-os](https://trmckinzie.github.io/aurelia-os/)
@@ -19,11 +19,11 @@ styled, and published as a real website with the link graph itself made visible 
   single CSS-variable source of truth), each with its own palette, typography, and material
   language: `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA`
   (Stoic Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State University green/black/white).
-- NotebookLM export support: audio/video overviews, flashcard decks, mind maps and other synthesis
-  assets are auto-detected from the export's headers and rendered as interactive widgets.
-  **Note:** the media files themselves are no longer committed to this repo (see [Media](#media)),
-  so the audio and image widgets currently render without their sources. Flashcard decks still
-  work — those are small CSVs.
+- Gemini Notebook export support: audio/video overviews, flashcard decks, mind maps and other
+  synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,
+  with each top-level section collapsible in the note reader. **Note:** the media files themselves
+  are no longer committed to this repo (see [Media](#media)), so the audio and image widgets
+  currently render without their sources. Flashcard decks still work — those are small CSVs.
 
 ## Stack
 
@@ -109,7 +109,7 @@ If you fork this or run it on your own vault, decide up front which of these you
 `audio/`, `images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input
 CSS, one shared JS file, and five small flashcard CSVs.
 
-NotebookLM audio exports ran 64–79 MB each and had grown to ~858 MB, which pushed the published
+Gemini Notebook audio exports ran 64–79 MB each and had grown to ~858 MB, which pushed the published
 site to 88% of GitHub Pages' 1 GB ceiling and made every clone and CI checkout pay for all of it.
 They were removed from the repository and its history in 2026; `dist/` went from ~882 MB to
 ~5.7 MB. Media of that size belongs in object storage, linked from the notes rather than bundled

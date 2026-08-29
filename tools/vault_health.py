@@ -37,7 +37,7 @@ _WIKILINK_RE = re.compile(r'\[\[(.*?)\]\]')
 
 # The "permanent notes" and "structure notes" in zettelkasten terms -- the
 # ones meant to be densely cross-linked. Daily Log (fleeting) and
-# Source/NotebookLM (literature) naturally have asymmetric link patterns
+# Source/Gemini Notebook (literature) naturally have asymmetric link patterns
 # (nobody links *to* a specific day; a Source is linked from its Concepts
 # more than it links out) that would flood an orphan list with false
 # positives if included by default.

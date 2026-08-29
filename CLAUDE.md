@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Aurelia OS is a personal static-site generator: it turns an Obsidian vault (`vault/`) into a
 published GitHub Pages site (`https://trmckinzie.github.io/aurelia-os/`) for Travis McKinzie. The
 stated purpose is an **"external cortex"** — a personal wiki/digital garden where atomic notes
-(concepts, sources, authors, disciplines, daily logs, NotebookLM syntheses, deep dives) link to each other the
+(concepts, sources, authors, disciplines, daily logs, Gemini Notebook syntheses, deep dives) link to each other the
 way a Zettelkasten does, captured in Obsidian and then rendered, styled, and published as a real
 website. The design goal is not just "notes on the web" — it's making the *graph* (what links to
 what, note maturity, discoverability) actually visible and navigable in the published site, not
@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (119 tests as of this writing)
+python -m pytest tests/ -q             # full suite (126 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -78,11 +78,13 @@ real logic lives in `engine/`:
 - **`content.py`** — markdown-level parsing: `parse_frontmatter()` (real YAML via PyYAML, not regex),
   `parse_body()`, `make_id()` (filename → slug), `process_wikilinks()` (`[[Target]]` /
   `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`), and
-  `process_notebooklm_media()` (converts NotebookLM export headers like `# Audio Overview` into
-  embedded `<audio>`/`<video>`/flashcard-CSV widgets).
+  `process_gemini_notebook_media()` (converts Gemini Notebook export headers like `# Audio Overview`
+  into embedded `<audio>`/`<video>`/flashcard-CSV widgets), and `wrap_gemini_notebook_sections()`
+  (wraps each top-level `#` section of a Gemini Notebook note in a collapsible `<details>`/
+  `<summary>` block for the modal reader — see "Content model" below).
 - **`extractors.py`** — regex extractors that pull structured data out of a garden note's body per
   type (`extract_log_data`, `extract_concept_data`, `extract_source_data`, `extract_author_data`,
-  `extract_discipline_data`, `extract_notebooklm_data`, `extract_deep_dive_data`). These depend on emoji-prefixed markdown
+  `extract_discipline_data`, `extract_gemini_notebook_data`, `extract_deep_dive_data`). These depend on emoji-prefixed markdown
   headers matching loosely (e.g. `r'###\s*.*Definition.*'` matches regardless of exact emoji), but
   **exact-string fields** (like `**🔗 Related:**`) are fragile — change the literal text in a
   template and extraction silently returns nothing for that field. Every extractor that returns
@@ -94,7 +96,7 @@ real logic lives in `engine/`:
   `dumps_for_script_tag` (JSON-dumps but escapes `</script` so embedded JSON can't break out of its
   `<script>` tag).
 - **`cards.py`** — `generate_garden_card_html()` is the single card-rendering function; it branches
-  on note type (daily-log, concept, source, author, discipline, notebooklm, deep-dive, default) and
+  on note type (daily-log, concept, source, author, discipline, gemini-notebook, deep-dive, default) and
   calls the matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
   target note id is in the `known_ids` set passed in, dimmed non-interactive text (with a "Not yet
   published" tooltip) if it was a wikilink to something that doesn't exist/isn't published, or plain
@@ -114,7 +116,7 @@ real logic lives in `engine/`:
 
   **No media is currently committed.** `vault/assets/` holds empty `audio/`, `images/`, and
   `flashcards/` directories; the only tracked assets are `assets/css`, `assets/js`, and five
-  flashcard CSVs. All NotebookLM audio and mind-map images were removed from the repo *and its
+  flashcard CSVs. All Gemini Notebook audio and mind-map images were removed from the repo *and its
   history* in 2026 (see "Recent history" item 9), so 15 notes still reference `assets/audio/...`
   and `assets/images/...` paths that no longer resolve — those widgets render as dead players
   until media hosting is re-established off-repo. The compression path above still works and is
@@ -226,9 +228,21 @@ in a private repo, CI pushing only built `dist/` to a separate public Pages repo
 
 Garden note types are set via YAML frontmatter `type:` (or a `type/xxx` tag as fallback) and a note
 only publishes with `publish: true`. Types: `concept`, `source/book`, `author`, `discipline`,
-`notebooklm`, `deep-dive`, daily logs (detected by a `YYYY-MM-DD`-shaped filename, or
+`gemini-notebook`, `deep-dive`, daily logs (detected by a `YYYY-MM-DD`-shaped filename, or
 `type: daily-bridge`/`log`), and anything else falls through to a generic card. Templater templates
 for each type live in `vault/90_SYSTEM/92_Templates/`.
+
+`gemini-notebook` (`10_GARDEN/16_Gemini_Notebook/`, renamed from `notebooklm` in 2026-08) is a
+literature note pasted from a Gemini Notebook/NotebookLM export: a Lit Review Overview plus
+whatever Studio outputs were generated (Audio Overview, Mind Map, Flashcards, and — recognized by
+the extractor and media map but no longer scaffolded in the template since no real note has ever
+used them — Video Overview, Reports, Quiz, Infographic, Slide Deck, Data Table). Every top-level `#`
+header in the note body, including freeform ones an author adds beyond the template's scaffold
+(chapter breakdowns, study guides — common in real notes), is wrapped by
+`content.wrap_gemini_notebook_sections()` into its own collapsible `<details>`/`<summary>` block in
+the modal reader (first section open, the rest collapsed) — real notes have run to 15+ sections, so
+this is a navigation aid, not decoration. Its card identity reuses the `info` role color (no
+dedicated CSS variable — `border-aurelia-info` is simply not assigned to any other card type).
 
 `deep-dive` (`10_GARDEN/17_Deep_Dives/`, added 2026-08) is structurally unlike the other six: a Deep
 Dive is pasted in whole from elsewhere (an AI chat, an essay draft) rather than filled in piecemeal,
@@ -373,6 +387,22 @@ knowing so you don't "fix" something that was a deliberate decision:
     `text-lg` → `text-xl`, and the at-rest card border opacity went 40% → 60% so card edges (and,
     per the same audit, boundaries generally) read clearly while scanning rather than only on
     hover.
+14. **`notebooklm` renamed to `gemini-notebook`, notes made collapsible (2026-08).** The product
+    isn't called NotebookLM any more, so the type slug, vault folder (`16_NotebookLM` →
+    `16_Gemini_Notebook`), the 3 note filenames that carried a "(NotebookLM)" suffix, every Python
+    identifier (`process_notebooklm_media` → `process_gemini_notebook_media`,
+    `extract_notebooklm_data` → `extract_gemini_notebook_data`), and every site-facing label
+    (card badge, filter button, legend, graph node color key) were renamed to match. All 15 existing
+    notes' frontmatter (`type:`, `type/*` and `source/*` tags) were migrated, and the 4 files with
+    inbound wikilinks to the 3 renamed notes were fixed up (same "Obsidian doesn't auto-relink
+    outside the app" caveat as item 8). `tools/migrate_notebooklm_placeholders.py`, a completed
+    one-off migration from the 2026-08 template audit, was deleted rather than left to break on
+    import. Separately, `TPL_Gemini_Notebook.md` was trimmed from 9 scaffolded Studio-output
+    headers to the 3 ever actually used (Audio Overview, Mind Map, Flashcards) — the other 6 had
+    only ever sat as unfilled placeholders (the exact bug class the template's own contract comment
+    already warned about); the extractor and media-widget map still recognize all 9 if a header is
+    added by hand. The actual new capability, `content.wrap_gemini_notebook_sections()`, is
+    documented under "Content model" above.
 
 ## Known gaps / deliberately not done
 
@@ -439,8 +469,8 @@ practical risk is bounded (single-author site, content the author pastes in hims
 `./Aurelia_Factory_v1/` (gitignored, not committed) — a white-labeled, `[INSERT NAME]`-style
 template meant to be handed to someone else as a starting point for their own instance. It copies
 `build.py`, `engine/`, `system/templates/`, `assets/{css,js}` (not images, for privacy), writes a
-generic `user_config.json`, and generates two demo notes (a Concept and a NotebookLM example) plus a
-README. Keep it in sync with `engine/`'s actual capabilities when you change what the site can do —
+generic `user_config.json`, and generates two demo notes (a Concept and a Gemini Notebook example)
+plus a README. Keep it in sync with `engine/`'s actual capabilities when you change what the site can do —
 its `FACTORY_CONFIG` and generated README have drifted out of sync with reality before (see "Recent
 history" item 4) and it's easy for that to happen again silently, since nothing tests it
 automatically.

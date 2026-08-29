@@ -12,7 +12,7 @@ publish: false
 ---
 <!--
 Zettelkasten role: PERMANENT / ATOMIC note. One idea, in your own words,
-densely linked -- the thing a literature note (Source/NotebookLM) or
+densely linked -- the thing a literature note (Source/Gemini Notebook) or
 fleeting note (Daily Log) eventually gets distilled into.
 
 Concept contract (engine/extractors.py::extract_concept_data) -- keep these
