@@ -50,6 +50,10 @@ python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 
 # Validate every published vault note against the canonical frontmatter schema
 python tools/validate_vault_schema.py
+
+# Advisory vault-health reports: pending-atomization queue, orphaned notes,
+# maturity-promotion candidates (read-only, never edits the vault)
+python tools/vault_health.py
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the full architecture writeup — build pipeline, the wikilink/backlink

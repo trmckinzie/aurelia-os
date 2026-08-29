@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (118 tests as of this writing)
+python -m pytest tests/ -q             # full suite (119 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -98,9 +98,12 @@ real logic lives in `engine/`:
   calls the matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
   target note id is in the `known_ids` set passed in, dimmed non-interactive text (with a "Not yet
   published" tooltip) if it was a wikilink to something that doesn't exist/isn't published, or plain
-  text if it was never a link at all. `_maturity_badge()` renders a 🌱/🌿/🌳 badge from the frontmatter
-  `maturity:` key (falling back to a `maturity/*` tag — see "Content model" below), shown
-  uniformly across every card type.
+  text if it was never a link at all. `_maturity_badge(slug, color)` renders a 🌱/🌿/🌳 + text-label
+  chip from the frontmatter `maturity:` key (falling back to a `maturity/*` tag — see "Content
+  model" below), shown uniformly across every card type. `color` is the calling card type's own
+  identity color (e.g. `border-aurelia-primary` for Concept) — the badge reuses it rather than a
+  new theme color, with fill weight (outline → soft tint → solid) tracking seed → growing →
+  evergreen, so no `THEME_CONFIG` change was needed to make the badge legible at a glance.
 - **`assets_pipeline.py`** — `organize_assets()` (sorts `vault/99_DROP_ZONE` into
   `vault/assets/{images,audio,video,flashcards,documents}` by extension; audio over 15MB gets
   auto-compressed via ffmpeg if it's installed, otherwise copied as-is with a warning),
@@ -338,6 +341,38 @@ knowing so you don't "fix" something that was a deliberate decision:
     legend/graph-node-coloring all needed a matching addition, since nothing about the type→color
     mapping is generic — each of the previous six was hand-wired the same way. `tools/
     validate_vault_schema.py`'s `FOLDER_TYPE` picked up `"17_Deep_Dives": "deep-dive"` alongside it.
+11. **Zettelkasten-improvements pass (2026-08).** Six additive suggestions for making the vault a
+    better zettelkasten, implemented via a formal plan: a "Contrasts With" tension-link field on
+    Concept/Discipline (`_extract_contrasts()` in `extractors.py`, rendered conditionally so it's a
+    byte-identical no-op for every note without the field), `tools/vault_health.py` (pending-
+    atomization, orphan, and maturity-promotion-candidate reports — advisory, never writes to the
+    vault), a topic-tag-hygiene check folded into `validate_vault_schema.py`, and each Templater
+    template in `92_Templates/` labeled with its zettelkasten role (fleeting/literature/permanent/
+    structure/context) in its own contract comment. The maturity-promotion heuristic documented
+    under "Content model" above came out of this pass. Raised extractor link/related-item caps at
+    the same time after discovering nearly every card was silently truncating content far below
+    actual vault usage (e.g. Concept's Related cap of 4 against notes with 8+ links).
+12. **THE_STOA contrast/readability fix (2026-08).** An audit (prompted by the theme's backgrounds
+    reading as eye-straining, closer to paper-white than intended) found `bg_layer_1` was literally
+    the single brightest color in the theme — lighter than `bg_main` itself — driving body-text
+    contrast to 15–16.5:1 (well past AAA) on the note-reader/card surfaces, the ones stared at
+    longest. It also turned up a real, previously undetected AA *failure*: `text_muted` on
+    `bg_layer_2` (blockquote text/background) at 4.24:1, despite the theme's own comments claiming
+    every color was hand-checked. All three backgrounds, `text_main`/`text_muted`, and `border_main`
+    were recalibrated (values and full before/after contrast math live in the `THE_STOA` block's own
+    comments in `engine/config.py`); the seven role/identity colors needed no change. No other
+    theme, and no file besides `engine/config.py`, was touched — `theming.py`/`tailwind_build.py`
+    regenerate everything else from that one dict.
+13. **Card maturity badge redesign + general card readability (2026-08).** The maturity badge
+    (🌱/🌿/🌳) was a bare 10px emoji at 70% opacity with no visible text label — easy to miss while
+    scanning the Garden grid, and the only place maturity is surfaced anywhere in the UI at all.
+    `_maturity_badge()` gained a `color` parameter (see its Architecture entry above) and now
+    renders an always-visible, labeled chip whose fill weight tracks maturity level, moved out of
+    the cramped type-label row into its own slot under the card's icon. In the same pass: every
+    9–10px field-label text size in `cards.py` was bumped up a notch, the card title went
+    `text-lg` → `text-xl`, and the at-rest card border opacity went 40% → 60% so card edges (and,
+    per the same audit, boundaries generally) read clearly while scanning rather than only on
+    hover.
 
 ## Known gaps / deliberately not done
 
