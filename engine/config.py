@@ -153,32 +153,53 @@ THEME_CONFIG = {
     # (or its universal system fallback, Arial -- both ship on effectively
     # every OS, so this needs no webfont load), in place of every other
     # theme's monospace "terminal" voice -- cold, rational, grid-precise
-    # Swiss lettering standing in for a colonnade's own discipline. Every
-    # role color is deliberately darkened past a hand-checked WCAG AA
-    # floor (>=4.5:1 against bg_main) since several of them (primary,
-    # highlight) are also used as label/link text, not just decoration.
+    # Swiss lettering standing in for a colonnade's own discipline.
+    #
+    # 2026-08 contrast pass: the original backgrounds (bg_main #f3f1ea,
+    # bg_layer_1 #fbfaf6) sat at 0.88-0.96 relative luminance -- within a
+    # hair of paper-white, and bg_layer_1 (the note-reader/code-block
+    # surface, i.e. what gets stared at longest) was literally the single
+    # brightest color in the theme, lighter than bg_main itself. Every role
+    # color did clear its documented >=4.5:1 AA floor against bg_main -- but
+    # one pairing (text_muted on bg_layer_2, the blockquote text/background)
+    # was still an undetected 4.24:1 AA *failure*, and even the passing
+    # pairs landed body text at 15-16.5:1, well past AAA and into
+    # eye-straining territory for sustained reading. All three backgrounds
+    # were darkened/warmed a notch (still clearly the lightest of the four
+    # themes), text_main and text_muted were softened off pure ink-black
+    # accordingly, and border_main was darkened slightly for better
+    # card/table separation -- landing body text at a still-generous
+    # ~9.7-12.3:1 depending on surface, and closing the text_muted/
+    # bg_layer_2 gap to 4.76:1. The seven role/identity colors below were
+    # re-verified against both new backgrounds and needed no change (all
+    # stay >=5:1).
     "THE_STOA": {
         "label": "The Stoa",
         "description": "Stoic / Helvetic",
         "colors": {
             # Base Layer -- Carrara marble, not neutral gray: a warm,
-            # faintly stone-toned white that keeps every text color below
-            # comfortably above AA.
-            "bg_main": "#f3f1ea",       # Marble -- quarried stone, not paper
-            "bg_layer_1": "#fbfaf6",    # Polished marble (Cards)
-            "bg_layer_2": "#e7e3d6",    # Deeper stone (Hovers / Modals)
+            # faintly stone-toned surface, pulled back from paper-white so
+            # the full-height note-reader panel (bg_main) and card/code
+            # surface (bg_layer_1, previously the brightest color in the
+            # theme) don't read as glare.
+            "bg_main": "#e9e4d5",       # Marble -- quarried stone, not paper
+            "bg_layer_1": "#f2eee2",    # Polished marble (Cards) -- lightest surface, no longer near-white
+            "bg_layer_2": "#dcd5c2",    # Deeper stone (Hovers / Modals)
 
-            # Typography -- ink-black, not a tinted "classical" hue, for the
-            # same reason THE_PATRIOT keeps its body text near-black: a
-            # thematic tint on reading text quietly costs contrast.
-            "text_main": "#1c1b18",     # Carved-inscription black
-            "text_muted": "#6b6a61",    # Weathered stone gray
+            # Typography -- dark warm charcoal rather than literal ink-black:
+            # keeps the "carved inscription" read without the harshness of
+            # pure black on the marble tones above. text_muted was darkened
+            # a notch past its prior value to clear an AA failure against
+            # bg_layer_2 (blockquotes) that the original hex missed.
+            "text_main": "#2e2a22",     # Carved-inscription charcoal
+            "text_muted": "#5f594a",    # Weathered stone gray
             "text_inverted": "#ffffff", # White text (for solid buttons)
 
-            # Structure -- a limestone hairline; the focus ring borrows the
+            # Structure -- a limestone hairline, darkened slightly for
+            # clearer card/table separation; the focus ring borrows the
             # accent purple so it reads as unmistakably "select this," not
             # just another structural line.
-            "border_main": "#c7c2b0",   # Limestone
+            "border_main": "#a3987b",   # Limestone
             "border_focus": "#5b3a6b",  # Tyrian purple (keyboard focus ring)
 
             # Roles -- real antiquity pigments/materials, each hand-darkened
