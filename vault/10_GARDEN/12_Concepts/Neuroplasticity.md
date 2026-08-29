@@ -2,14 +2,14 @@
 created: 2026-04-23
 tags:
   - type/concept
-  - maturity/seed
+  - maturity/growing
   - status/active
   - topic/neuroscience
   - topic/learning-theory
   - topic/biology
   - topic/habit
 type: concept
-maturity: seed
+maturity: growing
 status: active
 publish: true
 ---

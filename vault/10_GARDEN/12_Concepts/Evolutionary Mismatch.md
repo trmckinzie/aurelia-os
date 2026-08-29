@@ -2,14 +2,14 @@
 created: 2026-04-24
 tags:
   - type/concept
-  - maturity/seed
+  - maturity/growing
   - status/active
   - topic/evolutionary-biology
   - topic/wetware-stack
   - topic/evo-psych
   - topic/cognitive-psychology
 type: concept
-maturity: seed
+maturity: growing
 status: active
 publish: true
 ---

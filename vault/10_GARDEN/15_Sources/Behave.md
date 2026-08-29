@@ -2,7 +2,7 @@
 created: 2025-12-31
 tags:
   - type/source/book
-  - maturity/growing
+  - maturity/evergreen
   - status/reading
   - topic/biology
   - topic/systems
@@ -15,7 +15,7 @@ tags:
   - topic/cognitive-science
   - topic/determinism
 type: source/book
-maturity: growing
+maturity: evergreen
 status: reading
 publish: true
 ---

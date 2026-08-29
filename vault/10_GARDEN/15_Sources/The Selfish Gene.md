@@ -2,14 +2,14 @@
 created: 2025-12-24
 tags:
   - type/source/book
-  - maturity/growing
+  - maturity/evergreen
   - status/reading
   - topic/biology
   - topic/evolution
   - topic/memetics
   - topic/phil-mind
 type: source/book
-maturity: growing
+maturity: evergreen
 status: reading
 publish: true
 ---

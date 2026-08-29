@@ -2,7 +2,7 @@
 created: 2026-01-16
 tags:
   - type/notebooklm
-  - maturity/growing
+  - maturity/evergreen
   - status/active
   - topic/research
   - source/notebooklm
@@ -13,7 +13,7 @@ tags:
   - topic/cognitive-science
   - topic/phil-mind
 type: notebooklm
-maturity: growing
+maturity: evergreen
 status: active
 publish: true
 ---

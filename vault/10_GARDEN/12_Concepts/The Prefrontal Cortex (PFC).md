@@ -2,13 +2,13 @@
 created: 2026-04-24
 tags:
   - type/concept
-  - maturity/seed
+  - maturity/growing
   - status/active
   - topic/neuroscience
   - topic/wetware-stack
   - topic/evolutionary-biology
 type: concept
-maturity: seed
+maturity: growing
 status: active
 publish: true
 ---

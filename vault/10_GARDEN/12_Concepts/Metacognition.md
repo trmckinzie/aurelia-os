@@ -2,7 +2,7 @@
 created: 2026-04-05
 tags:
   - type/concept
-  - maturity/seed
+  - maturity/growing
   - status/active
   - topic/cognitive-psychology
   - topic/learning-theory
@@ -10,7 +10,7 @@ tags:
   - topic/srl
   - topic/executive-function
 type: concept
-maturity: seed
+maturity: growing
 status: active
 publish: true
 ---

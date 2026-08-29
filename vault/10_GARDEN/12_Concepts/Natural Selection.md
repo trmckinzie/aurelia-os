@@ -2,13 +2,13 @@
 created: 2025-12-24
 tags:
   - type/concept
-  - maturity/seed
+  - maturity/growing
   - status/active
   - topic/biology
   - topic/evolution
   - topic/memetics
 type: concept
-maturity: seed
+maturity: growing
 status: active
 publish: true
 ---
