@@ -70,6 +70,23 @@ def test_maturity_badge_shown_for_maturity_key():
     assert "🌳" in html
 
 
+def test_maturity_badge_shows_text_label_and_scales_fill_with_level():
+    # The badge should be readable from the label alone, not just the emoji,
+    # and its visual weight (outline -> tint -> solid) should track the
+    # seed -> growing -> evergreen progression using the card's own identity
+    # color rather than a new theme color.
+    seed_html = generate_garden_card_html(
+        {"type": "concept", "maturity": "seed", "tags": []}, "A.md", "note-a", "body", "search")
+    growing_html = generate_garden_card_html(
+        {"type": "concept", "maturity": "growing", "tags": []}, "B.md", "note-b", "body", "search")
+    evergreen_html = generate_garden_card_html(
+        {"type": "concept", "maturity": "evergreen", "tags": []}, "C.md", "note-c", "body", "search")
+
+    assert "Seed" in seed_html and "bg-aurelia-primary/15" not in seed_html
+    assert "Growing" in growing_html and "bg-aurelia-primary/15" in growing_html
+    assert "Evergreen" in evergreen_html and "bg-aurelia-primary text-aurelia-inverted" in evergreen_html
+
+
 def test_maturity_badge_shown_for_maturity_tag_fallback():
     # No `maturity:` key -- falls back to a maturity/* tag, same precedence
     # pattern as `type` resolution (key wins, tag is the fallback for notes
