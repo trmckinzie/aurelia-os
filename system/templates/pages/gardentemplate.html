@@ -545,7 +545,7 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="bg-aurelia-bg border border-aurelia-dim w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="relative bg-aurelia-bg border border-aurelia-dim w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
             <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-dim bg-aurelia-card">
                 <div class="flex items-center gap-3">
                     <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
@@ -565,9 +565,21 @@
                     <div id="modal-related" class="max-w-3xl mx-auto"></div>
                 </div>
             </div>
+            <div id="tts-settings-panel" class="hidden absolute bottom-12 right-4 bg-aurelia-card border border-aurelia-dim rounded p-3 flex flex-col gap-2 text-[10px] font-mono text-aurelia-muted z-10 w-48">
+                <label class="flex flex-col gap-1">
+                    VOICE
+                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-dim rounded px-2 py-1 text-aurelia-text"></select>
+                </label>
+                <label class="flex flex-col gap-1">
+                    SPEED: <span id="tts-rate-label">1.0x</span>
+                    <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)">
+                </label>
+            </div>
             <div class="px-4 py-2 border-t border-aurelia-dim bg-aurelia-card flex justify-between items-center text-[10px] font-mono text-aurelia-muted">
                 <span id="modal-readtime">MODE: READ_ONLY</span>
                 <div class="flex items-center gap-5">
+                    <button id="btn-read-aloud" onclick="toggleReading()" title="Read this note aloud (R). Select text first to read just that selection." class="hover:text-aurelia-primary transition-colors">🔊 READ</button>
+                    <button id="btn-tts-settings" onclick="toggleTtsSettings()" title="Voice settings" class="hover:text-aurelia-primary transition-colors">⚙</button>
                     <button onclick="navigateNote(-1)" title="Previous in current view ([)" class="hover:text-aurelia-primary transition-colors">← PREV</button>
                     <span id="modal-reviewed" class="opacity-70"></span>
                     <button onclick="navigateNote(1)" title="Next in current view (])" class="hover:text-aurelia-primary transition-colors">NEXT →</button>
@@ -900,6 +912,7 @@
     function openNote(noteId) {
         const rawEl = document.getElementById(noteId);
         if (!rawEl) return;
+        stopReading();
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
         modalContent.innerHTML = marked.parse(txt.value, { breaks: true });
@@ -999,6 +1012,7 @@
     }
 
     function closeModal() {
+        stopReading();
         modalBackdrop.classList.add('opacity-0');
         modalPanel.classList.remove('scale-100');
         modalPanel.classList.add('scale-95');
@@ -1010,8 +1024,143 @@
         if (!modalBackdrop.classList.contains('hidden')) {
             if (e.key === ']') navigateNote(1);
             if (e.key === '[') navigateNote(-1);
+            if (e.key === 'r' || e.key === 'R') toggleReading();
         }
     });
+
+    // --- READ ALOUD (Web Speech API) ---
+    // Free, no API key, no backend -- the only option that can read an
+    // arbitrary highlighted selection live, not just a pre-rendered whole
+    // note (see CLAUDE.md's Architecture section: this is a static site with
+    // no server to hide a cloud-TTS API key behind).
+    let ttsSupported = 'speechSynthesis' in window;
+    let ttsState = 'idle';       // 'idle' | 'speaking' | 'paused'
+    let ttsChunks = [];
+    let ttsChunkIndex = 0;
+    let ttsVoice = null;         // SpeechSynthesisVoice
+    let ttsRate = 1;
+
+    function loadTtsPrefs() {
+        try {
+            return JSON.parse(localStorage.getItem('aurelia_tts_prefs') || '{}');
+        } catch (e) { return {}; }
+    }
+    function saveTtsPrefs() {
+        try {
+            localStorage.setItem('aurelia_tts_prefs', JSON.stringify({ voiceName: ttsVoice ? ttsVoice.name : null, rate: ttsRate }));
+        } catch (e) { /* localStorage unavailable -- prefs just won't persist */ }
+    }
+
+    function populateVoiceList() {
+        const select = document.getElementById('tts-voice-select');
+        if (!select) return;
+        const voices = speechSynthesis.getVoices();
+        if (voices.length === 0) return; // Chrome loads this async -- onvoiceschanged retries below
+        const prefs = loadTtsPrefs();
+        select.innerHTML = voices.map(v => `<option value="${escapeHtml(v.name)}">${escapeHtml(v.name)} (${escapeHtml(v.lang)})</option>`).join('');
+        const match = voices.find(v => v.name === prefs.voiceName) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+        if (match) { select.value = match.name; ttsVoice = match; }
+        ttsRate = prefs.rate || 1;
+        const rateInput = document.getElementById('tts-rate-input');
+        const rateLabel = document.getElementById('tts-rate-label');
+        if (rateInput) rateInput.value = ttsRate;
+        if (rateLabel) rateLabel.innerText = `${parseFloat(ttsRate).toFixed(1)}x`;
+    }
+
+    function onVoiceChange(name) {
+        const match = speechSynthesis.getVoices().find(v => v.name === name);
+        if (match) { ttsVoice = match; saveTtsPrefs(); }
+    }
+    function onRateChange(value) {
+        ttsRate = parseFloat(value);
+        const rateLabel = document.getElementById('tts-rate-label');
+        if (rateLabel) rateLabel.innerText = `${ttsRate.toFixed(1)}x`;
+        saveTtsPrefs();
+    }
+
+    function toggleTtsSettings() {
+        document.getElementById('tts-settings-panel').classList.toggle('hidden');
+    }
+
+    // Sentence-ish chunks, not one utterance for the whole note -- Chrome has
+    // a long-standing bug where a very long utterance can silently stop
+    // mid-read. This also gives pause/resume a natural granularity to work
+    // at without relying on the native (cross-browser flaky) pause/resume.
+    function splitIntoChunks(text) {
+        return text.replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || [];
+    }
+
+    function updateTtsButton() {
+        const btn = document.getElementById('btn-read-aloud');
+        if (!btn) return;
+        btn.innerText = { idle: '🔊 READ', speaking: '⏸ PAUSE', paused: '▶ RESUME' }[ttsState];
+    }
+
+    function speakChunk() {
+        if (ttsChunkIndex >= ttsChunks.length) { stopReading(); return; }
+        const utter = new SpeechSynthesisUtterance(ttsChunks[ttsChunkIndex]);
+        if (ttsVoice) utter.voice = ttsVoice;
+        utter.rate = ttsRate;
+        utter.onend = () => { ttsChunkIndex++; if (ttsState === 'speaking') speakChunk(); };
+        utter.onerror = () => { ttsChunkIndex++; if (ttsState === 'speaking') speakChunk(); };
+        speechSynthesis.speak(utter);
+    }
+
+    function startReading() {
+        const selection = window.getSelection();
+        const selectedText = selection.toString().trim();
+        const inModal = selectedText && modalContent.contains(selection.anchorNode);
+        // .textContent, not .innerText -- .innerText reflects rendered layout
+        // and would silently skip any collapsed Gemini Notebook <details>
+        // section; "read the whole note" should mean all of it.
+        const source = inModal ? selectedText : modalContent.textContent;
+        ttsChunks = splitIntoChunks(source);
+        ttsChunkIndex = 0;
+        ttsState = 'speaking';
+        updateTtsButton();
+        speakChunk();
+    }
+
+    function pauseReading() {
+        // State flips before cancel() -- the resulting onend/onerror above
+        // checks ttsState before auto-advancing, so this is what actually
+        // stops the chunk queue rather than just skipping to the next chunk.
+        ttsState = 'paused';
+        speechSynthesis.cancel();
+        updateTtsButton();
+    }
+
+    function resumeReading() {
+        ttsState = 'speaking';
+        updateTtsButton();
+        speakChunk();
+    }
+
+    function stopReading() {
+        if (!ttsSupported) return;
+        speechSynthesis.cancel();
+        ttsState = 'idle';
+        ttsChunks = [];
+        ttsChunkIndex = 0;
+        updateTtsButton();
+    }
+
+    function toggleReading() {
+        if (!ttsSupported) return;
+        if (ttsState === 'idle') startReading();
+        else if (ttsState === 'speaking') pauseReading();
+        else resumeReading();
+    }
+
+    if (ttsSupported) {
+        populateVoiceList();
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+    } else {
+        const btn = document.getElementById('btn-read-aloud');
+        const settingsBtn = document.getElementById('btn-tts-settings');
+        if (btn) btn.classList.add('hidden');
+        if (settingsBtn) settingsBtn.classList.add('hidden');
+    }
 
     // --- RANDOM NOTE DISCOVERY ---
     // Picks from whatever's currently visible (respects active filter/search),
