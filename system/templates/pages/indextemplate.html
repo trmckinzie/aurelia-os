@@ -57,7 +57,7 @@
 {% endblock %}
 
 {% block content %}
-   <header class="mb-24 relative">
+   <header class="mb-24 relative" data-reveal>
         <div class="font-mono text-[14px] text-aurelia-primary mb-4 flex items-center gap-2 flex-wrap">
             <span class="opacity-100">[ STATUS: ]</span>
             <span class="text-aurelia-primary">{{ config.status_message }}</span>
@@ -100,7 +100,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
 
-    <a href="garden.html" class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--aurelia-primary)_15%,transparent)] hover:border-aurelia-primary/50">
+    <a href="garden.html" data-reveal class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--aurelia-primary)_15%,transparent)] hover:border-aurelia-primary/50">
         <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
 
         <div class="relative z-10 flex flex-col h-full justify-between">
@@ -122,19 +122,19 @@
         <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-primary/20 transition-all"></div>
     </a>
 
-    <div class="relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
+    <div data-reveal class="relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
         <div class="inline-block font-mono text-[10px] font-bold text-aurelia-inverted bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
             MOD_02 // STATUS
         </div>
         <h2 class="text-2xl font-bold text-aurelia-text tracking-tight mb-4">Cortex Status</h2>
 
         <div class="flex items-baseline gap-3 mb-4">
-            <span class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
+            <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
             <span class="text-xs font-mono text-aurelia-muted uppercase tracking-widest">Nodes Cultivated</span>
         </div>
 
         <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
-            <div class="flex h-2 rounded-full overflow-hidden bg-aurelia-surface border border-aurelia-dim">
+            <div id="lobby-maturity-bar" class="flex h-2 rounded-full overflow-hidden bg-aurelia-surface border border-aurelia-dim">
                 {% if stats.total_notes %}
                 <div class="bg-aurelia-highlight" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
@@ -174,7 +174,7 @@
 
 </div>
 
-    <section class="w-full max-w-[1400px] mx-auto mt-40 relative px-6">
+    <section data-reveal class="w-full max-w-[1400px] mx-auto mt-40 relative px-6">
         <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
 
         <div class="text-center mb-20 relative z-10">
@@ -397,6 +397,51 @@
          if(title && !reduceMotion) title.onmouseover({target: title});
     };
 
+    /* --- MOTION.DEV ENTRANCE ANIMATIONS ---
+       Purely additive: every element already renders its correct final state
+       from Jinja (real note count, real bar widths, real copy), so if
+       window.Motion is unavailable (CDN blocked, ad-blocker) or reduceMotion
+       is true, all three blocks below simply no-op and the page looks exactly
+       like it does with no JS at all -- nothing is hidden/zeroed server-side
+       waiting on JS to reveal it. */
+    if (window.Motion && !reduceMotion) {
+        const { animate, inView } = Motion;
+
+        // Fade + slide up each major section the first time it's in view.
+        // The hero is already above the fold, so its callback fires
+        // essentially immediately on load -- same treatment, one code path.
+        document.querySelectorAll('[data-reveal]').forEach(el => {
+            inView(el, () => {
+                animate(el, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: 'ease-out' });
+            }, { amount: 0.2 });
+        });
+
+        // Count up "Nodes Cultivated" from 0 to the real total once visible.
+        const statEl = document.getElementById('lobby-total-notes');
+        if (statEl) {
+            inView(statEl, () => {
+                const target = parseInt(statEl.dataset.target, 10);
+                animate(0, target, {
+                    duration: 1.2, easing: 'ease-out',
+                    onUpdate: v => statEl.textContent = Math.round(v),
+                });
+            });
+        }
+
+        // Grow the seed/growing/evergreen maturity bar from 0 to its real,
+        // already-rendered width once visible.
+        const bar = document.getElementById('lobby-maturity-bar');
+        if (bar) {
+            inView(bar, () => {
+                Array.from(bar.children).forEach(seg => {
+                    const target = seg.style.width;
+                    seg.style.width = '0%';
+                    animate(seg, { width: ['0%', target] }, { duration: 0.8, easing: 'ease-out' });
+                });
+            });
+        }
+    }
+
     /* --- MANIFESTO MODAL LOGIC --- */
     const mBackdrop = document.getElementById('manifesto-backdrop');
     const mPanel = document.getElementById('manifesto-panel');
@@ -493,20 +538,35 @@
             // Calculate valid index even with negative numbers
             let virtualIndex = currIndex % cardCount;
             if (virtualIndex < 0) virtualIndex += cardCount;
-            
+
             const activeTech = techStack[virtualIndex];
-            
-            // TYPEWRITER EFFECT SIMULATION
-            titleEl.style.opacity = '0.5';
-            descEl.style.opacity = '0.5';
-            
-            setTimeout(() => {
+
+            const swapText = () => {
                 titleEl.innerText = activeTech.name + " //";
                 descEl.innerText = activeTech.desc;
-                
-                titleEl.style.opacity = '1';
-                descEl.style.opacity = '1';
-            }, 150);
+            };
+
+            if (reduceMotion) {
+                // Previously the only animation on this page NOT gated by
+                // prefers-reduced-motion -- an instant swap is the correct
+                // reduced-motion behavior, matching the decrypt-effect above.
+                swapText();
+            } else if (window.Motion) {
+                const { animate } = Motion;
+                animate([titleEl, descEl], { opacity: [1, 0] }, { duration: 0.15 }).finished.then(() => {
+                    swapText();
+                    animate([titleEl, descEl], { opacity: [0, 1] }, { duration: 0.25 });
+                });
+            } else {
+                // Fallback if Motion didn't load: the original opacity-dip.
+                titleEl.style.opacity = '0.5';
+                descEl.style.opacity = '0.5';
+                setTimeout(() => {
+                    swapText();
+                    titleEl.style.opacity = '1';
+                    descEl.style.opacity = '1';
+                }, 150);
+            }
         }
 
         function initCarousel() {
