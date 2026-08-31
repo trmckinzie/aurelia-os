@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "description": "Cross-language contract: TS makeId() (aurelia-mcp-server/packages/vault-reader/src/id.ts) and Python make_id() (aurelia-os/engine/content.py) must agree on every case here.",
+    "sync_with": [
+      "aurelia-mcp-server/packages/vault-reader/src/make-id.fixtures.json",
+      "aurelia-os/tests/fixtures/make_id_cases.json"
+    ],
+    "instructions": "Changing either implementation? Add a case here first, confirm both agree, then copy this file byte-for-byte into the other repo. No automated sync exists between these two repos/CIs -- a diff between the two copies IS the failure mode this file exists to catch."
+  },
+  "cases": [
+    { "name": "basic filename", "input": "My Cool Note.md", "expected": "note-my-cool-note" },
+    { "name": "strips only literal '.md' occurrences, before lowercasing", "input": "Report.md.backup.md", "expected": "note-report-backup" },
+    { "name": "collapses runs of punctuation/whitespace into single dashes", "input": "Weird!!  Name -- Here.md", "expected": "note-weird-name-here" },
+    { "name": "strips leading/trailing dashes", "input": "-Leading And Trailing-.md", "expected": "note-leading-and-trailing" },
+    { "name": "a bare wikilink target with no .md extension", "input": "2025-12-21", "expected": "note-2025-12-21" },
+    { "name": "dashed date filename with extension", "input": "2026-03-07.md", "expected": "note-2026-03-07" }
+  ]
+}

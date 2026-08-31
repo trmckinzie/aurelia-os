@@ -39,3 +39,8 @@ tailwind.config.js
 
 # --- IGNORE BUILD ARTIFACTS (CRITICAL) ---
 dist/
+
+# --- IGNORE AGENT-DRAFTED NOTES (see aurelia-mcp-server/ARCHITECTURE.md Rule 4) ---
+# Nothing auto-commits to the garden -- draft_note (aurelia-mcp-server) writes
+# here; promoting a note into 10_GARDEN is a deliberate human move.
+vault/20_AURELIA/
