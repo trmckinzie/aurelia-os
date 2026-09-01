@@ -10,6 +10,12 @@
 **/.obsidian/workspace-mobile.json
 **/.obsidian/workspaces.json
 
+# A repo-root .obsidian/ (as opposed to vault/.obsidian/) means this repo
+# folder itself got opened directly as an Obsidian vault at some point -- not
+# the intended vault root. This repo is public, so unlike vault/.obsidian/
+# above, none of this is meant to be tracked at all.
+/.obsidian/
+
 # --- IGNORE SYSTEM FILES ---
 .DS_Store
 Thumbs.db
