@@ -78,6 +78,27 @@ def dumps_for_script_tag(obj, **kwargs):
     return json.dumps(obj, **kwargs).replace('</', '<\\/')
 
 
+def escape_attr(value):
+    """Escapes a value for interpolation into a double-quoted HTML attribute.
+
+    Sibling of dumps_for_script_tag above: same idea, different sink. Card
+    attributes are built by f-string interpolation in cards.py, so a value
+    containing a double quote closes the attribute early and everything after
+    it is parsed as markup -- which is how a stray character in a note title
+    turns into a live event handler on the card.
+
+    Vault-derived values reaching HTML attributes unescaped is a known open
+    finding in this codebase (see CLAUDE.md's security notes). This does not
+    close that finding, but it does mean the attributes added here aren't new
+    instances of it.
+    """
+    return (str(value)
+            .replace('&', '&amp;')
+            .replace('"', '&quot;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;'))
+
+
 def first_blockquote_after(text, header_pattern):
     """Finds the blockquote directly under a header matching header_pattern,
     falling back to the first blockquote anywhere in the text."""

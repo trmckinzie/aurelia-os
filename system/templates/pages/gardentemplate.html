@@ -379,6 +379,24 @@
                     <span class="hidden lg:inline uppercase tracking-wider">Share View</span>
                 </button>
 
+                <!-- A select rather than a chip group: the toolbar already
+                     scrolls horizontally at desktop width, so five more chips
+                     would crowd it, and a native select is far better on
+                     mobile. Hidden in tree/graph, which have no linear order.
+                     "Relevance" is listed but only meaningful with a query --
+                     it is selected automatically when you type. -->
+                <div id="sort-control" class="shrink-0">
+                    <label class="sr-only" for="sort-select">Sort notes</label>
+                    <select id="sort-select" onchange="setSort(this.value)" title="Order the notes"
+                            class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
+                        <option value="relevance">↕ Relevance</option>
+                        <option value="connected">↕ Most connected</option>
+                        <option value="recent">↕ Recently created</option>
+                        <option value="maturity">↕ Maturity</option>
+                        <option value="title">↕ A–Z</option>
+                    </select>
+                </div>
+
                 <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
                     <span class="text-xs opacity-50 font-mono">CMD://</span>
                     <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
@@ -694,6 +712,7 @@
         // Filters now remain active in every mode.
 
         if (mode === 'graph') initGraph();
+        updateSortControlVisibility();
         syncViewToUrl();
     }
 
@@ -858,6 +877,8 @@
         // Suppressed while restoreViewFromUrl() applies several settings in
         // a row; it runs one pass itself once they're all in place.
         if (restoring) return;
+        applySort();
+        syncSortControl();
         let visibleCount = 0;
 
         // 1. FILTER GRID ITEMS
@@ -950,6 +971,121 @@
     }
 
     // HELPER: Centralized Logic (The Brain)
+    /* === SORTING & RELEVANCE RANKING =================================
+       The Garden could be sliced four ways and then returned results in no
+       order at all -- card order was filesystem order. Searching "memory"
+       put the note actually titled "Working Memory" (the most-linked note
+       in the vault) at position 76 of 76.
+
+       Reordering moves real DOM nodes rather than setting CSS `order`.
+       getVisibleNoteIds() reads querySelectorAll order and feeds the
+       modal's [ / ] navigation and openRandomNote(); CSS `order` changes
+       only visual position, so "next note" would silently disagree with
+       what the reader sees. Moving nodes keeps them in step -- and makes
+       prev/next follow the active sort for free. */
+    const SORTS = ['relevance', 'connected', 'recent', 'maturity', 'title'];
+    const DEFAULT_SORT = 'connected';
+    let currentSort = DEFAULT_SORT;
+    // Set once the reader picks a sort themselves, so auto-relevance below
+    // never overrides a deliberate choice.
+    let sortExplicit = false;
+
+    // Relevance is implied by typing, but only until the reader says
+    // otherwise.
+    function effectiveSort() {
+        if (currentQuery && !sortExplicit) return 'relevance';
+        return currentSort;
+    }
+
+    const MATURITY_RANK = { evergreen: 3, growing: 2, seed: 1 };
+
+    function cardTitle(el) { return (el.dataset.title || '').toLowerCase(); }
+    function cardConnections(el) { return parseInt(el.dataset.connections, 10) || 0; }
+
+    /* A card only reaches scoring if it already matched the query
+       somewhere, so a body match is the floor rather than a zero. The
+       connection nudge is small on purpose: it should break ties between
+       comparable matches, not let a popular note outrank an exact title. */
+    function relevanceScore(el, q) {
+        const title = cardTitle(el);
+        const tags = (el.dataset.tags || '').toLowerCase();
+        let score = 20;
+        if (title === q) score = 100;
+        else if (title.startsWith(q)) score = 80;
+        else if (title.includes(q)) score = 60;
+        else if (tags.includes(q)) score = 40;
+        return score + Math.min(cardConnections(el), 20) * 0.5;
+    }
+
+    function comparatorFor(mode, q) {
+        const byTitle = (a, b) => cardTitle(a).localeCompare(cardTitle(b));
+        switch (mode) {
+            case 'relevance':
+                return (a, b) => relevanceScore(b, q) - relevanceScore(a, q)
+                              || cardConnections(b) - cardConnections(a)
+                              || byTitle(a, b);
+            case 'recent':
+                // Descending string compare works because dates are ISO
+                // (YYYY-MM-DD); verified present on all 245 published notes.
+                return (a, b) => (b.dataset.created || '').localeCompare(a.dataset.created || '')
+                              || byTitle(a, b);
+            case 'maturity':
+                return (a, b) => (MATURITY_RANK[b.dataset.maturity] || 0) - (MATURITY_RANK[a.dataset.maturity] || 0)
+                              || cardConnections(b) - cardConnections(a)
+                              || byTitle(a, b);
+            case 'title':
+                return byTitle;
+            case 'connected':
+            default:
+                return (a, b) => cardConnections(b) - cardConnections(a) || byTitle(a, b);
+        }
+    }
+
+    // Reordering 245 nodes is only worth doing when the order could
+    // actually have changed. Filtering by type or topic changes which cards
+    // are visible, not their relative order, so a filter click shouldn't
+    // pay for a re-append.
+    let lastSortKey = null;
+
+    function applySort(force) {
+        const grid = document.getElementById('cardGrid');
+        if (!grid) return;
+        const mode = effectiveSort();
+        const q = currentQuery;
+        const key = mode + ' ' + (mode === 'relevance' ? q : '');
+        if (!force && key === lastSortKey) return;
+        lastSortKey = key;
+
+        const cards = Array.from(grid.querySelectorAll('.searchable-item'));
+        cards.sort(comparatorFor(mode, q));
+        // One reflow instead of 245: detach into a fragment, re-append once.
+        const frag = document.createDocumentFragment();
+        cards.forEach(c => frag.appendChild(c));
+        grid.appendChild(frag);
+    }
+
+    function setSort(mode) {
+        if (!SORTS.includes(mode)) return;
+        currentSort = mode;
+        sortExplicit = true;
+        applySort(true);
+        updateGrid();
+        syncViewToUrl();
+    }
+
+    // The tree is a type-grouped directory and the graph is spatial;
+    // neither has a meaningful linear order, so the control only applies to
+    // the grid.
+    function updateSortControlVisibility() {
+        const wrap = document.getElementById('sort-control');
+        if (wrap) wrap.classList.toggle('hidden', currentView !== 'grid');
+    }
+
+    function syncSortControl() {
+        const sel = document.getElementById('sort-select');
+        if (sel) sel.value = effectiveSort();
+    }
+
     function checkVisibility(item) {
         // Full body text comes from DEEP_SEARCH_INDEX, keyed by note id.
         // It used to live in a data-search attribute on every card AND every
@@ -1320,6 +1456,10 @@
         if (currentType && currentType !== 'all') params.set('type', currentType);
         if (currentTopic) params.set('topic', currentTopic);
         if (currentView && currentView !== 'grid') params.set('view', currentView);
+        // Only an explicit choice is worth carrying: auto-relevance is
+        // derived from the query, so recording it would pin the sort for
+        // whoever opens the link and stop it adapting to their search.
+        if (sortExplicit && currentSort !== DEFAULT_SORT) params.set('sort', currentSort);
 
         const qs = params.toString();
         // Keep the hash: it may be holding an open note.
@@ -1353,6 +1493,12 @@
                 // the grid from a panel the reader can't see.
                 const cloud = document.getElementById('topic-cloud');
                 if (cloud) cloud.classList.remove('hidden');
+            }
+
+            const sort = params.get('sort');
+            if (sort && SORTS.includes(sort)) {
+                currentSort = sort;
+                sortExplicit = true;
             }
 
             const q = params.get('q');
@@ -1816,6 +1962,11 @@
     renderReviewQueue();
     renderTopicCloud();
     restoreViewFromUrl();
+    // Establishes the default order even when the URL carried no state,
+    // since restoreViewFromUrl() returns early with no params.
+    applySort();
+    syncSortControl();
+    updateSortControlVisibility();
     openNoteFromHash();
 </script>
 {% endblock %}

@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (132 tests as of this writing)
+python -m pytest tests/ -q             # full suite (140 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 

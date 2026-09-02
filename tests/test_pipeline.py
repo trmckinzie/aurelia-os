@@ -1,4 +1,10 @@
-from engine.pipeline import _build_graph_index, _build_link_graph, _build_lobby_context
+from engine.content import dim_dangling_links
+from engine.pipeline import (
+    _build_graph_index,
+    _build_link_graph,
+    _build_lobby_context,
+    _degree_from_edges,
+)
 
 
 def _card(note_id, title, body, tags=None):
@@ -121,3 +127,41 @@ def test_lobby_context_review_seed_carries_id_title_maturity():
     graph_index = {"nodes": [], "edges": []}
     stats = _build_lobby_context(cards, graph_index)
     assert stats["review_seed"] == [{"id": "note-a", "title": "A", "maturity": "seed"}]
+
+
+def test_degree_from_edges_counts_both_endpoints():
+    edges = [
+        {"source": "note-a", "target": "note-b"},
+        {"source": "note-b", "target": "note-c"},
+    ]
+    degree = _degree_from_edges(edges)
+    assert degree["note-a"] == 1
+    assert degree["note-b"] == 2   # appears as both a source and a target
+    assert degree["note-c"] == 1
+
+
+def test_degree_from_edges_is_empty_for_no_edges():
+    assert _degree_from_edges([]) == {}
+
+
+def test_link_graph_is_identical_whether_or_not_dangling_links_were_dimmed():
+    """Regression guard for the ordering change that let cards show a
+    connection count.
+
+    _build_link_graph used to run on the finished cards, whose bodies had
+    been through dim_dangling_links() -- which rewrites openNote() buttons
+    whose target isn't published into plain spans. It now runs earlier, on
+    the un-dimmed body, so strictly more candidate targets reach it. That
+    must not change the graph: the function already discards any target not
+    in the known set. If someone later removes that guard, this fails.
+    """
+    body = (
+        "real <button onclick=\"openNote('note-b')\">B</button> and "
+        "dangling <button onclick=\"openNote('note-ghost')\">Ghost</button>"
+    )
+    known = {"note-a", "note-b"}
+
+    undimmed = [_card("note-a", "A", body), _card("note-b", "B", "")]
+    dimmed = [_card("note-a", "A", dim_dangling_links(body, known)), _card("note-b", "B", "")]
+
+    assert _build_link_graph(undimmed) == _build_link_graph(dimmed)

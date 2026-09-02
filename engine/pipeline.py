@@ -107,10 +107,34 @@ def _scan_vault():
 
     known_ids = {p["note_id"] for p in pending}
 
+    # The link graph is built HERE, before card generation, because a card
+    # now shows its own connection count and needs the degree at render
+    # time. It used to run afterwards, on the finished cards.
+    #
+    # Deliberately still one scan. The obvious alternative -- a second regex
+    # pass over the bodies just to count links -- is exactly what
+    # _build_link_graph's docstring says was consolidated away, so this
+    # reuses that function unchanged (it needs only id/title/body) and the
+    # results are handed back to build_all rather than recomputed there.
+    #
+    # It reads processed_body, where the previous call read the dimmed body
+    # (dim_dangling_links rewrites unknown-target openNote() buttons into
+    # spans). That means strictly more candidate targets reach the function
+    # -- which changes nothing, because it already discards any target not
+    # in `known`. Verified identical: see tests/test_pipeline.py.
+    link_input = [
+        {"id": p["note_id"], "title": p["title"], "body": p["processed_body"]}
+        for p in pending
+    ]
+    backlinks, edges = _build_link_graph(link_input)
+    degree = _degree_from_edges(edges)
+
     garden_cards = []
     for p in pending:
         card_html = cards.generate_garden_card_html(
             p["meta"], p["filename"], p["note_id"], p["processed_body"], p["full_search_text"], known_ids,
+            connections=degree.get(p["note_id"], 0),
+            created=str(p["meta"].get("created", "")),
         )
         garden_cards.append({
             "html": card_html,
@@ -122,9 +146,10 @@ def _scan_vault():
             "tags": p["meta"].get("tags", []),
             "maturity": cards._maturity_slug(p["meta"]),
             "desc": p["full_search_text"],
+            "connections": degree.get(p["note_id"], 0),
         })
 
-    return garden_cards
+    return garden_cards, backlinks, edges
 
 
 _OPEN_NOTE_RE = re.compile(r"openNote\('([^']+)'\)")
@@ -169,6 +194,19 @@ def _build_link_graph(garden_cards):
     return backlinks, edges
 
 
+def _degree_from_edges(edges):
+    """{note_id: number of links touching it}, counting both endpoints.
+
+    Shared by the Lobby's hub list and the per-card connection count, which
+    otherwise derive the same number from the same edges two different ways.
+    """
+    degree = Counter()
+    for edge in edges:
+        degree[edge['source']] += 1
+        degree[edge['target']] += 1
+    return degree
+
+
 def _build_graph_index(garden_cards, edges):
     """Builds the node/edge data for the Garden's knowledge-graph view and
     the modal's "Related by Topic" section.
@@ -200,10 +238,7 @@ def _build_lobby_context(garden_cards, graph_index):
     # "start here" entry points -- the personal-wiki equivalent of a Map of
     # Content, derived rather than hand-maintained.
     node_lookup = {n['id']: n for n in graph_index['nodes']}
-    degree = Counter()
-    for edge in graph_index['edges']:
-        degree[edge['source']] += 1
-        degree[edge['target']] += 1
+    degree = _degree_from_edges(graph_index['edges'])
     hub_notes = [
         {"id": note_id, "title": node_lookup[note_id]['title'], "type": node_lookup[note_id]['type'], "connections": count}
         for note_id, count in degree.most_common(5)
@@ -365,7 +400,7 @@ def build_all():
 
     user_config = load_user_config()
 
-    garden_cards = _scan_vault()
+    garden_cards, backlinks, edges = _scan_vault()
     garden_cards.sort(key=lambda x: x['title'].lower())
 
     print(f"   + Indexing: {len(garden_cards)} Notes")
@@ -397,7 +432,6 @@ def build_all():
 
     deep_search_json = dumps_for_script_tag(_build_deep_search_index(garden_cards))
 
-    backlinks, edges = _build_link_graph(garden_cards)
     backlinks_json = dumps_for_script_tag(backlinks)
     graph_index = _build_graph_index(garden_cards, edges)
     graph_json = dumps_for_script_tag(graph_index)

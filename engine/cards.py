@@ -10,7 +10,7 @@ from engine.extractors import (
     extract_log_data,
     extract_source_data,
 )
-from engine.textutils import truncate
+from engine.textutils import escape_attr, truncate
 
 _MATURITY_BADGES = {
     "seed": ("🌱", "Seed"),
@@ -118,7 +118,30 @@ def _maturity_badge(slug, color):
             f'{emoji} {text}</span>')
 
 
-def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text, known_ids=frozenset()):
+def _connection_badge(count, color):
+    """Renders a link-count chip, or nothing when a note has no connections.
+
+    How connected a note is is arguably the most useful signal in a
+    Zettelkasten -- it's what separates a load-bearing idea from an isolated
+    one -- and it was already computed for the knowledge graph and the
+    Lobby's hub list, but a card never surfaced it.
+
+    Silent at zero rather than showing "0": an orphan is better communicated
+    by the absence of the chip than by a number that reads like a defect.
+    `color` is the card type's own identity color, the same borrowing
+    _maturity_badge does, so this needs no new theme token.
+    """
+    if not count:
+        return ""
+    base = color.replace('border-', '')
+    label = "link" if count == 1 else "links"
+    return (f'<span class="field-label inline-flex items-center gap-1 px-2 py-1 rounded-theme '
+            f'whitespace-nowrap border border-{base}/40 text-{base}/90" '
+            f'title="{count} {label} to or from this note">&#9673; {count}</span>')
+
+
+def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text,
+                              known_ids=frozenset(), connections=0, created=""):
     # str() guards against frontmatter values YAML infers as non-strings
     # (e.g. an unquoted "type: 2026" would parse as an int, not text).
     note_type = str(meta.get("type", "unknown")).lower()
@@ -508,8 +531,15 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # scannable by type at a glance.
     spine = color.replace('border-', 'bg-')
 
+    connections_html = _connection_badge(connections, color)
+
+    # data-title/-connections/-created are what the Garden's sort comparators
+    # read. Title is duplicated into an attribute rather than being taken from
+    # the <h3> because highlightText() rewrites that element's innerHTML during
+    # search -- ordering must not depend on whether a search is active.
+    # escapeHtml keeps a quote in a filename from closing the attribute.
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">
@@ -523,6 +553,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
             <div class="flex flex-col items-end gap-2 shrink-0">
                 <div class="text-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-300">{icon}</div>
                 {maturity_html}
+                {connections_html}
             </div>
         </div>
         <hr class="hairline">

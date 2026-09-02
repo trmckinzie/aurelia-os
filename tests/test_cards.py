@@ -1,4 +1,4 @@
-from engine.cards import generate_garden_card_html, link_pill, render_items
+from engine.cards import _connection_badge, generate_garden_card_html, link_pill, render_items
 
 
 def test_render_items_joins_rendered_items():
@@ -185,3 +185,42 @@ def test_deep_dive_card_shows_no_links_placeholder_when_related_empty():
     body = "*A premise*\n\n## Part 3: Summary\n\nSome text.\n"
     html = generate_garden_card_html(meta, "N.md", "note-n", body, "search")
     assert "NO_LINKS_DETECTED" in html
+
+
+def test_card_carries_the_attributes_the_garden_sorts_on():
+    meta = {"type": "concept", "created": "2026-03-07", "tags": []}
+    html = generate_garden_card_html(
+        meta, "Working Memory.md", "note-working-memory", "body", "search",
+        connections=32, created="2026-03-07",
+    )
+    assert 'data-connections="32"' in html
+    assert 'data-created="2026-03-07"' in html
+    # Sorting reads data-title rather than the <h3>, because highlightText()
+    # rewrites that element's innerHTML while a search is active.
+    assert 'data-title="Working Memory"' in html
+
+
+def test_card_sort_attributes_default_when_not_supplied():
+    # Every existing call site omits these; they must not render as "None".
+    html = generate_garden_card_html({"type": "concept", "tags": []}, "A.md", "note-a", "b", "s")
+    assert 'data-connections="0"' in html
+    assert 'data-created=""' in html
+
+
+def test_card_title_attribute_is_escaped():
+    # A quote in a filename would otherwise close the attribute and let the
+    # rest be parsed as markup.
+    html = generate_garden_card_html(
+        {"type": "concept", "tags": []}, 'He said "hi".md', "note-x", "b", "s")
+    assert 'data-title="He said &quot;hi&quot;"' in html
+
+
+def test_connection_badge_renders_count_and_pluralises():
+    assert "2 links to or from this note" in _connection_badge(2, "border-aurelia-primary")
+    assert "1 link to or from this note" in _connection_badge(1, "border-aurelia-primary")
+
+
+def test_connection_badge_is_silent_at_zero():
+    # An orphan reads better as an absent chip than as a "0" that looks
+    # like a defect.
+    assert _connection_badge(0, "border-aurelia-primary") == ""
