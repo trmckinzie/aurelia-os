@@ -196,11 +196,54 @@ def _render_image(path):
 </div>"""
 
 
+# Counts media widgets skipped because the file they point at is gone (see
+# resolve_asset / process_gemini_notebook_media). pipeline.py reads this to
+# print a build summary -- a silent skip is just a different flavour of the
+# invisible failure this whole change is meant to remove.
+_missing_asset_count = 0
+_missing_assets = []
+
+
+def get_missing_asset_count():
+    return _missing_asset_count
+
+
+def get_missing_assets():
+    return list(_missing_assets)
+
+
+def reset_missing_asset_count():
+    global _missing_asset_count
+    _missing_asset_count = 0
+    _missing_assets.clear()
+
+
+def resolve_asset(path):
+    """Returns the on-disk path for a vault-relative asset ref, or None.
+
+    Note bodies reference media as `assets/audio/x.m4a`, which lives at
+    `vault/assets/audio/x.m4a` and is copied to `dist/assets/` by
+    assets_pipeline.sync_vault_assets(). The ROOT_DIR fallback is kept from
+    the original flashcard resolver, which supported decks committed at the
+    repo root rather than in the vault.
+    """
+    for base in (VAULT_PATH, ROOT_DIR):
+        candidate = os.path.join(base, path)
+        if os.path.exists(candidate):
+            return candidate
+    return None
+
+
+def _note_missing_asset(path):
+    global _missing_asset_count
+    _missing_asset_count += 1
+    if path not in _missing_assets:
+        _missing_assets.append(path)
+
+
 def _render_flashcards(path):
-    csv_path = os.path.join(VAULT_PATH, path)
-    if not os.path.exists(csv_path):
-        csv_path = os.path.join(ROOT_DIR, path)
-    if not os.path.exists(csv_path):
+    csv_path = resolve_asset(path)
+    if csv_path is None:
         return f'<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV NOT FOUND: {path}</div>'
 
     cards_html = ""
@@ -263,7 +306,25 @@ def process_gemini_notebook_media(text):
             if not file_match:
                 return match.group(0)
 
-            html_widget = _MEDIA_RENDERERS[item['type']](file_match.group(1))
+            asset_path = file_match.group(1)
+
+            # Don't render a player/image for a file that isn't there. The
+            # 2026 history purge removed the Gemini Notebook audio and
+            # mind-map assets from the repo, but the notes still name them --
+            # 34 of 38 references currently resolve to nothing, so 15 notes
+            # render empty audio controls and broken images. Dropping the
+            # bare path leaves the header and surrounding prose intact and
+            # the note simply reads as text.
+            #
+            # Flashcards included: that renderer's own "CSV NOT FOUND" box is
+            # a build diagnostic that was being rendered to readers. The count
+            # below reports it to the person who can act on it instead.
+            if resolve_asset(asset_path) is None:
+                _note_missing_asset(asset_path)
+                new_content = content.replace(file_match.group(0), "").strip()
+                return header + new_content + "\n"
+
+            html_widget = _MEDIA_RENDERERS[item['type']](asset_path)
             new_content = content.replace(file_match.group(0), html_widget)
             return header + new_content + "\n"
 
@@ -299,12 +360,28 @@ def wrap_gemini_notebook_sections(text):
         return text
 
     pieces = [text[:matches[0].start()]]
+    opened_one = False
     for i, match in enumerate(matches):
         header_text = match.group(1).strip()
         start = match.end()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         section_body = text[start:end].strip()
-        open_attr = " open" if i == 0 else ""
+
+        # Drop a section that has no body at all. This is what a header whose
+        # only content was a now-missing media file collapses to (see
+        # process_gemini_notebook_media): 10 "Audio Overview" and 6 "Mind Map"
+        # sections currently. Keeping them would trade a visibly broken player
+        # for an expandable section that opens onto nothing -- still a dead end
+        # for the reader, just a quieter one. It also covers the unfilled
+        # placeholder headers TPL_Gemini_Notebook's own contract warns about.
+        if not section_body:
+            continue
+
+        # "First section starts open" means the first section actually
+        # *rendered*, not index 0 -- if section 0 were dropped as empty, keying
+        # off `i` would leave the note with every section collapsed.
+        open_attr = "" if opened_one else " open"
+        opened_one = True
         pieces.append(
             f'\n\n<details{open_attr} class="gemini-note-section">\n'
             f'<summary class="gemini-note-summary"><span class="folder-arrow">▶</span> {header_text}</summary>\n\n'

@@ -15,12 +15,15 @@ from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env, 
 from engine.content import (
     dim_dangling_links,
     get_malformed_count,
+    get_missing_asset_count,
+    get_missing_assets,
     make_id,
     parse_body,
     parse_frontmatter,
     process_gemini_notebook_media,
     process_wikilinks,
     reset_malformed_count,
+    reset_missing_asset_count,
     wrap_gemini_notebook_sections,
 )
 from engine.tailwind_build import compile_css
@@ -51,6 +54,7 @@ def _scan_vault():
     target is real -- see cards.link_pill().
     """
     reset_malformed_count()
+    reset_missing_asset_count()
     pending = []
 
     for root, dirs, files in os.walk(VAULT_PATH):
@@ -325,6 +329,21 @@ def build_all():
         # with nothing but the per-note warning above -- easy to miss in
         # scroll-back. This line is the summary a human will actually see.
         print(f"   ⚠️  {malformed} note(s) skipped for malformed frontmatter -- see warnings above")
+
+    missing_assets = get_missing_asset_count()
+    if missing_assets:
+        # Same reasoning as the counter above. These are media widgets that
+        # were NOT rendered because the file a note names is gone (the 2026
+        # history purge removed the Gemini Notebook audio and mind maps).
+        # Skipping them is right -- an empty audio player helps nobody -- but
+        # skipping them silently would just replace a visible broken control
+        # with an invisible absence, so the count is surfaced here.
+        unique = get_missing_assets()
+        print(f"   ⚠️  {missing_assets} media widget(s) skipped -- {len(unique)} asset file(s) missing")
+        for path in unique[:3]:
+            print(f"        - {path}")
+        if len(unique) > 3:
+            print(f"        ... and {len(unique) - 3} more")
 
     master_index = _build_search_index(garden_cards)
     json_index = dumps_for_script_tag(master_index)

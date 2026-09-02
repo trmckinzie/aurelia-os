@@ -14,6 +14,21 @@ function escapeHtml(str) {
 }
 
 /**
+ * Escapes a string for literal use inside a RegExp.
+ *
+ * The Garden's search highlighter builds `new RegExp()` from whatever is
+ * typed into the search box. Without this, an ordinary query containing a
+ * regex metacharacter -- `System 1 (fast)`, `arrays[0]`, `a+b` -- throws a
+ * SyntaxError. That is not a cosmetic failure: the highlighter runs inside
+ * updateGrid()'s per-card loop, so the throw aborts filtering partway and
+ * leaves the grid showing a stale set of cards under a count that no longer
+ * matches them.
+ */
+function escapeRegExp(str) {
+    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * True when entrance animations should be skipped entirely: the user asked
  * for reduced motion, or the Motion library isn't available (CDN blocked,
  * offline, blocker extension). Callers should render their normal static

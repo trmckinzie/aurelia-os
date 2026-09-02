@@ -415,7 +415,13 @@
 
         <div id="grid-empty" class="hidden text-center py-20 field-label text-aurelia-muted">No nodes match the current filter</div>
 
-        <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 auto-rows-fr">
+        <!-- No auto-rows-fr. `grid-auto-rows: minmax(0, 1fr)` sizes every row
+             in the grid to the tallest card on the *page*, not the tallest in
+             each row -- so one long daily log made all 245 cards 676px and the
+             Garden ~58,000px of scroll. Letting rows size themselves gives
+             326-676px cards and a 32% shorter page; `h-full` on the card
+             (engine/cards.py) still equalises cards within a row. -->
+        <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
             {% for card in cards %}
                 {{ card.html|safe }}
             {% endfor %}
@@ -820,9 +826,29 @@
             if (checkVisibility(item)) {
                 item.style.display = 'flex';
                 visibleCount++;
-                // Additive Highlight: Only highlight if there is a query
-                if (currentQuery.length > 0) highlightText(item, currentQuery);
-                else clearHighlights(item);
+                // Additive Highlight: Only highlight if there is a query.
+                //
+                // Deliberately contained. Highlighting is decoration; filtering
+                // is not. This call used to be able to throw (see highlightText),
+                // and because it sits inside this loop the throw aborted
+                // filtering partway -- later cards kept their previous
+                // visibility, and node-count, the empty state, the tree folders
+                // and the graph dimming below all never ran, leaving the grid
+                // showing one set of cards under a count for another. The
+                // escaping in highlightText fixes the known trigger; this makes
+                // any *future* one degrade to "this card isn't highlighted"
+                // instead of "the grid is lying". Scoped to the highlight call
+                // only, so a real bug elsewhere still surfaces normally.
+                if (currentQuery.length > 0) {
+                    try {
+                        highlightText(item, currentQuery);
+                    } catch (e) {
+                        console.error('highlightText failed for', item.dataset.id, e);
+                        clearHighlights(item);
+                    }
+                } else {
+                    clearHighlights(item);
+                }
             } else {
                 item.style.display = 'none';
                 clearHighlights(item);
@@ -909,7 +935,11 @@
             // Only highlight if the VISIBLE text actually contains the term
             if (originalHTML.toLowerCase().includes(term)) {
                 // ⚡ SMART REGEX ⚡: Ignores text inside HTML tags (like <button> or class="")
-                const regex = new RegExp(`(?![^<]*>)(${term})`, 'gi');
+                // escapeRegExp (assets/js/utils.js) is load-bearing: the term
+                // comes straight from the search box, so an ordinary query
+                // like "System 1 (fast)" would otherwise be compiled as a
+                // pattern and throw. A reader typing a paren means a paren.
+                const regex = new RegExp(`(?![^<]*>)(${escapeRegExp(term)})`, 'gi');
                 element.innerHTML = originalHTML.replace(regex, '<span class="highlight">$1</span>');
             } else {
                 element.innerHTML = originalHTML;
