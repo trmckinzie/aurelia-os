@@ -325,35 +325,35 @@
                 <div class="h-6 w-px bg-aurelia-border shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
-                    <button onclick="setFilter('all', this)" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
+                    <button onclick="setFilter('all', this)" data-filter="all" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All_Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
+                    <button onclick="setFilter('daily-bridge', this)" data-filter="daily-bridge" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
+                    <button onclick="setFilter('concept', this)" data-filter="concept" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
+                    <button onclick="setFilter('source', this)" data-filter="source" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
                         Library
                     </button>
 
-                    <button onclick="setFilter('author', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
+                    <button onclick="setFilter('author', this)" data-filter="author" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
+                    <button onclick="setFilter('discipline', this)" data-filter="discipline" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
+                    <button onclick="setFilter('gemini-notebook', this)" data-filter="gemini-notebook" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
                         Gemini Notebook
                     </button>
 
-                    <button onclick="setFilter('deep-dive', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
+                    <button onclick="setFilter('deep-dive', this)" data-filter="deep-dive" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
                         Deep Dive
                     </button>
                 </div>
@@ -368,6 +368,15 @@
                 <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <span>🎲</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Random</span>
+                </button>
+
+                <!-- The address bar already carries the current view, so this
+                     is a convenience rather than the mechanism -- but without
+                     something visible, a reader has no reason to suspect the
+                     URL is worth copying. -->
+                <button onclick="copyViewLink()" id="btn-share" title="Copy a link to the current filter, search and view" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                    <span>🔗</span>
+                    <span class="hidden lg:inline uppercase tracking-wider">Share View</span>
                 </button>
 
                 <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
@@ -685,6 +694,7 @@
         // Filters now remain active in every mode.
 
         if (mode === 'graph') initGraph();
+        syncViewToUrl();
     }
 
     // --- 2. NEURAL ANIMATION (PRESERVED) ---
@@ -787,6 +797,7 @@
         const input = document.getElementById('searchInput');
         currentQuery = input.value.toLowerCase().trim();
         updateGrid();
+        syncViewToUrl();
     }
 
     function setFilter(type, btn) {
@@ -840,9 +851,13 @@
         }
         
         updateGrid();
+        syncViewToUrl();
     }
 
     function updateGrid() {
+        // Suppressed while restoreViewFromUrl() applies several settings in
+        // a row; it runs one pass itself once they're all in place.
+        if (restoring) return;
         let visibleCount = 0;
 
         // 1. FILTER GRID ITEMS
@@ -1275,6 +1290,130 @@
     }
     window.addEventListener('hashchange', openNoteFromHash);
 
+    /* === SHAREABLE VIEW STATE ==========================================
+       Filter, search, topic and view mode live in the query string, so a
+       particular slice of the Garden -- "concepts about memory, as a graph"
+       -- can be linked, bookmarked, or reopened where you left it. None of
+       that state survived a reload before; it existed only in memory.
+
+       Query string for the view, hash for the open note. They are
+       deliberately separate: the hash already means "open this note"
+       (openNoteFromHash above), so ?q=memory#note-working-memory restores a
+       filtered view *and* reopens the note, and neither feature has to know
+       about the other.
+
+       replaceState, not pushState. Search runs on every keystroke, so
+       pushState would add a history entry per character and bury the page
+       you arrived from under a dozen near-identical URLs. The tradeoff is
+       that Back leaves the Garden rather than undoing the last filter --
+       which is what it did before this change too, so nothing regresses.
+
+       `restoring` suppresses updateGrid() while state is being applied:
+       each setter normally triggers a full pass over 245 cards, and restore
+       calls several in a row. One pass at the end is enough. */
+    let restoring = false;
+
+    function syncViewToUrl() {
+        if (restoring) return;
+        const params = new URLSearchParams();
+        if (currentQuery) params.set('q', currentQuery);
+        if (currentType && currentType !== 'all') params.set('type', currentType);
+        if (currentTopic) params.set('topic', currentTopic);
+        if (currentView && currentView !== 'grid') params.set('view', currentView);
+
+        const qs = params.toString();
+        // Keep the hash: it may be holding an open note.
+        history.replaceState(null, '', (qs ? '?' + qs : location.pathname) + location.hash);
+    }
+
+    function restoreViewFromUrl() {
+        const params = new URLSearchParams(location.search);
+        if (![...params.keys()].length) return;
+
+        restoring = true;
+        try {
+            const view = params.get('view');
+            if (view === 'tree' || view === 'graph') switchView(view);
+
+            const type = params.get('type');
+            if (type) {
+                // Only honour a type that actually has a filter button --
+                // a hand-edited or stale ?type= would otherwise leave the
+                // grid empty with every button showing inactive.
+                const btn = document.querySelector(`.filter-btn[data-filter="${CSS.escape(type)}"]`);
+                if (btn) setFilter(type, btn);
+            }
+
+            const topic = params.get('topic');
+            if (topic) {
+                currentTopic = topic;
+                renderTopicCloud();
+                updateTopicActiveLabel();
+                // Reveal the cloud, otherwise the active topic is filtering
+                // the grid from a panel the reader can't see.
+                const cloud = document.getElementById('topic-cloud');
+                if (cloud) cloud.classList.remove('hidden');
+            }
+
+            const q = params.get('q');
+            if (q) {
+                const input = document.getElementById('searchInput');
+                if (input) input.value = q;
+                currentQuery = q.toLowerCase().trim();
+            }
+        } finally {
+            restoring = false;
+        }
+        updateGrid();
+    }
+
+    function copyViewLink() {
+        const btn = document.getElementById('btn-share');
+        const done = (msg) => {
+            if (!btn) return;
+            const original = btn.dataset.label || btn.textContent.trim();
+            btn.dataset.label = original;
+            btn.textContent = msg;
+            setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
+        };
+        // Two mechanisms, because the modern one is refused more often than
+        // you'd expect: navigator.clipboard needs a secure context (file://
+        // and plain http on a LAN address don't qualify) and can also be
+        // denied outright by permissions policy even on https. The legacy
+        // execCommand path works in several of those cases, so it's a real
+        // fallback rather than a formality.
+        const legacyCopy = () => {
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = location.href;
+                // Keep it off-screen but focusable; display:none can't be selected.
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.top = '-1000px';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                const ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+                return ok;
+            } catch (e) {
+                return false;
+            }
+        };
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(location.href).then(
+                () => done('✓ COPIED'),
+                () => done(legacyCopy() ? '✓ COPIED' : '⚠ PRESS ⌘C')
+            );
+        } else {
+            // No async clipboard at all. If the legacy path also fails the
+            // URL is still in the address bar, so say what to do rather than
+            // just reporting a failure the reader can't act on.
+            done(legacyCopy() ? '✓ COPIED' : '⚠ PRESS ⌘C');
+        }
+    }
+
     function daysAgoLabel(ts) {
         const days = Math.floor((Date.now() - ts) / 86400000);
         if (days <= 0) return 'today';
@@ -1319,6 +1458,7 @@
         renderTopicCloud();
         updateTopicActiveLabel();
         updateGrid();
+        syncViewToUrl();
     }
 
     function clearTopicFilter() {
@@ -1326,6 +1466,7 @@
         renderTopicCloud();
         updateTopicActiveLabel();
         updateGrid();
+        syncViewToUrl();
     }
 
     function updateTopicActiveLabel() {
@@ -1674,6 +1815,7 @@
 
     renderReviewQueue();
     renderTopicCloud();
+    restoreViewFromUrl();
     openNoteFromHash();
 </script>
 {% endblock %}
