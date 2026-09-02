@@ -4,13 +4,14 @@ Only the Lobby (index.html) and Garden (garden.html) are published. Project,
 protocol, and transmission notes are recognized by type but intentionally
 skipped -- there's no page left for them to link to.
 """
+import hashlib
 import os
 import re
 from collections import Counter
 
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
-from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env, load_user_config
+from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env, load_user_config
 from engine.content import (
     dim_dangling_links,
     get_malformed_count,
@@ -240,6 +241,38 @@ def _build_search_index(garden_cards):
     return master_index
 
 
+def _asset_version():
+    """A short content hash of the CSS/JS the pages link to, appended to
+    those URLs as ?v= so a deploy can't leave a visitor on stale assets.
+
+    This is not a nicety. The pages and their assets are cached
+    independently, and neither GitHub Pages nor a plain static server sends
+    Cache-Control for them -- so a browser applies *heuristic* freshness and
+    may serve a cached utils.js without revalidating at all. A visitor who
+    returns after a deploy then gets new HTML calling functions that only
+    exist in the new JS, against the old file. Hit exactly that during
+    development: new markup calling aureliaReveal() against a cached
+    utils.js from before that function existed, which failed silently and
+    made an entrance animation look like it worked when it had never run.
+
+    Hashing content rather than using a timestamp means the URL only
+    changes when the file actually changes, so unrelated rebuilds don't
+    needlessly bust every visitor's cache.
+    """
+    digest = hashlib.sha256()
+    for rel in ("assets/css/main.css", "assets/js/utils.js"):
+        path = os.path.join(ROOT_DIR, rel)
+        try:
+            with open(path, "rb") as f:
+                digest.update(f.read())
+        except OSError:
+            # A missing source file is the asset pipeline's problem to
+            # report, not this function's -- fold the path in so the
+            # version still changes if it reappears.
+            digest.update(rel.encode("utf-8"))
+    return digest.hexdigest()[:10]
+
+
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json):
     pages = [
         ("pages/indextemplate.html", "index.html", {"stats": lobby_stats, "review_seed": review_seed_json}),
@@ -249,6 +282,8 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         ("404.html", "404.html", {}),
     ]
 
+    asset_version = _asset_version()
+
     for template_name, output_name, context in pages:
         try:
             context["theme"] = CURRENT_THEME
@@ -256,6 +291,7 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["available_themes_json"] = dumps_for_script_tag(available_themes())
             context["search_index"] = json_index
             context["config"] = user_config
+            context["asset_version"] = asset_version
 
             template = env.get_template(template_name)
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)

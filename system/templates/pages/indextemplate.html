@@ -74,7 +74,7 @@
 
         <p class="font-mono text-xl md:text-2xl text-aurelia-text/90 max-w-3xl leading-snug">
             A Personal Knowledge Management System designed by
-            <button onclick="openAbout()" class="text-aurelia-accent font-bold underline decoration-aurelia-accent/40 underline-offset-8 hover:decoration-aurelia-accent transition-all duration-300 cursor-pointer">
+            <button onclick="openAbout()" class="text-aurelia-accent font-bold underline decoration-aurelia-accent/40 underline-offset-8 hover:decoration-aurelia-accent transition-colors duration-300 cursor-pointer">
                 {{ config.author.name }}
             </button>
         </p>
@@ -198,7 +198,7 @@
             
             <div class="flex items-center justify-between mb-8 px-4 md:px-12">
                  <button onclick="rotateCarousel(-1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors">
-                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-current"></div>
                         <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current"></div>
                         <span class="font-mono text-2xl">&lt;</span>
@@ -214,7 +214,7 @@
                 </div>
 
                 <button onclick="rotateCarousel(1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors flex-row-reverse">
-                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-all relative overflow-hidden backdrop-blur-sm">
+                    <div class="w-12 h-12 border border-aurelia-dim group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-current"></div>
                         <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current"></div>
                         <span class="font-mono text-2xl">&gt;</span>
@@ -622,7 +622,7 @@
                         
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_20%,transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_60%,transparent)] transition-all duration-500">
+                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_20%,transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_60%,transparent)] transition duration-500">
                             ${tech.icon}
                         </div>
                         

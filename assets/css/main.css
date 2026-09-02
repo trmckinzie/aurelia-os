@@ -207,6 +207,33 @@ body {
 }
 
 /* ============================================================
+   MOTION TOKENS
+   ============================================================
+   Durations and easings were previously written inline at every call site
+   (220ms here, 300ms there, three different cubic-beziers), so nothing
+   moved at a consistent speed. These are the vocabulary; the numbers are
+   chosen so that related things share a duration and unrelated things
+   don't accidentally match.
+
+   The scale is deliberately short. This is a reading interface -- motion
+   should confirm that something happened, not perform. Anything above
+   ~400ms starts to feel like waiting rather than responding.
+
+   --ease-out is the workhorse for things entering or settling.
+   --ease-spring overshoots very slightly; reserved for direct
+   manipulation (a press, a panel opening under the cursor) where a little
+   physicality reads as responsiveness rather than as decoration. */
+:root {
+    --dur-1: 140ms;   /* micro: press, hover tint */
+    --dur-2: 220ms;   /* standard: hover lift, colour change */
+    --dur-3: 320ms;   /* deliberate: panels, indicators, theme swap */
+    --dur-4: 460ms;   /* entrance: reveals, modal open */
+    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+    --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* ============================================================
    NAV HEIGHT -- one source of truth
    ============================================================
    The nav's height used to be hardcoded in three unrelated places that
@@ -231,17 +258,17 @@ body {
     background: var(--aurelia-surface-1);
     box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-1);
     border-bottom: 1px solid color-mix(in srgb, var(--aurelia-primary) 14%, transparent);
-    transition: height 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease;
+    transition: height var(--dur-3) var(--ease-out), box-shadow var(--dur-3) ease;
 }
 :root[data-nav="condensed"] .nav-shell {
     box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-2);
 }
 /* Page content and the Garden's sticky toolbar both key off --nav-h. */
 .nav-offset { padding-top: calc(var(--nav-h) + 4rem); }
-.nav-anchored { top: var(--nav-h); transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+.nav-anchored { top: var(--nav-h); transition: top var(--dur-3) var(--ease-out); }
 
 /* The brand's "// SUBTITLE" is the first thing to go when space tightens. */
-.nav-sub { transition: opacity 200ms ease, max-width 260ms ease; max-width: 16rem; }
+.nav-sub { transition: opacity var(--dur-2) ease, max-width var(--dur-3) ease; max-width: 16rem; }
 :root[data-nav="condensed"] .nav-sub { opacity: 0; max-width: 0; overflow: hidden; }
 
 /* Sliding active indicator: ONE element that moves between links, rather
@@ -255,14 +282,14 @@ body {
     box-shadow: 0 0 10px var(--aurelia-primary);
     border-radius: 2px;
     opacity: 0;
-    transition: left 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                width 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                opacity 200ms ease;
+    transition: left var(--dur-3) var(--ease-out),
+                width var(--dur-3) var(--ease-out),
+                opacity var(--dur-2) ease;
     pointer-events: none;
 }
 .nav-indicator.is-ready { opacity: 1; }
 
-.nav-link { position: relative; transition: color 200ms ease, text-shadow 200ms ease; }
+.nav-link { position: relative; transition: color var(--dur-2) ease, text-shadow var(--dur-2) ease; }
 .nav-link:hover { color: var(--aurelia-text-main); }
 
 /* Mobile menu: animated open/close instead of toggling `hidden`, which
@@ -272,7 +299,7 @@ body {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transition: max-height 280ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 200ms ease;
+    transition: max-height var(--dur-3) var(--ease-out), opacity var(--dur-2) ease;
 }
 .mobile-menu.is-open { max-height: 26rem; opacity: 1; }
 
@@ -285,8 +312,8 @@ body {
    245-card grid. Scoped to the properties that actually carry a theme. */
 :root.theme-transition,
 :root.theme-transition * {
-    transition: background-color 320ms ease, border-color 320ms ease,
-                color 320ms ease, fill 320ms ease, box-shadow 320ms ease !important;
+    transition: background-color var(--dur-3) ease, border-color var(--dur-3) ease,
+                color var(--dur-3) ease, fill var(--dur-3) ease, box-shadow var(--dur-3) ease !important;
     transition-delay: 0ms !important;
 }
 
@@ -328,9 +355,9 @@ body {
    because it composes three properties that have to move together, and
    because the reduced-motion block below needs one place to disable it. */
 .lift {
-    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 220ms ease;
+    transition: transform var(--dur-2) var(--ease-out),
+                box-shadow var(--dur-2) var(--ease-out),
+                border-color var(--dur-2) ease;
     will-change: transform;
 }
 .lift:hover {
@@ -368,7 +395,7 @@ body {
     background: var(--aurelia-glow-primary);
     filter: blur(40px);
     opacity: 0.5;
-    transition: opacity 300ms ease;
+    transition: opacity var(--dur-3) ease;
 }
 .bloom-accent::after { background: var(--aurelia-glow-accent); }
 .bloom:hover::after { opacity: 0.9; }
@@ -386,7 +413,7 @@ body {
     border-top: 1px solid currentColor;
     border-right: 1px solid currentColor;
     opacity: 0.4;
-    transition: opacity 220ms ease, width 220ms ease, height 220ms ease;
+    transition: opacity var(--dur-2) ease, width var(--dur-2) ease, height var(--dur-2) ease;
     pointer-events: none;
 }
 .group:hover > .bracket-mark { opacity: 1; width: 32px; height: 32px; }
@@ -418,8 +445,8 @@ body {
     padding: 0.95rem 1.6rem;
     border: 1px solid transparent;
     border-radius: var(--aurelia-radius);
-    transition: background-color 200ms ease, border-color 200ms ease,
-                color 200ms ease, box-shadow 200ms ease, transform 140ms ease;
+    transition: background-color var(--dur-2) ease, border-color var(--dur-2) ease,
+                color var(--dur-2) ease, box-shadow var(--dur-2) ease, transform var(--dur-1) ease;
 }
 .btn:active { transform: translateY(1px); }
 
@@ -478,8 +505,8 @@ body {
     white-space: nowrap;
     padding: 0.55rem 1rem;
     border-radius: var(--aurelia-radius);
-    transition: background-color 180ms ease, border-color 180ms ease,
-                color 180ms ease, box-shadow 180ms ease, transform 140ms ease;
+    transition: background-color var(--dur-2) ease, border-color var(--dur-2) ease,
+                color var(--dur-2) ease, box-shadow var(--dur-2) ease, transform var(--dur-1) ease;
 }
 .chip:active { transform: translateY(1px); }
 /* The selected filter emits a little light, so which one is active reads
@@ -491,11 +518,39 @@ body {
     .chip:active { transform: none; }
 }
 
+/* Modal choreography. The backdrop and the panel are deliberately given
+   different durations and easings: the backdrop fades fast so the page
+   recedes immediately, while the panel arrives slightly slower on the
+   spring easing so it reads as coming toward you. Matching them exactly
+   makes the whole thing feel like one flat cross-fade.
+
+   Closing is faster than opening (--dur-2 vs --dur-4) and uses ease-in:
+   dismissal should feel immediate, not like waiting for an exit. */
+.modal-panel-anim {
+    transition: transform var(--dur-4) var(--ease-spring),
+                opacity var(--dur-3) var(--ease-out);
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+}
+.modal-panel-anim.is-open { transform: scale(1) translateY(0); opacity: 1; }
+.modal-panel-anim.is-closing {
+    transition: transform var(--dur-2) var(--ease-in), opacity var(--dur-2) var(--ease-in);
+    transform: scale(0.98) translateY(4px);
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* Keep the end states, drop the movement -- a reduced-motion user
+       should still get a modal that appears, just without the travel. */
+    .modal-panel-anim,
+    .modal-panel-anim.is-closing { transition: none; transform: none; }
+}
+
 /* Modal footer actions -- underline grows from the left on hover instead of
    the label just changing color, which is hard to notice at 10px. */
 .modal-action {
     position: relative;
-    transition: color 180ms ease;
+    transition: color var(--dur-2) ease;
     white-space: nowrap;
 }
 .modal-action:hover { color: var(--aurelia-primary); }
@@ -505,7 +560,7 @@ body {
     left: 0; bottom: -3px;
     width: 0; height: 1px;
     background: currentColor;
-    transition: width 180ms ease;
+    transition: width var(--dur-2) ease;
 }
 .modal-action:hover::after { width: 100%; }
 
@@ -535,8 +590,8 @@ body {
    grayscale + dimmed, plain text does neither. Colour alone was what made
    dead pills look clickable, so the live state gets motion of its own. */
 .pill-live {
-    transition: background-color 160ms ease, border-color 160ms ease,
-                transform 160ms ease, box-shadow 160ms ease;
+    transition: background-color var(--dur-1) ease, border-color var(--dur-1) ease,
+                transform var(--dur-1) ease, box-shadow var(--dur-1) ease;
 }
 .pill-live:hover {
     transform: translateY(-1px);
@@ -550,7 +605,7 @@ body {
 .hub-row {
     position: relative;
     padding-left: 0;
-    transition: padding-left 200ms ease, color 200ms ease;
+    transition: padding-left var(--dur-2) ease, color var(--dur-2) ease;
 }
 .hub-row::before {
     content: "";
@@ -559,7 +614,7 @@ body {
     width: 0; height: 1px;
     background: currentColor;
     transform: translateY(-50%);
-    transition: width 200ms ease;
+    transition: width var(--dur-2) ease;
 }
 .hub-row:hover { padding-left: 1rem; }
 .hub-row:hover::before { width: 0.6rem; }
