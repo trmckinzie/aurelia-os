@@ -245,6 +245,24 @@ def _build_search_index(garden_cards):
     return master_index
 
 
+def _build_deep_search_index(garden_cards):
+    """{note_id: full lowercased body text} for the Garden's in-page deep search.
+
+    This used to live in a `data-search` attribute on every card -- and,
+    because the tree view renders the same notes again, on every tree row
+    too. That put the entire text of the vault into the HTML *twice*: 1.82 MB
+    of attributes across 490 elements, 35% of garden.html, with one note's
+    attribute alone running to 123,699 characters. The browser also had to
+    parse all of it into the DOM.
+
+    Emitting it once as JSON keyed by note id lets both views look a note up
+    by `data-id` instead of carrying its own copy. Full-text search is
+    preserved exactly -- this is deliberately the whole body, not the
+    200-char snippet the command palette uses (see _build_search_index).
+    """
+    return {c['id']: c['desc'] for c in garden_cards}
+
+
 def _asset_version():
     """A short content hash of the CSS/JS the pages link to, appended to
     those URLs as ?v= so a deploy can't leave a visitor on stale assets.
@@ -277,11 +295,40 @@ def _asset_version():
     return digest.hexdigest()[:10]
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json):
+def _write_deep_search_index(deep_search_json):
+    """Writes the deep-search index to its own JS file rather than inlining it.
+
+    At ~0.95 MB it is the single largest thing on the Garden page after the
+    note bodies. Inline, it is re-downloaded and re-parsed on every visit and
+    inflates the HTML the browser must parse before rendering anything. As a
+    separate file it is cached across visits (and versioned by the ?v= hash,
+    so a rebuild still invalidates it -- see _asset_version).
+
+    Returns (bytes_written, content_hash). The hash is its OWN, not
+    _asset_version(): that one covers main.css/utils.js, which do not change
+    when the vault does. Versioning this file by that hash would let a
+    visitor keep a cached index from before a note was added or edited --
+    the same stale-asset failure ?v= exists to prevent, just moved.
+    """
+    js_dir = os.path.join(OUTPUT_DIR, "assets", "js")
+    os.makedirs(js_dir, exist_ok=True)
+    path = os.path.join(js_dir, "search-index.js")
+    payload = f"window.DEEP_SEARCH_INDEX = {deep_search_json};\n"
+    encoded = payload.encode("utf-8")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(payload)
+    return len(encoded), hashlib.sha256(encoded).hexdigest()[:10]
+
+
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json):
+    index_bytes, search_index_version = _write_deep_search_index(deep_search_json)
+    print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
+
     pages = [
         ("pages/indextemplate.html", "index.html", {"stats": lobby_stats, "review_seed": review_seed_json}),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
+            "search_index_version": search_index_version,
         }),
         ("404.html", "404.html", {}),
     ]
@@ -348,6 +395,8 @@ def build_all():
     master_index = _build_search_index(garden_cards)
     json_index = dumps_for_script_tag(master_index)
 
+    deep_search_json = dumps_for_script_tag(_build_deep_search_index(garden_cards))
+
     backlinks, edges = _build_link_graph(garden_cards)
     backlinks_json = dumps_for_script_tag(backlinks)
     graph_index = _build_graph_index(garden_cards, edges)
@@ -356,7 +405,7 @@ def build_all():
     lobby_stats = _build_lobby_context(garden_cards, graph_index)
     review_seed_json = dumps_for_script_tag(lobby_stats.pop("review_seed"))
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json)
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.

@@ -509,7 +509,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     spine = color.replace('border-', 'bg-')
 
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-search="{title} {note_type} {full_search_text}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">

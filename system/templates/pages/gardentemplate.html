@@ -4,6 +4,18 @@
 {% block nav_title %}GARDEN_DECK{% endblock %}
 
 {% block head_extra %}
+<!-- The deep-search index (~0.95 MB, note_id -> full body text). Kept out of
+     the HTML so it caches across visits rather than being re-downloaded and
+     re-parsed every load; see pipeline._write_deep_search_index.
+
+     ?v= is the index's OWN content hash, not the site-wide asset hash: this
+     file changes whenever the vault does, while main.css/utils.js do not, so
+     sharing their hash would serve a stale index after a note was edited.
+
+     Not `defer`: the inline script below reads window.DEEP_SEARCH_INDEX at
+     parse time, so this has to have executed first. It is a plain assignment,
+     so there is no execution cost beyond the parse. -->
+<script src="assets/js/search-index.js?v={{ search_index_version }}"></script>
 <style>
     /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
@@ -492,9 +504,9 @@
                             {% for card in group %}
                             <div class="tree-node group/node cursor-pointer searchable-tree-item"
                                  onclick="openNote('{{ card.id }}')"
+                                 data-id="{{ card.id }}"
                                  data-type="{{ card.type|lower }}"
-                                 data-tags="{{ card.tags|join(' ') }}"
-                                 data-search="{{ card.title }} {{ card.desc }}">
+                                 data-tags="{{ card.tags|join(' ') }}">
                                 
                                 <div class="flex items-center gap-3 overflow-hidden">
                                     <span class="text-aurelia-muted text-[10px] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
@@ -607,6 +619,19 @@
     // deduped undirected edges), built at build time in
     // engine/pipeline.py._build_graph_index.
     const GRAPH_INDEX = {{ graph_index | safe }};
+
+    // note_id -> full lowercased body text, powering the in-page deep search
+    // (see checkVisibility). Built in pipeline._build_deep_search_index and
+    // loaded from assets/js/search-index.js (see the <script> in head_extra),
+    // so ~0.95 MB is cached across visits instead of re-parsed inline on
+    // every page load. This is also the one copy: the same text used to be
+    // duplicated into a data-search attribute on every grid card AND again
+    // on every tree row.
+    //
+    // Falls back to an empty object if that file failed to load, which
+    // checkVisibility() handles by matching on title/tags instead of
+    // returning nothing -- see the note there.
+    const DEEP_SEARCH_INDEX = window.DEEP_SEARCH_INDEX || {};
 
     // id -> {id, title, type, tags} for every published note, built once
     // from GRAPH_INDEX.nodes (already loaded for the graph view) so
@@ -911,10 +936,23 @@
 
     // HELPER: Centralized Logic (The Brain)
     function checkVisibility(item) {
-        // dataset.search now contains the FULL BODY TEXT (Deep Search)
+        // Full body text comes from DEEP_SEARCH_INDEX, keyed by note id.
+        // It used to live in a data-search attribute on every card AND every
+        // tree row -- the whole vault's text embedded twice, 1.82 MB and 35%
+        // of this page. Same full-text search, one copy.
         const itemType = item.dataset.type ? item.dataset.type.toLowerCase() : '';
-        const itemSearch = item.dataset.search ? item.dataset.search.toLowerCase() : '';
         const itemTags = item.dataset.tags || '';
+
+        // Deep-search text comes from the index, keyed by note id. If that
+        // file didn't load, fall back to the note's title plus its tags --
+        // both already in the DOM. Without the fallback an empty index makes
+        // every query match nothing, so search would look broken rather than
+        // merely shallower.
+        let itemSearch = DEEP_SEARCH_INDEX[item.dataset.id];
+        if (itemSearch === undefined) {
+            const titleEl = item.querySelector('h3') || item.querySelector('span');
+            itemSearch = ((titleEl ? titleEl.textContent : '') + ' ' + itemTags).toLowerCase();
+        }
 
         // ADDITIVE LOGIC: Must match Filter Button AND Search Bar AND Topic
         const typeMatch = (currentType === 'all') || (itemType.includes(currentType));
