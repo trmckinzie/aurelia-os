@@ -189,11 +189,12 @@ here). Both page templates `{% extends "base.html" %}`.
 `assets/css/main.css` is the Tailwind input file (`@tailwind base/components/utilities` +
 hand-written CSS: cursor SVGs, the `@keyframes scanline` atmosphere effect, the `.scanline` baseline
 rule shared across every page). It is **not** loaded from a CDN — Tailwind compiles it at build
-time (see `tailwind_build.py` above). The color palette (`aurelia-bg`, `aurelia-primary`,
-`aurelia-secondary`, etc., plus the three surviving legacy aliases `aurelia-cyan`/`aurelia-dim`/
-`aurelia-dark` mapped onto semantic ones — `aurelia-orange`/`green`/`purple` were dropped once the
-Protocol/Portfolio pages went and left them with zero call sites) is split across two generated
-files:
+time (see `tailwind_build.py` above). The color palette is entirely semantic now (`aurelia-bg`,
+`aurelia-primary`, `aurelia-secondary`, …): the legacy aliases `aurelia-cyan`/`aurelia-dim`/
+`aurelia-dark` pointed at the *same* CSS variables as `primary`/`border`/`bg` and were removed
+once all 74 call sites were migrated, so there is exactly one spelling per color. (`aurelia-orange`/
+`green`/`purple` had gone earlier, when the Protocol/Portfolio pages left them with zero call
+sites.) The palette is split across two generated files:
 
 - `tailwind.config.js` (from `tailwind_build.py`) maps each utility class to
   `rgb(var(--aurelia-x-rgb) / <alpha-value>)` — **theme-independent**, only needs regenerating when

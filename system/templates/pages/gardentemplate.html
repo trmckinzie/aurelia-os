@@ -293,72 +293,72 @@
         this page only. A page-level sub-nav belongs under the global nav; it's
         still above all in-flow content, and the note modal (z-[60]) and command
         palette (z-[100]) still sit above both. -->
-    <div class="nav-anchored fixed left-0 w-full z-40 bg-aurelia-dark/90 backdrop-blur border-b border-aurelia-dim py-4 px-6 shadow-2xl">
+    <div class="nav-anchored fixed left-0 w-full z-40 bg-aurelia-bg/90 backdrop-blur border-b border-aurelia-border py-4 px-6 shadow-2xl">
         <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             
             <div class="flex items-center gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
                 
-                <div class="flex items-center bg-aurelia-bg/50 border border-aurelia-dim rounded p-1 shrink-0">
-                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid View">
+                <div class="flex items-center bg-aurelia-bg/50 border border-aurelia-border rounded-theme p-1 shrink-0">
+                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid View">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     </button>
-                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded text-aurelia-muted hover:text-aurelia-text transition-colors" title="Tree View">
+                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Tree View">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge Graph">
+                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge Graph">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" stroke-width="2"></circle><circle cx="18" cy="6" r="2.5" stroke-width="2"></circle><circle cx="12" cy="18" r="2.5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"></path></svg>
                     </button>
                 </div>
 
-                <div class="h-6 w-px bg-aurelia-dim shrink-0"></div>
+                <div class="h-6 w-px bg-aurelia-border shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
                     <button onclick="setFilter('all', this)" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All_Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
+                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
+                    <button onclick="setFilter('concept', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
+                    <button onclick="setFilter('source', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
                         Library
                     </button>
 
-                    <button onclick="setFilter('author', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
+                    <button onclick="setFilter('author', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
+                    <button onclick="setFilter('discipline', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
+                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
                         Gemini Notebook
                     </button>
 
-                    <button onclick="setFilter('deep-dive', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
+                    <button onclick="setFilter('deep-dive', this)" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
                         Deep Dive
                     </button>
                 </div>
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
-                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="chip border border-aurelia-dim text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <span>🏷️</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Topics</span>
                 </button>
 
-                <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-dim text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <span>🎲</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Random</span>
                 </button>
 
-                <div class="flex items-center gap-3 border border-aurelia-dim bg-aurelia-bg/50 rounded px-4 py-2 w-full md:w-96">
+                <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
                     <span class="text-xs opacity-50 font-mono">CMD://</span>
                     <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
                 </div>
@@ -368,7 +368,7 @@
 
     <div class="flex-grow pt-12 pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
-        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-sm overflow-hidden border border-aurelia-dim bg-aurelia-bg h-64">
+        <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-theme overflow-hidden border border-aurelia-border bg-aurelia-bg h-64">
             <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
             <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.08)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--aurelia-bg-main)_100%)] z-10 opacity-50 pointer-events-none"></div>
@@ -381,7 +381,7 @@
             </div>
         </div>
 
-        <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4 gap-4">
+        <div class="mb-8 flex justify-between items-end border-b border-aurelia-border pb-4 gap-4">
             <p class="field-label text-aurelia-muted">
                 // TOTAL_NODES: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
             </p>
@@ -390,12 +390,12 @@
             </p>
         </div>
 
-        <div id="topic-cloud" class="hidden mb-8 border border-aurelia-dim bg-aurelia-bg/30 rounded-sm p-5">
+        <div id="topic-cloud" class="surface hidden mb-8 border border-aurelia-border rounded-theme p-5">
             <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-                <span class="text-[11px] font-bold font-mono text-aurelia-accent uppercase tracking-[0.2em]" title="Every topic/* tag in the vault, sized by how many notes carry it. Click one to filter; click it again to clear.">
+                <span class="field-label text-aurelia-accent" title="Every topic/* tag in the vault, sized by how many notes carry it. Click one to filter; click it again to clear.">
                     🏷️ Browse by Topic
                 </span>
-                <span id="topic-active-label" class="hidden text-[10px] font-mono text-aurelia-muted">
+                <span id="topic-active-label" class="hidden field-label text-aurelia-muted normal-case">
                     Filtering: <span id="topic-active-name" class="text-aurelia-accent"></span>
                     <button onclick="clearTopicFilter()" class="ml-2 text-aurelia-muted hover:text-aurelia-text">✕ clear</button>
                 </span>
@@ -403,17 +403,17 @@
             <div id="topic-cloud-items" class="flex flex-wrap gap-2 items-center"></div>
         </div>
 
-        <div id="review-queue" class="hidden mb-10 border border-aurelia-tertiary/30 bg-aurelia-tertiary/5 rounded-sm p-5">
+        <div id="review-queue" class="surface hidden mb-10 border border-aurelia-tertiary/40 rounded-theme p-5">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] font-bold font-mono text-aurelia-tertiary uppercase tracking-[0.2em]" title="Grounded in the spacing effect + retrieval practice: revisiting seeds and growing notes before they go stale helps them mature.">
+                <span class="field-label text-aurelia-tertiary" title="Grounded in the spacing effect + retrieval practice: revisiting seeds and growing notes before they go stale helps them mature.">
                     🧠 RETRIEVAL_QUEUE // Notes Due For Review
                 </span>
-                <span class="text-[9px] font-mono text-aurelia-muted uppercase tracking-wider">Click to review →</span>
+                <span class="field-label text-aurelia-muted">Click to review →</span>
             </div>
             <div id="review-queue-items" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <div id="grid-empty" class="hidden text-center py-20 text-xs font-mono text-aurelia-muted uppercase tracking-widest">No nodes match the current filter</div>
+        <div id="grid-empty" class="hidden text-center py-20 field-label text-aurelia-muted">No nodes match the current filter</div>
 
         <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20 auto-rows-fr">
             {% for card in cards %}
@@ -422,12 +422,12 @@
         </div>
 
         <div id="treeView" class="hidden">
-            <div class="max-w-5xl border-l border-aurelia-dim ml-4 pl-8 pt-6 pb-20">
+            <div class="max-w-5xl border-l border-aurelia-border ml-4 pl-8 pt-6 pb-20">
                 
                 {% for type, group in cards|groupby('type') %}
                     
                     {% set group_color = "text-aurelia-muted" %}
-                    {% set group_border = "border-aurelia-dim" %}
+                    {% set group_border = "border-aurelia-border" %}
                     {% set folder_icon = "📁" %}
                     
                     {% if "concept" in type %} 
@@ -475,9 +475,9 @@
                                 <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type|replace('-', ' ') }}</span>
                             </div>
                             
-                            <div class="h-px bg-aurelia-dim flex-grow mx-4 opacity-50"></div>
+                            <div class="h-px bg-aurelia-border flex-grow mx-4 opacity-50"></div>
                             
-                            <span class="text-[10px] text-aurelia-muted font-mono border border-aurelia-dim bg-aurelia-bg px-2 py-0.5 rounded">
+                            <span class="text-[10px] text-aurelia-muted font-mono border border-aurelia-border bg-aurelia-bg px-2 py-0.5 rounded-theme">
                                 {{ group|length }} NODES
                             </span>
                         </summary>
@@ -499,7 +499,7 @@
                                     
                                     <div class="flex gap-1">
                                         {% for tag in card.tags[:2] %}
-                                        <span class="text-[9px] font-mono text-aurelia-muted border border-aurelia-dim px-1.5 py-0.5 rounded bg-aurelia-bg">#{{ tag }}</span>
+                                        <span class="text-[9px] font-mono text-aurelia-muted border border-aurelia-border px-1.5 py-0.5 rounded-theme bg-aurelia-bg">#{{ tag }}</span>
                                         {% endfor %}
                                     </div>
 
@@ -517,7 +517,7 @@
         </div>
 
         <div id="graphView" class="hidden">
-            <div class="mb-4 flex items-center justify-between text-[10px] font-mono text-aurelia-muted uppercase tracking-widest">
+            <div class="mb-4 flex items-center justify-between field-label text-aurelia-muted">
                 <span>Scroll to zoom · drag to pan · click a node to open</span>
                 <div class="flex items-center gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
@@ -529,9 +529,9 @@
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-insight"></span>Deep Dive</span>
                 </div>
             </div>
-            <div id="graph-canvas-wrap" class="relative border border-aurelia-dim bg-aurelia-bg/40 rounded-sm overflow-hidden" style="height: 70vh;">
+            <div id="graph-canvas-wrap" class="relative border border-aurelia-border bg-aurelia-bg/40 rounded-theme overflow-hidden" style="height: 70vh;">
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
-                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-sm text-xs font-mono text-aurelia-text shadow-lg"></div>
+                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-xs font-mono text-aurelia-text shadow-lg"></div>
                 <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-aurelia-muted uppercase tracking-widest">No nodes match the current filter</div>
             </div>
         </div>
@@ -545,8 +545,8 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="modal-panel-anim surface-raised relative border border-aurelia-dim w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-dim shrink-0">
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-border shrink-0">
                 <div class="flex items-center gap-3">
                     <button onclick="closeModal()" aria-label="Close note" title="Close (Esc)" class="w-3 h-3 rounded-full bg-aurelia-insight hover:shadow-[0_0_10px_currentColor] text-aurelia-insight transition-shadow"></button>
                     <div class="w-3 h-3 bg-aurelia-highlight/70 rounded-full"></div>
@@ -565,17 +565,17 @@
                     <div id="modal-related" class="max-w-3xl mx-auto"></div>
                 </div>
             </div>
-            <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-12 right-4 border border-aurelia-dim rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
+            <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-12 right-4 border border-aurelia-border rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
                 <label class="flex flex-col gap-1.5">
                     VOICE
-                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-dim rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[11px] normal-case tracking-normal"></select>
+                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[11px] normal-case tracking-normal"></select>
                 </label>
                 <label class="flex flex-col gap-1.5">
                     SPEED: <span id="tts-rate-label" class="text-aurelia-primary">1.0x</span>
                     <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)" class="accent-aurelia-primary">
                 </label>
             </div>
-            <div class="px-4 py-2.5 border-t border-aurelia-dim flex justify-between items-center field-label text-aurelia-muted gap-4 shrink-0">
+            <div class="px-4 py-2.5 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-4 shrink-0">
                 <span id="modal-readtime" class="truncate">MODE: READ_ONLY</span>
                 <div class="flex items-center gap-4 shrink-0">
                     <button id="btn-read-aloud" onclick="toggleReading()" title="Read this note aloud (R). Select text first to read just that selection." class="modal-action">🔊 READ</button>
@@ -778,7 +778,7 @@
             );
 
             // Add inactive state
-            btn.classList.add('border-aurelia-dim', 'text-aurelia-muted');
+            btn.classList.add('border-aurelia-border', 'text-aurelia-muted');
         });
 
         // 2. Activate Target Button
@@ -787,7 +787,7 @@
         // only worked because every call site happened to be a live click
         // and would break if setFilter were ever called programmatically.
         const target = btn;
-        target.classList.remove('border-aurelia-dim', 'text-aurelia-muted');
+        target.classList.remove('border-aurelia-border', 'text-aurelia-muted');
         target.classList.add('active');
 
         // 3. Apply Dynamic Color Scheme
@@ -979,11 +979,11 @@
             return;
         }
         container.innerHTML = `
-            <div class="mt-6 pt-6 border-t border-aurelia-dim">
-                <span class="text-[10px] font-bold font-mono text-aurelia-muted uppercase tracking-widest block mb-3">⟵ Referenced By (${refs.length})</span>
+            <div class="mt-6 pt-6 border-t border-aurelia-border">
+                <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
                 <div class="flex flex-wrap gap-2">
                     ${refs.map(r => `
-                    <span onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-dim rounded-sm hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</span>
+                    <span onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</span>
                     `).join('')}
                 </div>
             </div>
@@ -1021,11 +1021,11 @@
             return;
         }
         container.innerHTML = `
-            <div class="mt-6 pt-6 border-t border-aurelia-dim">
-                <span class="text-[10px] font-bold font-mono text-aurelia-accent uppercase tracking-widest block mb-3">✦ Related by Topic</span>
+            <div class="mt-6 pt-6 border-t border-aurelia-border">
+                <span class="field-label text-aurelia-accent block mb-3">✦ Related by Topic</span>
                 <div class="flex flex-wrap gap-2">
                     ${related.map(r => `
-                    <span onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-sm hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</span>
+                    <span onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</span>
                     `).join('')}
                 </div>
             </div>
@@ -1241,8 +1241,8 @@
             const active = tag === currentTopic;
             const activeClasses = active
                 ? 'border-aurelia-accent text-aurelia-accent bg-aurelia-accent/10'
-                : 'border-aurelia-dim text-aurelia-muted hover:border-aurelia-accent hover:text-aurelia-accent';
-            return `<button onclick="toggleTopicFilter('${tag}')" class="font-mono px-2.5 py-1 rounded-sm border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
+                : 'border-aurelia-border text-aurelia-muted hover:border-aurelia-accent hover:text-aurelia-accent';
+            return `<button onclick="toggleTopicFilter('${tag}')" class="font-mono px-2.5 py-1 rounded-theme border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
         }).join('');
     }
 
@@ -1323,7 +1323,7 @@
         }
         panel.classList.remove('hidden');
         container.innerHTML = queue.map(item => `
-            <span onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-sm hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
+            <span onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
                 <span>${escapeHtml(item.title)}</span>
                 <span class="opacity-50 text-[9px]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
             </span>

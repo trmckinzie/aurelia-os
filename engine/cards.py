@@ -167,7 +167,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         cues_html = render_items(
             cues,
-            lambda c: link_pill(c[0], c[1], "text-[11px] font-mono px-2 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/30 rounded-sm font-bold", known_ids),
+            lambda c: link_pill(c[0], c[1], "text-[11px] font-mono px-2 py-0.5 bg-aurelia-tertiary/10 text-aurelia-tertiary border border-aurelia-tertiary/30 rounded-theme font-bold", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col gap-4 h-full">
@@ -186,7 +186,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </p>
             </div>
 
-            <div class="mt-auto pt-3 border-t border-aurelia-dim/50 flex flex-col gap-2">
+            <div class="mt-auto pt-3 border-t border-aurelia-border/50 flex flex-col gap-2">
                 <div class="flex justify-between items-center">
                     <span class="field-label text-aurelia-tertiary truncate w-full">SRC: {source_html}</span>
                 </div>
@@ -205,7 +205,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         links_html = render_items(
             links,
-            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-aurelia-dim hover:border-aurelia-primary pb-0.5", known_ids),
+            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-primary transition-colors border-b border-aurelia-border hover:border-aurelia-primary pb-0.5", known_ids),
             empty_html='<span class="opacity-30 text-[10px]">// NO_LINKS_DETECTED</span>',
         )
         # Built conditionally rather than via render_items' empty_html
@@ -217,10 +217,10 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         if tensions:
             tensions_html = render_items(
                 tensions,
-                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[10px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-sm hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
+                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[10px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-theme hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
             )
             tensions_block = f"""
-            <div class="pt-2 border-t border-aurelia-dim">
+            <div class="pt-2 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-tertiary block mb-1">CONTRASTS_WITH:</span>
                 <div class="flex flex-wrap gap-1.5">
                     {tensions_html}
@@ -238,7 +238,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
             <div class="flex-grow"></div>
 
-            <div class="pt-3 border-t border-aurelia-dim/50">
+            <div class="pt-3 border-t border-aurelia-border/50">
                 <span class="field-label text-aurelia-primary block mb-2">NEURAL_LINKS:</span>
                 <div class="flex flex-wrap gap-2 text-[11px] font-mono text-aurelia-muted">
                     {links_html}
@@ -275,15 +275,15 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-1.5 py-0.5 border border-aurelia-highlight/40 text-aurelia-muted rounded-sm hover:text-aurelia-highlight transition-colors", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-1.5 py-0.5 border border-aurelia-highlight/40 text-aurelia-muted rounded-theme hover:text-aurelia-highlight transition-colors", known_ids),
             empty_html='<span class="opacity-30 text-[10px] text-aurelia-muted font-mono">// NO_CONCEPTS_LINKED</span>',
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-3">
 
             <div class="flex justify-between items-end border-b border-aurelia-highlight/30 pb-2">
-                <span class="text-[11px] font-bold font-mono text-aurelia-highlight uppercase tracking-wider truncate mr-2">AUTH: {author_html}</span>
-                <span class="text-[10px] font-bold font-mono text-aurelia-inverted bg-aurelia-highlight px-1.5 py-0.5 rounded-sm shrink-0">{status}</span>
+                <span class="field-label text-aurelia-highlight truncate mr-2">AUTH: {author_html}</span>
+                <span class="text-[10px] font-bold font-mono text-aurelia-inverted bg-aurelia-highlight px-1.5 py-0.5 rounded-theme shrink-0">{status}</span>
             </div>
 
             <div class="mt-1">
@@ -310,12 +310,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         concepts_html = render_items(
             concepts,
-            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-2 py-1 bg-aurelia-secondary text-aurelia-inverted font-bold rounded-sm border border-aurelia-secondary", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-2 py-1 bg-aurelia-secondary text-aurelia-inverted font-bold rounded-theme border border-aurelia-secondary", known_ids),
             empty_html='<span class="text-[10px] text-aurelia-text font-mono opacity-80">// NO_SYSTEMS_DETECTED</span>',
         )
         works_html = render_items(
             works,
-            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-2 py-0.5 border border-aurelia-dim text-aurelia-text font-bold rounded-sm hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-2 py-0.5 border border-aurelia-border text-aurelia-text font-bold rounded-theme hover:border-aurelia-secondary hover:text-aurelia-secondary transition-colors", known_ids),
         )
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
@@ -336,7 +336,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </div>
             </div>
 
-            <div class="pt-2 border-t border-aurelia-dim">
+            <div class="pt-2 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-text block mb-1">BIBLIOGRAPHY:</span>
                 <div class="flex flex-wrap gap-1.5">
                     {works_html}
@@ -353,7 +353,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         pillars_html = render_items(
             pillars,
-            lambda pair: link_pill(pair[0], pair[1], "text-[10px] font-mono px-2 py-1 bg-aurelia-accent text-aurelia-inverted font-extrabold rounded-sm uppercase", known_ids),
+            lambda pair: link_pill(pair[0], pair[1], "field-label px-2 py-1 bg-aurelia-accent text-aurelia-inverted rounded-theme", known_ids),
             empty_html='<span class="text-[10px] text-aurelia-muted font-mono">// FOUNDATIONS_PENDING</span>',
         )
         canon_html = render_items(
@@ -366,10 +366,10 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         if tensions:
             tensions_html = render_items(
                 tensions,
-                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[10px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-sm hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
+                lambda pair: link_pill(pair[0], f"⚡ {pair[1]}", "text-[10px] font-mono px-2 py-1 border border-aurelia-tertiary/40 text-aurelia-tertiary rounded-theme hover:bg-aurelia-tertiary/10 transition-colors", known_ids),
             )
             tensions_block = f"""
-            <div class="pt-2 border-t border-aurelia-dim">
+            <div class="pt-2 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-tertiary block mb-1">CONTRASTS_WITH:</span>
                 <div class="flex flex-wrap gap-1.5">
                     {tensions_html}
@@ -394,7 +394,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                 </div>
             </div>
 
-            <div class="pt-2 border-t border-aurelia-dim">
+            <div class="pt-2 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-text block mb-1">THE_CANON:</span>
                 <div class="flex flex-col gap-1">
                     {canon_html}
@@ -417,9 +417,9 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         def render_feature(f):
             return f"""
-                    <div class="flex items-center gap-2 px-2 py-1 bg-aurelia-info/10 border border-aurelia-info/30 rounded-sm" title="{f.upper()}">
+                    <div class="flex items-center gap-2 px-2 py-1 bg-aurelia-info/10 border border-aurelia-info/30 rounded-theme" title="{f.upper()}">
                         <span class="text-xs">{feature_icons.get(f, "•")}</span>
-                        <span class="text-[10px] font-mono text-aurelia-primary font-bold uppercase">{f}</span>
+                        <span class="field-label text-aurelia-primary">{f}</span>
                     </div>
                     """
 
@@ -458,7 +458,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
         related_html = render_items(
             related,
-            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-insight transition-colors border-b border-aurelia-dim hover:border-aurelia-insight pb-0.5", known_ids),
+            lambda pair: link_pill(pair[0], f"→ {pair[1]}", "hover:text-aurelia-insight transition-colors border-b border-aurelia-border hover:border-aurelia-insight pb-0.5", known_ids),
             empty_html='<span class="opacity-30 text-[10px]">// NO_LINKS_DETECTED</span>',
         )
         card_content = f"""
@@ -480,7 +480,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
 
             <div class="flex-grow"></div>
 
-            <div class="pt-3 border-t border-aurelia-dim/50">
+            <div class="pt-3 border-t border-aurelia-border/50">
                 <span class="field-label text-aurelia-insight block mb-2">SEE_ALSO:</span>
                 <div class="flex flex-wrap gap-2 text-[11px] font-mono text-aurelia-muted">
                     {related_html}
@@ -490,7 +490,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         icon = "🔎"; label = "DEEP DIVE"
 
     else:
-        color = "border-aurelia-dim"
+        color = "border-aurelia-border"
         clean_body = re.sub(r'<[^>]+>', '', body_content)
         clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
         blurb = clean_body[:200] + "..."

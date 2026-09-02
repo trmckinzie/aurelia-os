@@ -52,10 +52,15 @@ def generate_config():
         "aurelia-highlight": "highlight",
         "aurelia-info": "info",
         "aurelia-insight": "insight",
-        "aurelia-cyan": "primary",
-        "aurelia-dim": "border-main",
-        "aurelia-dark": "bg-main",
     }
+    # aurelia-cyan / aurelia-dim / aurelia-dark used to live here as
+    # pre-semantic aliases pointing at the *same* variables as
+    # primary / border-main / bg-main -- two names for one thing, and 74
+    # call sites split across both. All call sites now use the semantic
+    # name, and the aliases are gone so they can't be reintroduced by
+    # copy-paste: a stray `border-aurelia-dim` is now simply an undefined
+    # class that compiles to nothing, which is visible, rather than a
+    # second valid spelling that quietly fragments the vocabulary.
     color_lines = ",\n      ".join(
         f"'{name}': 'rgb(var(--aurelia-{var}-rgb) / <alpha-value>)'" for name, var in color_map.items()
     )

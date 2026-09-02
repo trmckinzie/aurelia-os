@@ -162,9 +162,9 @@ def _render_audio(path):
     if path.endswith(".wav"):
         mime = "audio/wav"
     return f"""
-<div class="my-6 p-4 border-l-2 border-aurelia-info bg-aurelia-info/5 rounded-r-sm">
+<div class="my-6 p-4 border-l-2 border-aurelia-info bg-aurelia-info/5 rounded-r-theme">
 <div class="flex items-center justify-between mb-3">
-<span class="text-[10px] font-bold font-mono text-aurelia-info uppercase tracking-widest">:: NEURAL_AUDIO_STREAM</span>
+<span class="field-label text-aurelia-info">:: NEURAL_AUDIO_STREAM</span>
 <span class="text-[10px] font-mono text-aurelia-info animate-pulse">● LIVE_ASSET</span>
 </div>
 <audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity">
@@ -175,10 +175,10 @@ def _render_audio(path):
 
 def _render_video(path):
     return f"""
-<div class="my-6 border border-aurelia-dim rounded-sm overflow-hidden bg-aurelia-bg">
-<div class="p-2 border-b border-aurelia-dim bg-aurelia-card/50 flex items-center gap-2">
+<div class="my-6 border border-aurelia-border rounded-theme overflow-hidden bg-aurelia-bg">
+<div class="p-2 border-b border-aurelia-border bg-aurelia-card/50 flex items-center gap-2">
 <span class="w-2 h-2 bg-aurelia-info rounded-full animate-pulse"></span>
-<span class="text-[10px] font-mono text-aurelia-muted uppercase tracking-widest">VISUAL_FEED</span>
+<span class="field-label text-aurelia-muted">VISUAL_FEED</span>
 </div>
 <video controls class="w-full max-h-[400px]">
 <source src="{path}" type="video/mp4">
@@ -188,9 +188,9 @@ def _render_video(path):
 
 def _render_image(path):
     return f"""
-<div class="my-6 group relative border border-aurelia-dim rounded-sm overflow-hidden bg-aurelia-bg/50 hover:border-aurelia-info/50 transition-colors">
+<div class="my-6 group relative border border-aurelia-border rounded-theme overflow-hidden bg-aurelia-bg/50 hover:border-aurelia-info/50 transition-colors">
 <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-<a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-dim rounded hover:bg-aurelia-info hover:text-aurelia-inverted">ENLARGE</a>
+<a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-border rounded-theme hover:bg-aurelia-info hover:text-aurelia-inverted">ENLARGE</a>
 </div>
 <img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="Gemini Notebook Asset">
 </div>"""
@@ -214,13 +214,13 @@ def _render_flashcards(path):
             cards_html += f"""
 <div class="snap-center shrink-0 w-64 h-40 relative group perspective-1000 cursor-pointer" onclick="this.querySelector('.inner-card').classList.toggle('rotate-y-180')">
 <div class="inner-card w-full h-full relative preserve-3d transition-transform duration-500 shadow-lg">
-<div class="absolute inset-0 backface-hidden bg-aurelia-card border border-aurelia-info/30 p-4 flex flex-col items-center justify-center text-center rounded-sm group-hover:border-aurelia-info transition-colors">
-<span class="text-[9px] font-mono text-aurelia-info uppercase tracking-widest absolute top-2 left-2">Q_NODE // 0{i+1}</span>
+<div class="absolute inset-0 backface-hidden bg-aurelia-card border border-aurelia-info/30 p-4 flex flex-col items-center justify-center text-center rounded-theme group-hover:border-aurelia-info transition-colors">
+<span class="field-label text-aurelia-info absolute top-2 left-2">Q_NODE // 0{i+1}</span>
 <p class="text-xs font-bold text-aurelia-text font-sans leading-relaxed">{q}</p>
 <span class="text-[9px] text-aurelia-muted absolute bottom-2 animate-pulse">TAP TO DECRYPT</span>
 </div>
-<div class="absolute inset-0 backface-hidden rotate-y-180 bg-aurelia-info/10 border border-aurelia-info p-4 flex flex-col items-center justify-center text-center rounded-sm">
-<span class="text-[9px] font-mono text-aurelia-info uppercase tracking-widest absolute top-2 left-2">A_DATA</span>
+<div class="absolute inset-0 backface-hidden rotate-y-180 bg-aurelia-info/10 border border-aurelia-info p-4 flex flex-col items-center justify-center text-center rounded-theme">
+<span class="field-label text-aurelia-info absolute top-2 left-2">A_DATA</span>
 <p class="text-xs text-aurelia-text/80 font-mono leading-relaxed">{a}</p>
 </div>
 </div>
@@ -231,7 +231,7 @@ def _render_flashcards(path):
     return f"""
 <div class="my-6">
 <div class="flex items-center gap-2 mb-3">
-<span class="text-[10px] font-bold font-mono text-aurelia-info uppercase tracking-widest">:: MEMORY_BANK_LOADED</span>
+<span class="field-label text-aurelia-info">:: MEMORY_BANK_LOADED</span>
 <div class="h-px bg-aurelia-info/30 flex-grow"></div>
 </div>
 <div class="flex gap-4 overflow-x-auto pb-6 pt-2 px-1 snap-x no-scrollbar">

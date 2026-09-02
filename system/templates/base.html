@@ -73,7 +73,7 @@
 
     {% block head_extra %}{% endblock %}
 </head>
-<body class="text-aurelia-text font-sans selection:bg-aurelia-cyan selection:text-aurelia-inverted overflow-x-hidden min-h-screen flex flex-col">
+<body class="text-aurelia-text font-sans selection:bg-aurelia-primary selection:text-aurelia-inverted overflow-x-hidden min-h-screen flex flex-col">
     
     <div class="scanline"></div>
 
@@ -137,7 +137,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="border-t border-aurelia-dim bg-aurelia-bg/80 backdrop-blur py-7 mt-20 relative z-30">
+    <footer class="border-t border-aurelia-border bg-aurelia-bg/80 backdrop-blur py-7 mt-20 relative z-30">
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 field-label text-aurelia-muted">
             <div class="flex items-center gap-2.5">
                 <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_8px_currentColor] text-aurelia-primary"></div>
@@ -443,7 +443,7 @@
             cmdResults.querySelectorAll('[data-result-index]').forEach(el => {
                 const isSelected = Number(el.dataset.resultIndex) === selectedIndex;
                 el.classList.toggle('bg-aurelia-text/5', isSelected);
-                el.classList.toggle('border-aurelia-cyan', isSelected);
+                el.classList.toggle('border-aurelia-primary', isSelected);
                 if (isSelected) el.scrollIntoView({ block: 'nearest' });
             });
         }
@@ -505,19 +505,19 @@
                 // Only SYSTEM (Lobby/Garden) and GARDEN (notes) are ever
                 // indexed -- see engine/pipeline.py._build_search_index.
                 let typeColor = "text-aurelia-muted border-aurelia-border";
-                if(item.type === "GARDEN") typeColor = "text-aurelia-cyan border-aurelia-cyan/50";
+                if(item.type === "GARDEN") typeColor = "text-aurelia-primary border-aurelia-primary/50";
                 if(item.type === "SYSTEM") typeColor = "text-aurelia-text border-aurelia-text/30";
                 const selected = index === selectedIndex;
 
                 return `
-                <a href="${encodeURI(item.url)}" data-result-index="${index}" class="group flex items-center justify-between p-3 rounded-md hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-cyan cursor-pointer transition-colors border-l-2 ${selected ? 'bg-aurelia-text/5 border-aurelia-cyan' : 'border-transparent'}" onmouseenter="selectedIndex = ${index}; highlightSelected();">
+                <a href="${encodeURI(item.url)}" data-result-index="${index}" class="group flex items-center justify-between p-3 rounded-theme hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-primary cursor-pointer transition-colors border-l-2 ${selected ? 'bg-aurelia-text/5 border-aurelia-primary' : 'border-transparent'}" onmouseenter="selectedIndex = ${index}; highlightSelected();">
                     <div class="flex items-center gap-3">
-                        <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded border ${typeColor} w-20 text-center">
+                        <span class="field-label px-1.5 py-0.5 rounded-theme border ${typeColor} w-20 text-center">
                             ${escapeHtml(item.type)}
                         </span>
                         <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${escapeHtml(item.title)}</span>
                     </div>
-                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-cyan">${selected ? 'ENTER ↵' : 'JUMP ->'}</span>
+                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-primary">${selected ? 'ENTER ↵' : 'JUMP ->'}</span>
                 </a>
                 `;
             }).join('');
