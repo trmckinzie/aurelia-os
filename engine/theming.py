@@ -37,6 +37,111 @@ _DEFAULTS = {
     "scanline_opacity": "0.1",
 }
 
+# --- DEPTH SYSTEM -------------------------------------------------------
+# The surface/elevation/glow/grid tokens below are what give a theme actual
+# depth instead of flat color-on-color. They are deliberately NOT in
+# _COLOR_KEYS: that list is mandatory for every theme, which is why adding
+# the `insight` role rippled through four theme dicts plus this file,
+# tailwind_build.py, and gardentemplate.html. These are optional and
+# *derived* from each theme's own palette instead -- the same approach
+# _cursor_default()/_cursor_interactive() below already use.
+#
+# Net effect: every theme gets a coherent depth treatment for free, built
+# from its own colors, and a theme that wants a hand-tuned one just sets
+# the key (see CYBER_PRIME in config.py). Nothing has to be defined twice,
+# and adding a 5th theme still requires nothing here.
+#
+# `_derived_*` functions each take the theme's `colors` dict and return a
+# finished CSS value.
+
+
+def _lum(hex_color):
+    r, g, b = _hex_channels(hex_color)
+    return 0.299 * r + 0.587 * g + 0.114 * b
+
+
+def _lit_gradient(a, b):
+    """A 160deg gradient between two surface colors with the lighter one
+    always at the top, so the panel reads as lit from above on every theme.
+    Ordering by luminance rather than by key matters because the layers
+    invert between dark and light themes: on CYBER_PRIME layer_2 is the
+    brighter of the pair, on THE_PATRIOT it's the darker one."""
+    top, bottom = (a, b) if _lum(a) >= _lum(b) else (b, a)
+    return f"linear-gradient(160deg, {top} 0%, {bottom} 100%)"
+
+
+def _derived_surface_1(colors):
+    """Card/panel surface: a subtle directional lift across the theme's two
+    layer colors, so a panel reads as a lit surface rather than a flat fill."""
+    return _lit_gradient(colors["bg_layer_2"], colors["bg_layer_1"])
+
+
+def _derived_surface_2(colors):
+    """Raised surface (modals, popovers, hovered rows) -- sits one step off
+    the page background so stacked elements stay distinguishable."""
+    return _lit_gradient(colors["bg_layer_2"], colors["bg_layer_2"])
+
+
+def _is_dark(hex_color):
+    """Relative luminance test (ITU-R BT.601 weighting, good enough for a
+    light-vs-dark decision). Used to pick a shadow color: a shadow has to be
+    darker than the surface it falls on, and deriving one from bg_main works
+    only on dark themes -- on THE_PATRIOT that produced a parchment-colored
+    'shadow' lighter than the card casting it."""
+    r, g, b = _hex_channels(hex_color)
+    return (0.299 * r + 0.587 * g + 0.114 * b) < 128
+
+
+def _derived_elevation(colors, level):
+    """A 3-step shadow ladder. The shadow color is always the darker end of
+    the theme -- its background on a dark theme, its ink on a light one --
+    so the ladder reads as depth in both. Level 3 adds a faint primary-tinted
+    bloom: the 'light' half of the depth system, which is what actually
+    separates a surface from a near-black page where a black shadow is
+    invisible."""
+    depth = {1: (4, 10, 0.30), 2: (10, 26, 0.55), 3: (22, 48, 0.75)}[level]
+    y, blur, alpha = depth
+    shade = colors["bg_main"] if _is_dark(colors["bg_main"]) else colors["text_main"]
+    shadow = f"0 {y}px {blur}px -{max(y // 2, 2)}px {_hex_to_rgba(shade, alpha)}"
+    if level == 3:
+        shadow += f", 0 0 {blur}px -{blur // 3}px {_hex_to_rgba(colors['primary'], 0.35)}"
+    return shadow
+
+
+def _derived_rim_light(colors):
+    """A 1px inset highlight along a surface's top edge -- the single
+    cheapest cue that a panel is a physical object catching light. Keyed to
+    the theme's primary so it reads as the theme's own light source."""
+    return f"inset 0 1px 0 0 {_hex_to_rgba(colors['primary'], 0.18)}"
+
+
+def _derived_glow(colors, role):
+    """A radial bloom used behind hero elements and on card hover. Returns a
+    full background-image value so it can be dropped straight onto a
+    pseudo-element."""
+    return f"radial-gradient(circle, {_hex_to_rgba(colors[role], 0.35)} 0%, transparent 70%)"
+
+
+def _derived_grid_overlay(colors):
+    """The HUD grid. Two hairline gradients at the theme's primary, faint
+    enough to read as texture rather than as content."""
+    line = _hex_to_rgba(colors["primary"], 0.05)
+    return (f"linear-gradient({line} 1px, transparent 1px), "
+            f"linear-gradient(90deg, {line} 1px, transparent 1px)")
+
+
+_DERIVED = {
+    "surface_1": _derived_surface_1,
+    "surface_2": _derived_surface_2,
+    "elevation_1": lambda c: _derived_elevation(c, 1),
+    "elevation_2": lambda c: _derived_elevation(c, 2),
+    "elevation_3": lambda c: _derived_elevation(c, 3),
+    "rim_light": _derived_rim_light,
+    "glow_primary": lambda c: _derived_glow(c, "primary"),
+    "glow_accent": lambda c: _derived_glow(c, "accent"),
+    "grid_overlay": _derived_grid_overlay,
+}
+
 
 def theme_slug(key):
     """'CYBER_PRIME' -> 'cyber-prime'. The data-theme attribute value and
@@ -102,8 +207,19 @@ def _variables_for(theme):
     for key in _COLOR_KEYS:
         variables[f"--aurelia-{key.replace('_', '-')}-rgb"] = _hex_to_rgb_triple(colors[key])
 
-    variables["--aurelia-font-mono"] = theme.get("font_mono", _DEFAULTS["font_mono"])
+    font_mono = theme.get("font_mono", _DEFAULTS["font_mono"])
+    variables["--aurelia-font-mono"] = font_mono
+    # The display face defaults to the theme's own mono -- "mono-first
+    # headings" is the house style, and a theme that wants an actual display
+    # family (a condensed poster face, a serif) just sets font_display.
+    variables["--aurelia-font-display"] = theme.get("font_display", font_mono)
     variables["--aurelia-radius"] = theme.get("rounded", _DEFAULTS["rounded"])
+
+    # Depth system -- a theme's own value wins, otherwise it's derived from
+    # that theme's palette (see _DERIVED above).
+    for key, derive in _DERIVED.items():
+        variables[f"--aurelia-{key.replace('_', '-')}"] = theme.get(key, derive(colors))
+    variables["--aurelia-grid-size"] = theme.get("grid_size", "40px")
 
     glass_opacity = theme.get("glass_opacity", _DEFAULTS["glass_opacity"])
     variables["--aurelia-glass-bg"] = _hex_to_rgba(colors["bg_main"], glass_opacity)

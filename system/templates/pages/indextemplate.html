@@ -57,91 +57,92 @@
 {% endblock %}
 
 {% block content %}
-   <header class="mb-24 relative" data-reveal>
-        <div class="font-mono text-[14px] text-aurelia-primary mb-4 flex items-center gap-2 flex-wrap">
-            <span class="opacity-100">[ STATUS: ]</span>
-            <span class="text-aurelia-primary">{{ config.status_message }}</span>
+   <header class="mb-16 relative" data-reveal>
+        <div class="field-label text-aurelia-primary mb-5 flex items-center gap-2.5 flex-wrap">
+            <span class="inline-flex items-center gap-2 border border-aurelia-primary/40 bg-aurelia-primary/10 px-2.5 py-1 rounded-theme">
+                <span class="w-1.5 h-1.5 rounded-full bg-aurelia-primary shadow-[0_0_8px_currentColor]"></span>
+                {{ config.status_message }}
+            </span>
             {% if stats.latest_log_date %}
-            <span class="text-aurelia-muted">//</span>
-            <span class="text-aurelia-muted text-xs tracking-wider">LAST CULTIVATED: {{ stats.latest_log_date }}</span>
+            <span class="text-aurelia-muted">LAST CULTIVATED / {{ stats.latest_log_date }}</span>
             {% endif %}
         </div>
 
-        <h1 class="text-6xl md:text-9xl font-bold text-aurelia-text tracking-tighter mb-8 uppercase leading-[0.8]">
+        <h1 class="display-xl text-aurelia-text mb-7 uppercase">
             <span class="decrypt-effect" data-value="{{ config.system_name }}">{{ config.system_name }}</span>
         </h1>
 
-        <p class="font-mono text-[26px] text-aurelia-text transition-colors mt-2">
-            A Personal Knowledge Management System Designed by 
-            <button onclick="openAbout()" class="text-aurelia-accent hover:text-aurelia-accent hover:underline decoration-aurelia-accent underline-offset-8 transition-all duration-300 cursor-pointer font-bold animate-pulse hover:animate-none">
+        <p class="font-mono text-xl md:text-2xl text-aurelia-text/90 max-w-3xl leading-snug">
+            A Personal Knowledge Management System designed by
+            <button onclick="openAbout()" class="text-aurelia-accent font-bold underline decoration-aurelia-accent/40 underline-offset-8 hover:decoration-aurelia-accent transition-all duration-300 cursor-pointer">
                 {{ config.author.name }}
             </button>
         </p>
 
-        <div class="border-l border-aurelia-dim pl-6 max-w-xl mt-6">
-            <p class="font-mono text-md text-aurelia-accent leading-relaxed mb-6">
-                > SYSTEM_READY<br>
-                > {{ config.author.bio_short }}<br>
-                > {{ config.author.role }}<br>
+        <div class="border-l-2 border-aurelia-accent/40 pl-6 max-w-xl mt-8">
+            <p class="font-mono text-sm text-aurelia-accent/90 leading-relaxed">
+                &gt; SYSTEM_READY<br>
+                &gt; {{ config.author.bio_short }}<br>
+                &gt; {{ config.author.role }}<br>
             </p>
-            
-            <div class="mt-10 flex flex-wrap items-center gap-4">
-                <button onclick="openManifesto()" class="group flex items-center gap-3 text-md font-mono text-aurelia-primary border border-aurelia-primary/30 bg-aurelia-primary/5 px-8 py-4 hover:bg-aurelia-primary hover:text-aurelia-inverted transition-all">
-                    <span> WHAT IS AURELIA OS? </span>
-                    <span class="group-hover:translate-x-1 transition-transform">-></span>
-                </button>
-                <button onclick="toggleCmd()" title="Search every published note" class="group flex items-center gap-3 text-md font-mono text-aurelia-muted border border-aurelia-dim px-6 py-4 hover:border-aurelia-text hover:text-aurelia-text transition-all">
-                    <span>🔍 SEARCH THE CORTEX</span>
-                    <span class="text-[10px] border border-aurelia-dim rounded px-1.5 py-0.5 group-hover:border-aurelia-text">⌘K</span>
-                </button>
-            </div>
+        </div>
+
+        <div class="mt-9 flex flex-wrap items-center gap-3">
+            <button onclick="openManifesto()" class="btn btn-primary group">
+                <span>WHAT IS AURELIA OS?</span>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
+            </button>
+            <button onclick="toggleCmd()" title="Search every published note" class="btn btn-ghost group">
+                <span>SEARCH THE CORTEX</span>
+                <kbd class="kbd">&#8984;K</kbd>
+            </button>
         </div>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
 
-    <a href="garden.html" data-reveal class="group relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-primary p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_color-mix(in_srgb,var(--aurelia-primary)_15%,transparent)] hover:border-aurelia-primary/50">
-        <div class="absolute top-0 right-0 w-16 h-16 border-t-2 border-r-2 border-aurelia-dim group-hover:border-aurelia-primary transition-colors duration-300 rounded-tr-sm"></div>
+    <a href="garden.html" data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-dim rounded-theme p-8 overflow-hidden hover:border-aurelia-primary/50">
+        <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-primary opacity-70 group-hover:opacity-100 transition-opacity"></span>
+        <span aria-hidden="true" class="bracket-mark text-aurelia-primary" style="width:56px;height:56px;"></span>
 
-        <div class="relative z-10 flex flex-col h-full justify-between">
+        <div class="flex flex-col h-full justify-between">
             <div>
-                <div class="inline-block font-mono text-[10px] font-bold text-aurelia-inverted bg-aurelia-primary px-2 py-1 mb-4 tracking-widest rounded-sm">
+                <div class="field-label inline-block text-aurelia-inverted bg-aurelia-primary px-2.5 py-1 mb-5 rounded-theme">
                     MOD_01 // INPUT
                 </div>
-                <h2 class="text-4xl font-bold text-aurelia-text group-hover:text-aurelia-primary transition-colors tracking-tight">
+                <h2 class="display-lg text-aurelia-text group-hover:text-aurelia-primary transition-colors">
                     The Garden
                 </h2>
             </div>
 
-            <div class="font-mono text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-dim pl-4 py-1">
-                <span class="text-aurelia-primary">></span> STATUS: VOLATILE<br>
-                <span class="text-aurelia-primary">></span> NOTES / SEEDS / RAW
+            <div class="font-mono text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-dim pl-4 py-1 mt-6">
+                <span class="text-aurelia-primary">&gt;</span> STATUS: VOLATILE<br>
+                <span class="text-aurelia-primary">&gt;</span> NOTES / SEEDS / RAW
             </div>
         </div>
-
-        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-aurelia-primary/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-aurelia-primary/20 transition-all"></div>
     </a>
 
-    <div data-reveal class="relative min-h-[20rem] bg-aurelia-bg border border-aurelia-dim border-l-4 border-l-aurelia-accent p-8 overflow-hidden flex flex-col">
-        <div class="inline-block font-mono text-[10px] font-bold text-aurelia-inverted bg-aurelia-accent px-2 py-1 mb-4 tracking-widest rounded-sm self-start">
+    <div data-reveal class="surface relative min-h-[20rem] border border-aurelia-dim rounded-theme p-8 overflow-hidden flex flex-col">
+        <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-accent opacity-70"></span>
+        <div class="field-label inline-block text-aurelia-inverted bg-aurelia-accent px-2.5 py-1 mb-5 rounded-theme self-start">
             MOD_02 // STATUS
         </div>
-        <h2 class="text-2xl font-bold text-aurelia-text tracking-tight mb-4">Cortex Status</h2>
+        <h2 class="display-md text-aurelia-text mb-5">Cortex Status</h2>
 
-        <div class="flex items-baseline gap-3 mb-4">
-            <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="text-4xl font-black text-aurelia-accent font-mono">{{ stats.total_notes }}</span>
-            <span class="text-xs font-mono text-aurelia-muted uppercase tracking-widest">Nodes Cultivated</span>
+        <div class="flex items-baseline gap-3 mb-5">
+            <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="font-display text-5xl font-extrabold text-aurelia-accent tabular-nums leading-none drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-accent)_45%,transparent)]">{{ stats.total_notes }}</span>
+            <span class="field-label text-aurelia-muted">Nodes Cultivated</span>
         </div>
 
-        <div class="mb-5" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
-            <div id="lobby-maturity-bar" class="flex h-2 rounded-full overflow-hidden bg-aurelia-surface border border-aurelia-dim">
+        <div class="mb-6" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
+            <div id="lobby-maturity-bar" class="flex h-2.5 rounded-full overflow-hidden bg-aurelia-bg border border-aurelia-dim">
                 {% if stats.total_notes %}
                 <div class="bg-aurelia-highlight" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
                 <div class="bg-aurelia-secondary" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
                 {% endif %}
             </div>
-            <div class="flex justify-between text-[9px] font-mono text-aurelia-muted mt-1.5 uppercase tracking-wider">
+            <div class="flex justify-between field-label text-aurelia-muted mt-2">
                 <span>🌱 {{ stats.maturity_counts.seed }} Seed</span>
                 <span>🌿 {{ stats.maturity_counts.growing }} Growing</span>
                 <span>🌳 {{ stats.maturity_counts.evergreen }} Evergreen</span>
@@ -149,14 +150,14 @@
         </div>
 
         <div class="flex-grow min-h-0">
-            <span class="text-[9px] font-bold font-mono text-aurelia-muted uppercase tracking-widest block mb-2" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
+            <span class="field-label text-aurelia-muted block mb-2.5" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
                 Start Here // Most-Connected Notes
             </span>
-            <div class="flex flex-col gap-1">
+            <div class="flex flex-col">
                 {% for hub in stats.hub_notes %}
-                <a href="garden.html#{{ hub.id }}" class="group/hub flex items-center justify-between text-xs font-mono text-aurelia-text/80 hover:text-aurelia-accent transition-colors border-b border-aurelia-dim py-1">
+                <a href="garden.html#{{ hub.id }}" class="hub-row group/hub flex items-center justify-between gap-3 text-xs font-mono text-aurelia-text/80 hover:text-aurelia-accent border-b border-aurelia-dim py-1.5">
                     <span class="truncate">{{ hub.title }}</span>
-                    <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 ml-2">{{ hub.connections }} ⟷</span>
+                    <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 tabular-nums">{{ hub.connections }} &#10231;</span>
                 </a>
                 {% else %}
                 <span class="text-xs font-mono text-aurelia-muted">// Link notes together to surface hubs here</span>
@@ -174,18 +175,16 @@
 
 </div>
 
-    <section data-reveal class="w-full max-w-[1400px] mx-auto mt-40 relative px-6">
-        <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_srgb,var(--aurelia-primary)_3%,transparent)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
-
+    <section data-reveal class="hud-grid w-full max-w-[1400px] mx-auto mt-32 relative px-6">
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
                 <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
-                <h2 class="text-3xl md:text-5xl font-mono font-black text-aurelia-text tracking-tighter uppercase drop-shadow-[0_0_10px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
+                <h2 class="display-lg text-aurelia-text uppercase drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
                     NEURAL_LOADOUT
                 </h2>
                 <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
             </div>
-            <div class="mt-4 flex justify-center items-center gap-2 text-aurelia-primary font-mono text-xs tracking-[0.3em] opacity-80">
+            <div class="mt-4 flex justify-center items-center gap-2 text-aurelia-primary field-label opacity-80">
                 <span>[ SYSTEM_ARCHITECTURE ]</span>
                 <span class="animate-pulse">_</span>
             </div>
@@ -410,33 +409,68 @@
         // Fade + slide up each major section the first time it's in view.
         // The hero is already above the fold, so its callback fires
         // essentially immediately on load -- same treatment, one code path.
+        //
+        // Routed through aureliaReveal (assets/js/utils.js) rather than a
+        // bare animate(): an `opacity: [0, 1]` entrance makes the animation
+        // the only thing that ever makes the section visible, and a stalled
+        // frame loop (background tab, restored session) freezes it mid-flight
+        // and strands the section invisible. aureliaReveal guarantees the
+        // end state regardless. See its comment for the full failure mode.
         document.querySelectorAll('[data-reveal]').forEach(el => {
             inView(el, () => {
-                animate(el, { opacity: [0, 1], y: [24, 0] }, { duration: 0.6, easing: 'ease-out' });
+                aureliaReveal(el, { y: 24, duration: 0.6 });
             }, { amount: 0.2 });
         });
 
         // Count up "Nodes Cultivated" from 0 to the real total once visible.
+        // A frozen count-up is worse than no count-up: it leaves a *wrong
+        // number* on screen presented as fact. The timeout pins the true
+        // total regardless of whether the animation ever completes.
         const statEl = document.getElementById('lobby-total-notes');
         if (statEl) {
+            let counted = false;
             inView(statEl, () => {
+                // Once only. inView fires again every time the element
+                // re-enters the viewport, and a stat that re-counts itself
+                // each time you scroll past reads as a glitch rather than
+                // as a flourish.
+                if (counted) return;
+                counted = true;
                 const target = parseInt(statEl.dataset.target, 10);
-                animate(0, target, {
+                if (!Number.isFinite(target)) return;
+                const anim = animate(0, target, {
                     duration: 1.2, easing: 'ease-out',
                     onUpdate: v => statEl.textContent = Math.round(v),
                 });
+                const settle = () => {
+                    try { anim.cancel(); } catch (e) { /* already finished */ }
+                    statEl.textContent = target;
+                };
+                if (anim && anim.finished) anim.finished.then(settle).catch(settle);
+                setTimeout(settle, 2000);
             });
         }
 
         // Grow the seed/growing/evergreen maturity bar from 0 to its real,
-        // already-rendered width once visible.
+        // already-rendered width once visible. Same guarantee: the widths
+        // are real data, so they get restored even if the animation stalls
+        // -- otherwise the bar reads as an empty (0-note) vault.
         const bar = document.getElementById('lobby-maturity-bar');
         if (bar) {
+            let grown = false;
             inView(bar, () => {
+                if (grown) return;   // once only -- see the stat above
+                grown = true;
                 Array.from(bar.children).forEach(seg => {
                     const target = seg.style.width;
-                    seg.style.width = '0%';
-                    animate(seg, { width: ['0%', target] }, { duration: 0.8, easing: 'ease-out' });
+                    const anim = animate(seg, { width: ['0%', target] },
+                                         { duration: 0.8, easing: 'ease-out' });
+                    const settle = () => {
+                        try { anim.cancel(); } catch (e) { /* already finished */ }
+                        seg.style.width = target;
+                    };
+                    if (anim && anim.finished) anim.finished.then(settle).catch(settle);
+                    setTimeout(settle, 1600);
                 });
             });
         }

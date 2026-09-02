@@ -313,47 +313,47 @@
                 <div class="h-6 w-px bg-aurelia-dim shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
-                    <button onclick="setFilter('all', this)" class="filter-btn active px-5 py-2 text-sm font-mono border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary rounded uppercase tracking-wider transition-all whitespace-nowrap">
+                    <button onclick="setFilter('all', this)" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All_Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('daily-bridge', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('concept', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('source', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
                         Library
                     </button>
 
-                    <button onclick="setFilter('author', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('author', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('discipline', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('gemini-notebook', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
                         Gemini Notebook
                     </button>
 
-                    <button onclick="setFilter('deep-dive', this)" class="filter-btn px-5 py-2 text-sm font-mono border border-aurelia-dim text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5 rounded transition-all uppercase tracking-wider whitespace-nowrap">
+                    <button onclick="setFilter('deep-dive', this)" class="filter-btn chip border border-aurelia-dim text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
                         Deep Dive
                     </button>
                 </div>
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
-                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="flex items-center gap-2 border border-aurelia-dim bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent rounded px-3 py-2 text-xs font-mono text-aurelia-muted transition-colors shrink-0">
+                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="chip border border-aurelia-dim text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <span>🏷️</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Topics</span>
                 </button>
 
-                <button onclick="openRandomNote()" title="Open a random note" class="flex items-center gap-2 border border-aurelia-dim bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary rounded px-3 py-2 text-xs font-mono text-aurelia-muted transition-colors shrink-0">
+                <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-dim text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <span>🎲</span>
                     <span class="hidden lg:inline uppercase tracking-wider">Random</span>
                 </button>
@@ -373,20 +373,20 @@
             <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.08)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--aurelia-bg-main)_100%)] z-10 opacity-50 pointer-events-none"></div>
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
-                <h1 class="text-5xl font-black text-aurelia-text font-mono tracking-tighter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_30%,transparent)]">DIGITAL_GARDEN</h1>
-                <p class="text-xs text-aurelia-primary font-mono mt-2 tracking-[0.3em] flex items-center gap-3">
+                <h1 class="display-lg text-aurelia-text drop-shadow-[0_0_22px_color-mix(in_srgb,var(--aurelia-primary)_35%,transparent)]">DIGITAL_GARDEN</h1>
+                <p class="field-label text-aurelia-primary mt-3 flex items-center gap-3">
                     <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_var(--aurelia-primary)]"></span>
                     SYSTEM STATUS: ONLINE // VIEW: <span id="view-mode-label">GRID_MATRIX</span>
                 </p>
             </div>
         </div>
 
-        <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4">
-            <p class="text-md font-mono text-aurelia-text tracking-widest">
-                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text">{{ cards|length }}</span>
+        <div class="mb-8 flex justify-between items-end border-b border-aurelia-dim pb-4 gap-4">
+            <p class="field-label text-aurelia-muted">
+                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
             </p>
-            <p class="text-xs font-mono text-aurelia-tertiary tracking-widest opacity-80" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
-                DUE_FOR_REVIEW: <span id="review-count" class="text-aurelia-tertiary">0</span>
+            <p class="field-label text-aurelia-tertiary" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
+                DUE_FOR_REVIEW: <span id="review-count" class="text-aurelia-tertiary text-base font-extrabold tabular-nums">0</span>
             </p>
         </div>
 
@@ -545,18 +545,18 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="relative bg-aurelia-bg border border-aurelia-dim w-full max-w-[90vw] h-[90vh] rounded-lg shadow-2xl flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-dim bg-aurelia-card">
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="surface-raised relative border border-aurelia-dim w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-dim shrink-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 cursor-pointer" onclick="closeModal()"></div>
-                    <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span class="ml-4 text-xs font-mono text-aurelia-muted uppercase tracking-widest">OBSIDIAN_VIEWER // ACTIVE</span>
+                    <button onclick="closeModal()" aria-label="Close note" title="Close (Esc)" class="w-3 h-3 rounded-full bg-aurelia-insight hover:shadow-[0_0_10px_currentColor] text-aurelia-insight transition-shadow"></button>
+                    <div class="w-3 h-3 bg-aurelia-highlight/70 rounded-full"></div>
+                    <div class="w-3 h-3 bg-aurelia-accent/70 rounded-full"></div>
+                    <span class="ml-4 field-label text-aurelia-muted">OBSIDIAN_VIEWER // ACTIVE</span>
                 </div>
-                <div class="text-[10px] font-mono text-aurelia-muted">[ / ] TO NAVIGATE &nbsp;·&nbsp; ESC TO CLOSE</div>
+                <div class="field-label text-aurelia-muted hidden sm:block">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</div>
             </div>
             <div class="h-[2px] bg-aurelia-bg/40 shrink-0">
-                <div id="modal-progress" class="h-full bg-aurelia-primary/70" style="width: 0%"></div>
+                <div id="modal-progress" class="h-full bg-aurelia-primary shadow-[0_0_10px_var(--aurelia-primary)]" style="width: 0%"></div>
             </div>
             <div id="modal-scroll" class="flex-grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
                 <div class="max-w-5xl mx-auto px-8 py-12">
@@ -565,26 +565,26 @@
                     <div id="modal-related" class="max-w-3xl mx-auto"></div>
                 </div>
             </div>
-            <div id="tts-settings-panel" class="hidden absolute bottom-12 right-4 bg-aurelia-card border border-aurelia-dim rounded p-3 flex flex-col gap-2 text-[10px] font-mono text-aurelia-muted z-10 w-48">
-                <label class="flex flex-col gap-1">
+            <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-12 right-4 border border-aurelia-dim rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
+                <label class="flex flex-col gap-1.5">
                     VOICE
-                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-dim rounded px-2 py-1 text-aurelia-text"></select>
+                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-dim rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[11px] normal-case tracking-normal"></select>
                 </label>
-                <label class="flex flex-col gap-1">
-                    SPEED: <span id="tts-rate-label">1.0x</span>
-                    <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)">
+                <label class="flex flex-col gap-1.5">
+                    SPEED: <span id="tts-rate-label" class="text-aurelia-primary">1.0x</span>
+                    <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)" class="accent-aurelia-primary">
                 </label>
             </div>
-            <div class="px-4 py-2 border-t border-aurelia-dim bg-aurelia-card flex justify-between items-center text-[10px] font-mono text-aurelia-muted">
-                <span id="modal-readtime">MODE: READ_ONLY</span>
-                <div class="flex items-center gap-5">
-                    <button id="btn-read-aloud" onclick="toggleReading()" title="Read this note aloud (R). Select text first to read just that selection." class="hover:text-aurelia-primary transition-colors">🔊 READ</button>
-                    <button id="btn-tts-settings" onclick="toggleTtsSettings()" title="Voice settings" class="hover:text-aurelia-primary transition-colors">⚙</button>
-                    <button onclick="navigateNote(-1)" title="Previous in current view ([)" class="hover:text-aurelia-primary transition-colors">← PREV</button>
+            <div class="px-4 py-2.5 border-t border-aurelia-dim flex justify-between items-center field-label text-aurelia-muted gap-4 shrink-0">
+                <span id="modal-readtime" class="truncate">MODE: READ_ONLY</span>
+                <div class="flex items-center gap-4 shrink-0">
+                    <button id="btn-read-aloud" onclick="toggleReading()" title="Read this note aloud (R). Select text first to read just that selection." class="modal-action">🔊 READ</button>
+                    <button id="btn-tts-settings" onclick="toggleTtsSettings()" title="Voice settings" class="modal-action">⚙</button>
+                    <button onclick="navigateNote(-1)" title="Previous in current view ([)" class="modal-action">&larr; PREV</button>
                     <span id="modal-reviewed" class="opacity-70"></span>
-                    <button onclick="navigateNote(1)" title="Next in current view (])" class="hover:text-aurelia-primary transition-colors">NEXT →</button>
+                    <button onclick="navigateNote(1)" title="Next in current view (])" class="modal-action">NEXT &rarr;</button>
                 </div>
-                <span>AURELIA_OS V3.0</span>
+                <span class="hidden md:inline">AURELIA_OS V3.0</span>
             </div>
         </div>
     </div>
@@ -759,7 +759,8 @@
                 'bg-aurelia-secondary/10', 'text-aurelia-secondary', 'border-aurelia-secondary',
                 'bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent',
                 'bg-aurelia-highlight/10', 'text-aurelia-highlight', 'border-aurelia-highlight',
-                'bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info'
+                'bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info',
+                'bg-aurelia-insight/10', 'text-aurelia-insight', 'border-aurelia-insight'
             );
 
             // Add inactive state
@@ -786,6 +787,8 @@
             target.classList.add('bg-aurelia-accent/10', 'text-aurelia-accent', 'border-aurelia-accent');
         } else if (type === 'gemini-notebook') {
             target.classList.add('bg-aurelia-info/10', 'text-aurelia-info', 'border-aurelia-info');
+        } else if (type === 'deep-dive') {
+            target.classList.add('bg-aurelia-insight/10', 'text-aurelia-insight', 'border-aurelia-insight');
         } else {
             // Default (All, Concepts) -> Cyan
             target.classList.add('bg-aurelia-primary/10', 'text-aurelia-primary', 'border-aurelia-primary');
@@ -1527,6 +1530,58 @@
     }
 
     window.addEventListener('resize', () => { if (currentView === 'graph') initGraph(); });
+
+    /* === MOTION: staggered card reveal ===============================
+       Cards animate in as they scroll into view, and re-stagger after a
+       filter or search changes what's visible -- so a filter change reads
+       as the grid rebuilding itself rather than as content teleporting.
+
+       Same two guards the Lobby uses (commit 414a16e): skipped entirely
+       under prefers-reduced-motion, and a no-op if the Motion CDN didn't
+       load. Cards are always rendered in their correct final state by
+       cards.py, so nothing here is load-bearing for visibility -- if this
+       block never runs, the grid just appears the way it does today. */
+    (function () {
+        if (aureliaMotionOff()) return;
+        const { inView } = window.Motion;
+
+        // Tracked so a card already revealed once isn't re-animated every
+        // time the filter changes -- only newly-shown cards animate.
+        const revealed = new WeakSet();
+
+        function revealCard(card, index) {
+            if (revealed.has(card)) return;
+            revealed.add(card);
+            // aureliaReveal (assets/js/utils.js) guarantees the card ends
+            // visible even if the frame loop stalls mid-animation.
+            aureliaReveal(card, { y: 14, duration: 0.42, delay: Math.min(index, 12) * 0.035 });
+        }
+
+        document.querySelectorAll('.searchable-item').forEach((card) => {
+            inView(card, () => {
+                if (revealed.has(card)) return;
+                // Index within the currently-visible run, so the stagger
+                // reads left-to-right across the row being entered.
+                const shown = [...document.querySelectorAll('.searchable-item')]
+                    .filter(c => c.style.display !== 'none');
+                revealCard(card, Math.max(0, shown.indexOf(card) % 12));
+            }, { amount: 0.15 });
+        });
+
+        // updateGrid() is what filter + search both funnel through; wrapping
+        // it keeps this in one place instead of hooking each call site.
+        const originalUpdateGrid = updateGrid;
+        updateGrid = function () {
+            const wasVisible = new Set(
+                [...document.querySelectorAll('.searchable-item')].filter(c => c.style.display !== 'none'));
+            originalUpdateGrid.apply(this, arguments);
+            const nowVisible = [...document.querySelectorAll('.searchable-item')]
+                .filter(c => c.style.display !== 'none');
+            nowVisible.forEach((card, i) => {
+                if (!wasVisible.has(card)) revealCard(card, i);
+            });
+        };
+    })();
 
     renderReviewQueue();
     renderTopicCloud();

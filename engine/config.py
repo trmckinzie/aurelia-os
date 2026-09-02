@@ -67,6 +67,34 @@ THEME_CONFIG = {
         "glass_opacity": "0.6",        # Heavy glass
         # Defaults (no override needed): borderless dark-glass cards, the
         # neon horizontal-sweep scanline. See engine/theming.py fallbacks.
+
+        # --- Hand-tuned depth system -------------------------------------
+        # Every key below has a working derived default in theming.py's
+        # _DERIVED (so the other themes need none of this). CYBER_PRIME
+        # overrides them because it's the flagship theme and the derived
+        # values, while coherent, are deliberately conservative.
+        #
+        # The problem being solved: bg_main (#0a0a0b) is a *neutral* near-
+        # black, and stacking neutral grays on it reads as flat no matter
+        # how many layers there are. Every surface below is pushed a few
+        # points toward blue-violet instead, so a panel separates from the
+        # page by hue as well as luminance -- that's what makes the cyan
+        # read as light falling on a surface rather than as a border color.
+        "surface_1": "linear-gradient(160deg, #16161f 0%, #0e0e14 100%)",
+        "surface_2": "linear-gradient(160deg, #1c1c28 0%, #14141c 100%)",
+        # Shadow ladder. Level 3 carries a cyan bloom, which is the "light"
+        # half of the system -- a pure black shadow on a black page is
+        # invisible, so depth here has to come from emitted light.
+        "elevation_1": "0 2px 8px -2px rgba(0,0,0,0.8)",
+        "elevation_2": "0 10px 26px -8px rgba(0,0,0,0.9)",
+        "elevation_3": "0 22px 48px -14px rgba(0,0,0,0.95), 0 0 40px -12px rgba(0,242,255,0.28)",
+        # Slightly hotter than the derived 0.18 -- on this near-black the
+        # rim is the main cue that a card has a top edge at all.
+        "rim_light": "inset 0 1px 0 0 rgba(0,242,255,0.22)",
+        "glow_primary": "radial-gradient(circle, rgba(0,242,255,0.40) 0%, transparent 70%)",
+        "glow_accent": "radial-gradient(circle, rgba(57,255,20,0.35) 0%, transparent 70%)",
+        "grid_overlay": ("linear-gradient(rgba(0,242,255,0.055) 1px, transparent 1px), "
+                         "linear-gradient(90deg, rgba(0,242,255,0.055) 1px, transparent 1px)"),
     },
 
     # 2. THE_PATRIOT (Light / Americana). Palette grounded in the U.S. Web

@@ -74,6 +74,20 @@ module.exports = {{
       fontFamily: {{
         sans: ['Inter', 'sans-serif'],
         mono: ['var(--aurelia-font-mono)', 'monospace'],
+        // Headings. Defaults to the theme's own mono (the house style is
+        // mono-first display type); a theme can point font_display at a
+        // real display family instead -- see engine/theming.py.
+        display: ['var(--aurelia-font-display)', 'monospace'],
+      }},
+      // Depth ladder -- shadow-e1/e2/e3 plus the inset rim highlight.
+      // Values are per-theme (derived or hand-tuned); see engine/theming.py.
+      boxShadow: {{
+        e1: 'var(--aurelia-elevation-1)',
+        e2: 'var(--aurelia-elevation-2)',
+        e3: 'var(--aurelia-elevation-3)',
+        rim: 'var(--aurelia-rim-light)',
+        'rim-e2': 'var(--aurelia-rim-light), var(--aurelia-elevation-2)',
+        'rim-e3': 'var(--aurelia-rim-light), var(--aurelia-elevation-3)',
       }},
       animation: {{ 'scanline': 'scanline 8s linear 1 forwards' }},
     }}

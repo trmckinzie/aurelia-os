@@ -26,7 +26,23 @@
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Every family a theme can select at runtime has to be loaded up front,
+         because the theme switcher is a pure CSS swap with no rebuild: the
+         font is chosen by --aurelia-font-mono / --aurelia-font-display (see
+         THEME_CONFIG in engine/config.py), not by a class in the markup. So:
+           Inter          -- body text on every theme
+           JetBrains Mono -- CYBER_PRIME; also the default display face, which
+                             is why 800 is requested (headings at 800 were
+                             previously synthesized faux-bold, since only
+                             400;700 were loaded)
+           Oswald         -- GRIZZ's font_mono (condensed collegiate)
+           Courier Prime  -- THE_PATRIOT's font_mono (typewriter). Was never
+                             loaded, so that theme had always been silently
+                             falling back to Courier New.
+         THE_STOA needs nothing here -- it uses system Helvetica by design. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Oswald:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind is compiled at build time (engine/tailwind_build.py) into
          assets/css/main.css, not loaded from a CDN. Its aurelia-* utility
