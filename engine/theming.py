@@ -32,7 +32,12 @@ _DEFAULTS = {
     "rounded": "2px",
     "glass_opacity": "0.6",
     "glass_border": "none",
-    "glass_shadow": "none",
+    # A no-op shadow rather than the keyword `none`, because .glass now
+    # *composes* this on top of the depth system's rim-light and elevation
+    # (see main.css). `none` is only legal as a box-shadow's sole value --
+    # `box-shadow: <rim>, <elevation>, none` is invalid CSS and would
+    # silently drop the whole declaration, taking the elevation with it.
+    "glass_shadow": "0 0 0 0 transparent",
     "scanline_bg": "linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(0, 0, 0, 0) 100%)",
     "scanline_opacity": "0.1",
 }

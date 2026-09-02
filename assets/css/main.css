@@ -157,14 +157,18 @@ body {
     text-shadow: none;
 }
 
-/* UNIVERSAL GLASS CLASS -- background/border/shadow all theme-driven, so
-   the previous "{% if theme.name == 'THE_PATRIOT' %} .glass { ... }"
-   override (a dead end for a 3rd theme -- it'd need its own branch too)
-   is just data now: a theme with no glass_border/glass_shadow of its own
-   gets `none` for both (see engine/theming.py's _DEFAULTS). */
+/* UNIVERSAL GLASS CLASS -- now an alias for the depth system.
+   .glass predates .surface and used to paint a flat translucent bg_main
+   over an element, which is exactly what made every card the same color
+   as the page. Cards moved to .surface in the CYBER_PRIME pass, leaving
+   .glass with zero call sites. Rather than delete it (and the three
+   per-theme glass_* keys with it), it now resolves to the same lit
+   surface treatment: any remaining or future .glass markup picks up the
+   real depth system, and glass_shadow still lets a theme layer its own
+   shadow on top. */
 .glass {
-    background: var(--aurelia-glass-bg);
-    box-shadow: var(--aurelia-glass-shadow);
+    background: var(--aurelia-surface-1);
+    box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-1), var(--aurelia-glass-shadow);
 }
 /* The border lives in its own :where() rule, which contributes ZERO
    specificity -- every .glass card in cards.py also carries an explicit
@@ -200,6 +204,95 @@ body {
 :focus-visible {
     outline: 2px solid var(--aurelia-border-focus);
     outline-offset: 2px;
+}
+
+/* ============================================================
+   NAV HEIGHT -- one source of truth
+   ============================================================
+   The nav's height used to be hardcoded in three unrelated places that
+   disagreed with each other: base.html's `h-16` (64px), the Garden
+   toolbar's `top-14` (56px), and base.html's `main` padding `pt-32`. The
+   toolbar therefore sat 8px *inside* the nav, hidden only because the nav
+   is z-50 over the toolbar's z-40.
+
+   Everything positioned against the nav now derives from this one
+   variable, which is also what makes a condensing nav safe: the toolbar
+   follows automatically instead of needing its own matching magic number.
+   JS only toggles data-nav on <html> and never writes a pixel value, so
+   CSS stays the single owner of the measurements. */
+:root {
+    --nav-h: 4rem;          /* at rest */
+    --nav-h-condensed: 2.875rem;
+}
+:root[data-nav="condensed"] { --nav-h: var(--nav-h-condensed); }
+
+.nav-shell {
+    height: var(--nav-h);
+    background: var(--aurelia-surface-1);
+    box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-1);
+    border-bottom: 1px solid color-mix(in srgb, var(--aurelia-primary) 14%, transparent);
+    transition: height 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease;
+}
+:root[data-nav="condensed"] .nav-shell {
+    box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-2);
+}
+/* Page content and the Garden's sticky toolbar both key off --nav-h. */
+.nav-offset { padding-top: calc(var(--nav-h) + 4rem); }
+.nav-anchored { top: var(--nav-h); transition: top 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* The brand's "// SUBTITLE" is the first thing to go when space tightens. */
+.nav-sub { transition: opacity 200ms ease, max-width 260ms ease; max-width: 16rem; }
+:root[data-nav="condensed"] .nav-sub { opacity: 0; max-width: 0; overflow: hidden; }
+
+/* Sliding active indicator: ONE element that moves between links, rather
+   than a scale-x underline per link that pops on and off. Its position is
+   written by JS from the active link's offsetLeft/offsetWidth. */
+.nav-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background: var(--aurelia-primary);
+    box-shadow: 0 0 10px var(--aurelia-primary);
+    border-radius: 2px;
+    opacity: 0;
+    transition: left 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                width 300ms cubic-bezier(0.2, 0.8, 0.2, 1),
+                opacity 200ms ease;
+    pointer-events: none;
+}
+.nav-indicator.is-ready { opacity: 1; }
+
+.nav-link { position: relative; transition: color 200ms ease, text-shadow 200ms ease; }
+.nav-link:hover { color: var(--aurelia-text-main); }
+
+/* Mobile menu: animated open/close instead of toggling `hidden`, which
+   gave it no transition at all. max-height rather than height, so the menu
+   never needs a measured pixel value. */
+.mobile-menu {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 280ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 200ms ease;
+}
+.mobile-menu.is-open { max-height: 26rem; opacity: 1; }
+
+/* ============================================================
+   THEME CROSS-FADE
+   ============================================================
+   Applied to <html> only for the duration of a theme switch, then removed.
+   Deliberately NOT a permanent global transition: leaving one on makes
+   every unrelated hover feel laggy and forces repaint work across a
+   245-card grid. Scoped to the properties that actually carry a theme. */
+:root.theme-transition,
+:root.theme-transition * {
+    transition: background-color 320ms ease, border-color 320ms ease,
+                color 320ms ease, fill 320ms ease, box-shadow 320ms ease !important;
+    transition-delay: 0ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-shell, .nav-anchored, .nav-indicator, .nav-sub, .mobile-menu { transition: none; }
+    :root.theme-transition, :root.theme-transition * { transition: none !important; }
 }
 
 /* ============================================================
@@ -340,6 +433,22 @@ body {
     background: var(--aurelia-primary);
     border-color: var(--aurelia-primary);
     box-shadow: 0 0 28px -6px var(--aurelia-primary);
+}
+
+/* Same weight as btn-primary but on the secondary role -- used where a
+   surface has its own identity color (the 404 page is secondary/purple
+   throughout, and a cyan button there would read as belonging to a
+   different screen). */
+.btn-secondary {
+    color: var(--aurelia-secondary);
+    border-color: color-mix(in srgb, var(--aurelia-secondary) 45%, transparent);
+    background: color-mix(in srgb, var(--aurelia-secondary) 8%, transparent);
+}
+.btn-secondary:hover {
+    color: var(--aurelia-text-inverted);
+    background: var(--aurelia-secondary);
+    border-color: var(--aurelia-secondary);
+    box-shadow: 0 0 28px -6px var(--aurelia-secondary);
 }
 
 .btn-ghost {

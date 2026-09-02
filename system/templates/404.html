@@ -4,22 +4,24 @@
 {% block nav_title %}ERROR_404{% endblock %}
 
 {% block content %}
-<div class="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
-    <div class="absolute inset-0 bg-aurelia-secondary/5 animate-pulse pointer-events-none"></div>
+<div class="hud-grid min-h-[60vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
 
-    <h1 class="text-9xl font-black text-aurelia-secondary font-mono tracking-tighter opacity-80 glitch-text">404</h1>
+    <h1 class="display-xl text-aurelia-secondary glitch-text">404</h1>
 
-    <div class="border-l-2 border-aurelia-secondary pl-6 my-8 text-left max-w-md">
-        <h2 class="text-xl text-aurelia-text font-mono font-bold mb-2">CRITICAL_SYSTEM_ERROR</h2>
+    <div class="surface relative border border-aurelia-dim rounded-theme px-7 py-6 my-10 text-left max-w-md">
+        <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-secondary opacity-70"></span>
+        <span aria-hidden="true" class="bracket-mark text-aurelia-secondary"></span>
+        <h2 class="display-md text-aurelia-text mb-3">CRITICAL_SYSTEM_ERROR</h2>
         <p class="text-sm text-aurelia-muted font-mono leading-relaxed">
-            > TARGET_NOT_FOUND<br>
-            > The requested node does not exist in the Aurelia file system.<br>
-            > Please reroute to a valid active page.
+            &gt; TARGET_NOT_FOUND<br>
+            &gt; The requested node does not exist in the Aurelia file system.<br>
+            &gt; Please reroute to a valid active page.
         </p>
     </div>
 
-    <a href="index.html" class="px-8 py-3 bg-aurelia-secondary/10 border border-aurelia-secondary text-aurelia-secondary font-mono text-sm tracking-widest hover:bg-aurelia-secondary hover:text-aurelia-text transition-all">
-        INITIATE_SYSTEM_REBOOT
+    <a href="index.html" class="btn btn-secondary group">
+        <span>INITIATE_SYSTEM_REBOOT</span>
+        <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
     </a>
 </div>
 {% endblock %}
