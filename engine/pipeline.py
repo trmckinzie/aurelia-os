@@ -27,6 +27,19 @@ from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_themes, default_theme_slug, generate_theme_css
 
 
+# Vault directories the build never publishes from, whatever a note's
+# `publish:` flag says. The publish surface is otherwise one boolean unbounded
+# by directory (see CLAUDE.md's privacy model), so a folder whose contents are
+# by definition unreviewed needs the guard here, in the build -- .gitignore
+# only keeps such notes out of the repo, not off the site.
+#
+# 20_AURELIA: where aurelia-mcp-server's draft_note writes agent-drafted notes
+# (its ARCHITECTURE.md Rule 4). Promoting a draft into 10_GARDEN is a
+# deliberate human move, so an agent that emits `publish: true` in its
+# frontmatter must not thereby publish itself.
+UNPUBLISHED_DIRS = {"20_AURELIA"}
+
+
 def _scan_vault():
     """Walks the vault, building a card for every published garden note.
 
@@ -39,7 +52,11 @@ def _scan_vault():
     reset_malformed_count()
     pending = []
 
-    for root, _, files in os.walk(VAULT_PATH):
+    for root, dirs, files in os.walk(VAULT_PATH):
+        # Prune in place so os.walk never descends -- cheaper than filtering
+        # per-file, and it covers nested subfolders for free.
+        dirs[:] = [d for d in dirs if d not in UNPUBLISHED_DIRS]
+
         for filename in sorted(files):
             if not filename.endswith(".md"):
                 continue
