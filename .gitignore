@@ -57,3 +57,10 @@ vault/20_AURELIA/
 # tree sitting in the working directory is exactly what a stray `git add -A`
 # would sweep into this public repo.
 /Aurelia_Factory_v1/
+
+# --- IGNORE PER-MACHINE CLAUDE CODE SETTINGS ---
+# .claude/agents/ and .claude/launch.json are shared project config and stay
+# tracked. settings.local.json is not: it is the per-machine permission
+# allowlist Claude Code appends to as you approve tools, so it accumulates
+# local paths and command lines nobody meant to publish from a public repo.
+.claude/settings.local.json
