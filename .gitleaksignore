@@ -1,0 +1,19 @@
+# gitleaks — findings reviewed and cleared, so a clean scan stays meaningful.
+#
+# Each line is a fingerprint: <commit>:<file>:<rule>:<line>. Pinning specific
+# findings rather than allowlisting the `citekey:` pattern outright is
+# deliberate: a regex allowlist would create a standing blind spot in a repo
+# that is meant to be publishable, for a pattern that no note in the current
+# tree even uses. If Zotero literature notes ever come back, their citekeys
+# will be flagged again and can be judged with fresh eyes rather than silently
+# passing.
+#
+# Cleared 2026-09-02. All three are Zotero citekeys in literature notes from
+# commit ef9b3cc0 ("vault backup: 2026-01-17"), verified by confirming each
+# flagged value is identical to its own filename stem — a bibliography key
+# derived from author + title + year, which gitleaks' generic-api-key rule
+# reads as a high-entropy string. Those notes are no longer in the tree.
+
+ef9b3cc069453332c3fa16fda91e1f4380e91b25:literature-notes/obaidiCulturalThreatPerceptions2023.md:generic-api-key:2
+ef9b3cc069453332c3fa16fda91e1f4380e91b25:literature-notes/smithYouKnowYoure2023.md:generic-api-key:2
+ef9b3cc069453332c3fa16fda91e1f4380e91b25:literature-notes/zwickerPersistentBeliefsPolitical2020.md:generic-api-key:2
