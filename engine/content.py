@@ -22,6 +22,14 @@ def make_id(text):
 # somewhere surfaces loudly rather than only as a scroll-back warning.
 _malformed_count = 0
 
+# A YAML frontmatter fence is a line that is exactly `---` (trailing spaces
+# tolerated), not any occurrence of those three characters. Splitting on the
+# bare substring meant a note whose frontmatter carried an em-dash-ish value
+# (`title: Before---After`) had its own delimiter found mid-line: parse_frontmatter
+# then handed PyYAML a truncated block and parse_body started the body
+# mid-frontmatter. Anchoring to ^...$ in MULTILINE mode is the whole fix.
+_FRONTMATTER_FENCE_RE = re.compile(r'(?m)^---[ \t]*$')
+
 
 def get_malformed_count():
     return _malformed_count
@@ -43,7 +51,7 @@ def parse_frontmatter(content):
     if not content.startswith("---"):
         return meta
 
-    parts = content.split("---", 2)
+    parts = _FRONTMATTER_FENCE_RE.split(content, maxsplit=2)
     if len(parts) < 3:
         return meta
 
@@ -81,7 +89,13 @@ def parse_frontmatter(content):
 
 
 def parse_body(content):
-    parts = content.split("---", 2)
+    """Returns everything after the closing frontmatter fence.
+
+    Uses the same line-anchored fence as parse_frontmatter -- the two have to
+    agree on where the frontmatter ends, or the body silently starts in the
+    middle of it.
+    """
+    parts = _FRONTMATTER_FENCE_RE.split(content, maxsplit=2)
     if len(parts) < 3:
         return content
     return parts[2].strip()

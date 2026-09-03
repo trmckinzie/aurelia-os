@@ -162,6 +162,68 @@ def test_parse_body_no_frontmatter_returns_whole_content():
     assert parse_body("Just body, no frontmatter") == "Just body, no frontmatter"
 
 
+# --- frontmatter fence is a whole line, not a substring (audit #24) ---------
+
+def test_parse_frontmatter_ignores_triple_dash_inside_a_value():
+    content = (
+        "---\n"
+        "title: Before---After\n"
+        "publish: true\n"
+        "type: concept\n"
+        "---\n"
+        "Body text\n"
+    )
+    meta = parse_frontmatter(content)
+    assert meta["title"] == "Before---After"
+    assert meta["publish"] is True
+    assert meta["type"] == "concept"
+
+
+def test_parse_body_ignores_triple_dash_inside_a_frontmatter_value():
+    content = (
+        "---\n"
+        "title: Before---After\n"
+        "publish: true\n"
+        "---\n"
+        "Body text\n"
+    )
+    assert parse_body(content) == "Body text"
+
+
+def test_parse_body_ignores_triple_dash_mid_line_in_the_body():
+    content = (
+        "---\n"
+        "publish: true\n"
+        "---\n"
+        "A well---known result.\n"
+    )
+    assert parse_body(content) == "A well---known result."
+
+
+def test_parse_body_keeps_a_horizontal_rule_in_the_body():
+    content = (
+        "---\n"
+        "publish: true\n"
+        "---\n"
+        "Intro paragraph.\n"
+        "\n"
+        "---\n"
+        "\n"
+        "Section after the rule.\n"
+    )
+    body = parse_body(content)
+    assert body.startswith("Intro paragraph.")
+    assert "---" in body
+    assert body.endswith("Section after the rule.")
+
+
+def test_parse_frontmatter_tolerates_trailing_whitespace_on_the_fence():
+    content = "---  \npublish: true\n---\t\nBody"
+    meta = parse_frontmatter(content)
+    assert meta["publish"] is True
+    assert parse_body(content) == "Body"
+
+
 def test_process_wikilinks_simple():
     html = process_wikilinks("See [[Some Note]] for detail")
     assert "openNote('note-some-note')" in html
