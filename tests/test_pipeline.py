@@ -1,3 +1,4 @@
+from engine import pipeline
 from engine.content import dim_dangling_links
 from engine.pipeline import (
     _build_graph_index,
@@ -165,3 +166,71 @@ def test_link_graph_is_identical_whether_or_not_dangling_links_were_dimmed():
     dimmed = [_card("note-a", "A", dim_dangling_links(body, known)), _card("note-b", "B", "")]
 
     assert _build_link_graph(undimmed) == _build_link_graph(dimmed)
+
+
+# --- _scan_vault publish gating (audit #25) --------------------------------
+#
+# Every test below builds its own vault under pytest's tmp_path and points
+# engine.pipeline.VAULT_PATH at it. The real vault/ is never read or written.
+
+def _write_note(vault, relpath, frontmatter, body="Body text.\n"):
+    path = vault / relpath
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(f"---\n{frontmatter}\n---\n{body}", encoding="utf-8")
+    return path
+
+
+def _scan(vault, monkeypatch):
+    monkeypatch.setattr(pipeline, "VAULT_PATH", str(vault))
+    garden_cards, _, _ = pipeline._scan_vault()
+    return {c["title"] for c in garden_cards}
+
+
+def test_scan_vault_publishes_only_notes_flagged_true(tmp_path, monkeypatch):
+    vault = tmp_path / "vault"
+    _write_note(vault, "10_GARDEN/Published.md", "publish: true\ntype: concept")
+    _write_note(vault, "10_GARDEN/Unpublished.md", "publish: false\ntype: concept")
+    # Audit #23: bool("false") was True, so this one published itself.
+    _write_note(vault, "10_GARDEN/Quoted False.md", 'publish: "false"\ntype: concept')
+    # Audit #23: an unrecognized value must not publish either.
+    _write_note(vault, "10_GARDEN/Ambiguous.md", "publish: maybe\ntype: concept")
+
+    assert _scan(vault, monkeypatch) == {"Published"}
+
+
+def test_scan_vault_skips_20_aurelia_even_when_publish_is_true(tmp_path, monkeypatch):
+    # Agent-drafted notes (aurelia-mcp-server's draft_note, ARCHITECTURE.md
+    # Rule 4). An agent emitting `publish: true` must not thereby publish
+    # itself to a public site.
+    vault = tmp_path / "vault"
+    _write_note(vault, "10_GARDEN/Real Note.md", "publish: true\ntype: concept")
+    _write_note(vault, "20_AURELIA/Agent Draft.md", "publish: true\ntype: concept")
+    _write_note(vault, "20_AURELIA/nested/Deeper Draft.md", "publish: true\ntype: concept")
+
+    assert _scan(vault, monkeypatch) == {"Real Note"}
+
+
+def test_scan_vault_reads_frontmatter_past_a_triple_dash_value(tmp_path, monkeypatch):
+    # Audit #24: the fence used to be found mid-value, so `publish:` below it
+    # was never parsed and the note silently vanished from the site.
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/Dashed.md",
+        "title: Before---After\npublish: true\ntype: concept",
+    )
+    assert _scan(vault, monkeypatch) == {"Dashed"}
+
+
+def test_scan_vault_keeps_a_body_horizontal_rule_out_of_the_frontmatter(tmp_path, monkeypatch):
+    # Audit #24, other direction: a horizontal rule in the body must not be
+    # mistaken for the opening fence of anything.
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/Ruled.md",
+        "publish: true\ntype: concept",
+        body="Intro paragraph.\n\n---\n\nAfter the rule.\n",
+    )
+    monkeypatch.setattr(pipeline, "VAULT_PATH", str(vault))
+    garden_cards, _, _ = pipeline._scan_vault()
+    assert [c["title"] for c in garden_cards] == ["Ruled"]
+    assert "After the rule." in garden_cards[0]["body"]
