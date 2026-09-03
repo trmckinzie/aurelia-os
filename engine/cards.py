@@ -538,8 +538,20 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # the <h3> because highlightText() rewrites that element's innerHTML during
     # search -- ordering must not depend on whether a search is active.
     # escapeHtml keeps a quote in a filename from closing the attribute.
+    #
+    # data-label carries the human type label the branches above already
+    # computed ("LIBRARY" for source/book, "SYS_LOG" for daily-bridge, ...).
+    # The note reader's header shows it, and it is emitted here rather than
+    # re-derived in gardentemplate.html because it is NOT a transform of
+    # note_type -- source/book -> LIBRARY and discipline -> FIELD are
+    # editorial choices that live in this function's branches. A client-side
+    # copy would be a second hand-maintained list of every note type, which
+    # is exactly the kind of thing that silently goes stale when an eighth
+    # type is added. (The reader's accent *color* needs no equivalent: the
+    # template's existing graphColorFor() already maps every type to a live
+    # --aurelia-* value for the graph view, so the reader reuses that.)
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">

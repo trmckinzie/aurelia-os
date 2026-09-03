@@ -590,27 +590,55 @@
     </div>
 
     <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-label="Note reader" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center px-6 py-3 border-b border-aurelia-border shrink-0">
-                <div class="flex items-center gap-3">
-                    <button onclick="closeModal()" aria-label="Close note" title="Close (Esc)" class="w-3 h-3 rounded-full bg-aurelia-insight hover:shadow-[0_0_10px_currentColor] text-aurelia-insight transition-shadow"></button>
-                    <div class="w-3 h-3 bg-aurelia-highlight/70 rounded-full"></div>
-                    <div class="w-3 h-3 bg-aurelia-accent/70 rounded-full"></div>
-                    <span class="ml-4 field-label text-aurelia-muted">OBSIDIAN_VIEWER // ACTIVE</span>
+        <!-- tabindex="-1" so openNote() can move focus into the dialog: with
+             aria-modal="true" and focus left on <body>, a screen reader
+             announces nothing and Tab walks the 20 controls *behind* the
+             backdrop. aria-labelledby (not a fixed aria-label) so the dialog
+             announces the note's own title. -->
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-none" onclick="event.stopPropagation()">
+            <!-- Identity strip. Replaces three macOS traffic lights (two of
+                 which were inert <div>s) plus "OBSIDIAN_VIEWER // ACTIVE",
+                 eleven characters that were identical for all 245 notes. Every
+                 value here is read off the card element's data-* attributes in
+                 openNote(); nothing new is computed at build time except
+                 data-label, which cards.py already had in hand. -->
+            <div class="flex justify-between items-center gap-4 px-4 sm:px-6 py-2.5 border-b border-aurelia-border shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span aria-hidden="true" class="reader-dot"></span>
+                    <span id="modal-type" class="field-label text-aurelia-muted shrink-0 hidden sm:inline"></span>
+                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">/</span>
+                    <!-- The one title that always exists. 15 gemini-notebook
+                         notes -- the longest in the vault -- have no <h1> in
+                         their body at all, so before this the reader showed
+                         them with no title anywhere. -->
+                    <h2 id="modal-title" class="font-display font-bold text-sm sm:text-base text-aurelia-text truncate"></h2>
                 </div>
-                <div class="field-label text-aurelia-muted hidden sm:block">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</div>
+                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                    <span id="modal-maturity" class="field-label text-aurelia-muted hidden md:inline"></span>
+                    <span id="modal-connections" class="field-label text-aurelia-muted hidden lg:inline"></span>
+                    <button type="button" onclick="copyNoteLink()" id="btn-copy-note" class="reader-icon-btn" aria-label="Copy link to this note" title="Copy link to this note">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"></path></svg>
+                    </button>
+                    <button type="button" onclick="closeModal()" data-variant="close" class="reader-icon-btn" aria-label="Close note" title="Close (Esc)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
             </div>
+            <div aria-hidden="true" class="reader-accent-rule"></div>
             <div class="h-[2px] bg-aurelia-bg/40 shrink-0">
-                <div id="modal-progress" class="h-full bg-aurelia-primary shadow-[0_0_10px_var(--aurelia-primary)]" style="width: 0%"></div>
+                <div id="modal-progress" class="h-full" style="width: 0%; background: var(--note-accent); box-shadow: 0 0 10px var(--note-accent)"></div>
             </div>
             <div id="modal-scroll" class="flex-grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
-                <div class="max-w-5xl mx-auto px-8 py-12">
-                    <div id="modal-content" class="obsidian-reader max-w-3xl mx-auto"></div>
-                    <div id="modal-backlinks" class="max-w-3xl mx-auto"></div>
-                    <div id="modal-related" class="max-w-3xl mx-auto"></div>
+                <div class="reader-column">
+                    <div id="modal-content" class="obsidian-reader"></div>
+                    <div id="modal-backlinks"></div>
+                    <div id="modal-related"></div>
                 </div>
             </div>
-            <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-12 right-4 border border-aurelia-border rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
+            <!-- bottom-14 clears the footer (8px padding + 34px control + 8px
+                 + 1px border = 51px); the old bottom-12 was 48px and would
+                 now sit on top of it. -->
+            <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-14 right-3 sm:right-4 border border-aurelia-border rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
                 <label class="flex flex-col gap-1.5">
                     VOICE
                     <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[11px] normal-case tracking-normal"></select>
@@ -620,16 +648,40 @@
                     <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)" class="accent-aurelia-primary">
                 </label>
             </div>
-            <div class="px-4 py-2.5 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-4 shrink-0">
-                <span id="modal-readtime" class="truncate">MODE: READ_ONLY</span>
-                <div class="flex items-center gap-4 shrink-0">
-                    <button id="btn-read-aloud" onclick="toggleReading()" title="Read this note aloud (R). Select text first to read just that selection." class="modal-action">🔊 READ</button>
-                    <button id="btn-tts-settings" onclick="toggleTtsSettings()" title="Voice settings" class="modal-action">⚙</button>
-                    <button onclick="navigateNote(-1)" title="Previous in current view ([)" class="modal-action">&larr; PREV</button>
-                    <span id="modal-reviewed" class="opacity-70"></span>
-                    <button onclick="navigateNote(1)" title="Next in current view (])" class="modal-action">NEXT &rarr;</button>
+            <!-- Two groups, not three. The session info truncates; the controls
+                 never shrink. Previously this row was a single flex line whose
+                 content overflowed its own box by 21px at 375px, clipping the
+                 NEXT button off the edge where it could not be tapped -- and
+                 "LAST SEEN" sat *between* PREV and NEXT, so a status label was
+                 wedged inside the navigation cluster. The decorative
+                 "AURELIA_OS V3.0" is gone: it was occupying the width that
+                 caused the overflow. -->
+            <div class="px-3 sm:px-4 py-2 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-2 sm:gap-4 shrink-0">
+                <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+                    <span id="modal-readtime" class="truncate"></span>
+                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">·</span>
+                    <span id="modal-reviewed" class="truncate opacity-70 hidden sm:inline"></span>
+                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden xl:inline">·</span>
+                    <span class="shrink-0 hidden xl:inline opacity-70">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</span>
                 </div>
-                <span class="hidden md:inline">AURELIA_OS V3.0</span>
+                <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+                    <button type="button" id="btn-read-aloud" onclick="toggleReading()" aria-pressed="false" aria-label="Read this note aloud" title="Read this note aloud (R). Select text first to read just that selection." class="reader-icon-btn"></button>
+                    <button type="button" id="btn-tts-settings" onclick="toggleTtsSettings()" aria-expanded="false" aria-label="Voice settings" title="Voice settings" class="reader-icon-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+                    </button>
+                    <span aria-hidden="true" class="w-px h-5 bg-aurelia-border shrink-0 mx-0.5 sm:mx-1"></span>
+                    <!-- 34px square on a phone, a labelled pill from `sm` up:
+                         one button, one label, rather than a duplicate pair
+                         toggled by breakpoint. -->
+                    <button type="button" onclick="navigateNote(-1)" aria-label="Previous note" title="Previous in current view ([)" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        <span class="hidden sm:inline">PREV</span>
+                    </button>
+                    <button type="button" onclick="navigateNote(1)" aria-label="Next note" title="Next in current view (])" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
+                        <span class="hidden sm:inline">NEXT</span>
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1144,10 +1196,84 @@
     }
 
     let currentModalNoteId = null;
+    // The element focus returns to when the reader closes. Without this,
+    // dismissing the dialog dropped focus onto <body> and a keyboard user
+    // restarted from the top of the page every time.
+    let modalReturnFocus = null;
+    /* closeModal() hides the backdrop on a 260ms timer (it has to outlast the
+       exit transition). Reopening inside that window used to let the stale
+       timer fire *after* the new note had already been shown, re-adding
+       `hidden` and leaving the reader invisible with the page still scroll-
+       locked. Back/Forward through the reading trail lands well inside 260ms,
+       so this went from unlikely to routine. openNote() cancels the pending
+       hide instead of racing it. */
+    let modalHideTimer = null;
 
-    function openNote(noteId) {
+    /* Fills the reader's header from the card element's data-* attributes.
+
+       All of it -- type, label, title, maturity, connection count -- is
+       already on the <article> for the Garden's sort comparators and filter
+       sweep (see engine/cards.py), so the reader needs no new build-time
+       data. The title matters most: 15 gemini-notebook notes carry no <h1>
+       in their body at all, and they are the longest notes in the vault, so
+       before this they opened with no title shown anywhere.
+
+       The accent is set as a CSS custom property, not a Tailwind class.
+       tailwind_build.py scans the rendered HTML under dist, so a utility
+       class assembled here at runtime would never be compiled and would
+       silently render with no colour -- the same trap documented for the
+       graph canvas, whose graphColorFor() map this reuses rather than
+       duplicating. (Writing that scan path as a glob here would close this
+       comment early on its star-slash -- it broke both this file and
+       main.css once each.) */
+    function applyNoteChrome(noteId) {
+        const card = document.querySelector(`.searchable-item[data-id="${CSS.escape(noteId)}"]`);
+        const node = NODE_BY_ID[noteId];
+        const type = (card && card.dataset.type) || (node && node.type) || '';
+        const title = (card && card.dataset.title) || (node && node.title) || '';
+
+        const accent = graphColorFor(type, graphTypeColors(getComputedStyle(document.documentElement)),
+                                     'var(--aurelia-primary)');
+        modalPanel.style.setProperty('--note-accent', accent);
+
+        const titleEl = document.getElementById('modal-title');
+        if (titleEl) titleEl.textContent = title;
+        const typeEl = document.getElementById('modal-type');
+        // data-label is the human label cards.py already chose for this type
+        // ("LIBRARY", "SYS_LOG"); it is not derivable from the type slug, so
+        // the fallback is the slug itself rather than a second lookup table.
+        if (typeEl) typeEl.textContent = (card && card.dataset.label) || type.toUpperCase();
+
+        const maturityEl = document.getElementById('modal-maturity');
+        if (maturityEl) {
+            const m = card && card.dataset.maturity;
+            maturityEl.textContent = m ? `${MATURITY_EMOJI[m] || ''} ${m}`.trim() : '';
+        }
+        const connEl = document.getElementById('modal-connections');
+        if (connEl) {
+            const n = parseInt((card && card.dataset.connections) || '0', 10);
+            connEl.textContent = n > 0 ? `◉ ${n} ${n === 1 ? 'LINK' : 'LINKS'}` : '';
+        }
+    }
+    const MATURITY_EMOJI = { seed: '🌱', growing: '🌿', evergreen: '🌳' };
+
+    /* `history` controls how this open participates in browser history:
+         'push'    -- a deliberate jump to a new note (a card, a backlink,
+                      the palette). Adds an entry, so Back returns to where
+                      you came from.
+         'replace' -- lateral movement inside one reading session ([ and ]).
+                      Stepping through 30 notes must not bury the Garden
+                      under 30 entries, which is the same objection the
+                      comment on syncViewToUrl() raises about per-keystroke
+                      pushState.
+         'none'    -- the router is reacting to a history event that already
+                      happened; writing again would fight the browser. */
+    function openNote(noteId, history_ = 'push') {
         const rawEl = document.getElementById(noteId);
         if (!rawEl) return;
+        if (modalHideTimer) { clearTimeout(modalHideTimer); modalHideTimer = null; }
+        const wasOpen = !modalBackdrop.classList.contains('hidden');
+        if (!wasOpen) modalReturnFocus = document.activeElement;
         stopReading();
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
@@ -1158,6 +1284,8 @@
         modalProgress.style.width = '0%';
 
         currentModalNoteId = noteId;
+        applyNoteChrome(noteId);
+        writeNoteToUrl(noteId, history_);
         const wordCount = (modalContent.innerText || '').trim().split(/\s+/).filter(Boolean).length;
         const minutes = Math.max(1, Math.round(wordCount / 200));
         const readtimeEl = document.getElementById('modal-readtime');
@@ -1175,6 +1303,10 @@
         // from and the panel simply appears.
         setTimeout(() => { modalBackdrop.classList.remove('opacity-0'); modalPanel.classList.add('is-open'); }, 10);
         document.body.style.overflow = 'hidden';
+        // Focus the panel itself rather than the first control: the dialog
+        // is for reading, so the caret belongs at the top of the document,
+        // and Escape/[/] all listen on document anyway.
+        if (!wasOpen) modalPanel.focus({ preventScroll: true });
     }
 
     // Moves to the next/previous note within whatever's currently visible
@@ -1187,7 +1319,10 @@
         let idx = ids.indexOf(currentModalNoteId);
         if (idx === -1) idx = 0;
         idx = (idx + direction + ids.length) % ids.length;
-        openNote(ids[idx]);
+        // 'replace': one reading session stays one history entry, so Back
+        // still exits to wherever you entered the reader from rather than
+        // replaying every note you paged past.
+        openNote(ids[idx], 'replace');
     }
 
     function renderBacklinks(noteId) {
@@ -1197,16 +1332,33 @@
             container.innerHTML = '';
             return;
         }
+        // The vault's most-linked note has 32 backlinks, and rendering all of
+        // them flat produced an undifferentiated wall that was harder to read
+        // than a truncated list plus a count. Show a first screenful, keep the
+        // rest one click away.
+        const VISIBLE = 12;
+        const shown = refs.slice(0, VISIBLE);
+        const rest = refs.slice(VISIBLE);
+        const pill = (r) => `
+                    <span onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</span>`;
         container.innerHTML = `
             <div class="mt-6 pt-6 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
                 <div class="flex flex-wrap gap-2">
-                    ${refs.map(r => `
-                    <span onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</span>
-                    `).join('')}
+                    ${shown.map(pill).join('')}
+                    ${rest.length ? `<span id="backlinks-rest" hidden>${rest.map(pill).join('')}</span>` : ''}
+                    ${rest.length ? `<button type="button" onclick="expandBacklinks(this)" class="text-xs font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
                 </div>
             </div>
         `;
+    }
+
+    // `hidden` rather than a display class: the pills are already in the DOM,
+    // so revealing them costs no re-render and keeps their openNote handlers.
+    function expandBacklinks(btn) {
+        const rest = document.getElementById('backlinks-rest');
+        if (rest) { rest.hidden = false; rest.className = 'contents'; }
+        btn.remove();
     }
 
     // Implicit connections via shared tags, as opposed to renderBacklinks'
@@ -1251,17 +1403,99 @@
         `;
     }
 
-    function closeModal() {
+    /* closeModal(dueToHistory) -- `true` when the router is closing us in
+       response to a history event that has already happened, in which case
+       touching history again would fight the browser.
+
+       Otherwise, dismissing unwinds the *whole* reading trail in one hop
+       (history.go(-depth)), so ✕ and Escape always return to the Garden
+       rather than stepping back one note at a time -- Back is what steps.
+       If the current entry is not ours -- someone arrived directly at
+       garden.html#note-x, where we pushed nothing -- only strip the hash,
+       because going back there would walk off the site entirely. */
+    function closeModal(dueToHistory) {
         stopReading();
+        const st = window.history.state;
+        const trailDepth = (st && st.aureliaNote) ? (st.aureliaDepth || 1) : 0;
+        currentModalNoteId = null;
         modalBackdrop.classList.add('opacity-0');
         modalPanel.classList.remove('is-open');
         modalPanel.classList.add('is-closing');
         // Matches --dur-2 (220ms) plus a little slack. setTimeout rather
         // than transitionend: if the frame loop is throttled the event
         // never fires and the backdrop would stay up, blocking the page.
-        setTimeout(() => { modalBackdrop.classList.add('hidden'); modalPanel.classList.remove('is-closing'); }, 260);
+        // Held in modalHideTimer so a reopen inside the window can cancel it.
+        if (modalHideTimer) clearTimeout(modalHideTimer);
+        modalHideTimer = setTimeout(() => {
+            modalBackdrop.classList.add('hidden');
+            modalPanel.classList.remove('is-closing');
+            modalHideTimer = null;
+        }, 260);
         document.body.style.overflow = 'auto';
+
+        if (dueToHistory !== true) {
+            if (trailDepth > 0) window.history.go(-trailDepth);
+            else if (location.hash) window.history.replaceState(null, '', location.pathname + location.search);
+        }
+        // Return focus to whatever opened the reader (usually the card), so
+        // a keyboard user resumes where they left off instead of at <body>.
+        if (modalReturnFocus && document.contains(modalReturnFocus)) {
+            try { modalReturnFocus.focus({ preventScroll: true }); } catch (e) { /* detached */ }
+        }
+        modalReturnFocus = null;
     }
+
+    /* === NOTE URL / HISTORY ===========================================
+       The hash has always meant "open this note" -- openNoteFromHash() and
+       the command palette both rely on it -- but nothing ever *wrote* it.
+       The result was that the URL never named the note you were reading (so
+       it could not be linked), Back did nothing, and a stale hash survived
+       closing, so a reload reopened a note you had already dismissed.
+
+       Everything funnels through one idempotent router. Idempotency is what
+       makes this safe rather than clever: traversing history across a
+       fragment change can fire popstate *and* hashchange, and a router that
+       no-ops when the requested note is already open cannot double-handle
+       them. Our own pushState/replaceState calls fire neither event, so
+       they never re-enter. */
+    /* Each entry we push records how deep into the reading trail it is, so
+       the ✕ can unwind the whole trail in one hop while Back still steps
+       through it one note at a time.
+
+       Without the depth, closing had to be a single history.back(), which
+       is right when you opened one note from the grid but wrong the moment
+       you follow a backlink: closing note B would reopen note A instead of
+       returning you to the Garden. Depth makes "dismiss" and "go back" two
+       different distances rather than forcing them to be the same one. */
+    function writeNoteToUrl(noteId, mode) {
+        if (mode === 'none') return;
+        const url = location.pathname + location.search + '#' + noteId;
+        const current = window.history.state;
+        const currentDepth = (current && current.aureliaDepth) || 0;
+        if (mode === 'replace') {
+            // Lateral move inside one reading session: same entry, so it
+            // keeps the depth it already had (1 if we arrived by deep link,
+            // where nothing was pushed and there is nothing to unwind).
+            window.history.replaceState(
+                { aureliaNote: noteId, aureliaDepth: currentDepth || 1 }, '', url);
+        } else {
+            window.history.pushState(
+                { aureliaNote: noteId, aureliaDepth: currentDepth + 1 }, '', url);
+        }
+    }
+
+    function syncModalToLocation() {
+        const id = location.hash.slice(1);
+        const isOpen = !modalBackdrop.classList.contains('hidden');
+        if (id && document.getElementById(id)) {
+            if (currentModalNoteId === id && isOpen) return;   // already showing it
+            openNote(id, 'none');
+        } else if (isOpen) {
+            closeModal(true);
+        }
+    }
+    window.addEventListener('popstate', syncModalToLocation);
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') { closeModal(); return; }
         if (!modalBackdrop.classList.contains('hidden')) {
@@ -1270,6 +1504,52 @@
             if (e.key === 'r' || e.key === 'R') toggleReading();
         }
     });
+
+    /* Focus trap. aria-modal="true" tells assistive tech that the rest of
+       the page is inert, but it does not change the browser's tab order --
+       measured, 20 controls behind the backdrop stayed reachable by Tab.
+       A keydown trap rather than the `inert` attribute, which would need
+       the page restructured into a wrapper this markup does not have. */
+    modalPanel.addEventListener('keydown', (e) => {
+        if (e.key !== 'Tab') return;
+        const focusables = [...modalPanel.querySelectorAll(
+            'a[href], button:not([disabled]), select, input, textarea, [tabindex]:not([tabindex="-1"])'
+        )].filter(el => el.offsetParent !== null);
+        if (focusables.length === 0) return;
+        const first = focusables[0], last = focusables[focusables.length - 1];
+        // The panel itself holds focus right after opening; Tab from there
+        // should enter the controls rather than escape to the page behind.
+        if (e.shiftKey && (document.activeElement === first || document.activeElement === modalPanel)) {
+            e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault(); first.focus();
+        }
+    });
+
+    // Copies a link to the note being read -- which only became a real link
+    // once openNote() started writing the hash. Shares writeToClipboard()
+    // with the toolbar's Share View chip rather than reimplementing its
+    // fallback, but reports the result as an icon swap, since this control
+    // is a 34px square with no room for a text label.
+    const COPY_ICON = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"></path>';
+    const OK_ICON = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+    const FAIL_ICON = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>';
+
+    function copyNoteLink() {
+        if (!currentModalNoteId) return;
+        const btn = document.getElementById('btn-copy-note');
+        const paint = (path, label) => {
+            if (!btn) return;
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
+            btn.setAttribute('title', label);
+        };
+        writeToClipboard(location.href).then(ok => {
+            // If the copy was refused the URL is still in the address bar,
+            // so the tooltip says what to do instead of only reporting failure.
+            paint(ok ? OK_ICON : FAIL_ICON, ok ? 'Link copied' : 'Copy failed — press ⌘C to copy the address bar');
+            setTimeout(() => paint(COPY_ICON, 'Copy link to this note'), 1600);
+        });
+    }
 
     // --- READ ALOUD (Web Speech API) ---
     // Free, no API key, no backend -- the only option that can read an
@@ -1322,7 +1602,12 @@
     }
 
     function toggleTtsSettings() {
-        document.getElementById('tts-settings-panel').classList.toggle('hidden');
+        const panel = document.getElementById('tts-settings-panel');
+        const open = panel.classList.toggle('hidden') === false;
+        // Mirrors the panel's state onto the button, so the control reports
+        // whether its popover is showing instead of looking identical either way.
+        const btn = document.getElementById('btn-tts-settings');
+        if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
     // Sentence-ish chunks, not one utterance for the whole note -- Chrome has
@@ -1333,11 +1618,28 @@
         return text.replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || [];
     }
 
+    // The read-aloud control is an icon button (see .reader-icon-btn), so
+    // state is carried by the icon plus aria-pressed/aria-label rather than
+    // by replacing the button's text -- the emoji-and-word label it used to
+    // swap in was part of what overflowed the footer on a phone.
+    const TTS_ICONS = {
+        idle: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M17.657 6.343a8 8 0 010 11.314M11 5L6 9H3v6h3l5 4V5z"></path>',
+        speaking: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6M14 9v6"></path><circle cx="12" cy="12" r="9" stroke-width="2"></circle>',
+        paused: '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 8l6 4-6 4V8z"></path><circle cx="12" cy="12" r="9" stroke-width="2"></circle>',
+    };
+    const TTS_LABELS = { idle: 'Read this note aloud', speaking: 'Pause reading', paused: 'Resume reading' };
+
     function updateTtsButton() {
         const btn = document.getElementById('btn-read-aloud');
         if (!btn) return;
-        btn.innerText = { idle: '🔊 READ', speaking: '⏸ PAUSE', paused: '▶ RESUME' }[ttsState];
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">${TTS_ICONS[ttsState]}</svg>`;
+        btn.setAttribute('aria-label', TTS_LABELS[ttsState]);
+        btn.setAttribute('aria-pressed', ttsState === 'idle' ? 'false' : 'true');
     }
+    // Paint the idle icon at load: the button ships empty so the icon has a
+    // single source of truth here rather than one copy in the markup and
+    // another in this map, which would drift the moment either changed.
+    updateTtsButton();
 
     function speakChunk() {
         if (ttsChunkIndex >= ttsChunks.length) { stopReading(); return; }
@@ -1420,11 +1722,19 @@
     // Lobby's hub-note/review links all rely on. Re-checked on hashchange
     // too, so an in-page link to a different note (e.g. a backlink pill
     // that also updates the URL) keeps working the same way.
+    // Arriving with a hash already set: open it without writing history,
+    // since this entry is the one the visitor landed on. closeModal() reads
+    // history.state to tell this case apart -- nothing was pushed here, so
+    // closing strips the hash rather than calling back() and leaving the site.
     function openNoteFromHash() {
         const id = location.hash.slice(1);
-        if (id && document.getElementById(id)) openNote(id);
+        if (id && document.getElementById(id)) openNote(id, 'none');
     }
-    window.addEventListener('hashchange', openNoteFromHash);
+    // Both listeners run the same idempotent router: traversing history
+    // across a fragment change can fire popstate and hashchange together,
+    // and syncModalToLocation() no-ops when the requested note is already
+    // open, so the pair cannot double-handle one navigation.
+    window.addEventListener('hashchange', syncModalToLocation);
 
     /* === SHAREABLE VIEW STATE ==========================================
        Filter, search, topic and view mode live in the query string, so a
@@ -1513,25 +1823,23 @@
         updateGrid();
     }
 
-    function copyViewLink() {
-        const btn = document.getElementById('btn-share');
-        const done = (msg) => {
-            if (!btn) return;
-            const original = btn.dataset.label || btn.textContent.trim();
-            btn.dataset.label = original;
-            btn.textContent = msg;
-            setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
-        };
-        // Two mechanisms, because the modern one is refused more often than
-        // you'd expect: navigator.clipboard needs a secure context (file://
-        // and plain http on a LAN address don't qualify) and can also be
-        // denied outright by permissions policy even on https. The legacy
-        // execCommand path works in several of those cases, so it's a real
-        // fallback rather than a formality.
+    /* Copies `text`, resolving to whether it worked. Two mechanisms, because
+       the modern one is refused more often than you'd expect:
+       navigator.clipboard needs a secure context (file:// and plain http on
+       a LAN address don't qualify) and can also be denied outright by
+       permissions policy even on https. The legacy execCommand path works
+       in several of those cases, so it's a real fallback rather than a
+       formality.
+
+       Shared by the toolbar's Share View chip and the reader's copy-link
+       button: same two failure modes, so the same two mechanisms, written
+       once. Feedback is left to the caller, since a text chip and a 34px
+       icon button can't report success the same way. */
+    function writeToClipboard(text) {
         const legacyCopy = () => {
             try {
                 const ta = document.createElement('textarea');
-                ta.value = location.href;
+                ta.value = text;
                 // Keep it off-screen but focusable; display:none can't be selected.
                 ta.setAttribute('readonly', '');
                 ta.style.position = 'fixed';
@@ -1546,18 +1854,24 @@
                 return false;
             }
         };
-
         if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(location.href).then(
-                () => done('✓ COPIED'),
-                () => done(legacyCopy() ? '✓ COPIED' : '⚠ PRESS ⌘C')
-            );
-        } else {
-            // No async clipboard at all. If the legacy path also fails the
-            // URL is still in the address bar, so say what to do rather than
-            // just reporting a failure the reader can't act on.
-            done(legacyCopy() ? '✓ COPIED' : '⚠ PRESS ⌘C');
+            return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy());
         }
+        return Promise.resolve(legacyCopy());
+    }
+
+    function copyViewLink() {
+        const btn = document.getElementById('btn-share');
+        const done = (msg) => {
+            if (!btn) return;
+            const original = btn.dataset.label || btn.textContent.trim();
+            btn.dataset.label = original;
+            btn.textContent = msg;
+            setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
+        };
+        // If both paths fail the URL is still in the address bar, so say
+        // what to do rather than reporting a failure the reader can't act on.
+        writeToClipboard(location.href).then(ok => done(ok ? '✓ COPIED' : '⚠ PRESS ⌘C'));
     }
 
     function daysAgoLabel(ts) {

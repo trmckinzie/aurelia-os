@@ -569,6 +569,131 @@ body {
     .modal-action:hover::after { width: 0; }
 }
 
+/* === NOTE READER ====================================================
+   The reader modal's own chrome. Everything here is driven by one custom
+   property, --note-accent, which gardentemplate.html's openNote() sets on
+   #modal-panel from the note's type (via the graphColorFor() map the graph
+   view already owns). A custom property rather than a Tailwind utility on
+   purpose: tailwind_build.py scans the rendered HTML under dist, so a class
+   name that only exists once client-side JS has run is invisible to the
+   content scanner and would silently compile to nothing. (Note for anyone
+   editing this comment: a glob containing a star-slash would close it
+   early, which is exactly how this block first broke the build.) The
+   fallback keeps the chrome legible if a type ever fails to resolve. */
+#modal-panel { --note-accent: var(--aurelia-primary); }
+
+/* The header's type dot. Replaces three macOS traffic lights, two of which
+   were inert <div>s wearing the shape of a control. This is the same dot
+   the cards already use for note type (see engine/cards.py), so opening a
+   note continues the card's identity rather than switching vocabulary. */
+.reader-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--note-accent);
+    box-shadow: 0 0 10px var(--note-accent);
+    flex-shrink: 0;
+}
+
+/* The accent rule under the header -- the reader's one full-width piece of
+   type identity, and what makes a deep-dive feel different from a log at a
+   glance. Sits directly above the reading-progress bar. */
+.reader-accent-rule {
+    height: 2px;
+    flex-shrink: 0;
+    background: linear-gradient(90deg,
+        var(--note-accent),
+        color-mix(in srgb, var(--note-accent) 15%, transparent) 60%,
+        transparent);
+}
+
+/* Square icon buttons in the header and footer. 34px, comfortably over the
+   24px floor in WCAG 2.5.8 Target Size (Minimum) -- the close control was
+   a 12x12 dot, half the minimum, with no focus ring at all. */
+.reader-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+    border-radius: var(--aurelia-radius);
+    color: var(--aurelia-text-muted);
+    background: transparent;
+    transition: color var(--dur-2) ease, border-color var(--dur-2) ease,
+                background-color var(--dur-2) ease;
+}
+.reader-icon-btn:hover {
+    color: var(--aurelia-text-main);
+    border-color: var(--aurelia-border-main);
+    background: var(--aurelia-surface-1);
+}
+.reader-icon-btn[data-variant="close"]:hover {
+    color: var(--aurelia-insight);
+    border-color: color-mix(in srgb, var(--aurelia-insight) 55%, transparent);
+    background: color-mix(in srgb, var(--aurelia-insight) 10%, transparent);
+}
+/* Active read-aloud state, so the button reads as "currently speaking"
+   rather than only the label text changing. */
+.reader-icon-btn[aria-pressed="true"] {
+    color: var(--aurelia-primary);
+    border-color: color-mix(in srgb, var(--aurelia-primary) 55%, transparent);
+    background: color-mix(in srgb, var(--aurelia-primary) 10%, transparent);
+}
+
+/* One visible focus ring for every control inside the reader. The dialog
+   had none, which made keyboard use effectively guesswork. :focus-visible
+   so a mouse click doesn't leave a ring behind. */
+.reader-icon-btn:focus-visible,
+.modal-action:focus-visible,
+#modal-panel [role="button"]:focus-visible,
+#modal-panel button:focus-visible {
+    outline: 2px solid var(--note-accent);
+    outline-offset: 2px;
+}
+/* The panel itself takes focus on open (tabindex="-1"). Programmatic focus
+   should move screen-reader attention without drawing a ring around the
+   whole dialog. */
+#modal-panel:focus { outline: none; }
+
+/* The reading column. Replaces `max-w-5xl px-8 py-12` wrapping three
+   separate `max-w-3xl mx-auto` children: one measure, set once, so the
+   note body, the backlinks and the related-by-topic strip stay aligned.
+   68ch lands in the 60-75 character band; the previous 768px column ran to
+   roughly 85 characters at 18px, which is past comfortable for continuous
+   prose. Tables and <pre> already scroll inside the column (see the
+   .obsidian-reader rules in gardentemplate.html), so narrowing it doesn't
+   clip wide content. */
+.reader-column {
+    width: 100%;
+    max-width: 68ch;
+    margin-inline: auto;
+    padding: 3rem 2rem;
+}
+
+/* Phone: a sheet, not a floating window. The panel was 90vw/90vh with 32px
+   of side padding on a 375px screen, and its footer overflowed by 21px --
+   the NEXT button was clipped off the edge and could not be tapped.
+   100dvh rather than 100vh so a mobile browser's collapsing toolbar can't
+   push the footer out of view, which is the same failure by another route. */
+@media (max-width: 639px) {
+    #modal-panel {
+        max-width: 100vw;
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+    .reader-column { padding: 1.75rem 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reader-icon-btn { transition: none; }
+}
+
 .kbd {
     font-family: var(--aurelia-font-mono);
     font-size: 10px;

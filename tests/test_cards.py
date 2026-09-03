@@ -215,6 +215,41 @@ def test_card_title_attribute_is_escaped():
     assert 'data-title="He said &quot;hi&quot;"' in html
 
 
+def test_card_carries_the_type_label_the_reader_displays():
+    # The note reader's header shows the note's type using this attribute.
+    # It is emitted here rather than derived client-side because the label
+    # is NOT a transform of the type slug -- see the pairs below.
+    for note_type, filename, expected in [
+        ("concept", "A.md", "CONCEPT"),
+        ("source/book", "B.md", "LIBRARY"),
+        ("author", "C.md", "PROFILE"),
+        ("discipline", "D.md", "FIELD"),
+        ("gemini-notebook", "E.md", "GEMINI NOTEBOOK"),
+        ("deep-dive", "F.md", "DEEP DIVE"),
+    ]:
+        html = generate_garden_card_html(
+            {"type": note_type, "tags": []}, filename, "note-x", "body", "search")
+        assert f'data-label="{expected}"' in html, note_type
+        # The same label the card face prints, so the reader and the card
+        # can never disagree about what a note is.
+        assert f">{expected}</span>" in html, note_type
+
+
+def test_daily_log_card_carries_its_type_label():
+    # Daily logs are detected by filename shape, not by a `type:` key, so
+    # they reach the label through a different branch than the six above.
+    html = generate_garden_card_html({"tags": []}, "2026-03-07.md", "note-2026-03-07", "body", "s")
+    assert 'data-label="SYS_LOG"' in html
+
+
+def test_card_type_label_is_escaped():
+    # The fallback branch's label is a constant, but the attribute is built
+    # by f-string interpolation like its neighbours -- assert the escaping
+    # path is wired rather than trusting that today's labels stay ASCII.
+    html = generate_garden_card_html({"type": "unknown-type", "tags": []}, "A.md", "note-a", "b", "s")
+    assert 'data-label="NOTE"' in html
+
+
 def test_connection_badge_renders_count_and_pluralises():
     assert "2 links to or from this note" in _connection_badge(2, "border-aurelia-primary")
     assert "1 link to or from this note" in _connection_badge(1, "border-aurelia-primary")
