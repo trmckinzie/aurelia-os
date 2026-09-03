@@ -215,6 +215,37 @@ def test_card_title_attribute_is_escaped():
     assert 'data-title="He said &quot;hi&quot;"' in html
 
 
+def test_card_tags_attribute_is_escaped():
+    # A frontmatter tag carrying a double quote closed data-tags and let
+    # everything after it land on the <article> as real markup -- an event
+    # handler, in the audit's proof-of-concept. Audit finding #22.
+    html = generate_garden_card_html(
+        {"type": "concept", "tags": ['topic/one" onmouseover="alert(1)', "a<b"]},
+        "A.md", "note-a", "b", "s")
+    assert 'data-tags="topic/one&quot; onmouseover=&quot;alert(1) a&lt;b"' in html
+    assert 'onmouseover="alert(1)"' not in html
+    assert "<b" not in html.split('class="', 1)[0]
+
+
+def test_card_type_attribute_is_escaped():
+    # data-type comes from frontmatter `type:` the same way data-tags comes
+    # from `tags:`, so it is the same sink.
+    html = generate_garden_card_html(
+        {"type": 'concept" onmouseover="alert(1)', "tags": []},
+        "A.md", "note-a", "b", "s")
+    assert 'data-type="concept&quot; onmouseover=&quot;alert(1)"' in html
+    assert 'onmouseover="alert(1)"' not in html
+
+
+def test_card_tags_attribute_unchanged_for_ordinary_tags():
+    # Escaping must be a no-op for every real tag in the vault -- the Garden's
+    # filter JS reads this attribute.
+    html = generate_garden_card_html(
+        {"type": "concept", "tags": ["topic/neuroscience", "maturity/seed"]},
+        "A.md", "note-a", "b", "s")
+    assert 'data-tags="topic/neuroscience maturity/seed"' in html
+
+
 def test_card_carries_the_type_label_the_reader_displays():
     # The note reader's header shows the note's type using this attribute.
     # It is emitted here rather than derived client-side because the label

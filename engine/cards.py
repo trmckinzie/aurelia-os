@@ -550,8 +550,19 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # type is added. (The reader's accent *color* needs no equivalent: the
     # template's existing graphColorFor() already maps every type to a live
     # --aurelia-* value for the graph view, so the reader reuses that.)
+    #
+    # data-tags and data-type are escaped for the same reason data-title is:
+    # both come straight out of frontmatter, and a tag or type containing a
+    # double quote closed the attribute and let the rest of the string be
+    # parsed as markup on the <article> itself (audit finding #22). Escaping
+    # is a no-op for every real tag -- the browser decodes entities before the
+    # Garden's filter JS reads dataset.tags, so filtering is unaffected.
+    #
+    # This does NOT close the template-level finding (#21): autoescape is
+    # still off in engine/config.py's Environment(...), so gardentemplate.html
+    # emits every {{ }} raw. That one is held for the user.
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{note_type}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{tags_attr}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">
