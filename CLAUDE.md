@@ -475,3 +475,9 @@ plus a README. Keep it in sync with `engine/`'s actual capabilities when you cha
 its `FACTORY_CONFIG` and generated README have drifted out of sync with reality before (see "Recent
 history" item 4) and it's easy for that to happen again silently, since nothing tests it
 automatically.
+
+## Model routing
+
+Sonnet executes, Opus escalates, Fable only on Travis's explicit say-so. This repo's subagents
+live in `.claude/agents/`; the doctrine they point to is `90_Meta/Model Routing.md` in the dev
+mono-vault containing this repo — personal workflow config, not part of this project.
