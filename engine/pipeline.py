@@ -389,13 +389,43 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             print(f"   ❌ Failed: {output_name} -> {e}")
 
 
-def build_all():
+# Values of AURELIA_SKIP_DROPZONE that mean "no, actually do sort". Anything
+# else non-empty means skip -- `AURELIA_SKIP_DROPZONE=1` is the common form.
+_ENV_FALSE = {"", "0", "false", "no", "off"}
+
+
+def skip_dropzone_env():
+    """True if the environment asks the build not to touch the drop zone."""
+    return os.environ.get("AURELIA_SKIP_DROPZONE", "").strip().lower() not in _ENV_FALSE
+
+
+def build_all(sort_dropzone=None):
+    """Builds the site into dist/.
+
+    organize_assets() is the one step in this pipeline that WRITES to vault/:
+    it moves files out of vault/99_DROP_ZONE into vault/assets/<kind>/. That
+    makes an ordinary `python build.py` a vault mutation, which is a surprise
+    for a command whose job is to produce dist/, and a problem anywhere the
+    vault must stay untouched -- CI, a review checkout, an agent session under
+    a no-vault-edits instruction (audit finding #26).
+
+    sort_dropzone=False (build.py --no-sort, or AURELIA_SKIP_DROPZONE=1) skips
+    it. Everything else in the pipeline only reads the vault, so the rendered
+    site is identical apart from assets still sitting in the drop zone.
+    Leaving it None defers to the environment variable.
+    """
+    if sort_dropzone is None:
+        sort_dropzone = not skip_dropzone_env()
+
     print("------------------------------------------------")
     print("💠 AURELIA OS BUILD ENGINE")
     print("------------------------------------------------")
 
     prepare_dist()
-    organize_assets()
+    if sort_dropzone:
+        organize_assets()
+    else:
+        print("\n⏭️  Drop Zone sort skipped -- vault/ will not be modified")
     sync_vault_assets()
 
     user_config = load_user_config()

@@ -42,6 +42,16 @@ npm install                            # Tailwind CLI
 # Build the site (writes to dist/, rebuilt from scratch every run)
 python build.py
 
+# Build without touching the vault. The Drop Zone sort is the one build step
+# that WRITES to vault/ -- it moves files out of vault/99_DROP_ZONE into
+# vault/assets/<kind>/ -- so a plain `python build.py` mutates the vault as a
+# side effect. Skip it when the working tree must stay clean: CI, a review
+# checkout, or any session under a no-vault-edits rule. dist/ is identical
+# either way; the drop zone just stays unsorted.
+python build.py --no-sort
+AURELIA_SKIP_DROPZONE=1 python build.py     # same thing, for CI            (bash)
+$env:AURELIA_SKIP_DROPZONE=1; python build.py                        # (PowerShell)
+
 # Tests
 python -m pytest tests/ -q
 

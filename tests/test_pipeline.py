@@ -1,3 +1,6 @@
+import pytest
+
+import build
 from engine import pipeline
 from engine.content import dim_dangling_links
 from engine.pipeline import (
@@ -234,3 +237,80 @@ def test_scan_vault_keeps_a_body_horizontal_rule_out_of_the_frontmatter(tmp_path
     garden_cards, _, _ = pipeline._scan_vault()
     assert [c["title"] for c in garden_cards] == ["Ruled"]
     assert "After the rule." in garden_cards[0]["body"]
+
+
+# --- the build can be told not to touch vault/ (audit #26) -----------------
+#
+# organize_assets() moves files inside vault/. These tests must never call the
+# real one, and must never let the real build run -- so every collaborator is
+# stubbed and _scan_vault raises immediately after the decision under test.
+
+class _StopBuild(Exception):
+    """Ends build_all() right after the drop-zone decision."""
+
+
+def _stub_build_steps(monkeypatch):
+    calls = []
+    monkeypatch.setattr(pipeline, "prepare_dist", lambda: calls.append("prepare_dist"))
+    monkeypatch.setattr(pipeline, "organize_assets", lambda: calls.append("organize_assets"))
+    monkeypatch.setattr(pipeline, "sync_vault_assets", lambda: calls.append("sync_vault_assets"))
+
+    def _stop():
+        raise _StopBuild
+
+    monkeypatch.setattr(pipeline, "_scan_vault", _stop)
+    return calls
+
+
+def test_build_all_sorts_the_dropzone_by_default(monkeypatch):
+    monkeypatch.delenv("AURELIA_SKIP_DROPZONE", raising=False)
+    calls = _stub_build_steps(monkeypatch)
+    with pytest.raises(_StopBuild):
+        pipeline.build_all()
+    assert "organize_assets" in calls
+
+
+def test_build_all_no_sort_does_not_call_organize_assets(monkeypatch):
+    monkeypatch.delenv("AURELIA_SKIP_DROPZONE", raising=False)
+    calls = _stub_build_steps(monkeypatch)
+    with pytest.raises(_StopBuild):
+        pipeline.build_all(sort_dropzone=False)
+    assert "organize_assets" not in calls
+    # The rest of the build still happens -- this skips a vault mutation, not
+    # a build step that produces dist/.
+    assert calls == ["prepare_dist", "sync_vault_assets"]
+
+
+def test_build_all_env_var_skips_the_dropzone_sort(monkeypatch):
+    monkeypatch.setenv("AURELIA_SKIP_DROPZONE", "1")
+    calls = _stub_build_steps(monkeypatch)
+    with pytest.raises(_StopBuild):
+        pipeline.build_all()
+    assert "organize_assets" not in calls
+
+
+def test_explicit_sort_dropzone_true_overrides_the_env_var(monkeypatch):
+    monkeypatch.setenv("AURELIA_SKIP_DROPZONE", "1")
+    calls = _stub_build_steps(monkeypatch)
+    with pytest.raises(_StopBuild):
+        pipeline.build_all(sort_dropzone=True)
+    assert "organize_assets" in calls
+
+
+@pytest.mark.parametrize("value", ["", "0", "false", "no", "off", "FALSE"])
+def test_env_var_falsey_values_still_sort(monkeypatch, value):
+    monkeypatch.setenv("AURELIA_SKIP_DROPZONE", value)
+    assert pipeline.skip_dropzone_env() is False
+
+
+@pytest.mark.parametrize("value", ["1", "true", "yes", "anything"])
+def test_env_var_truthy_values_skip(monkeypatch, value):
+    monkeypatch.setenv("AURELIA_SKIP_DROPZONE", value)
+    assert pipeline.skip_dropzone_env() is True
+
+
+def test_build_cli_maps_no_sort_to_sort_dropzone_false():
+    # Absent flag stays None so the env var still gets a say; --no-sort is a
+    # hard False.
+    assert build.parse_args([]).no_sort is False
+    assert build.parse_args(["--no-sort"]).no_sort is True
