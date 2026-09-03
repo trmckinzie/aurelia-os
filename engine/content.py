@@ -190,7 +190,12 @@ _MEDIA_MAP = [
     },
     {
         "header": r"#+\s*.*Flashcards",
-        "regex": r'(?:\[\[)?(assets/.*?[a-zA-Z0-9_\-\.\s]+\.(?:csv))(?:\]\])?',
+        # Bounded to assets/flashcards/ like the three matchers around it.
+        # This used to be `assets/.*?`, and `.` matches `/` -- so a note could
+        # name a .csv anywhere reachable from the build machine and have its
+        # contents embedded in a published page (audit finding #20). The regex
+        # is the first of two gates; resolve_asset() below is the real one.
+        "regex": r'(?:\[\[)?(assets/flashcards/[a-zA-Z0-9_\-\.\s]+\.csv)(?:\]\])?',
         "type": "flashcards",
     },
     {
@@ -264,6 +269,19 @@ def reset_missing_asset_count():
     _missing_assets.clear()
 
 
+def _is_within(candidate, base):
+    """True if candidate resolves to a path inside base.
+
+    realpath first, then compare -- resolving symlinks/junctions matters on a
+    vault that may be synced through one. normcase because Windows paths are
+    case-insensitive and a case-flipped prefix would otherwise slip past.
+    """
+    real_base = os.path.realpath(base)
+    real_candidate = os.path.realpath(candidate)
+    return os.path.normcase(real_candidate).startswith(
+        os.path.normcase(real_base) + os.sep)
+
+
 def resolve_asset(path):
     """Returns the on-disk path for a vault-relative asset ref, or None.
 
@@ -271,11 +289,25 @@ def resolve_asset(path):
     `vault/assets/audio/x.m4a` and is copied to `dist/assets/` by
     assets_pipeline.sync_vault_assets(). The ROOT_DIR fallback is kept from
     the original flashcard resolver, which supported decks committed at the
-    repo root rather than in the vault.
+    repo root rather than in the vault -- the five tracked flashcard CSVs
+    actually live there, so it is load-bearing, not vestigial.
+
+    Resolve-then-verify: the returned path must sit *under* the base it was
+    joined to. A tightened regex alone is not enough, because `assets/` is a
+    prefix, not a boundary -- `assets/flashcards/../../../../secrets.csv` still
+    matches a bounded character class only if the class admits dots and slashes,
+    and containment is what actually settles it (audit finding #20).
     """
     for base in (VAULT_PATH, ROOT_DIR):
         candidate = os.path.join(base, path)
-        if os.path.exists(candidate):
+        if not _is_within(candidate, base):
+            # A note asked for something outside the asset root -- `../../.env`,
+            # or an absolute path os.path.join() happily adopts. Refuse before
+            # touching the filesystem, so this can't be used as an existence
+            # oracle either. Audit finding #20.
+            print(f"   ⚠️  Refusing out-of-tree asset reference: {path}")
+            continue
+        if os.path.isfile(candidate):
             return candidate
     return None
 

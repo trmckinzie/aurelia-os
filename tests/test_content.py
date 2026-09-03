@@ -1,11 +1,15 @@
+import os
+
 import pytest
 
+from engine import content as content_module
 from engine.content import (
     dim_dangling_links,
     get_malformed_count,
     make_id,
     parse_body,
     parse_frontmatter,
+    process_gemini_notebook_media,
     process_wikilinks,
     reset_malformed_count,
     wrap_gemini_notebook_sections,
@@ -324,3 +328,72 @@ def test_wrap_gemini_notebook_sections_only_first_section_starts_open():
 
 def test_wrap_gemini_notebook_sections_no_headers_returns_text_unchanged():
     assert wrap_gemini_notebook_sections("Just plain text, no headers.") == "Just plain text, no headers."
+
+
+# --- asset resolution is containment-checked (audit #20) -------------------
+
+def _asset_sandbox(tmp_path, monkeypatch):
+    """Points resolve_asset() at a throwaway vault/repo pair under tmp_path.
+
+    The real vault is never touched by these tests -- every path below is
+    created inside tmp_path.
+    """
+    vault = tmp_path / "vault"
+    (vault / "assets" / "flashcards").mkdir(parents=True)
+    (vault / "assets" / "flashcards" / "deck.csv").write_text("q,a\n", encoding="utf-8")
+    (vault / "assets" / "flashcards" / "unit-1").mkdir()
+    (vault / "assets" / "flashcards" / "unit-1" / "nested.csv").write_text(
+        "q,a\n", encoding="utf-8")
+
+    # The thing a traversal would be reaching for: outside both bases.
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "secrets.csv").write_text("user,password\n", encoding="utf-8")
+
+    monkeypatch.setattr(content_module, "VAULT_PATH", str(vault))
+    monkeypatch.setattr(content_module, "ROOT_DIR", str(tmp_path / "repo"))
+    (tmp_path / "repo").mkdir()
+    return vault, outside
+
+
+def test_resolve_asset_returns_a_legitimate_asset(tmp_path, monkeypatch):
+    vault, _ = _asset_sandbox(tmp_path, monkeypatch)
+    resolved = content_module.resolve_asset("assets/flashcards/deck.csv")
+    assert resolved is not None
+    assert os.path.samefile(resolved, vault / "assets" / "flashcards" / "deck.csv")
+
+
+def test_resolve_asset_allows_a_nested_subdirectory(tmp_path, monkeypatch):
+    # Containment must not mean "one level deep only".
+    vault, _ = _asset_sandbox(tmp_path, monkeypatch)
+    resolved = content_module.resolve_asset("assets/flashcards/unit-1/nested.csv")
+    assert resolved is not None
+    assert os.path.samefile(
+        resolved, vault / "assets" / "flashcards" / "unit-1" / "nested.csv")
+
+
+def test_resolve_asset_refuses_a_dotdot_escape(tmp_path, monkeypatch, capsys):
+    _, outside = _asset_sandbox(tmp_path, monkeypatch)
+    escape = "assets/flashcards/../../../outside/secrets.csv"
+    # Sanity: the file it is reaching for really does exist, so a None result
+    # is the containment check and not just a missing file.
+    assert (outside / "secrets.csv").exists()
+    assert content_module.resolve_asset(escape) is None
+    assert "Refusing out-of-tree asset reference" in capsys.readouterr().out
+
+
+def test_resolve_asset_refuses_an_absolute_path(tmp_path, monkeypatch):
+    # os.path.join(base, "/etc/passwd") silently discards base.
+    _, outside = _asset_sandbox(tmp_path, monkeypatch)
+    assert content_module.resolve_asset(str(outside / "secrets.csv")) is None
+
+
+def test_flashcard_regex_no_longer_matches_a_traversal_path():
+    # The regex is the outer gate: `assets/.*?` let `.` match `/`, so any
+    # .csv on the build machine was addressable. Now bounded to
+    # assets/flashcards/ like the audio/video/image matchers.
+    body = "# Flashcards\nassets/../../../etc/secrets.csv\n"
+    out = process_gemini_notebook_media(body)
+    assert "secrets.csv" in out          # left as inert prose
+    assert "<div" not in out             # no widget rendered
+    assert "snap-center" not in out      # ... and no deck embedded
