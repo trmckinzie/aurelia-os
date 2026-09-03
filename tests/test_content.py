@@ -1,3 +1,5 @@
+import pytest
+
 from engine.content import (
     dim_dangling_links,
     get_malformed_count,
@@ -160,6 +162,42 @@ def test_parse_body_returns_content_after_frontmatter():
 
 def test_parse_body_no_frontmatter_returns_whole_content():
     assert parse_body("Just body, no frontmatter") == "Just body, no frontmatter"
+
+
+# --- publish: is an allowlist, not truthiness (audit #23) ------------------
+
+@pytest.mark.parametrize("raw", ["true", "True", "TRUE", "yes", "'1'", '"true"'])
+def test_publish_accepts_recognized_true_values(raw):
+    assert parse_frontmatter(f"---\npublish: {raw}\n---\nbody")["publish"] is True
+
+
+@pytest.mark.parametrize("raw", ["false", "False", "'false'", '"no"', "'0'", "no"])
+def test_publish_rejects_recognized_false_values(raw):
+    assert parse_frontmatter(f"---\npublish: {raw}\n---\nbody")["publish"] is False
+
+
+def test_publish_quoted_false_string_does_not_publish():
+    # The regression itself: bool("false") is True.
+    content = "---\npublish: \"false\"\ntype: concept\n---\nbody"
+    assert parse_frontmatter(content)["publish"] is False
+
+
+def test_publish_unrecognized_value_does_not_publish_and_warns(capsys):
+    content = "---\npublish: maybe later\n---\nbody"
+    assert parse_frontmatter(content)["publish"] is False
+    assert "Unrecognized publish value" in capsys.readouterr().out
+
+
+def test_publish_recognized_false_does_not_warn(capsys):
+    # Every unpublished note in the vault says `publish: false`; warning on
+    # those would bury the warning that matters.
+    parse_frontmatter("---\npublish: false\n---\nbody")
+    assert "Unrecognized publish value" not in capsys.readouterr().out
+
+
+def test_publish_missing_key_defaults_to_false_without_warning(capsys):
+    assert parse_frontmatter("---\ntype: concept\n---\nbody")["publish"] is False
+    assert "Unrecognized publish value" not in capsys.readouterr().out
 
 
 # --- frontmatter fence is a whole line, not a substring (audit #24) ---------

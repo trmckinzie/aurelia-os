@@ -40,6 +40,38 @@ def reset_malformed_count():
     _malformed_count = 0
 
 
+# Values that make a note publish. PyYAML already turns an unquoted `true`
+# (and YAML 1.1's `yes`/`on`) into Python True, so a *string* only ever gets
+# here when the author quoted it or Templater left it unfilled.
+_PUBLISH_TRUE = {"true", "yes", "1"}
+# Unambiguous "no". Listed separately from "unrecognized" so the warning below
+# fires on `publish: maybe`, not on every unpublished note in the vault.
+_PUBLISH_FALSE = {"false", "no", "0", "none", "null", ""}
+
+
+def _coerce_publish(value):
+    """Decides whether a frontmatter `publish:` value means publish.
+
+    Was `bool(value)`, which is true for *any* non-empty string -- so
+    `publish: "false"` published the note, the exact inversion of what the
+    author wrote. The publish flag is the whole rendering gate for this site
+    (see CLAUDE.md's privacy model), so it gets an allowlist, not truthiness.
+    """
+    if value is True or value is False:
+        return value
+    if value is None:
+        return False
+
+    token = str(value).strip().lower()
+    if token in _PUBLISH_TRUE:
+        return True
+    if token in _PUBLISH_FALSE:
+        return False
+
+    print(f"   ⚠️  Unrecognized publish value {value!r} -- treating as unpublished")
+    return False
+
+
 def parse_frontmatter(content):
     """Parses the YAML frontmatter block of a note into a metadata dict.
 
@@ -69,7 +101,7 @@ def parse_frontmatter(content):
         return meta
 
     meta.update(parsed)
-    meta["publish"] = bool(meta.get("publish", False))
+    meta["publish"] = _coerce_publish(meta.get("publish", False))
 
     tags = meta.get("tags") or []
     if isinstance(tags, str):
