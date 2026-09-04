@@ -40,7 +40,18 @@ jobs:
         run: npm ci
 
       - name: Run Build Script
-        run: python build.py
+        # --no-sort, always, in CI. Without it the build runs
+        # organize_assets(), the one step that WRITES to vault/: it moves
+        # everything under vault/99_DROP_ZONE/ into vault/assets/<kind>/,
+        # and sync_vault_assets() then copies audio/video/images/flashcards
+        # from there into dist/ with no `publish:` gate of any kind. So an
+        # unsorted file sitting in the drop zone at push time gets published
+        # to the live site by CI, having been reviewed by nobody.
+        #
+        # engine/pipeline.py's build_all() docstring names CI as exactly the
+        # place this must not happen. The runner's checkout is a throwaway,
+        # so the vault mutation itself is invisible -- only its output ships.
+        run: python build.py --no-sort
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 import build
@@ -357,6 +359,26 @@ def test_env_var_falsey_values_still_sort(monkeypatch, value):
 def test_env_var_truthy_values_skip(monkeypatch, value):
     monkeypatch.setenv("AURELIA_SKIP_DROPZONE", value)
     assert pipeline.skip_dropzone_env() is True
+
+
+def test_ci_workflow_builds_with_the_vault_guard_on():
+    """CI must pass --no-sort.
+
+    Without it the deploy job runs organize_assets() in the runner, moving
+    vault/99_DROP_ZONE/ into vault/assets/<kind>/ -- which sync_vault_assets()
+    then copies into the published dist/ with no `publish:` gate. The guard
+    exists (this module's build_all docstring names CI as the reason); it
+    just was not being used, and nothing but this test notices.
+    """
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    workflow = os.path.join(root, ".github", "workflows", "deploy.yml")
+    with open(workflow, encoding="utf-8") as f:
+        body = f.read()
+
+    build_lines = [ln.strip() for ln in body.splitlines() if "build.py" in ln and "#" not in ln]
+    assert build_lines, "no build.py invocation found in the deploy workflow"
+    for line in build_lines:
+        assert "--no-sort" in line, f"CI build must pass --no-sort: {line}"
 
 
 def test_build_cli_maps_no_sort_to_sort_dropzone_false():

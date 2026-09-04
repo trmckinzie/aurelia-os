@@ -53,9 +53,15 @@ On Windows, `build.py`'s own `print()` calls use emoji; if you ever invoke engin
 `python -c "..."` instead of through `build.py`, you may need `PYTHONUTF8=1` in the environment,
 since `build.py` itself reconfigures stdout to UTF-8 but a bare one-off script won't.
 
-**CI (`.github/workflows/deploy.yml`) only runs `python build.py`** — it does not run `pytest` or
-`pyflakes`. Both exist and are used during development, but a broken test or a new lint warning
-will not fail the build or block a deploy. Run them manually before committing.
+**CI (`.github/workflows/deploy.yml`) only runs `python build.py --no-sort`** — it does not run
+`pytest` or `pyflakes`. Both exist and are used during development, but a broken test or a new lint
+warning will not fail the build or block a deploy. Run them manually before committing.
+
+The `--no-sort` there is not optional and not cosmetic. Without it CI runs `organize_assets()`,
+which moves everything under `vault/99_DROP_ZONE/` into `vault/assets/<kind>/` — and
+`sync_vault_assets()` then copies those into `dist/` with **no `publish:` gate**. An unsorted file
+sitting in the drop zone at push time would be published to the live site by CI, reviewed by
+nobody. Keep the flag on any workflow that builds this site.
 
 ## Architecture
 
