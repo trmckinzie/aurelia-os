@@ -29,7 +29,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (140 tests as of this writing)
+python -m pytest tests/ -q             # full suite (229 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -72,9 +72,12 @@ real logic lives in `engine/`:
   nothing else: the CSS generator, the Tailwind config, and the switcher UI all derive from these
   keys.
 
-  `env` is built as `Environment(loader=FileSystemLoader(TEMPLATE_DIR))` — **autoescape is off**
-  (Jinja's default), so every `{{ }}` in every template emits raw. See "Known gaps" before
-  assuming template output is escaped.
+  `env` is built with **`autoescape=True`** (audit #21 — it used to take Jinja's default of off,
+  so every `{{ }}` emitted raw). It is unconditional rather than `select_autoescape()`, so a
+  future non-HTML template has to opt out deliberately instead of inheriting "unescaped" from a
+  filename extension. Nothing in the templates carries `|safe` any more: the two producers that
+  legitimately emit raw output return `markupsafe.Markup` instead — see `cards.py` and
+  `textutils.dumps_for_script_tag()` — and note-authored HTML goes through `sanitize.py`.
 - **`content.py`** — markdown-level parsing: `parse_frontmatter()` (real YAML via PyYAML, not regex),
   `parse_body()`, `make_id()` (filename → slug), `process_wikilinks()` (`[[Target]]` /
   `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`), and
@@ -94,7 +97,18 @@ real logic lives in `engine/`:
   prefers rendered `<button onclick="openNote('id')">` form, falls back to deriving an id from raw
   `[[brackets]]` via `make_id`), `section_after_header`, `first_blockquote_after`,
   `dumps_for_script_tag` (JSON-dumps but escapes `</script` so embedded JSON can't break out of its
-  `<script>` tag).
+  `<script>` tag; returns `Markup`, since a `<script>` block is exactly the sink it vouches for —
+  the same JSON is *not* safe in HTML text or an attribute).
+
+  Note that `strip_html`/`clean_text` are **not** output encoders and never were: the regex is
+  `<[^>]+>`, so an unterminated `<img src=x onerror=…` passes through untouched and the next `>`
+  in the surrounding markup closes it. Escape at the sink; don't rely on these.
+- **`sanitize.py`** — `sanitize_note_html()`, the allowlist sanitizer (nh3) for note-authored HTML,
+  applied by `pipeline._scan_vault()` to the **raw** note body. Read the module docstring before
+  moving that call: it has to run before `process_wikilinks()` and the media/section passes, since
+  those inject the engine's own `onclick` buttons and `<audio>`/`<img>` widgets that a sanitizer
+  would strip. It also explains why the cleaner must *strip* rather than escape (`openNote()`
+  decodes entities through a `<textarea>` before handing the body to `marked.parse()`).
 - **`cards.py`** — `generate_garden_card_html()` is the single card-rendering function; it branches
   on note type (daily-log, concept, source, author, discipline, gemini-notebook, deep-dive, default) and
   calls the matching extractor. `link_pill()` renders one linked-item pill: a real `openNote()` button if the
@@ -430,32 +444,44 @@ knowing so you don't "fix" something that was a deliberate decision:
   instant-open for a fetch-on-click UX, which wasn't chosen without discussing the tradeoff first.
 - No automated accessibility, performance (Lighthouse), or visual-regression testing.
 
-### Open security findings (from the 2026-08 audit — none of these are fixed)
+### Security findings from the 2026-08 audit
 
-These are real and reproducible, confirmed by running payloads through the actual functions. The
-practical risk is bounded (single-author site, content the author pastes in himself), but there is
-**no output-encoding layer anywhere** in the generator — the one `escapeHtml()` in
-`assets/js/utils.js` is client-side and covers roughly six of ~40 sinks.
+These were all real and reproducible, confirmed by running payloads through the actual functions.
+Some have since been fixed; the header used to say "none of these are fixed" and went stale as they
+were. **Check `git log --grep "audit #"` for the current state rather than trusting this list** —
+each fix names its finding number in the commit subject.
 
-- **Jinja2 autoescape is off** (`engine/config.py`, the `Environment(...)` call). Every `{{ }}` in
-  every template emits raw. The `|safe` filters in `gardentemplate.html` were never opting out of
-  anything, because nothing was being escaped to begin with. Turning it on is one line and is the
-  single highest-leverage fix — but expect to audit every existing `|safe` afterwards.
-- **Note bodies are injected raw into the live DOM.** `gardentemplate.html`'s `#data-storage` block
-  emits `{{ card.body | safe }}` per note. `class="hidden"` is `display:none`, which stops
-  *rendering*, not *parsing* — a `<script>` in a note executes at page load. `openNote()` then
-  passes the same content through `marked.parse()`, which does not sanitize (the `sanitize` option
-  was removed in marked v5).
-- **Attribute breakout via frontmatter tags.** `cards.py` builds `data-tags`/`data-search` by raw
-  f-string interpolation; a tag containing `"` closes the attribute and lands a live event handler
-  on the `<article>`. Wikilink *labels* and CSV cell contents reach HTML unescaped by the same
-  route. (Prose fields are safe — the extractors run `clean_text()` on those — which is exactly why
-  this went unnoticed.)
-- **Path traversal in the flashcard resolver.** `content.py`'s flashcards matcher uses `assets/.*?`
-  where the other three media matchers use a bounded character class, so `.*?` matches `/`. Combined
-  with an `os.path.join` that has no containment check, a note can name a `.csv` anywhere on the
-  build machine and have its contents embedded in a published page. Fix is resolve-then-verify with
-  `os.path.realpath`, not a tighter regex alone.
+The line that used to sit here — "there is **no output-encoding layer anywhere** in the generator"
+— is no longer true. There is one now, in two halves: Jinja2 autoescape for everything that is
+plain text, and `engine/sanitize.py` for the one value that is genuinely note-authored HTML. The
+client-side `escapeHtml()` in `assets/js/utils.js` is still only a client-side helper, not that
+layer.
+
+- **~~Jinja2 autoescape is off~~ — FIXED (#21).** `engine/config.py` now builds the environment
+  with `autoescape=True`. The two producers that legitimately emit raw output say so by returning
+  `markupsafe.Markup` — `cards.generate_garden_card_html()` and
+  `textutils.dumps_for_script_tag()` — rather than every template restating it with `|safe`, and
+  the seven `|safe` filters that were there are gone. Turning it on also forced the sinks behind
+  the card to be closed: `clean_text()`/`strip_html()` only strip *closed* tags (`<[^>]+>`), so an
+  unterminated `<img src=x onerror=…` went through untouched and was completed by the next `>` in
+  the card markup. The `<h3>` title, the prose fields and `link_pill()`'s wikilink label are now
+  escaped at their own interpolation sites.
+- **~~Note bodies are injected raw into the live DOM~~ — FIXED (#21).** `gardentemplate.html`'s
+  `#data-storage` block still emits each note's body, and `class="hidden"` is still `display:none`
+  (which stops *rendering*, not *parsing*), and `marked.parse()` still does not sanitize — but the
+  body is now run through `engine/sanitize.py` (nh3, allowlist) at build time. Read that module
+  before touching this path: it documents why it must run on the *raw* note body rather than the
+  finished one (the engine injects its own `onclick` buttons and media widgets afterwards, which a
+  sanitizer would eat), and why `openNote()`'s `<textarea>` round-trip means the cleaner has to
+  *strip* rather than escape. One deliberate cost: HTML-looking text inside a fenced code block is
+  removed, since sanitizing necessarily precedes markdown parsing.
+- **Attribute breakout via frontmatter tags** — `data-tags`/`data-type` fixed under #22, and
+  wikilink *labels* under #21. **CSV cell contents are still unescaped** (`_render_flashcards()` in
+  `content.py` interpolates `q`/`a` straight into HTML). Note that the parenthetical this bullet
+  used to carry — "prose fields are safe, the extractors run `clean_text()` on those" — was wrong;
+  see the autoescape entry above for why.
+- **Path traversal in the flashcard resolver** — fixed under #20 (`resolve_asset()` now does
+  resolve-then-verify with `os.path.realpath`, and the regex is bounded to `assets/flashcards/`).
 - **The build cannot fail.** `pipeline.py`'s `_render_pages()` catches every render exception per
   page, prints `❌`, and returns normally — so `python build.py` exits 0 and CI deploys a `dist/`
   that is silently missing a page. Same for the malformed-frontmatter counter: it warns, then exits
