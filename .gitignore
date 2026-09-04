@@ -46,6 +46,18 @@ tailwind.config.js
 # --- IGNORE BUILD ARTIFACTS (CRITICAL) ---
 dist/
 
+# --- NEVER COMMIT ASSET DOCUMENTS (CRITICAL) ---
+# This repo is public. assets/docs/ is one of the two paths that held the
+# author's resume in 2026-08, when the build copied the whole assets/ tree
+# into dist/ unfiltered and GitHub Pages served it live (see CLAUDE.md,
+# "Recent history" item 9). The folder is empty and stays that way.
+#
+# The build's own allowlist (PUBLISHABLE_ASSET_DIRS in
+# engine/assets_pipeline.py) is the other half of this: that one keeps such
+# a file off the *website*, this one keeps it out of the *repository*, and
+# in a public repo the repository is published too. Neither alone is enough.
+/assets/docs/
+
 # --- IGNORE AGENT-DRAFTED NOTES (see aurelia-mcp-server/ARCHITECTURE.md Rule 4) ---
 # Nothing auto-commits to the garden -- draft_note (aurelia-mcp-server) writes
 # here; promoting a note into 10_GARDEN is a deliberate human move.

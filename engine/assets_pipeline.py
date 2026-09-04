@@ -25,6 +25,24 @@ _AUDIO_CODEC_ARGS = {
     ".mp3": ["-c:a", "libmp3lame"],
 }
 
+# Repo-root assets/ subfolders that may be published. An allowlist, not a
+# list of known-bad names: prepare_dist() copies into dist/, dist/ is what
+# GitHub Pages serves, and a subfolder added later would otherwise be
+# published by default -- silently, and at the moment CI next runs.
+#
+# It mirrors sync_vault_assets()'s media kinds below, plus the two folders
+# holding the site's own front-end code. The codebase already knew filtering
+# was needed here; it was just applied on the vault path only.
+#
+# `docs` is why this is not hypothetical. assets/docs/ is the second path
+# that held the author's resume in 2026-08, when an unfiltered copytree
+# served it (alongside a transcript, IRB paperwork and coursework) live from
+# the Pages site -- see CLAUDE.md, "Recent history" item 9. The folder still
+# exists, empty. It is gitignored now as well, and both halves are needed:
+# .gitignore does nothing about a file already committed, and this list does
+# nothing about a file already public in the repo.
+PUBLISHABLE_ASSET_DIRS = frozenset({"css", "js", "images", "audio", "video", "flashcards"})
+
 
 def _compress_audio(src_path, dest_path, ext):
     """Re-encodes src_path to a smaller mono file at dest_path.
@@ -142,9 +160,28 @@ def prepare_dist():
 
     src_assets = os.path.join(ROOT_DIR, "assets")
     dst_assets = os.path.join(OUTPUT_DIR, "assets")
-    if os.path.exists(src_assets):
-        shutil.copytree(src_assets, dst_assets, dirs_exist_ok=True)
-        print("   + System assets copied.")
+    if not os.path.isdir(src_assets):
+        return
+
+    os.makedirs(dst_assets, exist_ok=True)
+    copied, withheld = [], []
+    for entry in sorted(os.listdir(src_assets)):
+        src = os.path.join(src_assets, entry)
+        # Case-folded because NTFS is case-insensitive and its casing is
+        # sticky: a folder first created as `CSS/` keeps that name forever.
+        # Folding an *allowlist* can only keep a legitimately-named folder
+        # working -- `Docs/` still isn't `docs`, so nothing new is admitted.
+        if entry.casefold() in PUBLISHABLE_ASSET_DIRS and os.path.isdir(src):
+            shutil.copytree(src, os.path.join(dst_assets, entry), dirs_exist_ok=True)
+            copied.append(entry)
+        else:
+            withheld.append(entry)
+
+    print(f"   + System assets copied: {', '.join(copied) if copied else '(none)'}")
+    if withheld:
+        # Named rather than silently dropped: someone who put a file here
+        # expecting it on the site needs to see why it isn't.
+        print(f"   > Withheld from dist/ (not a publishable asset folder): {', '.join(withheld)}")
 
 
 def sync_vault_assets():
