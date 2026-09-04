@@ -462,7 +462,7 @@
              (engine/cards.py) still equalises cards within a row. -->
         <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
             {% for card in cards %}
-                {{ card.html|safe }}
+                {{ card.html }}
             {% endfor %}
         </div>
 
@@ -692,12 +692,12 @@
     // Reverse-link index (note_id -> [{id, title}, ...] of notes that link to
     // it), built at build time in engine/pipeline.py._build_backlinks_index.
     // Powers the modal's "Referenced By" section.
-    const BACKLINKS_INDEX = {{ backlinks_index | safe }};
+    const BACKLINKS_INDEX = {{ backlinks_index }};
 
     // Node/edge data for the knowledge-graph view (id/title/type per note,
     // deduped undirected edges), built at build time in
     // engine/pipeline.py._build_graph_index.
-    const GRAPH_INDEX = {{ graph_index | safe }};
+    const GRAPH_INDEX = {{ graph_index }};
 
     // note_id -> full lowercased body text, powering the in-page deep search
     // (see checkVisibility). Built in pipeline._build_deep_search_index and

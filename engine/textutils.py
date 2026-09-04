@@ -8,6 +8,8 @@ need to recognize both the rendered <button> form and, as a fallback, raw
 import json
 import re
 
+from markupsafe import Markup
+
 _HTML_TAG_RE = re.compile(r'<[^>]+>')
 _WIKILINK_RE = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
 _BUTTON_ID_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
@@ -74,8 +76,15 @@ def dumps_for_script_tag(obj, **kwargs):
     A literal "</script" substring inside a JSON string value (e.g. a note
     title someone pastes from the web) would otherwise close the surrounding
     <script> tag early and let the rest of the page be parsed as HTML.
+
+    Returns Markup, because that is exactly what this function is for: it is
+    the one place that vouches for a JSON payload being safe in its sink, so
+    it says so, and the templates no longer need `|safe` on every embed
+    (audit finding #21). The guarantee is scoped to a <script> block -- JSON
+    escaped this way is NOT safe in an HTML text or attribute context, and
+    every current caller embeds it in a <script>.
     """
-    return json.dumps(obj, **kwargs).replace('</', '<\\/')
+    return Markup(json.dumps(obj, **kwargs).replace('</', '<\\/'))
 
 
 def escape_attr(value):

@@ -1,6 +1,8 @@
 """The Card Factory: renders the HTML card for a single note, by type."""
 import re
 
+from markupsafe import Markup, escape
+
 from engine.extractors import (
     extract_author_data,
     extract_concept_data,
@@ -40,7 +42,17 @@ def link_pill(target_id, label, classes, known_ids):
     never look clickable unless it actually is -- `classes` (each card
     type's own pill styling) should not include its own cursor-* class,
     since this owns that.
+
+    `label` is note-derived -- it is the display half of a [[Target|Label]]
+    wikilink, or a comma-separated item from a Related: line -- and lands in
+    HTML text position, so it is escaped here. It was not before (audit
+    finding #21's "wikilink labels reach HTML unescaped" sibling), and it has
+    to be for generate_garden_card_html() to honestly return Markup.
+    `target_id` needs no escaping of its own: it only ever comes from
+    content.make_id(), whose output is `note-` plus [a-z0-9-], so it cannot
+    carry the quote that would break out of the onclick's JS string.
     """
+    label = escape(label)
     if target_id and target_id in known_ids:
         # `pill-live` adds the hover treatment (see main.css) -- a live link
         # should look reactive, not just colored, since color alone is what
@@ -154,7 +166,10 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     if re.match(r'\d{4}-\d{2}-\d{2}', filename):
         note_type = "daily-bridge"
     meta["type"] = note_type
-    title = filename.replace(".md", "").replace("_", " ")
+    raw_title = filename.replace(".md", "").replace("_", " ")
+    # Escaped for the <h3> below. escape_attr() already covered data-title,
+    # but the visible heading was raw.
+    title = escape(raw_title)
     maturity_slug = _maturity_slug(meta)
     # Space-joined so the client can filter with a plain
     # `dataset.tags.split(' ').includes(tag)` -- powers the Garden's
@@ -183,7 +198,18 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     if "daily" in note_type or "log" in note_type:
         color = "border-aurelia-tertiary"
         mission, source, cues, summary = extract_log_data(body_content)
-        summary = truncate(summary, 120)
+        # Escaped after truncating, never before: escaping first and cutting
+        # afterwards can slice an entity in half ("&am"). Same order at every
+        # prose site below.
+        #
+        # These fields already pass through textutils.clean_text()/strip_html()
+        # in the extractors, which is why they were assumed safe -- but that
+        # strips `<[^>]+>`, i.e. only *closed* tags. An unterminated
+        # `<img src=x onerror=alert(1)` survives it untouched and is then
+        # completed by the very next `>` in the surrounding markup, so the
+        # tag-stripper is not an output encoder and never was.
+        mission = escape(mission)
+        summary = escape(truncate(summary, 120))
 
         src_id, src_label = source
         source_html = link_pill(src_id, src_label[:40], "hover:underline decoration-dotted", known_ids)
@@ -224,7 +250,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     elif "concept" in note_type:
         color = "border-aurelia-primary"
         definition, links, tensions = extract_concept_data(body_content)
-        definition = truncate(definition, 160)
+        definition = escape(truncate(definition, 160))
 
         links_html = render_items(
             links,
@@ -291,7 +317,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
                     break
         status = {"reading": "READING", "queued": "QUEUED", "archive": "ARCHIVED"}.get(status_lifecycle, "ARCHIVED")
 
-        argument = truncate(argument, 150)
+        argument = escape(truncate(argument, 150))
 
         auth_id, auth_label = author
         author_html = link_pill(auth_id, auth_label, "hover:underline decoration-dotted", known_ids)
@@ -329,7 +355,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     elif "author" in note_type:
         color = "border-aurelia-secondary"
         context, works, concepts = extract_author_data(body_content)
-        context = truncate(context, 150)
+        context = escape(truncate(context, 150))
 
         concepts_html = render_items(
             concepts,
@@ -372,7 +398,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     elif "discipline" in note_type:
         color = "border-aurelia-accent"
         scope, pillars, canon, tensions = extract_discipline_data(body_content)
-        scope = truncate(scope, 160)
+        scope = escape(truncate(scope, 160))
 
         pillars_html = render_items(
             pillars,
@@ -430,7 +456,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     elif "gemini-notebook" in note_type:
         color = "border-aurelia-info"
         overview, active_features = extract_gemini_notebook_data(body_content)
-        overview = truncate(overview, 160)
+        overview = escape(truncate(overview, 160))
 
         feature_icons = {
             'audio': '🎙️', 'video': '🎥', 'mindmap': '🧠',
@@ -476,8 +502,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     elif "deep-dive" in note_type or "deep_dive" in note_type:
         color = "border-aurelia-insight"
         premise, synthesis, related = extract_deep_dive_data(body_content)
-        premise = truncate(premise, 140)
-        synthesis = truncate(synthesis, 160)
+        premise = escape(truncate(premise, 140))
+        synthesis = escape(truncate(synthesis, 160))
 
         related_html = render_items(
             related,
@@ -516,7 +542,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         color = "border-aurelia-border"
         clean_body = re.sub(r'<[^>]+>', '', body_content)
         clean_body = re.sub(r'[*#_`\[\]]', '', clean_body)
-        blurb = clean_body[:200] + "..."
+        blurb = escape(clean_body[:200] + "...")
         card_content = f"""<div class="flex flex-col h-full"><p class="text-sm text-aurelia-muted font-sans leading-relaxed line-clamp-5">{blurb}</p></div>"""
         icon = "📄"; label = "NOTE"
 
@@ -558,11 +584,15 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # is a no-op for every real tag -- the browser decodes entities before the
     # Garden's filter JS reads dataset.tags, so filtering is unaffected.
     #
-    # This does NOT close the template-level finding (#21): autoescape is
-    # still off in engine/config.py's Environment(...), so gardentemplate.html
-    # emits every {{ }} raw. That one is held for the user.
+    # Autoescape is now ON (engine/config.py, audit finding #21), so the
+    # template no longer needs -- and no longer has -- a `|safe` on this
+    # value. The Markup() wrapper at the bottom of this function is what
+    # keeps the card raw, and it is a claim this function has to earn: every
+    # note-derived value interpolated above is escaped at its own site
+    # (title, the prose fields, link_pill's label) or is a literal from this
+    # module (icon, label, the Tailwind class strings).
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">
@@ -583,4 +613,4 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
         {card_content}
     </article>
     """
-    return html_card
+    return Markup(html_card)

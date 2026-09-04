@@ -346,7 +346,7 @@
        note is opened. REVIEW_SEED carries only id/title/maturity (no note
        bodies) -- see engine/pipeline.py._build_lobby_context. */
     (function() {
-        const REVIEW_SEED = {{ review_seed | safe }};
+        const REVIEW_SEED = {{ review_seed }};
         const REVIEW_INTERVAL_DAYS = { seed: 1, growing: 5, evergreen: 14 };
         const DEFAULT_INTERVAL_DAYS = 3;
 
@@ -541,13 +541,26 @@
         // DATA MATRIX (STANDARDIZED)
 
         // DATA MATRIX (DYNAMIC FROM CONFIG)
+        //
+        // `| tojson` rather than hand-written quotes around a bare
+        // interpolation.
+        // These land inside a JS string literal in a <script>, which is a
+        // raw-text element: the browser does NOT decode HTML entities there,
+        // so HTML-escaping (what autoescape does -- see engine/config.py)
+        // would render a value containing & or ' as a literal "&amp;" /
+        // "&#39;" on the page, and would not have stopped a value containing
+        // a double quote from closing the string and executing. tojson emits
+        // its own quotes and \u-escapes <, >, & and ', which is correct for
+        // this sink. Every current user_config.json value is plain ASCII
+        // prose, so today's output is byte-identical -- this is about the
+        // first value that isn't.
         const techStack = [
             {% for tech in config.tech_stack %}
-            { 
-                name: "{{ tech.name }}", 
-                type: "{{ tech.type }}", 
-                desc: "{{ tech.desc }}", 
-                icon: "{{ tech.icon }}" 
+            {
+                name: {{ tech.name | tojson }},
+                type: {{ tech.type | tojson }},
+                desc: {{ tech.desc | tojson }},
+                icon: {{ tech.icon | tojson }}
             },
             {% endfor %}
         ];

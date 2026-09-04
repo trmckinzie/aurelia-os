@@ -265,7 +265,7 @@
            color/font/radius/glass/scanline/cursor value in the page reads
            from a CSS custom property (see assets/css/main.css and
            theme-vars.css), so this takes effect instantly with no reload. */
-        const AVAILABLE_THEMES = {{ available_themes_json | safe }};
+        const AVAILABLE_THEMES = {{ available_themes_json }};
         const THEME_STORAGE_KEY = 'aurelia_theme';
 
         function currentTheme() {
@@ -370,7 +370,7 @@
 
         /* --- COMMAND PALETTE LOGIC --- */
         // 1. Ingest the Python-generated Index (Safe injection)
-        const SYSTEM_INDEX = {{ search_index | safe }}; 
+        const SYSTEM_INDEX = {{ search_index }}; 
         
         const cmdBackdrop = document.getElementById('cmd-backdrop');
         const cmdPanel = document.getElementById('cmd-panel');

@@ -9,7 +9,23 @@ VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system", "templates")
 OUTPUT_DIR = os.path.join(ROOT_DIR, "dist")
 
-env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
+# autoescape=True, not Jinja's default of False (audit finding #21). With it
+# off, every {{ }} in every template emitted raw HTML, so any vault-derived
+# value -- a note title, a tag, a frontmatter field -- reaching a template
+# was an injection sink, and the `|safe` filters dotted around the templates
+# were opting out of nothing.
+#
+# It is unconditional rather than select_autoescape(): every template here is
+# HTML, and a future non-HTML one should have to opt out deliberately rather
+# than inherit "unescaped" from a filename extension.
+#
+# The two things that legitimately must stay raw now say so at the point they
+# are produced, which is the honest place for it:
+#   - engine/cards.py's generate_garden_card_html() returns Markup
+#   - engine/textutils.py's dumps_for_script_tag() returns Markup
+# Note-derived HTML (a note's rendered body) is neither: it is sanitized
+# through engine/sanitize.py before it is marked safe.
+env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=True)
 
 # --- THEME ENGINE V3: RUNTIME-SWITCHABLE (see engine/theming.py) ---
 # Every value here becomes a CSS custom property (--aurelia-*), generated
