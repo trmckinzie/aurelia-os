@@ -76,3 +76,9 @@ vault/20_AURELIA/
 # allowlist Claude Code appends to as you approve tools, so it accumulates
 # local paths and command lines nobody meant to publish from a public repo.
 .claude/settings.local.json
+
+# .env variants. Only bare `.env` was covered, so .env.local and
+# .env.production were committable in a PUBLIC repo. Found by the /repo-check
+# ignore-rule probe.
+.env.*
+!.env.example
