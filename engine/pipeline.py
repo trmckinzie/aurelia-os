@@ -438,7 +438,20 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
                 f.write(rendered_html)
             print(f"   ✅ Deployed: {output_name}")
         except Exception as e:
+            # Fail the build. This used to print and continue, which meant
+            # `python build.py` exited 0 with a page missing or half-written
+            # -- and CI, which only runs the build, deployed that dist/ to
+            # the live site under a green check. A template typo has already
+            # been swallowed here once mid-session, with the build reporting
+            # success.
+            #
+            # Raising on the first failure is deliberate: the remaining
+            # pages are not worth rendering into a dist/ that must not ship,
+            # and a partial site is the outcome being prevented. The message
+            # is re-stated on the exception rather than left only in the
+            # printed line, so it survives into CI's failure summary.
             print(f"   ❌ Failed: {output_name} -> {e}")
+            raise RuntimeError(f"Render failed for {output_name}: {e}") from e
 
 
 # Values of AURELIA_SKIP_DROPZONE that mean "no, actually do sort". Anything

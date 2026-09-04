@@ -361,6 +361,53 @@ def test_env_var_truthy_values_skip(monkeypatch, value):
     assert pipeline.skip_dropzone_env() is True
 
 
+# --- a broken render must fail the build ----------------------------------
+
+def _render_args():
+    """Minimal arguments for _render_pages(); the render itself is stubbed."""
+    return dict(
+        user_config={}, garden_cards=[], json_index="{}", backlinks_json="{}",
+        graph_json="{}", lobby_stats={}, review_seed_json="{}", deep_search_json="{}",
+    )
+
+
+def test_render_failure_raises_instead_of_exiting_zero(tmp_path, monkeypatch):
+    """A template error used to print and continue.
+
+    `python build.py` then exited 0 with a page missing, and CI -- which
+    runs only the build -- deployed that dist/ under a green check. A
+    previous session's template typo was swallowed exactly here.
+    """
+    monkeypatch.setattr(pipeline, "OUTPUT_DIR", str(tmp_path))
+
+    class BrokenEnv:
+        def get_template(self, name):
+            raise ValueError("unexpected '%' in template")
+
+    monkeypatch.setattr(pipeline, "env", BrokenEnv())
+
+    with pytest.raises(RuntimeError, match="index.html"):
+        pipeline._render_pages(**_render_args())
+
+
+def test_render_failure_stops_before_writing_the_remaining_pages(tmp_path, monkeypatch):
+    # A half-rendered dist/ is the outcome being prevented, so the first
+    # failure aborts rather than pressing on to the next page.
+    monkeypatch.setattr(pipeline, "OUTPUT_DIR", str(tmp_path))
+
+    class BrokenEnv:
+        def get_template(self, name):
+            raise ValueError("boom")
+
+    monkeypatch.setattr(pipeline, "env", BrokenEnv())
+
+    with pytest.raises(RuntimeError):
+        pipeline._render_pages(**_render_args())
+
+    assert not (tmp_path / "garden.html").exists()
+    assert not (tmp_path / "404.html").exists()
+
+
 def test_ci_workflow_builds_with_the_vault_guard_on():
     """CI must pass --no-sort.
 

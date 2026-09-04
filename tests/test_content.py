@@ -397,3 +397,64 @@ def test_flashcard_regex_no_longer_matches_a_traversal_path():
     assert "secrets.csv" in out          # left as inert prose
     assert "<div" not in out             # no widget rendered
     assert "snap-center" not in out      # ... and no deck embedded
+
+
+# --- flashcard CSV cells are markup, not decoration ------------------------
+#
+# _render_flashcards() builds HTML *after* sanitize_note_html() has run on
+# the note body, so nothing else ever cleans these cells: whatever the CSV
+# says went into the published page verbatim.
+
+def _deck(tmp_path, monkeypatch, *rows):
+    deck = tmp_path / "assets" / "flashcards"
+    deck.mkdir(parents=True)
+    (deck / "deck.csv").write_text("\n".join(rows) + "\n", encoding="utf-8")
+    monkeypatch.setattr(content_module, "VAULT_PATH", str(tmp_path))
+    monkeypatch.setattr(content_module, "ROOT_DIR", str(tmp_path))
+    return content_module._render_flashcards("assets/flashcards/deck.csv")
+
+
+def test_flashcard_cells_keep_their_text(tmp_path, monkeypatch):
+    out = _deck(tmp_path, monkeypatch, "What is a Zettel?,An atomic note")
+    assert "What is a Zettel?" in out
+    assert "An atomic note" in out
+
+
+def test_flashcard_cell_cannot_inject_a_tag(tmp_path, monkeypatch):
+    out = _deck(tmp_path, monkeypatch, '"<img src=x onerror=alert(1)>","answer"')
+    assert "onerror" not in out
+    assert "<img" not in out
+
+
+def test_flashcard_answer_cell_cannot_inject_a_script(tmp_path, monkeypatch):
+    out = _deck(tmp_path, monkeypatch, '"question","<script>alert(1)</script>"')
+    assert "<script" not in out
+    assert "alert(1)" not in out  # clean_content_tags drops the payload, not just the tag
+
+
+def test_flashcard_cell_cannot_break_out_of_the_card_markup(tmp_path, monkeypatch):
+    out = _deck(tmp_path, monkeypatch, '"</p></div><div onclick=steal()>pwned","a"')
+    assert "onclick=steal()" not in out
+    assert "<div onclick" not in out
+
+
+def test_flashcard_cell_escaped_payload_is_stripped_not_reflected(tmp_path, monkeypatch):
+    """The reason this strips instead of escaping.
+
+    openNote() assigns the stored body to a <textarea>'s innerHTML, which
+    decodes character references, and hands the result to marked.parse(),
+    which does not sanitize. So a cell containing a *pre-escaped* payload
+    would come back as a live tag if we merely re-escaped it -- and a cell
+    we escaped ourselves would too.
+    """
+    out = _deck(tmp_path, monkeypatch, '"&lt;img src=x onerror=alert(1)&gt;","a"')
+    assert "onerror" not in out
+    assert "&lt;img" not in out
+
+
+def test_flashcard_missing_file_message_cannot_inject(tmp_path, monkeypatch):
+    monkeypatch.setattr(content_module, "VAULT_PATH", str(tmp_path))
+    monkeypatch.setattr(content_module, "ROOT_DIR", str(tmp_path))
+    out = content_module._render_flashcards("assets/flashcards/<img src=x onerror=alert(1)>.csv")
+    assert "onerror" not in out
+    assert "<img" not in out

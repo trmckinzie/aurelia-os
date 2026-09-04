@@ -6,6 +6,7 @@ import re
 import yaml
 
 from engine.config import VAULT_PATH, ROOT_DIR
+from engine.sanitize import sanitize_to_text
 
 
 def make_id(text):
@@ -322,7 +323,10 @@ def _note_missing_asset(path):
 def _render_flashcards(path):
     csv_path = resolve_asset(path)
     if csv_path is None:
-        return f'<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV NOT FOUND: {path}</div>'
+        # Same treatment as the cells: these two diagnostic branches also
+        # emit into the published page.
+        return ('<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV NOT FOUND: '
+                f'{sanitize_to_text(path)}</div>')
 
     cards_html = ""
     try:
@@ -331,7 +335,15 @@ def _render_flashcards(path):
         for i, row in enumerate(rows):
             if len(row) < 2:
                 continue
-            q, a = row[0], row[1]
+            # A CSV cell is plain text by contract, and this HTML is built
+            # after sanitize_note_html() has already run on the note body
+            # (pipeline._scan_vault), so nothing else ever cleans it: the
+            # cells went into the published page exactly as written. They
+            # reach two sinks -- the raw #data-storage block parsed at page
+            # load, and marked.parse() via openNote()'s entity-decoding
+            # <textarea>. Escaping only closes the first; see
+            # sanitize.sanitize_to_text.
+            q, a = sanitize_to_text(row[0]), sanitize_to_text(row[1])
             cards_html += f"""
 <div class="snap-center shrink-0 w-64 h-40 relative group perspective-1000 cursor-pointer" onclick="this.querySelector('.inner-card').classList.toggle('rotate-y-180')">
 <div class="inner-card w-full h-full relative preserve-3d transition-transform duration-500 shadow-lg">
@@ -347,7 +359,8 @@ def _render_flashcards(path):
 </div>
 </div>"""
     except Exception as e:
-        return f'<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV ERROR: {e}</div>'
+        return ('<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV ERROR: '
+                f'{sanitize_to_text(str(e))}</div>')
 
     return f"""
 <div class="my-6">

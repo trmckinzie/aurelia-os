@@ -95,3 +95,30 @@ def sanitize_note_html(text):
         return text
     return html.unescape(nh3.clean(html.unescape(text),
                                    clean_content_tags=_CLEAN_CONTENT_TAGS))
+
+
+def sanitize_to_text(text):
+    """Strips ALL markup out of an untrusted fragment, keeping its text.
+
+    For values that are plain text by contract and get interpolated into
+    HTML the engine builds itself -- currently the question/answer cells of
+    a flashcard CSV (engine/content.py's _render_flashcards).
+
+    Why not html.escape()? Because of the same `<textarea>` round-trip the
+    module docstring describes: openNote() decodes character references
+    before handing the text to marked.parse(), which does not sanitize. An
+    escaped `&lt;img src=x onerror=...&gt;` therefore comes back as a live
+    tag on the way into innerHTML. Escaping closes the page-load sink and
+    leaves the open-the-note sink wide open, so this strips, exactly as
+    sanitize_note_html() does and for exactly the same reason.
+
+    Same unescape-clean-unescape pair, same termination argument: what nh3
+    re-escapes is only the `<` characters the HTML parser already refused to
+    treat as a tag start (`a < b`), so decoding them once more cannot
+    produce a tag.
+    """
+    if not text:
+        return text
+    return html.unescape(nh3.clean(html.unescape(text),
+                                   tags=set(),
+                                   clean_content_tags=_CLEAN_CONTENT_TAGS))
