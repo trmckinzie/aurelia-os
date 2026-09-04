@@ -583,9 +583,20 @@
 
     </div>
 
+    <!-- card.body is a note's rendered markdown, and is emitted raw on
+         purpose -- escaping it would publish every note as literal markup.
+         It is note-derived, so it is the one value here that is neither
+         plain text nor engine-generated: it is run through an allowlist
+         sanitizer (engine/sanitize.py) before it ever reaches this page,
+         and arrives already marked safe, hence no `|safe` here.
+
+         Note that `class="hidden"` is display:none, which stops rendering,
+         not parsing -- anything in here is parsed by the browser at page
+         load whether or not a reader ever opens the note. That is why the
+         sanitizer runs at build time rather than in openNote(). -->
     <div id="data-storage" style="display: none;">
         {% for card in cards %}
-            <div id="{{ card.id }}" class="hidden">{{ card.body | safe }}</div>
+            <div id="{{ card.id }}" class="hidden">{{ card.body }}</div>
         {% endfor %}
     </div>
 

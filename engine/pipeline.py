@@ -9,6 +9,8 @@ import os
 import re
 from collections import Counter
 
+from markupsafe import Markup
+
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
 from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env, load_user_config
@@ -26,6 +28,7 @@ from engine.content import (
     reset_missing_asset_count,
     wrap_gemini_notebook_sections,
 )
+from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_themes, default_theme_slug, generate_theme_css
@@ -74,7 +77,16 @@ def _scan_vault():
             if not meta.get("publish"):
                 continue
 
-            body = parse_body(content)
+            # Sanitize here -- before process_wikilinks() and the media/section
+            # passes below, not after. Those passes inject the engine's OWN
+            # HTML into the body (openNote() buttons, <audio>/<video>/<img>
+            # widgets, flashcard flip handlers, <details> wrappers), which
+            # carries exactly what a sanitizer removes: event handlers and
+            # tags outside nh3's allowlist. Cleaning the finished body would
+            # strip the site's own features; cleaning the raw note first
+            # cleans the untrusted half and leaves the trusted half alone.
+            # See engine/sanitize.py. Audit finding #21.
+            body = sanitize_note_html(parse_body(content))
             note_type = str(meta.get("type", "unknown")).lower().strip()
 
             if "project" in note_type or "protocol" in note_type or "transmission" in note_type:
@@ -138,7 +150,14 @@ def _scan_vault():
         )
         garden_cards.append({
             "html": card_html,
-            "body": dim_dangling_links(p["processed_body"], known_ids),
+            # Marked safe here rather than inside dim_dangling_links(), which
+            # is a generic string transform and cannot vouch for anything.
+            # This is the end of the chain that can: the note body was
+            # sanitized on the way in (see sanitize_note_html above), and
+            # everything added since -- wikilink buttons, media widgets,
+            # section wrappers, this dimming pass -- is HTML the engine wrote
+            # itself.
+            "body": Markup(dim_dangling_links(p["processed_body"], known_ids)),
             "id": p["note_id"],
             "title": p["title"],
             "link": f"garden.html#{p['note_id']}",

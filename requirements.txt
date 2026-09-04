@@ -1,2 +1,5 @@
 Jinja2==3.1.6
 PyYAML==6.0.3
+# Allowlist HTML sanitizer for note-authored markup (engine/sanitize.py).
+# Build-time, not dev-only: the site cannot be built without it.
+nh3==0.3.7
