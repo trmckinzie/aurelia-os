@@ -9,6 +9,7 @@ from engine.pipeline import (
     _build_lobby_context,
     _degree_from_edges,
 )
+from tests.test_paths import make_dir_link
 
 
 def _card(note_id, title, body, tags=None):
@@ -211,6 +212,39 @@ def test_scan_vault_skips_20_aurelia_even_when_publish_is_true(tmp_path, monkeyp
     _write_note(vault, "20_AURELIA/nested/Deeper Draft.md", "publish: true\ntype: concept")
 
     assert _scan(vault, monkeypatch) == {"Real Note"}
+
+
+def test_scan_vault_does_not_publish_through_a_directory_junction(tmp_path, monkeypatch):
+    """A junction planted under vault/ must not publish external notes.
+
+    On Windows os.path.islink() is False for a junction, so os.walk descends
+    it with followlinks=False and every .md under it looks like an ordinary
+    vault note -- `publish: true` and all. Creating one needs no elevation.
+    The containment check on the resolved path is what stops it; see
+    engine/paths.py. Verified against the unfixed code: the walk reached
+    External Secret.md and published it.
+    """
+    vault = tmp_path / "vault"
+    _write_note(vault, "10_GARDEN/Real Note.md", "publish: true\ntype: concept")
+
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "External Secret.md").write_text(
+        "---\npublish: true\ntype: concept\n---\nNot vault content.\n", encoding="utf-8")
+    make_dir_link(vault / "10_GARDEN" / "linked", outside)
+
+    assert _scan(vault, monkeypatch) == {"Real Note"}
+
+
+def test_scan_vault_still_reads_a_junction_that_stays_inside_the_vault(tmp_path, monkeypatch):
+    # Containment, not a blanket ban on links: a vault synced or organized
+    # through a junction that lands back inside itself still publishes.
+    vault = tmp_path / "vault"
+    _write_note(vault, "10_GARDEN/Real Note.md", "publish: true\ntype: concept")
+    _write_note(vault, "10_GARDEN/nested/Inner.md", "publish: true\ntype: concept")
+    make_dir_link(vault / "alias", vault / "10_GARDEN" / "nested")
+
+    assert _scan(vault, monkeypatch) == {"Real Note", "Inner"}
 
 
 def test_scan_vault_reads_frontmatter_past_a_triple_dash_value(tmp_path, monkeypatch):

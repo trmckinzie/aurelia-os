@@ -8,6 +8,7 @@ import hashlib
 import os
 import re
 from collections import Counter
+from pathlib import Path
 
 from markupsafe import Markup
 
@@ -28,6 +29,7 @@ from engine.content import (
     reset_missing_asset_count,
     wrap_gemini_notebook_sections,
 )
+from engine.paths import escapes
 from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
@@ -60,16 +62,37 @@ def _scan_vault():
     reset_missing_asset_count()
     pending = []
 
+    # Resolved once, outside the walk: every note found below has to prove it
+    # really lives under this directory. os.walk's followlinks=False is no
+    # defense on Windows, where a junction is not a symlink -- see
+    # engine/paths.py. Whatever a note's `publish:` flag says, a file outside
+    # the vault was never reviewed as vault content, and this build's output
+    # is a public website.
+    vault_root = Path(VAULT_PATH).resolve()
+
     for root, dirs, files in os.walk(VAULT_PATH):
         # Prune in place so os.walk never descends -- cheaper than filtering
-        # per-file, and it covers nested subfolders for free.
-        dirs[:] = [d for d in dirs if d not in UNPUBLISHED_DIRS]
+        # per-file, and it covers nested subfolders for free. Directories
+        # that resolve outside the vault are pruned for the same reason, and
+        # here rather than per-file so the walk never enters them at all.
+        dirs[:] = [
+            d for d in dirs
+            if d not in UNPUBLISHED_DIRS
+            and not escapes(os.path.join(root, d), vault_root)
+        ]
 
         for filename in sorted(files):
             if not filename.endswith(".md"):
                 continue
 
             filepath = os.path.join(root, filename)
+            if escapes(filepath, vault_root):
+                # A file-level link that points out of the tree. The pruning
+                # above cannot catch this one: os.walk lists it as a plain
+                # file of the directory it sits in.
+                print(f"   ⚠️  Refusing note that resolves outside the vault: {filepath}")
+                continue
+
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read()
 
