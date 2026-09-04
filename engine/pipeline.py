@@ -48,6 +48,16 @@ from engine.theming import available_themes, default_theme_slug, generate_theme_
 # frontmatter must not thereby publish itself.
 UNPUBLISHED_DIRS = {"20_AURELIA"}
 
+# Compared case-folded, because this is a *denylist* on a case-insensitive
+# filesystem -- the direction where a mismatch fails open. NTFS matches
+# `20_Aurelia` to `20_AURELIA` when opening the folder but reports whatever
+# casing it was first created with, and that casing is sticky: nothing in
+# normal use ever changes it back. So a folder created once as `20_Aurelia`
+# (by a tool, a restore from backup, a hand-typed mkdir) would pass this
+# prune forever, silently, and every agent draft under it would become
+# publishable with no error anywhere. Folding is the whole fix.
+_UNPUBLISHED_DIRS_FOLDED = frozenset(d.casefold() for d in UNPUBLISHED_DIRS)
+
 
 def _scan_vault():
     """Walks the vault, building a card for every published garden note.
@@ -77,7 +87,7 @@ def _scan_vault():
         # here rather than per-file so the walk never enters them at all.
         dirs[:] = [
             d for d in dirs
-            if d not in UNPUBLISHED_DIRS
+            if d.casefold() not in _UNPUBLISHED_DIRS_FOLDED
             and not escapes(os.path.join(root, d), vault_root)
         ]
 

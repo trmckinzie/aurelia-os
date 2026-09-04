@@ -214,6 +214,22 @@ def test_scan_vault_skips_20_aurelia_even_when_publish_is_true(tmp_path, monkeyp
     assert _scan(vault, monkeypatch) == {"Real Note"}
 
 
+@pytest.mark.parametrize("folder", ["20_Aurelia", "20_aurelia", "20_AureliA"])
+def test_scan_vault_prunes_the_agent_draft_folder_whatever_its_casing(folder, tmp_path, monkeypatch):
+    """NTFS is case-insensitive and its casing is sticky.
+
+    If 20_AURELIA is ever first created as 20_Aurelia -- by a tool, a
+    restore, a hand-typed mkdir -- an exact-match prune fails open from then
+    on, permanently and with no error, and agent-drafted notes carrying
+    `publish: true` become publishable.
+    """
+    vault = tmp_path / "vault"
+    _write_note(vault, "10_GARDEN/Real Note.md", "publish: true\ntype: concept")
+    _write_note(vault, f"{folder}/Agent Draft.md", "publish: true\ntype: concept")
+
+    assert _scan(vault, monkeypatch) == {"Real Note"}
+
+
 def test_scan_vault_does_not_publish_through_a_directory_junction(tmp_path, monkeypatch):
     """A junction planted under vault/ must not publish external notes.
 
