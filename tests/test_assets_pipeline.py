@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from engine import assets_pipeline
 from engine.assets_pipeline import _compress_audio
+from tests.test_paths import make_dir_link
 
 
 def _write(path, size_bytes):
@@ -155,6 +156,60 @@ def test_prepare_dist_still_publishes_a_case_variant_of_an_allowlisted_folder(tm
 
     assert (dist / "assets" / "CSS" / "main.css").exists()
     assert not (dist / "assets" / "Docs").exists()
+
+
+def test_prepare_dist_does_not_copy_through_a_junction_into_dist(tmp_path, monkeypatch):
+    """shutil.copytree() follows a junction; dist/ is served to the internet.
+
+    Its symlinks=True option would not have helped: a junction is not a
+    symlink, so os.path.islink() is False for one. Verified against the
+    unfixed code -- external.txt landed in dist/assets/images/.
+    """
+    root, dist = _fake_root(tmp_path, monkeypatch, {"images/real.png": "img"})
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "external.txt").write_text("PERSONAL", encoding="utf-8")
+    make_dir_link(root / "assets" / "images" / "smuggled", outside)
+
+    assets_pipeline.prepare_dist()
+
+    assert (dist / "assets" / "images" / "real.png").exists()
+    assert not (dist / "assets" / "images" / "smuggled").exists()
+    assert not list(dist.rglob("external.txt"))
+
+
+def test_prepare_dist_does_not_follow_a_junction_standing_in_for_a_whole_asset_folder(tmp_path, monkeypatch):
+    root, dist = _fake_root(tmp_path, monkeypatch, {"css/main.css": "body{}"})
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "external.js").write_text("PERSONAL", encoding="utf-8")
+    make_dir_link(root / "assets" / "js", outside)
+
+    assets_pipeline.prepare_dist()
+
+    assert (dist / "assets" / "css" / "main.css").exists()
+    assert not list(dist.rglob("external.js"))
+
+
+def test_sync_vault_assets_does_not_publish_a_linked_media_folder(tmp_path, monkeypatch):
+    # os.path.isfile() follows links too, so the vault-side copy needed the
+    # same rule as the repo-side one.
+    vault = tmp_path / "vault"
+    (vault / "assets" / "audio").mkdir(parents=True)
+    (vault / "assets" / "audio" / "real.mp3").write_text("audio", encoding="utf-8")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "external.mp3").write_text("PERSONAL", encoding="utf-8")
+    make_dir_link(vault / "assets" / "images", outside)
+
+    dist = tmp_path / "dist"
+    monkeypatch.setattr(assets_pipeline, "VAULT_PATH", str(vault))
+    monkeypatch.setattr(assets_pipeline, "OUTPUT_DIR", str(dist))
+
+    assets_pipeline.sync_vault_assets()
+
+    assert (dist / "assets" / "audio" / "real.mp3").exists()
+    assert not list(dist.rglob("external.mp3"))
 
 
 def test_assets_docs_is_also_gitignored():

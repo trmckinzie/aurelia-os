@@ -2,8 +2,10 @@
 import os
 import shutil
 import subprocess
+from pathlib import Path
 
 from engine.config import OUTPUT_DIR, ROOT_DIR, VAULT_PATH
+from engine.paths import escapes, is_link
 
 # Gemini Notebook audio exports run 30-80MB+ each and go straight into git,
 # which never shrinks on its own. Rather than rewriting existing history
@@ -139,6 +141,37 @@ def organize_assets():
     print(f"   > Organization Complete. Sorted {moved_count} files.")
 
 
+def _copy_contained_tree(src, dst, base_resolved):
+    """Copies src/ into dst/, refusing any entry that leaves base_resolved.
+
+    shutil.copytree() cannot be used here. It follows a directory junction
+    and copies the *target's* contents into dist/, and its symlinks=True
+    option is no help, because a junction is not a symlink -- os.path.islink()
+    is False for one (see engine/paths.py). dist/ is what GitHub Pages
+    serves, so "copy whatever this link points at" hands the decision about
+    what goes on the internet to whoever planted the link.
+
+    Links are skipped outright rather than followed-and-checked, even when
+    they resolve back inside the tree: assets/ contains none, following one
+    buys nothing, and a junction aimed at an ancestor would recurse until
+    the path length gave out. `escapes()` stays as the backstop for anything
+    is_link() cannot recognize on an older interpreter.
+    """
+    os.makedirs(dst, exist_ok=True)
+    for entry in sorted(os.listdir(src)):
+        source = os.path.join(src, entry)
+        target = os.path.join(dst, entry)
+
+        if is_link(source) or escapes(source, base_resolved):
+            print(f"   ⚠️  Not published (link, or resolves outside assets/): {source}")
+            continue
+
+        if os.path.isdir(source):
+            _copy_contained_tree(source, target, base_resolved)
+        elif os.path.isfile(source):
+            shutil.copy2(source, target)
+
+
 def prepare_dist():
     """Creates the clean dist folder and copies system assets (CSS/JS/images)."""
     print(f"\n📦 INITIALIZING BUILD TARGET: {OUTPUT_DIR}...")
@@ -164,6 +197,7 @@ def prepare_dist():
         return
 
     os.makedirs(dst_assets, exist_ok=True)
+    assets_root = Path(src_assets).resolve()
     copied, withheld = [], []
     for entry in sorted(os.listdir(src_assets)):
         src = os.path.join(src_assets, entry)
@@ -171,8 +205,8 @@ def prepare_dist():
         # sticky: a folder first created as `CSS/` keeps that name forever.
         # Folding an *allowlist* can only keep a legitimately-named folder
         # working -- `Docs/` still isn't `docs`, so nothing new is admitted.
-        if entry.casefold() in PUBLISHABLE_ASSET_DIRS and os.path.isdir(src):
-            shutil.copytree(src, os.path.join(dst_assets, entry), dirs_exist_ok=True)
+        if entry.casefold() in PUBLISHABLE_ASSET_DIRS and os.path.isdir(src) and not is_link(src):
+            _copy_contained_tree(src, os.path.join(dst_assets, entry), assets_root)
             copied.append(entry)
         else:
             withheld.append(entry)
@@ -193,14 +227,22 @@ def sync_vault_assets():
     if not os.path.exists(source_root):
         return
 
+    # Same containment rule as prepare_dist(): os.path.isfile() follows a
+    # link, so without this a single symlink or junction dropped into
+    # vault/assets/audio/ publishes whatever it points at.
+    assets_root = Path(source_root).resolve()
+
     for folder in ["audio", "video", "images", "flashcards"]:
         src = os.path.join(source_root, folder)
         dst = os.path.join(public_root, folder)
         os.makedirs(dst, exist_ok=True)
 
         if os.path.exists(src):
-            for f in os.listdir(src):
+            for f in sorted(os.listdir(src)):
                 s_file = os.path.join(src, f)
+                if is_link(s_file) or escapes(s_file, assets_root):
+                    print(f"   ⚠️  Not published (link, or resolves outside vault/assets/): {s_file}")
+                    continue
                 if os.path.isfile(s_file):
                     shutil.copy2(s_file, os.path.join(dst, f))
 
