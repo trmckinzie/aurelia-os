@@ -27,10 +27,16 @@ company, so the plan is to move the site to a personal professional domain (work
 framing give way to web design, cognitive psychology, digital ergonomics, and Travis's professional
 roles. What has landed so far is the plumbing: `user_config.json` has a `site` block (`name`,
 `nav_label`, `tagline`, `domain`) that `base.html` reads for the nav brand, `<title>`, and
-canonical URL, and a non-empty `site.domain` makes the build write `dist/CNAME`. The Lobby's hero,
-manifesto modal, and the terminal-flavored chrome copy (`SEARCH THE CORTEX`, `TOTAL_NODES`, and
-so on) are **not yet rewritten** — that is the next pass. The `aurelia-*` CSS class names and
-`--aurelia-*` custom properties are internal identifiers, not branding; leave them alone.
+canonical URL, and a non-empty `site.domain` makes the build write `dist/CNAME`. The Lobby, the
+shared chrome in `base.html`, the 404 page, and the search-index seed entries were rewritten in a
+second pass (2026-09-05): the "AURELIA" manifesto modal and the operator-bio modal are gone (the
+About page replaced both), the Lobby shows a profile card fed from `profile.json`, and the
+terminal-voice copy (`SYSTEM_READY`, `NEURAL_LOADOUT`, `NODES CONNECTED`, and so on) is plain
+English. **The Garden page's own chrome copy (`SEARCH_DATABASE...`, `TOTAL_NODES`, `CMD://`) is
+still the old voice** — `gardentemplate.html` was mid-edit in another session when the pass ran,
+so it was deliberately left for a third pass. The `aurelia-*` CSS class names, `--aurelia-*`
+custom properties, JS identifiers, and localStorage keys are internal identifiers, not branding;
+leave them alone.
 
 ## Commands
 

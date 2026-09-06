@@ -332,14 +332,14 @@ def test_nav_links_to_about_on_index_garden_and_about():
     # heavy to stand up here.
     chrome = render_404()
     assert chrome.count('href="about.html"') >= 2, "desktop + mobile nav entries"
-    assert "02_ABOUT" in chrome
+    assert ">ABOUT</a>" in chrome
 
     about = render_about()
     assert 'href="about.html" data-nav-link data-active' in about
 
     lobby = render_index()
-    assert 'href="about.html" class="btn btn-ghost group"' in lobby
-    assert "ABOUT THE ARCHITECT" in lobby
+    assert 'href="about.html" class="btn btn-primary group"' in lobby
+    assert "About me" in lobby
 
 
 def test_nav_indicator_script_is_not_hardcoded_to_two_links():
@@ -391,13 +391,11 @@ def test_brand_label_comes_from_config():
     branded = render_about()
     assert "AL<span" in branded
     assert "AURELIA_OS<span" not in branded
-    assert "AL_INDEX" in branded
 
     # A config predating the `site` block (the factory clone writes one) must
     # still render -- degraded to the old hardcoded brand, not to an error.
     legacy = render_about(config=make_config(include_site=False))
     assert "AURELIA_OS<span" in legacy
-    assert "AURELIA_INDEX" in legacy
     assert 'rel="canonical"' not in legacy
 
 

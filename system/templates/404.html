@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}SYSTEM_FAILURE{% endblock %}
-{% block nav_title %}ERROR_404{% endblock %}
+{% block title %}Page not found{% endblock %}
+{% block nav_title %}404{% endblock %}
 
 {% block content %}
 <div class="hud-grid min-h-[60vh] flex flex-col items-center justify-center text-center px-4 relative overflow-hidden">
@@ -11,16 +11,15 @@
     <div class="surface relative border border-aurelia-border rounded-theme px-7 py-6 my-10 text-left max-w-md">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-secondary opacity-70"></span>
         <span aria-hidden="true" class="bracket-mark text-aurelia-secondary"></span>
-        <h2 class="display-md text-aurelia-text mb-3">CRITICAL_SYSTEM_ERROR</h2>
-        <p class="text-sm text-aurelia-muted font-mono leading-relaxed">
-            &gt; TARGET_NOT_FOUND<br>
-            &gt; The requested node does not exist in the Aurelia file system.<br>
-            &gt; Please reroute to a valid active page.
+        <h2 class="display-md text-aurelia-text mb-3">Page not found</h2>
+        <p class="text-sm text-aurelia-muted leading-relaxed">
+            There&#39;s nothing at this address. It may have moved, or the link may be
+            out of date.
         </p>
     </div>
 
     <a href="index.html" class="btn btn-secondary group">
-        <span>INITIATE_SYSTEM_REBOOT</span>
+        <span>Back to home</span>
         <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
     </a>
 </div>

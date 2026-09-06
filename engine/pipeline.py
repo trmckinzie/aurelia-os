@@ -319,8 +319,14 @@ def _build_lobby_context(garden_cards, graph_index):
 
 def _build_search_index(garden_cards, profile):
     master_index = [
-        {"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"},
-        {"title": "The Garden // Input", "url": "garden.html", "type": "SYSTEM", "tags": ["notes", "writing"], "desc": "Digital Garden"},
+        {"title": "Home", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Start page"},
+        {
+            "title": "Garden",
+            "url": "garden.html",
+            "type": "SYSTEM",
+            "tags": ["notes", "writing"],
+            "desc": "Published notes: concepts, sources, authors, deep dives",
+        },
         {
             "title": "About // " + profile["identity"]["name"],
             "url": "about.html",
@@ -422,7 +428,12 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
     pages = [
-        ("pages/indextemplate.html", "index.html", {"stats": lobby_stats, "review_seed": review_seed_json}),
+        # `profile` also goes to the Lobby: its first module card is a short
+        # profile summary that links through to about.html, read from the
+        # same profile.json rather than duplicated into user_config.json.
+        ("pages/indextemplate.html", "index.html", {
+            "stats": lobby_stats, "review_seed": review_seed_json, "profile": profile,
+        }),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
             "search_index_version": search_index_version,

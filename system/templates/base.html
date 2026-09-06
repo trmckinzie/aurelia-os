@@ -119,13 +119,13 @@
             <div id="nav-links" class="hidden md:flex items-center gap-10 relative h-full">
 
                 <a href="index.html" data-nav-link {% if active_page == 'index' %}data-active{% endif %}
-                   class="nav-link h-full flex items-center {% if active_page == 'index' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">00_LOBBY</a>
+                   class="nav-link h-full flex items-center {% if active_page == 'index' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">HOME</a>
 
                 <a href="garden.html" data-nav-link {% if active_page == 'garden' %}data-active{% endif %}
-                   class="nav-link h-full flex items-center {% if active_page == 'garden' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">01_GARDEN</a>
+                   class="nav-link h-full flex items-center {% if active_page == 'garden' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
 
                 <a href="about.html" data-nav-link {% if active_page == 'about' %}data-active{% endif %}
-                   class="nav-link h-full flex items-center {% if active_page == 'about' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">02_ABOUT</a>
+                   class="nav-link h-full flex items-center {% if active_page == 'about' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
 
                 <span id="nav-indicator" class="nav-indicator" aria-hidden="true"></span>
 
@@ -150,9 +150,9 @@
         </div>
 
         <div id="mobile-menu" class="mobile-menu md:hidden flex flex-col gap-1 px-6 bg-aurelia-bg/95 border-t border-aurelia-border/40">
-            <a href="index.html" class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">00_LOBBY</a>
-            <a href="garden.html" class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">01_GARDEN</a>
-            <a href="about.html" class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">02_ABOUT</a>
+            <a href="index.html" class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">HOME</a>
+            <a href="garden.html" class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
+            <a href="about.html" class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
             <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left field-label text-aurelia-muted">🔍 SEARCH // ⌘K</button>
             <div id="mobile-theme-menu" class="flex flex-col gap-1 pt-2 mt-2 mb-4 border-t border-aurelia-border/40 normal-case tracking-normal"></div>
         </div>
@@ -168,10 +168,10 @@
                 <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_8px_currentColor] text-aurelia-primary"></div>
                 <span class="text-aurelia-primary">{{ site.get('name', config.system_name) }}</span>
             </div>
-            <div class="text-aurelia-text normal-case tracking-normal font-mono text-xs">// {{ config.author.bio_short }}</div>
+            <div class="text-aurelia-text normal-case tracking-normal font-mono text-xs">{{ config.author.bio_short }}</div>
             <div class="flex gap-6">
                 <span class="text-aurelia-primary">{{ config.system_version }}</span>
-                <span>SECURE</span>
+                <span>NO TRACKING</span>
             </div>
         </div>
     </footer>
@@ -183,7 +183,7 @@
 
             <div class="flex items-center px-4 border-b border-aurelia-border gap-3">
                 <span class="text-aurelia-primary text-xl font-mono shrink-0">&gt;</span>
-                <input type="text" id="cmd-input" placeholder="Initiate Neural Query..." class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-none placeholder-[var(--aurelia-text-muted)]">
+                <input type="text" id="cmd-input" placeholder="Search notes and pages&hellip;" class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-none placeholder-[var(--aurelia-text-muted)]">
                 <div class="hidden md:flex gap-1 shrink-0">
                     <kbd class="kbd text-aurelia-muted">ESC</kbd>
                 </div>
@@ -193,8 +193,8 @@
                 </div>
 
             <div class="px-4 py-2.5 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted">
-                <span>{{ site.get('nav_label', 'AURELIA') }}_INDEX</span>
-                <span id="cmd-count">0 NODES CONNECTED</span>
+                <span>SEARCH</span>
+                <span id="cmd-count">0 entries</span>
             </div>
         </div>
     </div>
@@ -407,7 +407,7 @@
         let selectedIndex = -1;
 
         // Update footer count
-        if(cmdCount) cmdCount.innerText = `${SYSTEM_INDEX.length} NODES CONNECTED`;
+        if(cmdCount) cmdCount.innerText = `${SYSTEM_INDEX.length} entries`;
 
         // 2. Open/Close Logic
         function toggleCmd() {
@@ -499,7 +499,7 @@
             if(query.length < 1) {
                 currentResults = [];
                 selectedIndex = -1;
-                cmdResults.innerHTML = `<div class="text-center py-8 text-aurelia-muted font-mono text-sm opacity-50">... AWAITING INPUT ...</div>`;
+                cmdResults.innerHTML = `<div class="text-center py-8 text-aurelia-muted font-mono text-sm opacity-50">Type to search</div>`;
                 return;
             }
 
@@ -520,7 +520,7 @@
 
         function renderResults(results) {
             if(results.length === 0 && cmdInput.value.length > 0) {
-                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-aurelia-muted">> NO_MATCHES_FOUND_IN_VAULT</div>`;
+                cmdResults.innerHTML = `<div class="p-4 text-center font-mono text-aurelia-muted">No matches</div>`;
                 return;
             }
 

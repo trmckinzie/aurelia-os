@@ -1,7 +1,7 @@
 {
     "system_name": "AURELIA // OS",
     "system_version": "v3.2.0",
-    "status_message": "Developing_Aurelia_OS",
+    "status_message": "Portfolio & working notebook",
     "site": {
         "name": "Travis R. McKinzie",
         "nav_label": "TRM",
@@ -12,7 +12,7 @@
         "name": "Travis R. McKinzie",
         "short_name": "T.R.M.",
         "role": "CFO & Head of Web Solutions, Rocky Mountain Automation AI",
-        "email": "trmckinzie24@gmail.com",
+        "email": "travis@rockymountainautomationai.com",
         "location": "Colorado, USA",
         "bio_short": "Web design, cognitive psychology, and digital ergonomics.",
         "bio_long": "I build web systems that respect how people actually think and work. With a background in psychology, business administration, and IT operations, I focus on web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction. This site is my working notebook and a live demonstration of that approach."
@@ -21,23 +21,23 @@
         "github": "https://github.com/trmckinzie"
     },
     "tech_stack": [
-        {"name": "ThinkPad T495", "type": "HARDWARE // MOBILE", "desc": "Tactical Mobile Unit. Ruggedized daily driver.", "icon": "💻"},
-        {"name": "MacBook Air M1", "type": "HARDWARE // MOBILE", "desc": "Lightweight Recon Unit. High-efficiency deployment.", "icon": "🍏"},
-        {"name": "Mac Mini M1", "type": "HARDWARE // NODE", "desc": "Local Control Server. Always-on automation & ops.", "icon": "🔲"},
-        {"name": "Alienware i7", "type": "HARDWARE // COMPUTE", "desc": "High-Performance Workstation. Heavy compute.", "icon": "🖥️"},
-        {"name": "reMarkable 2", "type": "HARDWARE // INPUT", "desc": "E-Ink Buffer. Distraction-free drafting.", "icon": "📝"},
-        {"name": "iPhone 14", "type": "HARDWARE // COMMS", "desc": "Primary Uplink. Mobile interface.", "icon": "📱"},
-        {"name": "Meta Ray-Ban", "type": "HARDWARE // VISION", "desc": "Augmented Input Node. First-person capture.", "icon": "🕶️"},
-        {"name": "Gemini Adv.", "type": "AI // CO-PROCESSOR", "desc": "Primary Intelligence Engine (1.5 Pro).", "icon": "✨"},
-        {"name": "Claude Code", "type": "AI // ENGINEER", "desc": "Autonomous Coding Operative. Full-stack CLI deployment.", "icon": "🤖"},
-        {"name": "Ollama", "type": "AI // LOCAL", "desc": "Offline Intelligence Node. Decentralized inference.", "icon": "🦙"},
-        {"name": "NotebookLM", "type": "AI // SYNTHESIS", "desc": "Grounded Analysis Studio.", "icon": "📓"},
-        {"name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "The Neural Core. Local-first database.", "icon": "💎"},
-        {"name": "Zotero", "type": "SOFTWARE // ARCHIVE", "desc": "Reference Library & Citation Tracking.", "icon": "📚"},
-        {"name": "VS Code", "type": "SOFTWARE // IDE", "desc": "The Construct. Development Environment.", "icon": "🛠️"},
-        {"name": "GitHub", "type": "VERSION // CONTROL", "desc": "Distributed Memory & Backup.", "icon": "🐙"},
-        {"name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓"},
-        {"name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍"},
-        {"name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨"}
+        {"name": "Alienware i7", "type": "HARDWARE / WORKSTATION", "desc": "Primary development machine. Builds and tests this site.", "icon": "🖥️"},
+        {"name": "MacBook Air M1", "type": "HARDWARE / LAPTOP", "desc": "Daily driver for design and writing; runs the scheduled automation.", "icon": "🍏"},
+        {"name": "Mac Mini M1", "type": "HARDWARE / SERVER", "desc": "Always-on home server for scheduled jobs and local services.", "icon": "🔲"},
+        {"name": "ThinkPad T495", "type": "HARDWARE / LAPTOP", "desc": "Secondary laptop for IT and field work.", "icon": "💻"},
+        {"name": "reMarkable 2", "type": "HARDWARE / TABLET", "desc": "E-ink tablet for drafting and reading without distraction.", "icon": "📝"},
+        {"name": "iPhone 14", "type": "HARDWARE / MOBILE", "desc": "Capture on the go; notes sync straight into the vault.", "icon": "📱"},
+        {"name": "Claude Code", "type": "AI / ENGINEERING", "desc": "Agentic coding in the terminal. Most of this site's engine was built with it.", "icon": "🤖"},
+        {"name": "Gemini Notebook", "type": "AI / SYNTHESIS", "desc": "Grounded summaries, audio overviews, and flashcards from source documents.", "icon": "📓"},
+        {"name": "MCP servers", "type": "AI / INTEGRATION", "desc": "Model Context Protocol servers that connect agents to my own tools and data.", "icon": "🔌"},
+        {"name": "Ollama", "type": "AI / LOCAL", "desc": "Runs open models locally when data should not leave the machine.", "icon": "🦙"},
+        {"name": "Obsidian", "type": "SOFTWARE / KNOWLEDGE", "desc": "Local-first Markdown vault. The source of everything in the Garden.", "icon": "💎"},
+        {"name": "Zotero", "type": "SOFTWARE / REFERENCES", "desc": "Citation library and PDF archive for sources.", "icon": "📚"},
+        {"name": "VS Code", "type": "SOFTWARE / EDITOR", "desc": "Primary editor.", "icon": "🛠️"},
+        {"name": "GitHub", "type": "SOFTWARE / VERSION CONTROL", "desc": "Source control, CI, and hosting for this site via GitHub Pages.", "icon": "🐙"},
+        {"name": "GoHighLevel", "type": "SOFTWARE / WEB PLATFORM", "desc": "Client site builds and integrations at Rocky Mountain Automation AI.", "icon": "🌐"},
+        {"name": "Python", "type": "CODE / LANGUAGE", "desc": "The build engine behind this site and most of my automation.", "icon": "🐍"},
+        {"name": "Next.js", "type": "CODE / FRAMEWORK", "desc": "React framework for dashboards and client-facing work.", "icon": "▲"},
+        {"name": "Tailwind CSS", "type": "CODE / STYLING", "desc": "Utility-first CSS, compiled at build time from a single theme config.", "icon": "🎨"}
     ]
 }

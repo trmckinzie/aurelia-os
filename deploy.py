@@ -13,7 +13,7 @@ TARGET_DIR = os.path.join(SOURCE_DIR, TARGET_DIR_NAME)
 FACTORY_CONFIG = {
     "system_name": "AURELIA // OS",
     "system_version": "v1.0.0 (Factory)",
-    "status_message": "System_Online",
+    "status_message": "Portfolio & working notebook",
     "author": {
         "name": "[INSERT NAME]",
         "short_name": "USR",
@@ -37,9 +37,9 @@ FACTORY_CONFIG = {
         "github": "https://github.com"
     },
     "tech_stack": [
-        { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "Neural Core.", "icon": "💎" },
-        { "name": "Zotero", "type": "RESEARCH // CITATION", "desc": "Reference Library.", "icon": "📚" },
-        { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Build Engine.", "icon": "🐍" }
+        { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "Local-first Markdown vault.", "icon": "💎" },
+        { "name": "Zotero", "type": "RESEARCH // CITATION", "desc": "Citation library and PDF archive.", "icon": "📚" },
+        { "name": "Python", "type": "BACKEND // LOGIC", "desc": "The build engine behind this site.", "icon": "🐍" }
     ]
 }
 

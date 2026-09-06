@@ -1,11 +1,20 @@
 {% extends "base.html" %}
 
+{# === LOBBY / HOME ============================================================
+   The site's front page. Rebranded away from the original "Aurelia OS
+   terminal" voice: the design system stays (display type, aurelia-* palette,
+   monospace micro-labels, the 3D toolkit carousel, the motion.dev entrances),
+   but the copy reads as a professional site rather than a game HUD -- no
+   SYSTEM_/OPERATOR/NODE labels, no `>`-prefixed prose, no manifesto or bio
+   modals. The profile lives on about.html now, and this page links to it.
+============================================================================ #}
+
 {% set active_page = "index" %}
-{% block nav_title %}MAIN_HUB{% endblock %}
+{% block nav_title %}HOME{% endblock %}
 
 {% block head_extra %}
 <style>
-    /* === HOLO-CAROUSEL 3D ENGINE === */
+    /* === 3D CAROUSEL SCENE === */
     .carousel-scene {
         perspective: 1000px;
         overflow: hidden;
@@ -26,18 +35,19 @@
         transform-style: preserve-3d;
         transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    
 
-    /* === HYBRID PROTOCOL: DECRYPT + BIOLUMINESCENCE ===
-       Gradient now starts from the theme's own text color rather than a
-       hardcoded white -- on CYBER_PRIME that's the same #ffffff either
-       way, but a hardcoded white-to-primary gradient would render as
-       pale, low-contrast text at the top of the gradient on THE_PATRIOT's
-       light background (never noticed before because nothing could switch
-       to that theme without a rebuild). */
-    .decrypt-effect {
-        font-family: 'JetBrains Mono', monospace;
-        cursor: pointer;
+    /* === HERO NAME ===
+       Gradient + glow only. This used to also carry a hover letter-scramble;
+       scrambling a person's own name read as a gimmick on a professional
+       front page, so the JS went and the class is now purely a static text
+       treatment.
+
+       The gradient starts from the theme's own text color rather than a
+       hardcoded white -- on CYBER_PRIME that's the same #ffffff either way,
+       but a hardcoded white-to-primary gradient would render as pale,
+       low-contrast text at the top of the gradient on THE_PATRIOT's light
+       background. */
+    .hero-name {
         background: linear-gradient(to bottom, var(--aurelia-text-main) 0%, var(--aurelia-primary) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -51,7 +61,7 @@
         100% { filter: drop-shadow(0 0 25px color-mix(in srgb, var(--aurelia-primary) 80%, transparent)); opacity: 1; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .decrypt-effect { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent)); }
+        .hero-name { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent)); }
     }
 </style>
 {% endblock %}
@@ -64,46 +74,71 @@
                 {{ config.status_message }}
             </span>
             {% if stats.latest_log_date %}
-            <span class="text-aurelia-muted">LAST CULTIVATED / {{ stats.latest_log_date }}</span>
+            <span class="text-aurelia-muted">Latest note / {{ stats.latest_log_date }}</span>
             {% endif %}
         </div>
 
-        <h1 class="display-xl text-aurelia-text mb-7 uppercase">
-            <span class="decrypt-effect" data-value="{{ config.system_name }}">{{ config.system_name }}</span>
+        <h1 class="display-xl text-aurelia-text mb-7">
+            <span class="hero-name">{{ site.get('name', config.system_name) }}</span>
         </h1>
 
-        <p class="font-mono text-xl md:text-2xl text-aurelia-text/90 max-w-3xl leading-snug">
-            A Personal Knowledge Management System designed by
-            <button onclick="openAbout()" class="text-aurelia-accent font-bold underline decoration-aurelia-accent/40 underline-offset-8 hover:decoration-aurelia-accent transition-colors duration-300 cursor-pointer">
-                {{ config.author.name }}
-            </button>
+        <p class="text-xl md:text-2xl text-aurelia-text/90 max-w-3xl leading-snug text-pretty">
+            {{ site.get('tagline', config.author.bio_short) }}
         </p>
 
         <div class="border-l-2 border-aurelia-accent/40 pl-6 max-w-xl mt-8">
-            <p class="font-mono text-sm text-aurelia-accent/90 leading-relaxed">
-                &gt; SYSTEM_READY<br>
-                &gt; {{ config.author.bio_short }}<br>
-                &gt; {{ config.author.role }}<br>
+            <p class="text-sm text-aurelia-text/85 leading-relaxed">
+                {{ config.author.role }}<br>
+                {{ config.author.bio_short }}
             </p>
         </div>
 
         <div class="mt-9 flex flex-wrap items-center gap-3">
-            <button onclick="openManifesto()" class="btn btn-primary group">
-                <span>WHAT IS AURELIA OS?</span>
-                <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
-            </button>
-            <button onclick="toggleCmd()" title="Search every published note" class="btn btn-ghost group">
-                <span>SEARCH THE CORTEX</span>
-                <kbd class="kbd">&#8984;K</kbd>
-            </button>
-            <a href="about.html" class="btn btn-ghost group">
-                <span>ABOUT THE ARCHITECT</span>
+            <a href="about.html" class="btn btn-primary group">
+                <span>About me</span>
                 <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
             </a>
+            <a href="garden.html" class="btn btn-ghost group">
+                <span>Browse the notes</span>
+                <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
+            </a>
+            <button onclick="toggleCmd()" title="Search every published note" class="btn btn-ghost group">
+                <span>Search</span>
+                <kbd class="kbd">&#8984;K</kbd>
+            </button>
         </div>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full items-stretch">
+
+    {% if profile %}
+    <a href="about.html" data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-secondary/50">
+        <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-secondary opacity-70 group-hover:opacity-100 transition-opacity"></span>
+        <span aria-hidden="true" class="bracket-mark text-aurelia-secondary" style="width:56px;height:56px;"></span>
+
+        <div class="flex flex-col h-full justify-between">
+            <div>
+                <div class="field-label inline-block text-aurelia-inverted bg-aurelia-secondary px-2.5 py-1 mb-5 rounded-theme">
+                    01 / Profile
+                </div>
+                <h2 class="display-md text-aurelia-text group-hover:text-aurelia-secondary transition-colors">
+                    {{ profile.identity.name }}
+                </h2>
+                <p class="mt-4 text-sm text-aurelia-muted group-hover:text-aurelia-text transition-colors leading-relaxed text-pretty">
+                    {{ profile.identity.headline }}
+                </p>
+            </div>
+
+            {% if profile.roles %}
+            <div class="text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6 leading-relaxed">
+                {% for role in profile.roles if role.primary %}{% if loop.index <= 2 %}{% if not loop.first %}<br>{% endif %}
+                {{ role.title }} &mdash; {{ role.org }}
+                {% endif %}{% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </a>
+    {% endif %}
 
     <a href="garden.html" data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-primary/50">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-primary opacity-70 group-hover:opacity-100 transition-opacity"></span>
@@ -112,30 +147,32 @@
         <div class="flex flex-col h-full justify-between">
             <div>
                 <div class="field-label inline-block text-aurelia-inverted bg-aurelia-primary px-2.5 py-1 mb-5 rounded-theme">
-                    MOD_01 // INPUT
+                    02 / Notes
                 </div>
                 <h2 class="display-lg text-aurelia-text group-hover:text-aurelia-primary transition-colors">
                     The Garden
                 </h2>
+                <p class="mt-4 text-sm text-aurelia-muted group-hover:text-aurelia-text transition-colors leading-relaxed text-pretty">
+                    Published notes on cognition, learning, design, and systems.
+                </p>
             </div>
 
-            <div class="font-mono text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6">
-                <span class="text-aurelia-primary">&gt;</span> STATUS: VOLATILE<br>
-                <span class="text-aurelia-primary">&gt;</span> NOTES / SEEDS / RAW
+            <div class="text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6">
+                Concepts &middot; Sources &middot; Authors &middot; Disciplines &middot; Deep dives
             </div>
         </div>
     </a>
 
-    <div data-reveal class="surface relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden flex flex-col">
+    <div data-reveal class="surface relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden flex flex-col md:col-span-2 lg:col-span-1">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-accent opacity-70"></span>
         <div class="field-label inline-block text-aurelia-inverted bg-aurelia-accent px-2.5 py-1 mb-5 rounded-theme self-start">
-            MOD_02 // STATUS
+            03 / At a glance
         </div>
-        <h2 class="display-md text-aurelia-text mb-5">Cortex Status</h2>
+        <h2 class="display-md text-aurelia-text mb-5">Garden status</h2>
 
         <div class="flex items-baseline gap-3 mb-5">
             <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="font-display text-5xl font-extrabold text-aurelia-accent tabular-nums leading-none drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-accent)_45%,transparent)]">{{ stats.total_notes }}</span>
-            <span class="field-label text-aurelia-muted">Nodes Cultivated</span>
+            <span class="field-label text-aurelia-muted">published notes</span>
         </div>
 
         <div class="mb-6" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
@@ -155,7 +192,7 @@
 
         <div class="flex-grow min-h-0">
             <span class="field-label text-aurelia-muted block mb-2.5" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
-                Start Here // Most-Connected Notes
+                Start here &mdash; most-connected notes
             </span>
             <div class="flex flex-col">
                 {% for hub in stats.hub_notes %}
@@ -164,14 +201,14 @@
                     <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 tabular-nums">{{ hub.connections }} &#10231;</span>
                 </a>
                 {% else %}
-                <span class="text-xs font-mono text-aurelia-muted">// Link notes together to surface hubs here</span>
+                <span class="text-xs text-aurelia-muted">Link notes together to surface hubs here</span>
                 {% endfor %}
             </div>
         </div>
 
         <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-border">
             <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-aurelia-text transition-colors">
-                <span>🧠 <span id="lobby-review-count">0</span> notes due for retrieval practice</span>
+                <span>🧠 <span id="lobby-review-count">0</span> notes due for review</span>
                 <span>→</span>
             </a>
         </div>
@@ -183,14 +220,13 @@
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
                 <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
-                <h2 class="display-lg text-aurelia-text uppercase drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
-                    NEURAL_LOADOUT
+                <h2 class="display-lg text-aurelia-text drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
+                    Toolkit
                 </h2>
                 <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
             </div>
             <div class="mt-4 flex justify-center items-center gap-2 text-aurelia-primary field-label opacity-80">
-                <span>[ SYSTEM_ARCHITECTURE ]</span>
-                <span class="animate-pulse">_</span>
+                <span>The hardware, software, and AI tooling behind the work</span>
             </div>
         </div>
 
@@ -199,147 +235,55 @@
         </div>
 
         <div class="max-w-4xl mx-auto relative z-20">
-            
+
             <div class="flex items-center justify-between mb-8 px-4 md:px-12">
-                 <button onclick="rotateCarousel(-1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors">
+                 <button onclick="rotateCarousel(-1)" aria-label="Previous item" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors">
                     <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-current"></div>
                         <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current"></div>
-                        <span class="font-mono text-2xl">&lt;</span>
+                        <span aria-hidden="true" class="font-mono text-2xl">&lt;</span>
                     </div>
-                    <span class="hidden md:block font-mono text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">PREV_MOD</span>
+                    <span aria-hidden="true" class="hidden md:block field-label opacity-0 group-hover:opacity-100 transition-opacity">Previous</span>
                 </button>
 
                 <div class="flex flex-col items-center gap-2">
                     <div class="w-24 h-px bg-aurelia-border relative">
                         <div class="absolute inset-0 bg-aurelia-primary w-full animate-pulse shadow-[0_0_8px_var(--aurelia-primary)]"></div>
                     </div>
-                    <span class="text-[8px] font-mono text-aurelia-primary tracking-[0.2em] uppercase">System_Online</span>
                 </div>
 
-                <button onclick="rotateCarousel(1)" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors flex-row-reverse">
+                <button onclick="rotateCarousel(1)" aria-label="Next item" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors flex-row-reverse">
                     <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
                         <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-current"></div>
                         <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current"></div>
-                        <span class="font-mono text-2xl">&gt;</span>
+                        <span aria-hidden="true" class="font-mono text-2xl">&gt;</span>
                     </div>
-                    <span class="hidden md:block font-mono text-[10px] tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">NEXT_MOD</span>
+                    <span aria-hidden="true" class="hidden md:block field-label opacity-0 group-hover:opacity-100 transition-opacity">Next</span>
                 </button>
             </div>
 
             <div class="bg-aurelia-bg border border-aurelia-border p-1 relative group">
                 <div class="absolute inset-0 border border-aurelia-primary/30 opacity-50"></div>
                 <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
-                
+
                 <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
                     <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
-                    
+
+                    {# Seeded server-side with the first item rather than a
+                       placeholder: the carousel calls updateReadout() on init,
+                       so with JS this is what appears anyway -- and without JS
+                       the panel still says something true instead of sitting
+                       on a stub. #}
                     <h3 id="readout-title" class="display-md text-aurelia-text mb-4 relative z-10 text-shadow-cyan">
-                        SYSTEM_READY
+                        {% if config.tech_stack %}{{ config.tech_stack[0].name }}{% endif %}
                     </h3>
-                    <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted font-mono leading-relaxed max-w-2xl relative z-10">
-                        Initiate rotation to inspect technical specifications.
+                    <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted leading-relaxed max-w-2xl relative z-10">
+                        {% if config.tech_stack %}{{ config.tech_stack[0].desc }}{% endif %}
                     </p>
-                    
-                    <div class="absolute bottom-2 right-2 text-[8px] font-mono text-aurelia-muted">TERM_v3.0</div>
                 </div>
             </div>
         </div>
     </section>
-
-    <div id="manifesto-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeManifesto()">
-        <div id="manifesto-panel" class="bg-aurelia-bg border border-aurelia-primary/30 w-full max-w-4xl max-h-[85vh] rounded-theme shadow-[0_0_50px_color-mix(in_srgb,var(--aurelia-primary)_10%,transparent)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center p-4 border-b border-aurelia-border bg-aurelia-bg/50">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse"></div>
-                    <span class="field-label text-aurelia-primary">SYSTEM_MANIFESTO_V3.0</span>
-                </div>
-                <button onclick="closeManifesto()" class="text-aurelia-muted hover:text-aurelia-text transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-aurelia-text/80 space-y-6">
-                <div class="border-l-2 border-aurelia-primary pl-4">
-                    <h2 class="display-md text-aurelia-text mb-1">AURELIA OS</h2>
-                    <p class="font-mono text-sm text-aurelia-primary tracking-wider">Augmented Understanding via Recursive Evolutionary Logic & Intelligent Analysis</p>
-                </div>
-                <div>
-                    <h3 class="field-label text-aurelia-text mb-2 border-b border-aurelia-border pb-1 w-max">Mission Parameters</h3>
-                    <p class="text-sm text-aurelia-text/80">
-                        AURELIA is an <strong class="font-mono text-aurelia-primary">Externalized Cortex</strong>. It is a cybernetic extension of the biological mind designed to augment human cognition through the strategic integration of digital tools, AI agents, and evolutionary knowledge management principles. Its core mission is to enhance intellectual capacity by facilitating deeper understanding, fostering creativity, and enabling efficient knowledge synthesis. By leveraging recursive logic and intelligent analysis, AURELIA serves as a dynamic second brain that evolves alongside its user, adapting to their cognitive needs and promoting continuous intellectual growth.
-                    </p>
-                </div>
-                <div>
-                    <h3 class="field-label text-aurelia-text mb-4 border-b border-aurelia-border pb-1 w-max">System Definitions</h3>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">AUGMENTED:</strong><span class="text-aurelia-text/80 block mt-1">The use of digital prosthetics to extend biological cognitive limits.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[U]</span><div><strong class="text-aurelia-text">UNDERSTANDING:</strong><span class="text-aurelia-text/80 block mt-1">The shift from raw "Data" to synthesized "Wisdom".</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[R]</span><div><strong class="text-aurelia-text">RECURSIVE:</strong><span class="text-aurelia-text/80 block mt-1">The logic of loops. Creating compound interest on knowledge.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[E]</span><div><strong class="text-aurelia-text">EVOLUTIONARY:</strong><span class="text-aurelia-text/80 block mt-1">Darwinian selection for ideas. Only "Cranes" survive.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[L]</span><div><strong class="text-aurelia-text">LOGIC:</strong><span class="text-aurelia-text/80 block mt-1">Validity is prioritized over intuition.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[I]</span><div><strong class="text-aurelia-text">INTELLIGENT:</strong><span class="text-aurelia-text/80 block mt-1">Integration of active agents (LLMs). Achieving goals under constraint.</span></div></li>
-                        <li class="flex gap-3"><span class="font-mono text-aurelia-primary font-bold min-w-[20px]">[A]</span><div><strong class="text-aurelia-text">ANALYSIS:</strong><span class="text-aurelia-text/80 block mt-1">Atomic deconstruction of complex systems. Leveraging the Feynman Technique.</span></div></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="p-2 border-t border-aurelia-border bg-aurelia-bg/50 text-center">
-                <span class="text-[9px] font-mono text-aurelia-muted">PRESS ESC TO CLOSE // END_TRANSMISSION</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="about-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeAbout()">
-        <div id="about-panel" class="bg-aurelia-bg border border-aurelia-accent/30 w-full max-w-4xl max-h-[85vh] rounded-theme shadow-[0_0_50px_color-mix(in_srgb,var(--aurelia-accent)_10%,transparent)] flex flex-col transform scale-95 transition-transform duration-300" onclick="event.stopPropagation()">
-            
-            <div class="flex justify-between items-center p-4 border-b border-aurelia-border bg-aurelia-bg/50">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse"></div>
-                    <span class="field-label text-aurelia-accent">OPERATOR_PROFILE // {{ config.author.short_name }}</span>
-                </div>
-                <button onclick="closeAbout()" class="text-aurelia-muted hover:text-aurelia-text transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-
-            <div class="p-8 overflow-y-auto font-sans leading-relaxed text-aurelia-text/80 space-y-6">
-                <div class="border-l-2 border-aurelia-accent pl-4">
-                    <h2 class="display-md text-aurelia-text mb-1">{{ config.author.name | upper }}</h2>
-                    <p class="font-mono text-sm text-aurelia-accent tracking-wider">{{ config.author.role }}</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-                    <div class="bg-aurelia-text/5 p-4 rounded-theme border border-aurelia-text/5">
-                        <div class="text-aurelia-accent font-mono text-xs mb-2">LOCATION</div>
-                        <div class="text-aurelia-text font-bold">{{ config.author.location }}</div>
-                    </div>
-                    <div class="bg-aurelia-text/5 p-4 rounded-theme border border-aurelia-text/5">
-                        <div class="text-aurelia-accent font-mono text-xs mb-2">SPECIALTY</div>
-                        <div class="text-aurelia-text font-bold">{{ config.author.role }}</div>
-                    </div>
-                    <div class="bg-aurelia-text/5 p-4 rounded-theme border border-aurelia-text/5">
-                        <div class="text-aurelia-accent font-mono text-xs mb-2">STATUS</div>
-                        <div class="text-aurelia-text font-bold flex items-center gap-2">
-                            <span class="w-2 h-2 bg-aurelia-accent rounded-full animate-pulse"></span>
-                            ONLINE
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="field-label text-aurelia-text mb-2 border-b border-aurelia-border pb-1 w-max">Mission Statement</h3>
-                    <p class="text-sm text-aurelia-text/80">
-                        {{ config.author.bio_long }}
-                    </p>
-                </div>
-            </div>
-
-            <div class="p-2 border-t border-aurelia-border bg-aurelia-bg/50 text-center">
-                <span class="text-[9px] font-mono text-aurelia-muted">PRESS ESC TO CLOSE // END_PROFILE</span>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -375,30 +319,10 @@
         }
     })();
 
-    /* --- DECRYPTION EFFECT ENGINE ---
-       Skipped entirely under prefers-reduced-motion: it's a rapid
-       character-scramble loop, exactly the kind of motion that
-       preference exists to opt out of. The final text is already
-       correct in the DOM (it's the element's own text content), so
-       reduced-motion users just see it appear normally, unscrambled. */
+    /* Read once and shared by the entrance animations and the carousel's
+       readout swap below. The hero name's glow is CSS-only and opts itself
+       out via its own @media block. */
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+";
-    document.querySelector(".decrypt-effect").onmouseover = event => {
-        if (reduceMotion) return;
-        let iterations = 0;
-        const interval = setInterval(() => {
-            event.target.innerText = event.target.innerText.split("").map((letter, index) => {
-                if(index < iterations) return event.target.dataset.value[index];
-                return letters[Math.floor(Math.random() * 26)];
-            }).join("");
-            if(iterations >= event.target.dataset.value.length) clearInterval(interval);
-            iterations += 1 / 8;
-        }, 30);
-    }
-    window.onload = () => {
-         const title = document.querySelector(".decrypt-effect");
-         if(title && !reduceMotion) title.onmouseover({target: title});
-    };
 
     /* --- MOTION.DEV ENTRANCE ANIMATIONS ---
        Purely additive: every element already renders its correct final state
@@ -426,7 +350,7 @@
             }, { amount: 0.2 });
         });
 
-        // Count up "Nodes Cultivated" from 0 to the real total once visible.
+        // Count up the published-note total from 0 once visible.
         // A frozen count-up is worse than no count-up: it leaves a *wrong
         // number* on screen presented as fact. The timeout pins the true
         // total regardless of whether the animation ever completes.
@@ -480,57 +404,7 @@
         }
     }
 
-    /* --- MANIFESTO MODAL LOGIC --- */
-    const mBackdrop = document.getElementById('manifesto-backdrop');
-    const mPanel = document.getElementById('manifesto-panel');
-    function openManifesto() {
-        mBackdrop.classList.remove('hidden');
-        setTimeout(() => {
-            mBackdrop.classList.remove('opacity-0');
-            mPanel.classList.remove('scale-95');
-            mPanel.classList.add('scale-100');
-        }, 10);
-        document.body.style.overflow = 'hidden';
-    }
-    function closeManifesto() {
-        mBackdrop.classList.add('opacity-0');
-        mPanel.classList.remove('scale-100');
-        mPanel.classList.add('scale-95');
-        setTimeout(() => { mBackdrop.classList.add('hidden'); }, 300);
-        document.body.style.overflow = 'auto';
-    }
-
-    /* --- OPERATOR BIO LOGIC (GREEN) --- */
-    const aBackdrop = document.getElementById('about-backdrop');
-    const aPanel = document.getElementById('about-panel');
-
-    function openAbout() {
-        aBackdrop.classList.remove('hidden');
-        setTimeout(() => {
-            aBackdrop.classList.remove('opacity-0');
-            aPanel.classList.remove('scale-95');
-            aPanel.classList.add('scale-100');
-        }, 10);
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeAbout() {
-        aBackdrop.classList.add('opacity-0');
-        aPanel.classList.remove('scale-100');
-        aPanel.classList.add('scale-95');
-        setTimeout(() => { aBackdrop.classList.add('hidden'); }, 300);
-        document.body.style.overflow = 'auto';
-    }
-
-    // GLOBAL ESCAPE KEY HANDLER
-    document.addEventListener('keydown', (e) => { 
-        if (e.key === 'Escape') {
-            closeManifesto();
-            closeAbout();
-        }
-    });
-
-    /* --- 3D CAROUSEL ENGINE (HIGH-CONTRAST EDITION) --- */
+    /* --- 3D TOOLKIT CAROUSEL --- */
     document.addEventListener('DOMContentLoaded', () => {
         const carousel = document.getElementById('tech-carousel');
         const titleEl = document.getElementById('readout-title');
@@ -538,13 +412,11 @@
 
         // SAFETY CHECK: Abort if elements are missing
         if (!carousel || !titleEl || !descEl) {
-            console.warn("System Alert: Carousel elements not detected. Skipping initialization.");
+            console.warn("Carousel elements not found; skipping initialization.");
             return;
         }
 
-        // DATA MATRIX (STANDARDIZED)
-
-        // DATA MATRIX (DYNAMIC FROM CONFIG)
+        // TOOLKIT DATA (FROM CONFIG)
         //
         // `| tojson` rather than hand-written quotes around a bare
         // interpolation.
@@ -569,15 +441,23 @@
             {% endfor %}
         ];
 
-        // PHYSICS CONFIG
+        // An empty tech_stack (the factory clone can ship one) would make
+        // every number below NaN and throw on the first readout. Nothing to
+        // rotate, so leave the server-rendered panel alone and stop.
         const cardCount = techStack.length;
+        if (!cardCount) {
+            window.rotateCarousel = function() {};
+            return;
+        }
+
+        // PHYSICS CONFIG
         const radius = Math.round( (300 / 2) / Math.tan( Math.PI / cardCount ) ) + 50;
         const theta = 360 / cardCount;
         let currIndex = 0;
 
-        // GLOBAL EXPOSURE (CRITICAL FIX)
-        // We define this function here so it closes over variables, but assign it to window
-        // so HTML buttons can access it.
+        // GLOBAL EXPOSURE
+        // Defined here so it closes over the variables above, but assigned to
+        // window so the HTML buttons can reach it.
         window.rotateCarousel = function(direction) {
             currIndex += direction;
             const angle = theta * currIndex * -1;
@@ -593,14 +473,12 @@
             const activeTech = techStack[virtualIndex];
 
             const swapText = () => {
-                titleEl.innerText = activeTech.name + " //";
+                titleEl.innerText = activeTech.name;
                 descEl.innerText = activeTech.desc;
             };
 
             if (reduceMotion) {
-                // Previously the only animation on this page NOT gated by
-                // prefers-reduced-motion -- an instant swap is the correct
-                // reduced-motion behavior, matching the decrypt-effect above.
+                // An instant swap is the correct reduced-motion behavior.
                 swapText();
             } else if (window.Motion) {
                 const { animate } = Motion;
@@ -623,37 +501,37 @@
         function initCarousel() {
             techStack.forEach((tech, i) => {
                 const card = document.createElement('div');
-                
-                // FIX 1: Added 'absolute top-0 left-0' to force them into a stack (so they can rotate)
-                // FIX 2: Added 'w-[300px] h-[400px]' to enforce size via Tailwind
-                card.className = 'absolute top-0 left-0 w-[300px] h-[400px] group bg-aurelia-bg border border-aurelia-border hover:border-aurelia-primary/50 transition-colors duration-500 cursor-pointer rounded-theme'; 
-                
+
+                // 'absolute top-0 left-0' stacks the cards so they can rotate
+                // as one ring; the explicit w/h matches .carousel's box.
+                card.className = 'absolute top-0 left-0 w-[300px] h-[400px] group bg-aurelia-bg border border-aurelia-border hover:border-aurelia-primary/50 transition-colors duration-500 cursor-pointer rounded-theme';
+
                 // 3D POSITIONING
                 const angle = theta * i;
                 card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                
-                // INNER HTML (Fixed Hover Logic)
-                // We apply the scale to the INNER div so we don't break the outer 3D transform
+
+                // The hover scale goes on the INNER div so it doesn't clobber
+                // the outer 3D transform.
                 card.innerHTML = `
                     <div class="w-full h-full transform transition-transform duration-500 group-hover:scale-105 relative z-10 flex flex-col items-center justify-center p-6">
-                        
+
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                         <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_20%,transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_60%,transparent)] transition duration-500">
                             ${tech.icon}
                         </div>
-                        
-                        <h3 class="display-md text-aurelia-text mb-4 group-hover:text-aurelia-primary transition-colors">${tech.name}</h3>
-                        
+
+                        <h3 class="display-md text-aurelia-text mb-4 group-hover:text-aurelia-primary transition-colors">${escapeHtml(tech.name)}</h3>
+
                         <span class="field-label text-aurelia-primary border border-aurelia-primary/20 px-3 py-1 bg-aurelia-primary/5 rounded-theme">
-                            ${tech.type}
+                            ${escapeHtml(tech.type)}
                         </span>
-                        
+
                         <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-aurelia-border group-hover:border-aurelia-primary transition-colors"></div>
                         <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-aurelia-border group-hover:border-aurelia-primary transition-colors"></div>
                     </div>
                 `;
-                
+
                 // Interaction
                 card.onclick = () => {
                     const diff = i - (currIndex % cardCount);
@@ -663,9 +541,9 @@
                 carousel.appendChild(card);
             });
 
-            // --- NEW LINE: PUSH CAMERA BACK ON LOAD ---
-        carousel.style.transform = `translateZ(-${radius}px) rotateY(0deg)`;
-            
+            // Push the camera back so the whole ring is in frame on load.
+            carousel.style.transform = `translateZ(-${radius}px) rotateY(0deg)`;
+
             updateReadout();
         }
 
