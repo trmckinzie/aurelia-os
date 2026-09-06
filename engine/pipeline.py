@@ -1,8 +1,10 @@
 """Orchestrates the full build: scan the vault, route notes by type, render pages.
 
-Only the Lobby (index.html) and Garden (garden.html) are published. Project,
-protocol, and transmission notes are recognized by type but intentionally
-skipped -- there's no page left for them to link to.
+Three pages are published: the Lobby (index.html), the Garden (garden.html),
+and About (about.html) -- the last rendered from repo-root profile.json
+rather than the vault (see engine/profile.py). Project, protocol, and
+transmission notes are recognized by type but intentionally skipped --
+there's no page left for them to link to.
 """
 import hashlib
 import os
@@ -30,6 +32,7 @@ from engine.content import (
     wrap_gemini_notebook_sections,
 )
 from engine.paths import escapes
+from engine.profile import load_profile, person_jsonld
 from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
@@ -314,10 +317,17 @@ def _build_lobby_context(garden_cards, graph_index):
     }
 
 
-def _build_search_index(garden_cards):
+def _build_search_index(garden_cards, profile):
     master_index = [
         {"title": "Home // Mission Control", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Main Hub"},
         {"title": "The Garden // Input", "url": "garden.html", "type": "SYSTEM", "tags": ["notes", "writing"], "desc": "Digital Garden"},
+        {
+            "title": "About // " + profile["identity"]["name"],
+            "url": "about.html",
+            "type": "SYSTEM",
+            "tags": ["about", "profile"],
+            "desc": profile["identity"]["headline"],
+        },
     ]
 
     for c in garden_cards:
@@ -407,7 +417,7 @@ def _write_deep_search_index(deep_search_json):
     return len(encoded), hashlib.sha256(encoded).hexdigest()[:10]
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json):
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json, profile):
     index_bytes, search_index_version = _write_deep_search_index(deep_search_json)
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
@@ -416,6 +426,9 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
             "search_index_version": search_index_version,
+        }),
+        ("pages/abouttemplate.html", "about.html", {
+            "profile": profile, "person_jsonld": dumps_for_script_tag(person_jsonld(profile)),
         }),
         ("404.html", "404.html", {}),
     ]
@@ -454,6 +467,71 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             raise RuntimeError(f"Render failed for {output_name}: {e}") from e
 
 
+# A hostname label: starts and ends with a letter/digit, 1-63 chars, only
+# letters/digits/hyphens in between. Deliberately lowercase-only -- GitHub
+# Pages' own CNAME file is case-insensitive in practice, but accepting mixed
+# case here would mean either silently lowercasing a value the user typed
+# (surprising) or writing a CNAME that doesn't byte-for-byte match what they
+# configured at their registrar (confusing to debug). Rejecting uppercase and
+# telling the user to fix user_config.json is simpler than either.
+_HOSTNAME_LABEL_RE = re.compile(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$')
+
+
+def _is_valid_domain(value):
+    """True if `value` is a bare lowercase ASCII hostname suitable for a
+    GitHub Pages CNAME file: no scheme, no path, no port, at least two
+    labels, each label 1-63 chars of [a-z0-9-] not starting/ending with '-',
+    total length <=253.
+    """
+    if not isinstance(value, str) or not value:
+        return False
+    if len(value) > 253:
+        return False
+    # A scheme, path, or port means this is a URL, not a bare hostname --
+    # GitHub Pages' CNAME file wants the hostname alone.
+    if "://" in value or "/" in value or ":" in value:
+        return False
+    labels = value.split(".")
+    if len(labels) < 2:
+        return False
+    return all(_HOSTNAME_LABEL_RE.match(label) for label in labels)
+
+
+def _write_cname(user_config):
+    """Writes dist/CNAME for a custom domain, read from user_config.json's
+    optional site.domain -- the file GitHub Pages reads to serve the site
+    from that domain instead of the default *.github.io one.
+
+    site.domain absent or "" means no custom domain: writes nothing. Since
+    this runs right after prepare_dist() (which wipes and recreates
+    OUTPUT_DIR from scratch), there is never a stale CNAME left over from an
+    earlier build with a domain configured.
+
+    A non-empty domain that fails validation raises RuntimeError naming the
+    value -- a malformed CNAME is silently ignored by GitHub Pages, which
+    would look like "the custom domain just doesn't work" with no error
+    anywhere, so this fails the build loudly instead.
+    """
+    site = user_config.get("site") if isinstance(user_config, dict) else None
+    domain = site.get("domain") if isinstance(site, dict) else None
+    domain = domain or ""
+
+    if not isinstance(domain, str):
+        raise RuntimeError(f"user_config.json: site.domain must be a string, got {domain!r}")
+    if domain == "":
+        return
+
+    if not _is_valid_domain(domain):
+        raise RuntimeError(
+            f"user_config.json: site.domain {domain!r} is not a valid custom domain "
+            "(expected a bare lowercase hostname, e.g. 'example.com', with no scheme/path/port)"
+        )
+
+    with open(os.path.join(OUTPUT_DIR, "CNAME"), "w", encoding="utf-8", newline="\n") as f:
+        f.write(domain + "\n")
+    print(f"   + Custom domain: {domain} -> dist/CNAME")
+
+
 # Values of AURELIA_SKIP_DROPZONE that mean "no, actually do sort". Anything
 # else non-empty means skip -- `AURELIA_SKIP_DROPZONE=1` is the common form.
 _ENV_FALSE = {"", "0", "false", "no", "off"}
@@ -486,14 +564,22 @@ def build_all(sort_dropzone=None):
     print("💠 AURELIA OS BUILD ENGINE")
     print("------------------------------------------------")
 
+    user_config = load_user_config()
+
+    # Fatal by design (see engine/profile.py's module docstring): About is
+    # one of only three published pages, so a missing/invalid profile.json
+    # must abort the whole build rather than ship a broken or stale page.
+    # Loaded before any vault work so a bad profile fails fast.
+    profile = load_profile()
+    print(f"   + Profile Loaded: {profile['identity']['name']}")
+
     prepare_dist()
+    _write_cname(user_config)
     if sort_dropzone:
         organize_assets()
     else:
         print("\n⏭️  Drop Zone sort skipped -- vault/ will not be modified")
     sync_vault_assets()
-
-    user_config = load_user_config()
 
     garden_cards, backlinks, edges = _scan_vault()
     garden_cards.sort(key=lambda x: x['title'].lower())
@@ -522,7 +608,7 @@ def build_all(sort_dropzone=None):
         if len(unique) > 3:
             print(f"        ... and {len(unique) - 3} more")
 
-    master_index = _build_search_index(garden_cards)
+    master_index = _build_search_index(garden_cards, profile)
     json_index = dumps_for_script_tag(master_index)
 
     deep_search_json = dumps_for_script_tag(_build_deep_search_index(garden_cards))
@@ -534,7 +620,7 @@ def build_all(sort_dropzone=None):
     lobby_stats = _build_lobby_context(garden_cards, graph_index)
     review_seed_json = dumps_for_script_tag(lobby_stats.pop("review_seed"))
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json)
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json, profile)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.

@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{# === ABOUT / PROFILE =========================================================
+   A professional profile page, rendered from repo-root profile.json (see
+   engine/profile.py for the validated shape). Deliberately written as a
+   well-typeset CV that happens to live in this design system: no glitch
+   effects, no `>`-prefixed terminal prose, no OPERATOR/NODE/SYSTEM in-jokes.
+   Those belong to the Lobby's voice; this page is read by people deciding
+   whether to work with Travis.
+
+   Everything here is autoescaped. `person_jsonld` is the single exception --
+   it arrives as Markup from textutils.dumps_for_script_tag(), already made
+   safe for a <script> body, so it takes no filter. Nothing on this page uses
+   |safe.
+
+   Layout: one column on mobile; on lg, a short skills rail beside the
+   history. Section order in the DOM is also the reading order, and heading
+   levels run h1 (name, once) -> h2 (section) -> h3 (item) with no skips.
+
+   No [data-reveal] here on purpose. That entrance animates opacity from 0,
+   which is fine on the Lobby but would mean the CV is invisible to anything
+   that does not run its script -- including print. This page is legible with
+   zero JavaScript.
+============================================================================ #}
+
+{% set active_page = "about" %}
+
+{% block title %}{{ profile.identity.name }} — {{ profile.identity.headline }}{% endblock %}
+{% block og_title %}{{ profile.identity.name }}{% endblock %}
+{% block description %}{{ profile.identity.headline }}{% endblock %}
+{% block nav_title %}PROFILE{% endblock %}
+
+{% block head_extra %}
+<script type="application/ld+json">{{ person_jsonld }}</script>
+{% endblock %}
+
+{# Project status -> an existing theme role. No new color variables: `active`
+   borrows the primary identity, `maintained` the secondary, `prototype` the
+   accent, and `archived` deliberately drops to muted so a retired project
+   recedes instead of competing. Written as whole literal class strings so the
+   Tailwind scanner (which reads rendered dist/**/*.html) sees them intact. #}
+{% set status_styles = {
+    'active':     'border-aurelia-primary/50 text-aurelia-primary bg-aurelia-primary/10',
+    'maintained': 'border-aurelia-secondary/50 text-aurelia-secondary bg-aurelia-secondary/10',
+    'prototype':  'border-aurelia-accent/50 text-aurelia-accent bg-aurelia-accent/10',
+    'archived':   'border-aurelia-border text-aurelia-muted bg-aurelia-muted/10'
+} %}
+
+{# Small stroke glyph per link kind. Inline SVG rather than an icon font:
+   one fewer network dependency, and it inherits currentColor per theme. #}
+{% macro link_glyph(kind) -%}
+<svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{%- if kind == 'email' -%}
+<path d="M3 7l9 6 9-6"></path><rect x="3" y="5" width="18" height="14" rx="1.5"></rect>
+{%- elif kind == 'code' -%}
+<path d="M8 6l-5 6 5 6"></path><path d="M16 6l5 6-5 6"></path>
+{%- elif kind == 'social' -%}
+<circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="M8.4 10.8l7.2-4.1"></path><path d="M8.4 13.2l7.2 4.1"></path>
+{%- elif kind == 'writing' -%}
+<path d="M4 20h4L19 9a2.1 2.1 0 10-3-3L5 17v3z"></path>
+{%- else -%}
+<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.6 2.9 2.6 15.1 0 18"></path><path d="M12 3c-2.6 2.9-2.6 15.1 0 18"></path>
+{%- endif -%}
+</svg>
+{%- endmacro %}
+
+{% block content %}
+{# .about-print is the print stylesheet's hook (assets/css/main.css) -- it
+   scopes the "expand link URLs" rule so it never leaks onto other pages. #}
+<div class="about-print max-w-[1100px] mx-auto">
+
+    <header class="pb-12 mb-12 border-b border-aurelia-border">
+
+        <p class="field-label text-aurelia-primary mb-5">Profile</p>
+
+        <h1 class="display-lg text-aurelia-text mb-5">{{ profile.identity.name }}</h1>
+
+        <p class="text-lg md:text-xl text-aurelia-text/90 leading-snug max-w-3xl text-pretty">
+            {{ profile.identity.headline }}
+        </p>
+
+        <dl class="mt-9 grid grid-cols-1 sm:grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-3 max-w-2xl">
+            <dt class="field-label text-aurelia-muted sm:pt-0.5">Location</dt>
+            <dd class="text-sm text-aurelia-text mb-2 sm:mb-0">{{ profile.identity.location }}</dd>
+
+            {% if profile.identity.pronouns %}
+            <dt class="field-label text-aurelia-muted sm:pt-0.5">Pronouns</dt>
+            <dd class="text-sm text-aurelia-text mb-2 sm:mb-0">{{ profile.identity.pronouns }}</dd>
+            {% endif %}
+
+            {% if profile.meta.availability %}
+            <dt class="field-label text-aurelia-muted sm:pt-0.5">Availability</dt>
+            <dd class="text-sm text-aurelia-text leading-relaxed">{{ profile.meta.availability }}</dd>
+            {% endif %}
+        </dl>
+
+        {% if profile.links %}
+        <nav aria-label="Profile links" class="mt-9">
+            <ul class="flex flex-wrap gap-3">
+                {% for link in profile.links %}
+                <li>
+                    {# rel is unconditional on every outbound anchor on this
+                       page. No target="_blank": leaving the tab in the
+                       reader's control is the whole point of a CV page. #}
+                    <a href="{{ link.url }}" rel="noopener noreferrer"
+                       class="chip border border-aurelia-border text-aurelia-text hover:border-aurelia-primary hover:text-aurelia-primary">
+                        {{ link_glyph(link.kind) }}
+                        <span>{{ link.label }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </header>
+
+    <section aria-labelledby="about-summary-heading" class="mb-16">
+        <h2 id="about-summary-heading" class="display-md text-aurelia-text mb-5">Summary</h2>
+        <p class="text-base md:text-lg text-aurelia-text/90 leading-relaxed max-w-3xl text-pretty">
+            {{ profile.identity.summary }}
+        </p>
+    </section>
+
+    <div class="about-columns grid grid-cols-1 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] gap-x-16 gap-y-16">
+
+        {# --- Left rail (lg only; stacks first on mobile) ------------------
+             Deliberately NOT position:sticky. Measured at 1092px tall against
+             a 900px viewport, and a sticky box taller than the viewport pins
+             its top and puts its own bottom permanently out of reach -- the
+             last two skill groups became unscrollable. It flows normally. #}
+        <div class="lg:self-start">
+            {% if profile.skills %}
+            <section aria-labelledby="about-skills-heading">
+                <h2 id="about-skills-heading" class="display-md text-aurelia-text mb-6">Skills</h2>
+                <div class="flex flex-col gap-7">
+                    {% for group in profile.skills %}
+                    <div>
+                        <h3 class="field-label text-aurelia-primary mb-3">{{ group.group }}</h3>
+                        <ul class="flex flex-wrap gap-2">
+                            {% for item in group['items'] %}
+                            <li class="chip-static border border-aurelia-border text-aurelia-text/85">{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+
+        {# --- Main column -------------------------------------------------- #}
+        <div class="flex flex-col gap-16 min-w-0">
+
+            {% if profile.roles %}
+            <section aria-labelledby="about-experience-heading">
+                <h2 id="about-experience-heading" class="display-md text-aurelia-text mb-7">Experience</h2>
+                <ol class="flex flex-col gap-8">
+                    {% for role in profile.roles %}
+                    <li>
+                        {# The left rule is the only weight difference between a
+                           primary role and the rest -- colored vs. neutral,
+                           same geometry, so the list still reads as one list. #}
+                        <article class="border-l-2 pl-6 {% if role.primary %}border-aurelia-primary{% else %}border-aurelia-border{% endif %}">
+                            <h3 class="text-xl font-semibold text-aurelia-text leading-snug">{{ role.title }}</h3>
+                            <p class="mt-1.5 text-sm text-aurelia-muted">
+                                {% if role.url %}
+                                <a href="{{ role.url }}" rel="noopener noreferrer" class="text-aurelia-text underline decoration-aurelia-border underline-offset-4 hover:text-aurelia-primary hover:decoration-aurelia-primary transition-colors">{{ role.org }}</a>
+                                {% else %}
+                                <span class="text-aurelia-text">{{ role.org }}</span>
+                                {% endif %}
+                                <span aria-hidden="true" class="mx-2 text-aurelia-border">/</span>
+                                <span class="font-mono text-xs tracking-wide">{{ role.period }}</span>
+                            </p>
+                            <p class="mt-3 text-sm md:text-base text-aurelia-text/85 leading-relaxed max-w-2xl text-pretty">{{ role.description }}</p>
+                        </article>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </section>
+            {% endif %}
+
+            {% if profile.education %}
+            <section aria-labelledby="about-education-heading">
+                <h2 id="about-education-heading" class="display-md text-aurelia-text mb-7">Education</h2>
+                <ol class="flex flex-col gap-8">
+                    {% for entry in profile.education %}
+                    <li>
+                        <article class="border-l-2 border-aurelia-border pl-6">
+                            <h3 class="text-xl font-semibold text-aurelia-text leading-snug">{{ entry.credential }}</h3>
+                            <p class="mt-1.5 text-sm text-aurelia-muted">
+                                {% if entry.url %}
+                                <a href="{{ entry.url }}" rel="noopener noreferrer" class="text-aurelia-text underline decoration-aurelia-border underline-offset-4 hover:text-aurelia-primary hover:decoration-aurelia-primary transition-colors">{{ entry.institution }}</a>
+                                {% else %}
+                                <span class="text-aurelia-text">{{ entry.institution }}</span>
+                                {% endif %}
+                                <span aria-hidden="true" class="mx-2 text-aurelia-border">/</span>
+                                <span class="font-mono text-xs tracking-wide">{{ entry.period }}</span>
+                            </p>
+                            {% if entry.detail %}
+                            <p class="mt-3 text-sm md:text-base text-aurelia-text/85 leading-relaxed max-w-2xl text-pretty">{{ entry.detail }}</p>
+                            {% endif %}
+                        </article>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </section>
+            {% endif %}
+
+            {% if profile.projects %}
+            <section aria-labelledby="about-work-heading">
+                <h2 id="about-work-heading" class="display-md text-aurelia-text mb-7">Selected Work</h2>
+                <ul class="flex flex-col gap-6">
+                    {% for project in profile.projects %}
+                    <li>
+                        <article class="surface border border-aurelia-border rounded-theme p-6">
+                            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+                                <h3 class="text-xl font-semibold text-aurelia-text leading-snug min-w-0">
+                                    {% if project.url %}
+                                    <a href="{{ project.url }}" rel="noopener noreferrer" class="underline decoration-aurelia-border underline-offset-4 hover:text-aurelia-primary hover:decoration-aurelia-primary transition-colors">{{ project.name }}</a>
+                                    {% else %}
+                                    {{ project.name }}
+                                    {% endif %}
+                                </h3>
+                                <span class="field-label shrink-0 border rounded-theme px-2.5 py-1 {{ status_styles.get(project.status, 'border-aurelia-border text-aurelia-muted bg-aurelia-muted/10') }}">{{ project.status }}</span>
+                            </div>
+                            <p class="mt-3 text-sm md:text-base text-aurelia-text/85 leading-relaxed max-w-2xl text-pretty">{{ project.description }}</p>
+                            {% if project.tags %}
+                            <ul class="mt-4 flex flex-wrap gap-2">
+                                {% for tag in project.tags %}
+                                <li class="chip-static border border-aurelia-border text-aurelia-muted">{{ tag }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </article>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <footer class="mt-16 pt-6 border-t border-aurelia-border text-sm text-aurelia-muted">
+        Last updated <time datetime="{{ profile.meta.updated }}">{{ profile.meta.updated }}</time>.
+    </footer>
+
+</div>
+{% endblock %}

@@ -11,6 +11,7 @@ from engine.pipeline import (
     _build_lobby_context,
     _degree_from_edges,
 )
+from tests.profile_fixtures import minimal_profile
 from tests.test_paths import make_dir_link
 
 
@@ -368,6 +369,7 @@ def _render_args():
     return dict(
         user_config={}, garden_cards=[], json_index="{}", backlinks_json="{}",
         graph_json="{}", lobby_stats={}, review_seed_json="{}", deep_search_json="{}",
+        profile=minimal_profile(),
     )
 
 

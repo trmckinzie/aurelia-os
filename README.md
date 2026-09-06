@@ -15,6 +15,10 @@ styled, and published as a real website with the link graph itself made visible 
   access — see [Privacy model](#privacy-model) below before assuming anything in `vault/` is private.
 - Real backlinks, note-maturity badges (🌱 seed / 🌿 growing / 🌳 evergreen), topic browsing, a
   command palette (⌘K), spaced-review surfacing, and a random-note discovery button.
+- A professional About page (`about.html`) — roles, education, skills, selected work, and
+  schema.org `Person` structured data — rendered from a repo-root `profile.json`. The file is
+  validated strictly at build time (unknown keys, non-`http`/`https`/`mailto` URLs, over-long or
+  missing fields all fail the build), and every value is escaped on output; it carries no HTML.
 - Four runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
   single CSS-variable source of truth), each with its own palette, typography, and material
   language: `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA`
@@ -74,7 +78,8 @@ system, the theming architecture, and the reasoning behind various design decisi
 ```
 build.py               Entry point (python build.py)
 engine/                 All real build logic: parsing, extraction, card rendering, theming, pipeline
-system/templates/       Jinja2 templates (base + Lobby + Garden + 404)
+profile.json            The About page's content: structured data validated at build time, not a vault note
+system/templates/       Jinja2 templates (base + Lobby + Garden + About + 404)
 assets/                 Tailwind input CSS, shared client JS
 vault/                  The Obsidian vault itself -- source content, not source code (see License)
 tests/                  pytest suite

@@ -13,10 +13,24 @@ website. The design goal is not just "notes on the web" — it's making the *gra
 what, note maturity, discoverability) actually visible and navigable in the published site, not
 just inside Obsidian.
 
-The **only two published pages are the Lobby (`index.html`) and the Garden (`garden.html`)**.
-Protocols/Portfolio/Transmissions/Services pages, and their card types, project types, and
+**Three pages are published: the Lobby (`index.html`), the Garden (`garden.html`), and About
+(`about.html`).** About was added 2026-09 at the user's request (see "Recent history" item 15) and
+is a *data-driven* page rendered from the repo-root `profile.json` — it is not a vault note type.
+The Protocols/Portfolio/Transmissions/Services pages, and their card types, project types, and
 extractors, were deliberately removed (see "Recent history" below) — don't reintroduce them without
-being asked.
+being asked. About does not bring them back: there is no `type: project` card, and nothing about
+the page reads from `vault/`.
+
+**The site is at the start of a rebrand.** The "Aurelia" name collides with an unrelated software
+company, so the plan is to move the site to a personal professional domain (working name
+`travisrmckinzie.com`, not yet purchased) and let the "evolutionary theory meets cognitive science"
+framing give way to web design, cognitive psychology, digital ergonomics, and Travis's professional
+roles. What has landed so far is the plumbing: `user_config.json` has a `site` block (`name`,
+`nav_label`, `tagline`, `domain`) that `base.html` reads for the nav brand, `<title>`, and
+canonical URL, and a non-empty `site.domain` makes the build write `dist/CNAME`. The Lobby's hero,
+manifesto modal, and the terminal-flavored chrome copy (`SEARCH THE CORTEX`, `TOTAL_NODES`, and
+so on) are **not yet rewritten** — that is the next pass. The `aurelia-*` CSS class names and
+`--aurelia-*` custom properties are internal identifiers, not branding; leave them alone.
 
 ## Commands
 
@@ -166,8 +180,20 @@ real logic lives in `engine/`:
   inverts the graph (note_id → list of notes that link to it) — this is what powers the modal's
   "Referenced By" section. `_build_search_index()` builds the command-palette JSON (title/type/
   tags/short-snippet only, **not** full note bodies — this was a deliberate size fix, see "Recent
-  history" item 5). `_render_pages()` renders `index.html`, `garden.html`, `404.html` and nothing
-  else.
+  history" item 5). `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
+  `404.html` and nothing else. `build_all()` loads `profile.json` (below) *before* scanning the
+  vault, so a malformed profile aborts the build before any vault work; it also writes
+  `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).
+- **`profile.py`** — the About page's data layer. `load_profile()` reads the repo-root
+  `profile.json` and `validate_profile()` checks it against a hand-written schema (no `jsonschema`
+  dependency, same precedent as `tools/validate_vault_schema.py`): unknown keys at any depth, a
+  non-string where a string is expected, an over-long string, a bad `meta.updated` date, or a URL
+  whose scheme isn't `http`/`https`/`mailto` all raise `ProfileError` (a `RuntimeError`) with a
+  path-qualified message. A **missing file is fatal by design** — a conditionally present page
+  would make the nav differ build to build. `person_jsonld()` returns a schema.org `Person` dict
+  that the pipeline serializes with `dumps_for_script_tag()` (the correct sink for JSON in a
+  `<script>`). The module emits no HTML; every profile value reaches the page through autoescaped
+  `{{ }}`.
 
 ### Link system (the "personal wiki" part)
 
@@ -194,11 +220,16 @@ fixed (pills that looked clickable but weren't, because the extractor threw away
 
 ### Templates (`system/templates/`)
 
-Only four template files exist: `base.html` (nav, footer, command palette, theme CSS block, loads
+Only five template files exist: `base.html` (nav, footer, command palette, theme CSS block, loads
 `marked.js` via CDN pinned with an SRI hash, loads `assets/js/utils.js` for the shared
 `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
 (Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live
-here). Both page templates `{% extends "base.html" %}`.
+here), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like page: one `<h1>`,
+`aria-labelledby` sections, no terminal-flavored copy, no `data-reveal`, a `@media print` block in
+`main.css` so it doubles as a printable résumé). All page templates `{% extends "base.html" %}`.
+`base.html` reads `config.site` (nav brand, `<title>`, canonical URL) and carries the skip link
+and the three nav entries; child templates that need `site` must `{% set %}` it themselves, since
+a parent's top-level `set` is not visible inside a child's blocks.
 
 `base.html`'s inline `<script>` embeds `SYSTEM_INDEX` (the command-palette JSON) via
 `dumps_for_script_tag`, safe against a note title containing a literal `</script`.
@@ -424,6 +455,20 @@ knowing so you don't "fix" something that was a deliberate decision:
     already warned about); the extractor and media-widget map still recognize all 9 if a header is
     added by hand. The actual new capability, `content.wrap_gemini_notebook_sections()`, is
     documented under "Content model" above.
+15. **About page + rebrand plumbing (2026-09).** A third published page, `about.html`, as a
+    professional profile and portfolio piece — the site itself is the demo. Content lives in a
+    repo-root `profile.json`, **not** in `vault/` (the vault is off-limits to sessions, and a CV is
+    structured data, not a note), and is validated fail-loud by `engine/profile.py` (see its
+    Architecture entry for the rules and why there's no `jsonschema` dependency). The old
+    Portfolio page type did not come back: no card type, no extractor, nothing read from the vault.
+    Content decisions worth knowing: only repos confirmed public via the GitHub API carry links
+    (private ones are described without a URL); location is state-level; the contact email is
+    the one already public in `user_config.json`; side jobs and employer-internal tooling were
+    left out. In the same pass `user_config.json` gained the `site` block and `base.html` was
+    made brand-config-driven (nav label, title, canonical, `dist/CNAME`), the skip link and
+    `<main id="main-content">` landmark were added, and the author `role`/`bio_*` strings were
+    rewritten to the new positioning. The Lobby's hero/manifesto and the terminal-flavored chrome
+    copy are the *next* rebrand pass, listed in the intro above.
 
 ## Known gaps / deliberately not done
 

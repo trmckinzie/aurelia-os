@@ -23,16 +23,75 @@ FACTORY_CONFIG = {
         "bio_short": "Digital Knowledge Management System.",
         "bio_long": "Aurelia OS is a local-first digital garden designed to augment biological cognition through structured data workflows."
     },
+    # Brand block read by base.html (nav label, <title>, canonical URL).
+    # `domain` stays empty in the factory: a non-empty value makes the build
+    # write dist/CNAME for GitHub Pages, which is only right once the owner
+    # has actually bought the domain and pointed DNS at Pages.
+    "site": {
+        "name": "[INSERT SITE NAME]",
+        "nav_label": "SITE",
+        "tagline": "A personal knowledge base, published.",
+        "domain": ""
+    },
     "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com",
-        "twitter": "https://twitter.com"
+        "github": "https://github.com"
     },
     "tech_stack": [
         { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "Neural Core.", "icon": "💎" },
         { "name": "Zotero", "type": "RESEARCH // CITATION", "desc": "Reference Library.", "icon": "📚" },
         { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Build Engine.", "icon": "🐍" }
     ]
+}
+
+# The About page's content. Structured data, not a note: it lives at the repo
+# root rather than in vault/, and engine/profile.py validates it strictly
+# (unknown keys, bad URL schemes, over-long strings and a missing file all
+# FAIL the build rather than rendering a half-empty page). Every value here
+# is a placeholder shaped to pass that validator, so the factory clone builds
+# out of the box and the owner replaces the text rather than the structure.
+FACTORY_PROFILE = {
+    "schema_version": 1,
+    "identity": {
+        "name": "[INSERT NAME]",
+        "headline": "[INSERT HEADLINE -- one line, what you do]",
+        "location": "Global",
+        "summary": "[INSERT SUMMARY -- three or four sentences about your work.]"
+    },
+    "roles": [
+        {
+            "org": "[INSERT ORGANIZATION]",
+            "title": "[INSERT TITLE]",
+            "period": "2026 -- present",
+            "description": "[INSERT one or two sentences about what you do there.]",
+            "primary": True
+        }
+    ],
+    "education": [
+        {
+            "institution": "[INSERT INSTITUTION]",
+            "credential": "[INSERT DEGREE OR CERTIFICATION]",
+            "period": "2026"
+        }
+    ],
+    "skills": [
+        { "group": "Software", "items": ["Python", "Git"] },
+        { "group": "Knowledge Management", "items": ["Obsidian", "Zettelkasten"] }
+    ],
+    "projects": [
+        {
+            "name": "This site",
+            "description": "A static-site generator that publishes an Obsidian vault as a digital garden. You are looking at the output.",
+            "url": "https://github.com",
+            "tags": ["Python", "Jinja2", "Tailwind"],
+            "status": "active"
+        }
+    ],
+    "links": [
+        { "label": "GitHub", "url": "https://github.com", "kind": "code" }
+    ],
+    "meta": {
+        "updated": "2026-01-01"
+    }
 }
 
 def print_step(msg):
@@ -100,6 +159,12 @@ def copy_engine():
     with open(os.path.join(TARGET_DIR, "user_config.json"), "w", encoding="utf-8") as f:
         json.dump(FACTORY_CONFIG, f, indent=4)
     print_step("Clean user_config.json generated.")
+
+    # 4. Profile (the About page). Written as JSON, not copied from the
+    # source repo -- the source profile.json is the real owner's CV.
+    with open(os.path.join(TARGET_DIR, "profile.json"), "w", encoding="utf-8") as f:
+        json.dump(FACTORY_PROFILE, f, indent=4)
+    print_step("Placeholder profile.json generated.")
 
 def copy_frontend():
     print("🎨  Migrating UI/UX Assets...")
@@ -202,6 +267,11 @@ def create_readme():
    npm install
    ```
 2. **Configure:** Open `user_config.json` and add your Name, Role, and Bio.
+   Then open `profile.json` and replace every `[INSERT ...]` placeholder --
+   this is the About page. Keep the structure: the build validates it and
+   refuses to run on an unknown key, a URL that isn't http/https/mailto,
+   or a missing required field, so a typo shows up as a build error rather
+   than a half-empty page.
 3. **Build:** Open a terminal and run `python build.py`.
 4. **View:** Open `dist/index.html` in your browser.
 
@@ -214,10 +284,11 @@ def create_readme():
   from scratch every time you run `python build.py`; don't edit it by hand.
 
 ## 🧩 Product
-This edition ships two pages: the Lobby (`index.html`) and the Garden
-(`garden.html`), your knowledge base. Every published note in `vault/`
-becomes a card there. Set `type:` in a note's frontmatter to choose its card
-layout:
+This edition ships three pages: the Lobby (`index.html`), the Garden
+(`garden.html`), your knowledge base, and About (`about.html`), a
+professional profile rendered from `profile.json` rather than from a note.
+Every published note in `vault/` becomes a card on the Garden. Set `type:`
+in a note's frontmatter to choose its card layout:
 - **concept** -- definitions, ideas, terms (see demo)
 - **source** -- books, articles, papers you're drawing on
 - **author** -- profiles of people whose work you cite

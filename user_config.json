@@ -2,41 +2,42 @@
     "system_name": "AURELIA // OS",
     "system_version": "v3.2.0",
     "status_message": "Developing_Aurelia_OS",
-    
+    "site": {
+        "name": "Travis R. McKinzie",
+        "nav_label": "TRM",
+        "tagline": "Web solutions, IT systems, and human-centered design.",
+        "domain": ""
+    },
     "author": {
         "name": "Travis R. McKinzie",
         "short_name": "T.R.M.",
-        "role": "Digital Architecture & AI Integration",
+        "role": "CFO & Head of Web Solutions, Rocky Mountain Automation AI",
         "email": "trmckinzie24@gmail.com",
         "location": "Colorado, USA",
-        "bio_short": "Evolutionary Theory meets Cognitive Science.",
-        "bio_long": "I build digital ecosystems that bridge the gap between biological cognition and artificial intelligence. My work focuses on designing systems that enhance the learning experience and increase the quality of your output as a creative, while balancing a healthy lifestyle (whatever that means to you). Everybody has a unique set of values, aspirations, desires, and obstacles in their life. It is my intention to provide people with digital tools that augment their knowledge and problem solving abilities through workflows that are functional, customizable, and visually stunning. Lets build together"
+        "bio_short": "Web design, cognitive psychology, and digital ergonomics.",
+        "bio_long": "I build web systems that respect how people actually think and work. With a background in psychology, business administration, and IT operations, I focus on web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction. This site is my working notebook and a live demonstration of that approach."
     },
-
     "links": {
-        "github": "https://github.com",
-        "linkedin": "https://linkedin.com",
-        "twitter": "https://twitter.com"
+        "github": "https://github.com/trmckinzie"
     },
-
-   "tech_stack": [
-        { "name": "ThinkPad T495", "type": "HARDWARE // MOBILE", "desc": "Tactical Mobile Unit. Ruggedized daily driver.", "icon": "💻" },
-        { "name": "MacBook Air M1", "type": "HARDWARE // MOBILE", "desc": "Lightweight Recon Unit. High-efficiency deployment.", "icon": "🍏" },
-        { "name": "Mac Mini M1", "type": "HARDWARE // NODE", "desc": "Local Control Server. Always-on automation & ops.", "icon": "🔲" },
-        { "name": "Alienware i7", "type": "HARDWARE // COMPUTE", "desc": "High-Performance Workstation. Heavy compute.", "icon": "🖥️" },
-        { "name": "reMarkable 2", "type": "HARDWARE // INPUT", "desc": "E-Ink Buffer. Distraction-free drafting.", "icon": "📝" },
-        { "name": "iPhone 14", "type": "HARDWARE // COMMS", "desc": "Primary Uplink. Mobile interface.", "icon": "📱" },
-        { "name": "Meta Ray-Ban", "type": "HARDWARE // VISION", "desc": "Augmented Input Node. First-person capture.", "icon": "🕶️" },
-        { "name": "Gemini Adv.", "type": "AI // CO-PROCESSOR", "desc": "Primary Intelligence Engine (1.5 Pro).", "icon": "✨" },
-        { "name": "Claude Code", "type": "AI // ENGINEER", "desc": "Autonomous Coding Operative. Full-stack CLI deployment.", "icon": "🤖" },
-        { "name": "Ollama", "type": "AI // LOCAL", "desc": "Offline Intelligence Node. Decentralized inference.", "icon": "🦙" },
-        { "name": "NotebookLM", "type": "AI // SYNTHESIS", "desc": "Grounded Analysis Studio.", "icon": "📓" },
-        { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "The Neural Core. Local-first database.", "icon": "💎" },
-        { "name": "Zotero", "type": "SOFTWARE // ARCHIVE", "desc": "Reference Library & Citation Tracking.", "icon": "📚" },
-        { "name": "VS Code", "type": "SOFTWARE // IDE", "desc": "The Construct. Development Environment.", "icon": "🛠️" },
-        { "name": "GitHub", "type": "VERSION // CONTROL", "desc": "Distributed Memory & Backup.", "icon": "🐙" },
-        { "name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓" },
-        { "name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍" },
-        { "name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨" }
+    "tech_stack": [
+        {"name": "ThinkPad T495", "type": "HARDWARE // MOBILE", "desc": "Tactical Mobile Unit. Ruggedized daily driver.", "icon": "💻"},
+        {"name": "MacBook Air M1", "type": "HARDWARE // MOBILE", "desc": "Lightweight Recon Unit. High-efficiency deployment.", "icon": "🍏"},
+        {"name": "Mac Mini M1", "type": "HARDWARE // NODE", "desc": "Local Control Server. Always-on automation & ops.", "icon": "🔲"},
+        {"name": "Alienware i7", "type": "HARDWARE // COMPUTE", "desc": "High-Performance Workstation. Heavy compute.", "icon": "🖥️"},
+        {"name": "reMarkable 2", "type": "HARDWARE // INPUT", "desc": "E-Ink Buffer. Distraction-free drafting.", "icon": "📝"},
+        {"name": "iPhone 14", "type": "HARDWARE // COMMS", "desc": "Primary Uplink. Mobile interface.", "icon": "📱"},
+        {"name": "Meta Ray-Ban", "type": "HARDWARE // VISION", "desc": "Augmented Input Node. First-person capture.", "icon": "🕶️"},
+        {"name": "Gemini Adv.", "type": "AI // CO-PROCESSOR", "desc": "Primary Intelligence Engine (1.5 Pro).", "icon": "✨"},
+        {"name": "Claude Code", "type": "AI // ENGINEER", "desc": "Autonomous Coding Operative. Full-stack CLI deployment.", "icon": "🤖"},
+        {"name": "Ollama", "type": "AI // LOCAL", "desc": "Offline Intelligence Node. Decentralized inference.", "icon": "🦙"},
+        {"name": "NotebookLM", "type": "AI // SYNTHESIS", "desc": "Grounded Analysis Studio.", "icon": "📓"},
+        {"name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "The Neural Core. Local-first database.", "icon": "💎"},
+        {"name": "Zotero", "type": "SOFTWARE // ARCHIVE", "desc": "Reference Library & Citation Tracking.", "icon": "📚"},
+        {"name": "VS Code", "type": "SOFTWARE // IDE", "desc": "The Construct. Development Environment.", "icon": "🛠️"},
+        {"name": "GitHub", "type": "VERSION // CONTROL", "desc": "Distributed Memory & Backup.", "icon": "🐙"},
+        {"name": "Google Scholar", "type": "WEB // QUERY", "desc": "Academic Query Engine.", "icon": "🎓"},
+        {"name": "Python", "type": "BACKEND // LOGIC", "desc": "Automation Backbone.", "icon": "🐍"},
+        {"name": "Tailwind", "type": "VISUAL // STYLE", "desc": "Cyberpunk Aesthetics.", "icon": "🎨"}
     ]
 }

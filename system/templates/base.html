@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+{# Site identity, one place. `config.site` is a newer block in
+   user_config.json; the factory clone (deploy.py) and any older config
+   predate it, so every read below goes through .get() with a fallback
+   rather than assuming the block exists.
+
+   A top-level {% set %} here IS visible inside a child template's blocks
+   (verified by rendering, not assumed): the child's root runs first, then
+   base's root puts `site` into the shared context before it reaches
+   {% block %} dispatch. Child templates therefore do not need to re-set it. #}
+{% set site = config.site or {} %}<!DOCTYPE html>
 <html lang="en" data-theme="{{ theme_key }}">
 <head>
     <!-- Runs before any stylesheet is applied, so a returning visitor's
@@ -15,15 +24,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}Aurelia OS{% endblock %}</title>
-    <meta name="description" content="{{ config.author.bio_short }}">
+    <title>{% block title %}{{ site.get('name', 'Aurelia OS') }}{% endblock %}</title>
+    <meta name="description" content="{% block description %}{{ config.author.bio_short }}{% endblock %}">
     <meta name="author" content="{{ config.author.name }}">
-    
-    <meta property="og:title" content="{{ config.system_name }}">
-    <meta property="og:description" content="{{ config.author.bio_short }}">
-    <meta property="og:image" content="assets/images/social-preview.jpg"> 
+
+    <meta property="og:title" content="{% block og_title %}{{ site.get('name', config.system_name) }}{% endblock %}">
+    <meta property="og:description" content="{{ self.description() }}">
+    <meta property="og:image" content="assets/images/social-preview.jpg">
     <meta property="og:type" content="website">
-    
+
+    {# Only emitted once a real domain is configured. A canonical URL built
+       from an empty domain would point every page at "https:///page.html",
+       which is worse than having none. #}
+    {% if site.get('domain') %}
+    <link rel="canonical" href="https://{{ site.get('domain') }}/{% if active_page != 'index' %}{{ active_page }}.html{% endif %}">
+    {% endif %}
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
     
     <!-- Every family a theme can select at runtime has to be loaded up front,
@@ -74,7 +90,12 @@
     {% block head_extra %}{% endblock %}
 </head>
 <body class="text-aurelia-text font-sans selection:bg-aurelia-primary selection:text-aurelia-inverted overflow-x-hidden min-h-screen flex flex-col">
-    
+
+    <!-- First focusable thing on every page: a keyboard user should not have
+         to tab through the whole nav (and the theme switcher) to reach the
+         content. Visually hidden until focused. -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[200] focus:px-4 focus:py-2 focus:bg-aurelia-bg focus:text-aurelia-text focus:border focus:border-aurelia-primary rounded-theme">Skip to content</a>
+
     <div class="scanline"></div>
 
     <nav class="nav-shell fixed top-0 w-full z-50 backdrop-blur-md">
@@ -88,7 +109,7 @@
                 <span class="text-aurelia-text font-bold group-hover:text-aurelia-primary transition-colors duration-300 whitespace-nowrap">
                     <!-- &nbsp; not a plain space: an inline-block strips leading
                          whitespace, which ate the gap before the "//". -->
-                    AURELIA_OS<span class="nav-sub inline-block align-bottom">&nbsp;// <span class="opacity-50">{% block nav_title %}HUB{% endblock %}</span></span>
+                    {{ site.get('nav_label', 'AURELIA_OS') }}<span class="nav-sub inline-block align-bottom">&nbsp;// <span class="opacity-50">{% block nav_title %}HUB{% endblock %}</span></span>
                 </span>
             </a>
 
@@ -102,6 +123,9 @@
 
                 <a href="garden.html" data-nav-link {% if active_page == 'garden' %}data-active{% endif %}
                    class="nav-link h-full flex items-center {% if active_page == 'garden' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">01_GARDEN</a>
+
+                <a href="about.html" data-nav-link {% if active_page == 'about' %}data-active{% endif %}
+                   class="nav-link h-full flex items-center {% if active_page == 'about' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">02_ABOUT</a>
 
                 <span id="nav-indicator" class="nav-indicator" aria-hidden="true"></span>
 
@@ -128,20 +152,21 @@
         <div id="mobile-menu" class="mobile-menu md:hidden flex flex-col gap-1 px-6 bg-aurelia-bg/95 border-t border-aurelia-border/40">
             <a href="index.html" class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">00_LOBBY</a>
             <a href="garden.html" class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">01_GARDEN</a>
+            <a href="about.html" class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">02_ABOUT</a>
             <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left field-label text-aurelia-muted">🔍 SEARCH // ⌘K</button>
             <div id="mobile-theme-menu" class="flex flex-col gap-1 pt-2 mt-2 mb-4 border-t border-aurelia-border/40 normal-case tracking-normal"></div>
         </div>
     </nav>
 
-    <main class="nav-offset flex-grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
+    <main id="main-content" class="nav-offset flex-grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="border-t border-aurelia-border bg-aurelia-bg/80 backdrop-blur py-7 mt-20 relative z-30">
+    <footer class="site-footer border-t border-aurelia-border bg-aurelia-bg/80 backdrop-blur py-7 mt-20 relative z-30">
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 field-label text-aurelia-muted">
             <div class="flex items-center gap-2.5">
                 <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_8px_currentColor] text-aurelia-primary"></div>
-                <span class="text-aurelia-primary">{{ config.system_name }} SYSTEM</span>
+                <span class="text-aurelia-primary">{{ site.get('name', config.system_name) }}</span>
             </div>
             <div class="text-aurelia-text normal-case tracking-normal font-mono text-xs">// {{ config.author.bio_short }}</div>
             <div class="flex gap-6">
@@ -168,7 +193,7 @@
                 </div>
 
             <div class="px-4 py-2.5 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted">
-                <span>AURELIA_INDEX_V3.2</span>
+                <span>{{ site.get('nav_label', 'AURELIA') }}_INDEX</span>
                 <span id="cmd-count">0 NODES CONNECTED</span>
             </div>
         </div>

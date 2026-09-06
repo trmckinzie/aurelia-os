@@ -1,0 +1,114 @@
+{
+    "schema_version": 1,
+
+    "identity": {
+        "name": "Travis R. McKinzie",
+        "headline": "Web Solutions Lead & IT Professional — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
+        "location": "Colorado, USA",
+        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website."
+    },
+
+    "roles": [
+        {
+            "org": "Rocky Mountain Automation AI",
+            "title": "CFO & Head of Web Solutions",
+            "period": "2026 — present",
+            "description": "Lead web design, site architecture, and client-facing web builds and integrations for an automation-focused company, alongside financial oversight of the business.",
+            "primary": true
+        },
+        {
+            "org": "Adams State University — Computing Services",
+            "title": "Help Desk Manager",
+            "period": "Current",
+            "description": "Run the campus IT help desk: manage a student support team, own the ticketing workflow, and lead the migration of internal IT documentation into a searchable knowledge base.",
+            "url": "https://www.adams.edu/",
+            "primary": true
+        }
+    ],
+
+    "education": [
+        {
+            "institution": "Adams State University",
+            "credential": "B.A., Psychology",
+            "period": "2026",
+            "detail": "Chapter President, Psi Chi International Honor Society in Psychology.",
+            "url": "https://www.adams.edu/"
+        },
+        {
+            "institution": "Adams State University",
+            "credential": "B.S., Business Administration",
+            "period": "2026",
+            "url": "https://www.adams.edu/"
+        }
+    ],
+
+    "skills": [
+        {
+            "group": "Web & Design",
+            "items": ["Web design", "Digital ergonomics", "Accessibility (WCAG)", "Tailwind CSS", "Responsive layout", "Design systems", "GoHighLevel"]
+        },
+        {
+            "group": "Software",
+            "items": ["Python", "JavaScript", "TypeScript", "Next.js", "Node.js", "Jinja2", "Static site generation", "Git & GitHub", "CI/CD (GitHub Actions)"]
+        },
+        {
+            "group": "AI & Automation",
+            "items": ["Claude Code", "Model Context Protocol (MCP) servers", "Agent workflow design", "Workflow automation", "Local LLM inference"]
+        },
+        {
+            "group": "IT Operations",
+            "items": ["Help desk management", "IT service management", "Knowledge base design", "Identity & directory administration", "Endpoint support", "Technical documentation"]
+        },
+        {
+            "group": "Research & Cognition",
+            "items": ["Cognitive psychology", "Human factors", "Personal knowledge management", "Zettelkasten method", "Literature review"]
+        }
+    ],
+
+    "projects": [
+        {
+            "name": "This site — a personal knowledge base as a website",
+            "description": "A Python static-site generator that turns an Obsidian vault into a public digital garden: typed note cards, backlinks and a knowledge graph, four switchable themes, keyboard navigation, and a build that fails loudly on unsafe input. You are looking at the output.",
+            "url": "https://github.com/trmckinzie/aurelia-os",
+            "tags": ["Python", "Jinja2", "Tailwind", "GitHub Pages", "Accessibility"],
+            "status": "active"
+        },
+        {
+            "name": "Claude Docs MCP Server",
+            "description": "A local Model Context Protocol server that gives coding agents search and discovery over a documentation corpus, so answers come from the docs rather than memory.",
+            "url": "https://github.com/trmckinzie/claude-docs-mcp-server",
+            "tags": ["MCP", "TypeScript", "Developer tooling"],
+            "status": "maintained"
+        },
+        {
+            "name": "Agent Mission Control",
+            "description": "A Next.js dashboard for tracking AI agents, goals, and runs across a personal tool ecosystem, connected to the knowledge base through an MCP seam with a strict one-owner-per-datastore rule.",
+            "tags": ["Next.js", "TypeScript", "SQLite", "MCP"],
+            "status": "prototype"
+        },
+        {
+            "name": "PDF Chunker",
+            "description": "Splits large PDFs into per-chapter files by detecting document structure, built to make long technical references usable in AI research workflows.",
+            "url": "https://github.com/trmckinzie/pdf_chunker",
+            "tags": ["Python", "CLI", "Document processing"],
+            "status": "maintained"
+        },
+        {
+            "name": "File Sorter",
+            "description": "A small Python command-line tool for rule-based file organization — the kind of quiet automation that removes a daily chore.",
+            "url": "https://github.com/trmckinzie/file-sorter",
+            "tags": ["Python", "CLI", "Automation"],
+            "status": "maintained"
+        }
+    ],
+
+    "links": [
+        { "label": "GitHub", "url": "https://github.com/trmckinzie", "kind": "code" },
+        { "label": "Email", "url": "mailto:trmckinzie24@gmail.com", "kind": "email" }
+    ],
+
+    "meta": {
+        "updated": "2026-09-05",
+        "availability": "Open to conversations about web solutions, IT systems, and human-centered design."
+    }
+}

@@ -781,3 +781,113 @@ body {
     .lift, .bracket-mark, .bloom::after { transition: none; }
     .lift:hover, .lift:active { transform: none; }
 }
+/* Non-interactive chip -- skill and tag lists on the About page.
+   Deliberately NOT `.chip`: that variant carries a press affordance
+   (`transform` on :active), and :active fires on mousedown for any element,
+   so a static <li> built on .chip would nudge under the cursor and read as
+   clickable. Also sentence case rather than .chip's uppercase -- "Model
+   Context Protocol (MCP) servers" set in caps reads as shouting, not as a
+   label. Color is left to the call site, same discipline as .chip. */
+.chip-static {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--aurelia-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--aurelia-radius);
+}
+
+/* === PRINT: the About page as a CV ==========================================
+   Someone who reaches a profile page and hits Cmd+P expects a resume, not a
+   screenshot of a dark website. This turns the page into plain black-on-white
+   with the site chrome removed. Scoped as tightly as it can be: the URL
+   expansion and the page-break rules only apply inside .about-print, so no
+   other page inherits them.
+
+   The `* { color: #000 }` sledgehammer is deliberate. Every visible color in
+   this design system arrives through a `text-aurelia-*` utility with a real
+   specificity, so a single rule on the wrapper would lose to all of them.
+   Confined to @media print, this is the cheap correct answer. */
+@media print {
+    .nav-shell,
+    #mobile-menu,
+    #theme-menu,
+    #mobile-theme-menu,
+    #cmd-backdrop,
+    .scanline,
+    .site-footer {
+        display: none !important;
+    }
+
+    /* The entrance animation (assets/js/utils.js aureliaReveal) starts at
+       opacity 0 and is finished by script. A print rendering may never run
+       it -- and a half-finished one would print a faded page -- so anything
+       marked for reveal is forced fully visible here. */
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    html, body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    /* nav-offset reserves room for a fixed nav that is not printed. */
+    main.nav-offset {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        max-width: none !important;
+    }
+
+    .about-print {
+        background: #fff;
+        color: #000;
+        max-width: none;
+    }
+
+    .about-print * {
+        color: #000 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        border-color: #999 !important;
+    }
+
+    .about-print a {
+        color: #000 !important;
+        text-decoration: underline;
+    }
+
+    /* Print the destination of every outbound link -- a paper CV that says
+       "GitHub" with no address is a dead end. Scoped to .about-print so the
+       rest of the site is untouched. */
+    .about-print a[href^="http"]::after,
+    .about-print a[href^="mailto:"]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        word-break: break-all;
+    }
+
+    /* Keep a role, degree or project from being split across two sheets. */
+    .about-print li,
+    .about-print article {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* The two-column rail collapses: a sidebar makes no sense on A4.
+       Targeted by a plain hook class rather than by the Tailwind arbitrary-
+       value class it sits next to -- that selector would need three levels of
+       CSS escaping and would silently stop matching if the column widths were
+       ever retuned. */
+    .about-columns {
+        display: block !important;
+    }
+    .about-columns > * + * {
+        margin-top: 2.5rem;
+    }
+}
