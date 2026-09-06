@@ -624,12 +624,14 @@
              backdrop. aria-labelledby (not a fixed aria-label) so the dialog
              announces the note's own title. -->
         <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-none" onclick="event.stopPropagation()">
-            <!-- Identity strip. Replaces three macOS traffic lights (two of
-                 which were inert <div>s) plus "OBSIDIAN_VIEWER // ACTIVE",
-                 eleven characters that were identical for all 245 notes. Every
-                 value here is read off the card element's data-* attributes in
-                 openNote(); nothing new is computed at build time except
-                 data-label, which cards.py already had in hand. -->
+            {# Identity strip. Replaces three macOS traffic lights (two of
+               which were inert <div>s) plus "OBSIDIAN_VIEWER // ACTIVE",
+               eleven characters that were identical for all 245 notes. Every
+               value here is read off the card element's data-* attributes in
+               openNote(); nothing new is computed at build time except
+               data-label, which cards.py already had in hand.
+               A Jinja comment, not an HTML one: it quotes retired branding,
+               and HTML comments ship in dist/garden.html. #}
             <div class="flex justify-between items-center gap-4 px-4 sm:px-6 py-2.5 border-b border-aurelia-border shrink-0">
                 <div class="flex items-center gap-3 min-w-0">
                     <span aria-hidden="true" class="reader-dot"></span>
@@ -676,14 +678,15 @@
                     <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)" class="accent-aurelia-primary">
                 </label>
             </div>
-            <!-- Two groups, not three. The session info truncates; the controls
-                 never shrink. Previously this row was a single flex line whose
-                 content overflowed its own box by 21px at 375px, clipping the
-                 NEXT button off the edge where it could not be tapped -- and
-                 "LAST SEEN" sat *between* PREV and NEXT, so a status label was
-                 wedged inside the navigation cluster. The decorative
-                 "AURELIA_OS V3.0" is gone: it was occupying the width that
-                 caused the overflow. -->
+            {# Two groups, not three. The session info truncates; the controls
+               never shrink. Previously this row was a single flex line whose
+               content overflowed its own box by 21px at 375px, clipping the
+               NEXT button off the edge where it could not be tapped -- and
+               "LAST SEEN" sat *between* PREV and NEXT, so a status label was
+               wedged inside the navigation cluster. The decorative
+               "AURELIA_OS V3.0" is gone: it was occupying the width that
+               caused the overflow. (Jinja comment so the retired name does
+               not ship in dist/garden.html.) #}
             <div class="px-3 sm:px-4 py-2 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-2 sm:gap-4 shrink-0">
                 <div class="flex items-center gap-2 min-w-0 overflow-hidden">
                     <span id="modal-readtime" class="truncate"></span>
