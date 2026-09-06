@@ -569,6 +569,42 @@ body {
     .modal-action:hover::after { width: 0; }
 }
 
+/* === KEYBOARD NAVIGATION ============================================
+   The Garden's 245 cards and 245 tree rows were <article onclick> and
+   <div onclick>: no role, no tabindex, no key handler. The page had 25
+   focusable elements and every one of them was chrome, so the whole site
+   could be filtered and searched from a keyboard and then no note could
+   be opened. They are controls now (see engine/cards.py and the ROVING
+   FOCUS block in gardentemplate.html); this is what makes that visible.
+
+   One ring for both, in the primary role colour rather than each card's
+   identity colour: a focus ring answers "where am I", and it reads
+   faster when the answer looks the same everywhere. */
+.searchable-item:focus-visible,
+.searchable-tree-item:focus-visible {
+    outline: 2px solid var(--aurelia-primary);
+    outline-offset: 3px;
+}
+
+/* The Garden's chrome is two stacked sticky bars: base.html's nav
+   (--nav-h) and this page's filter toolbar. Arrowing upward through the
+   grid scrolls the focused card to the viewport top, which parks it
+   *under* both of them. --toolbar-h is published from JS because the
+   toolbar's height is content- and breakpoint-dependent (90px at desktop,
+   135px at 375px), unlike --nav-h which is a fixed token. The fallback
+   keeps this sane for the frame before JS runs. */
+.searchable-item,
+.searchable-tree-item {
+    scroll-margin-top: calc(var(--nav-h, 4rem) + var(--toolbar-h, 6rem) + 1rem);
+}
+
+/* Tree rows reveal their tags and the ACCESS affordance on hover only, so
+   a keyboard user arrowing down a row saw nothing appear at all. Same
+   treatment on focus. Written as a sibling of the hover rule rather than
+   folded into it, because :focus-visible is unknown to old parsers and an
+   invalid selector in a group takes the whole rule down with it. */
+.tree-node:focus-visible .tree-node-detail { opacity: 1; transform: translateX(0); }
+
 /* === NOTE READER ====================================================
    The reader modal's own chrome. Everything here is driven by one custom
    property, --note-accent, which gardentemplate.html's openNote() sets on

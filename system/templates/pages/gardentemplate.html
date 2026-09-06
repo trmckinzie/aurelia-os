@@ -399,7 +399,11 @@
 
                 <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
                     <span class="text-xs opacity-50 font-mono">CMD://</span>
-                    <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
+                    <!-- oninput, not onkeyup: a mouse paste, a drag-and-drop, an
+                         autofill and most IME composition all change the value
+                         without ever releasing a key, so onkeyup silently
+                         ignored every one of them. `input` covers typing too. -->
+                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -421,7 +425,13 @@
         </div>
 
         <div class="mb-8 flex justify-between items-end border-b border-aurelia-border pb-4 gap-4">
-            <p class="field-label text-aurelia-muted">
+            <!-- The page's only live region. Filtering and searching change the
+                 result count with no other feedback, so without this a screen
+                 reader hears nothing at all when 245 results become 0 -- which
+                 is what would make the keyboard navigation below merely
+                 possible rather than usable. aria-atomic so the whole
+                 "TOTAL_NODES: n" phrase is re-read, not the bare digit. -->
+            <p class="field-label text-aurelia-muted" aria-live="polite" aria-atomic="true">
                 // TOTAL_NODES: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
             </p>
             <p class="field-label text-aurelia-tertiary" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
@@ -530,8 +540,11 @@
                         <div class="tree-branch space-y-1 mt-2">
                             {% for card in group %}
                             <div class="tree-node group/node cursor-pointer searchable-tree-item"
+                                 role="button" tabindex="-1"
+                                 aria-label="{{ card.title }}"
                                  onclick="openNote('{{ card.id }}')"
                                  data-id="{{ card.id }}"
+                                 data-title="{{ card.title }}"
                                  data-type="{{ card.type|lower }}"
                                  data-tags="{{ card.tags|join(' ') }}">
                                 
@@ -540,7 +553,10 @@
                                     <span class="text-sm font-mono text-aurelia-muted group-hover/node:text-aurelia-text transition-colors truncate">{{ card.title }}</span>
                                 </div>
 
-                                <div class="hidden md:flex items-center gap-4 opacity-0 group-hover/node:opacity-100 transition transform translate-x-2 group-hover/node:translate-x-0">
+                                <!-- tree-node-detail is the hook main.css uses to
+                                     reveal this on :focus-visible as well as on
+                                     hover; keyboard focus alone showed nothing. -->
+                                <div class="tree-node-detail hidden md:flex items-center gap-4 opacity-0 group-hover/node:opacity-100 transition transform translate-x-2 group-hover/node:translate-x-0">
                                     
                                     <div class="flex gap-1">
                                         {% for tag in card.tags[:2] %}
@@ -776,6 +792,12 @@
 
         if (mode === 'graph') initGraph();
         updateSortControlVisibility();
+        // The grid and the tree keep separate item lists, so the tab stop has
+        // to be re-established against whichever one is now on screen. Reset
+        // to the top: carrying position 180 across from the grid into a tree
+        // that groups by type would land somewhere arbitrary.
+        if (previous !== mode) rovingIndex = 0;
+        syncRoving(false);
         syncViewToUrl();
     }
 
@@ -793,7 +815,25 @@
         const connectionDistance = 150; 
         const mouseDistance = 200; 
 
-        function resize() { width = canvas.width = canvas.parentElement.offsetWidth; height = canvas.height = canvas.parentElement.offsetHeight; }
+        /* The backing store is sized in device pixels, the drawing surface
+           stays in CSS pixels. This used to set canvas.width straight from
+           offsetWidth, so on any display with devicePixelRatio above 1 --
+           a Retina screen is 2, Windows at 125% scaling is 1.25 -- the
+           browser stretched a half-resolution bitmap over the element and
+           every line came out soft.
+
+           setTransform (not scale) because resize() runs again on every
+           window resize, and scale() would compound each time. width and
+           height stay CSS pixels, which is what the particle simulation and
+           the mouse mapping below both work in, so nothing else changes. */
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            width = canvas.parentElement.offsetWidth;
+            height = canvas.parentElement.offsetHeight;
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
         window.addEventListener('resize', resize);
         resize();
 
@@ -1008,6 +1048,13 @@
 
         // 4. REFRESH GRAPH DIMMING (if that's the active view)
         if (currentView === 'graph' && graphState && graphState.laidOut) drawGraph();
+
+        // 5. KEEP THE KEYBOARD TAB STOP VALID
+        // Everything above can hide or reorder the item currently carrying
+        // tabindex="0". If that item ends up hidden, the grid stops being
+        // reachable by Tab at all, so re-apply and clamp after every sweep.
+        // Never steals focus -- this runs on every keystroke in the search box.
+        syncRoving(false);
     }
 
     function graphNodeMatches(node) {
@@ -1032,6 +1079,141 @@
             .filter(el => el.style.display !== 'none')
             .map(el => el.dataset.id);
     }
+
+    /* === ROVING FOCUS =================================================
+       Makes the grid and the tree operable from a keyboard. Both were
+       walls of onclick-only elements: 245 cards, 245 tree rows and 615
+       in-card pills, none of them reachable, against 25 focusable
+       elements on the page that were all nav and toolbar.
+
+       Roving rather than one tab stop per card. Every card being a tab
+       stop is simpler, but Tab would then have to pass through up to 245
+       of them to reach anything after the grid. Instead exactly one item
+       carries tabindex="0" and the rest carry -1, so the grid is a single
+       stop and the arrow keys move within it -- the same shape a native
+       listbox or radio group has, and what a screen reader user expects
+       from a grid of peers.
+
+       Visibility is read from style.display, matching getVisibleNoteIds()
+       and updateGrid()'s own sweep, so the walk follows the active
+       filter, topic, search and sort with nothing extra to keep in sync.
+       The reader's [ and ] keys use that same helper, which is why
+       arrowing and next/previous cannot drift apart. */
+    let rovingIndex = 0;
+
+    function rovingContainer() {
+        return currentView === 'tree'
+            ? document.getElementById('treeView')
+            : document.getElementById('cardGrid');
+    }
+
+    function rovingItems() {
+        const sel = currentView === 'tree' ? '.searchable-tree-item' : '#cardGrid .searchable-item';
+        return Array.from(document.querySelectorAll(sel)).filter(el => {
+            if (el.style.display === 'none') return false;
+            // A row inside a collapsed <details> is display:none only via its
+            // ancestor, so check that it actually has a box.
+            return el.getClientRects().length > 0;
+        });
+    }
+
+    // Grid columns come from the computed template rather than a hardcoded 3,
+    // so up/down step one visual row at every breakpoint (1 / 2 / 3 columns).
+    function rovingColumns() {
+        const grid = document.getElementById('cardGrid');
+        if (!grid || currentView === 'tree') return 1;
+        const cols = getComputedStyle(grid).gridTemplateColumns;
+        if (!cols || cols === 'none') return 1;
+        return Math.max(1, cols.trim().split(/\s+/).length);
+    }
+
+    // Every card and tree row, visible or not. syncRoving resets across the
+    // whole set rather than only the visible one, because an item that gets
+    // filtered out -- or a row belonging to the view you just switched away
+    // from -- keeps whatever tabindex it last had. Clearing only what is
+    // currently visible leaves those stragglers at 0, and the grid ends up
+    // with two tab stops the moment one of them is shown again.
+    function allRovingCandidates() {
+        return document.querySelectorAll('#cardGrid .searchable-item, .searchable-tree-item');
+    }
+
+    /* Re-applies tabindex after anything that changes what is visible or in
+       what order. Clamps the index: filtering from 245 cards down to 3 must
+       not leave the tab stop pointing at a card that is now hidden, which
+       would silently make the grid unreachable by Tab entirely. */
+    function syncRoving(focusActive) {
+        allRovingCandidates().forEach(el => { el.tabIndex = -1; });
+        const items = rovingItems();
+        if (items.length === 0) { rovingIndex = 0; return; }
+        if (rovingIndex >= items.length) rovingIndex = items.length - 1;
+        if (rovingIndex < 0) rovingIndex = 0;
+        items[rovingIndex].tabIndex = 0;
+        if (focusActive) {
+            items[rovingIndex].focus({ preventScroll: true });
+            items[rovingIndex].scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    function moveRoving(delta) {
+        const items = rovingItems();
+        if (items.length === 0) return;
+        rovingIndex = Math.min(items.length - 1, Math.max(0, rovingIndex + delta));
+        syncRoving(true);
+    }
+
+    function rovingKeydown(e) {
+        const item = e.target.closest('.searchable-item, .searchable-tree-item');
+        if (!item) return;
+        const cols = rovingColumns();
+        switch (e.key) {
+            case 'ArrowRight': e.preventDefault(); moveRoving(1); break;
+            case 'ArrowLeft':  e.preventDefault(); moveRoving(-1); break;
+            case 'ArrowDown':  e.preventDefault(); moveRoving(cols); break;
+            case 'ArrowUp':    e.preventDefault(); moveRoving(-cols); break;
+            case 'Home':       e.preventDefault(); rovingIndex = 0; syncRoving(true); break;
+            case 'End':        e.preventDefault(); rovingIndex = rovingItems().length - 1; syncRoving(true); break;
+            case 'Enter':
+            case ' ':
+                // Space scrolls the page by default; a role="button" must not.
+                e.preventDefault();
+                if (item.dataset.id) openNote(item.dataset.id);
+                break;
+            default: return;
+        }
+    }
+
+    ['cardGrid', 'treeView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('keydown', rovingKeydown);
+        // Clicking a card focuses it (elements with any tabindex, -1 included,
+        // are click-focusable), so this keeps the arrow keys continuing from
+        // wherever the mouse last was instead of jumping back to the old index.
+        el.addEventListener('focusin', (e) => {
+            const item = e.target.closest('.searchable-item, .searchable-tree-item');
+            if (!item) return;
+            const idx = rovingItems().indexOf(item);
+            if (idx !== -1 && idx !== rovingIndex) {
+                rovingIndex = idx;
+                syncRoving(false);
+            }
+        });
+    });
+
+    /* The filter toolbar is sticky under the nav, so a focused card scrolled
+       to the viewport top lands underneath it. main.css turns this into
+       scroll-margin-top; it is published from here because the toolbar's
+       height is content- and breakpoint-dependent (90px wide, 135px at
+       375px) rather than a fixed token like --nav-h. */
+    (function publishToolbarHeight() {
+        const bar = document.querySelector('.nav-anchored');
+        if (!bar) return;
+        const write = () => document.documentElement.style.setProperty(
+            '--toolbar-h', bar.getBoundingClientRect().height + 'px');
+        write();
+        if (window.ResizeObserver) new ResizeObserver(write).observe(bar);
+        else window.addEventListener('resize', write);
+    })();
 
     // HELPER: Centralized Logic (The Brain)
     /* === SORTING & RELEVANCE RANKING =================================
@@ -1350,8 +1532,11 @@
         const VISIBLE = 12;
         const shown = refs.slice(0, VISIBLE);
         const rest = refs.slice(VISIBLE);
+        // Ordinary tab stops, unlike the tabindex="-1" pills on the card faces:
+        // there are at most a dozen or so here, and the reader already traps
+        // focus around its own content, so they cost nothing to tab through.
         const pill = (r) => `
-                    <span onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</span>`;
+                    <button type="button" onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
         container.innerHTML = `
             <div class="mt-6 pt-6 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
@@ -1407,7 +1592,7 @@
                 <span class="field-label text-aurelia-accent block mb-3">✦ Related by Topic</span>
                 <div class="flex flex-wrap gap-2">
                     ${related.map(r => `
-                    <span onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</span>
+                    <button type="button" onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
                     `).join('')}
                 </div>
             </div>
@@ -1508,12 +1693,17 @@
     window.addEventListener('popstate', syncModalToLocation);
 
     document.addEventListener('keydown', (e) => {
+        // The open-check has to gate Escape too, not just the reading keys.
+        // closeModal() now moves history (see its comment), and this handler
+        // fires on every Escape anywhere on the page -- so dismissing the
+        // command palette with a note id sitting in the URL used to run the
+        // reader's close path and navigate the browser backwards. Escape
+        // belongs to whatever is actually open.
+        if (modalBackdrop.classList.contains('hidden')) return;
         if (e.key === 'Escape') { closeModal(); return; }
-        if (!modalBackdrop.classList.contains('hidden')) {
-            if (e.key === ']') navigateNote(1);
-            if (e.key === '[') navigateNote(-1);
-            if (e.key === 'r' || e.key === 'R') toggleReading();
-        }
+        if (e.key === ']') navigateNote(1);
+        if (e.key === '[') navigateNote(-1);
+        if (e.key === 'r' || e.key === 'R') toggleReading();
     });
 
     /* Focus trap. aria-modal="true" tells assistive tech that the rest of
@@ -1976,6 +2166,16 @@
         renderReviewQueue();
     }
 
+    // How many notes the queue panel shows at once. The *count* is deliberately
+    // not capped by this -- see renderReviewQueue.
+    const REVIEW_QUEUE_SHOWN = 8;
+
+    // Returns EVERY due note, most-overdue first. This used to end in
+    // `.slice(0, 8)`, and renderReviewQueue reported that slice's length as
+    // the count -- so DUE_FOR_REVIEW read "8" whenever 8 or more notes were
+    // due, no matter how far behind you actually were, and disagreed with the
+    // Lobby's teaser (which computes the real number from the same log and the
+    // same intervals). Truncation is a rendering concern and now lives there.
     function computeReviewQueue() {
         const now = Date.now();
         const items = Array.from(document.querySelectorAll('#cardGrid .searchable-item')).map(el => {
@@ -1983,10 +2183,12 @@
             const last = reviewLog[id];
             const intervalMs = (REVIEW_INTERVAL_DAYS[el.dataset.maturity] || DEFAULT_INTERVAL_DAYS) * 86400000;
             const due = last ? (now - last) / intervalMs : Infinity;
-            const h3 = el.querySelector('h3');
-            return { id, title: h3 ? h3.innerText : id, due, last };
+            // dataset.title rather than the <h3>: highlightText() rewrites
+            // that element's innerHTML while a search is active, the same
+            // reason the sort comparators read the attribute.
+            return { id, title: el.dataset.title || id, due, last };
         });
-        return items.filter(i => i.due >= 1).sort((a, b) => b.due - a.due).slice(0, 8);
+        return items.filter(i => i.due >= 1).sort((a, b) => b.due - a.due);
     }
 
     function renderReviewQueue() {
@@ -2002,12 +2204,16 @@
             return;
         }
         panel.classList.remove('hidden');
-        container.innerHTML = queue.map(item => `
-            <span onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
+        const shown = queue.slice(0, REVIEW_QUEUE_SHOWN);
+        const overflow = queue.length - shown.length;
+        container.innerHTML = shown.map(item => `
+            <button type="button" onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
                 <span>${escapeHtml(item.title)}</span>
                 <span class="opacity-50 text-[9px]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
-            </span>
-        `).join('');
+            </button>
+        `).join('') + (overflow > 0 ? `
+            <span class="text-xs font-mono px-3 py-1.5 text-aurelia-muted opacity-70 flex items-center">+${overflow} more due</span>
+        ` : '');
     }
 
     // --- KNOWLEDGE GRAPH VIEW ---
@@ -2018,6 +2224,10 @@
     // click at a time.
     let graphState = null;
     let graphPan = { x: 0, y: 0, scale: 1, dragging: false, lastX: 0, lastY: 0 };
+    // The canvas's CSS size. Kept separately from canvas.width/height, which
+    // are the device-pixel backing store (see initGraph) and would be wrong
+    // to mix with pointer coordinates.
+    let graphSize = { width: 0, height: 0 };
 
     // Reads live --aurelia-* values rather than hardcoded hex -- same
     // reasoning as the primary/text reads in drawGraph() below: a fixed
@@ -2045,8 +2255,24 @@
         const canvas = document.getElementById('graph-canvas');
         const wrap = document.getElementById('graph-canvas-wrap');
         if (!canvas || !wrap) return;
+        /* Backing store in device pixels, drawing surface in CSS pixels --
+           same reasoning as the neural canvas above.
+
+           graphSize exists because of the trap in doing this: drawGraph()
+           and graphNodeAt() both used to read canvas.width/canvas.height for
+           the centre point, and graphNodeAt() mixes that with
+           `e.clientX - rect.left`, which is CSS pixels. Scale the backing
+           store without touching them and the graph renders sharper while
+           hit-testing silently goes wrong -- clicking a node opens a
+           different note, with no error anywhere. Both now read graphSize. */
         const width = wrap.clientWidth, height = wrap.clientHeight;
-        canvas.width = width; canvas.height = height;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        canvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+        graphSize = { width, height };
 
         if (!graphState) {
             const degree = {};
@@ -2164,7 +2390,9 @@
     function graphNodeAt(canvas, e) {
         if (!graphState) return null;
         const rect = canvas.getBoundingClientRect();
-        const cx = canvas.width / 2 + graphPan.x, cy = canvas.height / 2 + graphPan.y;
+        // graphSize, not canvas.width/height: those are device pixels now, and
+        // they are being combined with clientX/rect, which are CSS pixels.
+        const cx = graphSize.width / 2 + graphPan.x, cy = graphSize.height / 2 + graphPan.y;
         const mx = (e.clientX - rect.left - cx) / graphPan.scale;
         const my = (e.clientY - rect.top - cy) / graphPan.scale;
         for (const n of graphState.nodes) {
@@ -2180,7 +2408,10 @@
         const empty = document.getElementById('graph-empty');
         if (!canvas || !graphState) return;
         const ctx = canvas.getContext('2d');
-        const width = canvas.width, height = canvas.height;
+        // CSS pixels: the context carries a devicePixelRatio transform from
+        // initGraph, so all drawing below stays in the same coordinate space
+        // the layout and the pointer handlers use.
+        const width = graphSize.width, height = graphSize.height;
         ctx.clearRect(0, 0, width, height);
 
         const cx = width / 2 + graphPan.x, cy = height / 2 + graphPan.y;

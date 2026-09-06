@@ -54,11 +54,23 @@ def link_pill(target_id, label, classes, known_ids):
     """
     label = escape(label)
     if target_id and target_id in known_ids:
+        # A real <button>, not a <span onclick>. Assistive tech announces this
+        # as a control and can activate it; a span announced nothing and was
+        # invisible to every keyboard affordance on the page.
+        #
+        # tabindex="-1" keeps it out of the global tab order on purpose. The
+        # grid uses roving focus (one tab stop, arrow keys between cards -- see
+        # gardentemplate.html), and 615 in-card pills would each become a stop
+        # and defeat it. A screen reader's browse mode still reaches these, and
+        # the same links are ordinary tab stops inside the reader's own
+        # Referenced By / Related sections.
+        #
         # `pill-live` adds the hover treatment (see main.css) -- a live link
         # should look reactive, not just colored, since color alone is what
         # made these look clickable when they weren't.
-        return (f'<span onclick="openNote(\'{target_id}\'); event.stopPropagation()" '
-                f'class="{classes} pill-live cursor-pointer">{label}</span>')
+        return (f'<button type="button" tabindex="-1" '
+                f'onclick="openNote(\'{target_id}\'); event.stopPropagation()" '
+                f'class="{classes} pill-live cursor-pointer">{label}</button>')
     if target_id:
         # grayscale neutralizes whatever hue `classes` set (so a dangling
         # link never looks like a "real," differently-colored pill); the
@@ -584,6 +596,18 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # is a no-op for every real tag -- the browser decodes entities before the
     # Garden's filter JS reads dataset.tags, so filtering is unaffected.
     #
+    # role/tabindex/aria-label make the card a real control. It was an
+    # <article onclick> with no role, no tabindex and no key handler, so not
+    # one of the 245 cards could be reached or activated without a mouse --
+    # the Garden could be filtered, sorted and searched, and then no note
+    # could be opened. tabindex starts at -1 on every card because the grid
+    # uses roving focus (gardentemplate.html's ROVING FOCUS block promotes
+    # exactly one card to 0, making the whole grid a single tab stop with
+    # arrow keys moving inside it). aria-label is the bare title: the card's
+    # visible text is type label, maturity, connection count and a body
+    # excerpt, and the accessible name should be the note, not all of that
+    # read out in sequence before you learn which note it is.
+    #
     # Autoescape is now ON (engine/config.py, audit finding #21), so the
     # template no longer needs -- and no longer has -- a `|safe` on this
     # value. The Markup() wrapper at the bottom of this function is what
@@ -592,7 +616,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content, full_search
     # (title, the prose fields, link_pill's label) or is a literal from this
     # module (icon, label, the Tailwind class strings).
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article role="button" tabindex="-1" aria-label="{escape_attr(raw_title)}" onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">
