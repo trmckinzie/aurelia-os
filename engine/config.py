@@ -48,9 +48,183 @@ env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=True)
 # Only "colors" is required. Every other key has a sensible fallback (see
 # engine/theming.py) so a minimal new theme can omit font_mono/rounded/
 # glass_opacity/glass_border/glass_shadow/scanline_bg/scanline_opacity
-# entirely and still render correctly.
+# entirely and still render correctly. Two more are overridable the same
+# way for the same reason: cursor_default/cursor_interactive normally
+# derive an SVG cursor (arrow / target-reticle) from the theme's own
+# colors, but a theme aiming at plain professional UI -- see TIMBERLINE --
+# can set them to the literal CSS keywords "auto"/"pointer" to opt out of
+# the custom cursors entirely.
+#
+# Six more govern the *type register* rather than color/shape, added for
+# TIMBERLINE's editorial brief and all optional with defaults that
+# reproduce the previous hard-coded behavior exactly, so every other theme
+# is unaffected:
+#   - font_body ("--aurelia-font-body", default "'Inter', sans-serif"):
+#     the body/paragraph face read by Tailwind's font-sans (see
+#     tailwind_build.py). Independent of font_mono/font_display -- a theme
+#     can go serif-display + grotesque-body (TIMBERLINE) without touching
+#     the mono/display faces at all.
+#   - display_weight / display_tracking / display_leading
+#     ("--aurelia-display-weight/-tracking/-leading", defaults "800" /
+#     "-0.03em" / "0.95"): the .display-xl/-lg/-md heading rules in
+#     main.css. Defaults are exactly what those rules used to hard-code, so
+#     a theme that omits these renders byte-for-byte identical headings to
+#     before this became theme-driven.
+#   - label_weight ("--aurelia-label-weight", default "700"): shared by
+#     .field-label/.btn/.chip in main.css (all were hard-coded to 700).
+#     Deliberately not read by .chip-static, which stays at a fixed 500
+#     regardless of theme -- see that rule's own comment in main.css.
+#   - halo ("--aurelia-halo", default "50%"): the color-mix() percentage
+#     behind main.css's .text-shadow-cyan glow. A theme going for a flat,
+#     hairline-and-paper register instead of a glowing one (TIMBERLINE)
+#     sets this to "0%" to turn the halo off rather than just dimming it.
 THEME_CONFIG = {
-    # 1. CYBER_PRIME (Dark / Neon)
+    # 1. TIMBERLINE (Light / Editorial). The default (2026-09 rebrand).
+    # Palette derived from Rocky Mountain Automation AI's live brand tokens
+    # (measured off rockymountainautomationai.com's own CSS): black
+    # #000000, signal orange #f04800, sand #f2c898, deep indigo #24214c,
+    # rust #7a2a0a, slate ink #1a2a33. The palette is unchanged from the
+    # theme's first pass; what changed in this pass is the *type register*
+    # sitting on top of it.
+    #
+    # The brief: "Helvetica + Times New Roman" -- a book-jacket or quality-
+    # broadsheet register, not a HUD, and not the same "clean grotesque
+    # headings" look the first pass reached for by pointing font_display at
+    # the body sans. A serif display face (font_display) now carries the
+    # headings and a grotesque (font_body/font_mono) carries everything
+    # else -- prose, field labels, buttons, chips, even code, the same
+    # trade THE_STOA already makes and documents the cost of (code blocks
+    # inherit the humanist face too; accepted there for the same reason
+    # here). font_display is 'Cormorant Garamond' -- the Garamond-family
+    # face actually available on Google Fonts -- falling back to 'Times New
+    # Roman', Times, serif: a *named*, deliberate fallback matching the
+    # brief's own "Times New Roman" half, not an accidental generic-serif
+    # default. This is also why every existing theme needed the six new
+    # display/label/halo keys documented above added before this pass could
+    # happen at all -- until now, font_body didn't exist and
+    # display_weight/tracking/leading/label_weight/halo were hard-coded in
+    # main.css and tailwind_build.py, so no theme (light or dark) could
+    # actually depart from "heavy mono-first, glowing" without editing
+    # shared CSS.
+    #
+    # The depth system follows the same brief: rounded is "0px" (a
+    # typeset page has square corners, not app-UI curves), glass_opacity is
+    # "1" (fully opaque -- paper, not glass), elevation_1 is a hairline
+    # (rgba(214, 204, 186, 0.55)) rather than a shadow, and halo is "0%" --
+    # the glowing text-shadow every other theme uses reads as HUD/neon, and
+    # an editorial page separates elements with rules and whitespace, not
+    # light. glow_primary is kept (a theme with a `primary` role still needs
+    # one, since it's referenced unconditionally elsewhere), but it's
+    # retuned to a soft sand-tint bloom rather than a saturated color, since
+    # the brief calls the brand's sand tint "the light source" and reserves
+    # true orange for emphasis text only.
+    #
+    # Professional first, brand-inspired second -- unchanged from the first
+    # pass. The true brand orange (#f04800) is a striking accent but fails
+    # AA as *text* on any of this theme's light backgrounds -- 3.39:1
+    # against bg_main, nowhere near the 4.5:1 floor, because it was
+    # designed to pop on black (RMAAI's own site), not to sit on paper.
+    # Rather than eyeball a lighter background or quietly drop the brand
+    # color, the trap is handled the same way GRIZZ handles its own
+    # print-dark brand green (#00452A, ~1.8:1 on black): the true hex is
+    # kept as a purely decorative anchor -- glow_primary's radial bloom is
+    # the one place rgba(240, 72, 0, ...) appears -- while every role that
+    # doubles as text/link color is a hand-darkened on-light tint of the
+    # same hue family (secondary #b93700, tertiary #7a2a0a -- rust is
+    # itself a true, unmodified brand hex and clears AA on its own at
+    # 8.83:1). The backgrounds were re-tuned this pass toward a warmer,
+    # more ivory paper (bg_main #f5f2eb, bg_layer_2 #eae5da -- a visibly
+    # deeper sand hairline than the first pass's cooler off-white) to read
+    # less like app chrome and more like stock; every text-bearing role was
+    # re-verified against all three backgrounds (bg_main, bg_layer_1,
+    # bg_layer_2) after that change: the tightest pairing is secondary on
+    # bg_layer_2 at 4.63:1, everything else clears with more room, and body
+    # text (text_main) runs comfortably past that on every surface.
+    #
+    # This is also why it's first in the dict (switcher order) and why
+    # CURRENT_THEME points here: the "Aurelia"/terminal-neon framing is
+    # being retired in favor of a professional portfolio site (see
+    # CLAUDE.md's rebrand notes), and a light, quiet, CV-appropriate theme
+    # is what a first-time visitor should land on now. The custom SVG
+    # cursors (arrow/reticle) are switched off via cursor_default/
+    # cursor_interactive below -- a "tactical HUD" cursor reads as playful
+    # novelty on a résumé-adjacent page, not as polish -- which is also why
+    # scanline_bg/grid_overlay are both "none" (this is the first theme
+    # with no atmosphere-texture overlay at all, another explicit inverse
+    # of the design each other theme opts into).
+    "TIMBERLINE": {
+        "label": "Timberline",
+        "description": "Light / Editorial",
+        "colors": {
+            "bg_main": "#f5f2eb",       # ivory paper
+            "bg_layer_1": "#fdfcf9",    # cards -- barely lifted off the page
+            "bg_layer_2": "#eae5da",    # hovers / modals -- sand hairline territory
+
+            "text_main": "#1a2a33",     # RMAAI's own body ink (slate)
+            "text_muted": "#4d5a63",
+            "text_inverted": "#ffffff",
+
+            "border_main": "#d6ccba",   # sand hairline
+            "border_focus": "#b93700",  # darkened brand orange (focus ring)
+
+            "primary": "#24214c",       # RMAAI deep indigo (headings, key data)
+            "secondary": "#b93700",     # brand orange, darkened for AA text (emphasis, CTAs)
+            "tertiary": "#7a2a0a",      # RMAAI rust (true brand hex; clears AA on its own)
+            "accent": "#2b5f80",        # steel blue (links/success role)
+            "highlight": "#8a5a12",     # ochre, sand family darkened (Source card identity)
+            "info": "#3f4a8c",          # indigo-slate (Gemini Notebook card identity)
+            "insight": "#2f6b4f",       # pine green (Deep Dive card identity)
+        },
+        # Serif display + grotesque everything-else -- see the comment
+        # above. font_mono doubles as font_body (both read Helvetica Neue),
+        # the same "one humanist face carries labels, buttons, chips, *and*
+        # code" trade THE_STOA documents; accepted here for the same
+        # reason.
+        "font_display": "'Cormorant Garamond', 'Times New Roman', Times, serif",
+        # Note headings in the reader take the same serif; every other
+        # theme leaves them in its body face (engine/theming.py default).
+        "font_reader_heading": "'Cormorant Garamond', 'Times New Roman', Times, serif",
+        "font_mono": "'Helvetica Neue', Helvetica, Arial, sans-serif",
+        "font_body": "'Helvetica Neue', Helvetica, Arial, sans-serif",
+        # A restrained serif register rather than the house style's heavy
+        # mono-first display type: a lighter weight, barely-there negative
+        # tracking (serif capitals don't need the aggressive tightening a
+        # grotesque does), and slightly looser leading than the house 0.95
+        # (a serif face wants a little more air between lines than a
+        # condensed mono does). label_weight stays a firm 600 rather than
+        # the house 700 -- Helvetica Neue at 700 in small caps reads heavy
+        # next to a light serif headline; 600 keeps labels legible without
+        # competing with it.
+        "display_weight": "600",
+        "display_tracking": "-0.005em",
+        "display_leading": "1.02",
+        "label_weight": "600",
+        "halo": "0%",               # no glow -- hairlines and whitespace do the separating
+        "rounded": "0px",           # a typeset page has square corners, not app-UI curves
+        "glass_opacity": "1",       # fully opaque -- paper, not glass
+        "glass_border": "1px solid #d6ccba",
+        "glass_shadow": "0 0 0 0 transparent",  # no-op; see theming.py's _DEFAULTS for why not `none`
+        "scanline_bg": "none",
+        "scanline_opacity": "0",
+        "surface_1": "linear-gradient(180deg, #fdfcf9 0%, #fbf9f4 100%)",
+        "surface_2": "linear-gradient(180deg, #fdfcf9 0%, #f3efe6 100%)",
+        # A hairline instead of a shadow at rest, still backed by a real
+        # (if soft) shadow ladder at the deeper levels -- a book jacket
+        # doesn't float, but a raised modal still needs to read as raised.
+        "elevation_1": "0 0 0 1px rgba(214, 204, 186, 0.55)",
+        "elevation_2": "0 12px 32px -20px rgba(26, 42, 51, 0.25)",
+        "elevation_3": "0 24px 56px -28px rgba(26, 42, 51, 0.30)",
+        "rim_light": "inset 0 0 0 0 transparent",  # no top-edge catch-light -- flat paper, not glass
+        # The brand's sand tint is the light source here; true orange is
+        # reserved for emphasis text, not ambient glow (see comment above).
+        "glow_primary": "radial-gradient(circle, rgba(242, 200, 152, 0.28) 0%, transparent 70%)",
+        "glow_accent": "radial-gradient(circle, rgba(43, 95, 128, 0.12) 0%, transparent 70%)",
+        "grid_overlay": "none",
+        "cursor_default": "auto",
+        "cursor_interactive": "pointer",
+    },
+
+    # 2. CYBER_PRIME (Dark / Neon)
     "CYBER_PRIME": {
         "label": "Cyber Prime",
         "description": "Dark / Neon",
@@ -113,7 +287,7 @@ THEME_CONFIG = {
                          "linear-gradient(90deg, rgba(0,242,255,0.055) 1px, transparent 1px)"),
     },
 
-    # 2. THE_PATRIOT (Light / Americana). Palette grounded in the U.S. Web
+    # 3. THE_PATRIOT (Light / Americana). Palette grounded in the U.S. Web
     # Design System (USWDS) -- the federal government's own design system,
     # built and accessibility-tested (Section 508 / WCAG AA) specifically
     # for red/white/blue/gold civic sites. Every color below is a real
@@ -183,7 +357,7 @@ THEME_CONFIG = {
         "scanline_opacity": "0.2",
     },
 
-    # 3. THE_STOA (Light / Stoic Greco-Roman + Swiss). Named for the Stoa
+    # 4. THE_STOA (Light / Stoic Greco-Roman + Swiss). Named for the Stoa
     # Poikile, the painted colonnade in Athens where Zeno of Citium taught --
     # a word that's simultaneously the origin of "Stoic" and a piece of
     # classical architecture (a repeating colonnade reads a lot like a
@@ -276,7 +450,7 @@ THEME_CONFIG = {
         "scanline_opacity": "0.15",
     },
 
-    # 4. GRIZZ (Dark / Collegiate). Adams State University's official
+    # 5. GRIZZ (Dark / Collegiate). Adams State University's official
     # Grizzlies colors are just two: green (Pantone 3435 C / #00452A) and
     # white -- confirmed via teamcolorcodes.com and brandcolorcode.com.
     # #00452A itself is print-dark: at ~0.044 relative luminance it manages
@@ -387,7 +561,14 @@ THEME_CONFIG = {
 # is never unstyled. Change this to re-point the *default*; it no longer
 # requires a rebuild to let a visitor use the other theme, since both are
 # always shipped and switchable at runtime.
-CURRENT_THEME = THEME_CONFIG["CYBER_PRIME"]
+#
+# TIMBERLINE as of the 2026-09 rebrand (was CYBER_PRIME): the site is
+# moving away from the "AURELIA" terminal-neon identity toward a
+# professional portfolio (see CLAUDE.md's rebrand notes), and a light,
+# quiet, CV-appropriate theme is what a first-time visitor should land on
+# now. CYBER_PRIME and the other three remain fully shipped and
+# switchable -- this only changes the default.
+CURRENT_THEME = THEME_CONFIG["TIMBERLINE"]
 
 
 def load_user_config():

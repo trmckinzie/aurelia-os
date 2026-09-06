@@ -572,7 +572,7 @@ def build_all(sort_dropzone=None):
         sort_dropzone = not skip_dropzone_env()
 
     print("------------------------------------------------")
-    print("💠 AURELIA OS BUILD ENGINE")
+    print("SITE BUILD ENGINE")
     print("------------------------------------------------")
 
     user_config = load_user_config()

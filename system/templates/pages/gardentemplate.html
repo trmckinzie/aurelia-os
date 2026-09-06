@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% set active_page = "garden" %}
-{% block nav_title %}GARDEN_DECK{% endblock %}
+{% block nav_title %}GARDEN{% endblock %}
 
 {% block head_extra %}
 <!-- The deep-search index (~0.95 MB, note_id -> full body text). Kept out of
@@ -178,7 +178,7 @@
        var(--aurelia-x) throughout, resolved from whatever theme is active
        (engine/theming.py), instead of a value baked in at build time. */
     .obsidian-reader {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         color: var(--aurelia-text-main);
         line-height: 1.8;
         font-size: 1.125rem;
@@ -191,6 +191,7 @@
     .obsidian-reader h1, .obsidian-reader h2, .obsidian-reader h3,
     .obsidian-reader h4, .obsidian-reader h5, .obsidian-reader h6 {
         color: var(--aurelia-text-main);
+        font-family: var(--aurelia-font-reader-heading);
         font-weight: 700; line-height: 1.3;
         margin-top: 2em; margin-bottom: 0.75em;
     }
@@ -326,7 +327,7 @@
 
                 <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
                     <button onclick="setFilter('all', this)" data-filter="all" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
-                        All_Notes
+                        All Notes
                     </button>
 
                     <button onclick="setFilter('daily-bridge', this)" data-filter="daily-bridge" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
@@ -338,7 +339,7 @@
                     </button>
 
                     <button onclick="setFilter('source', this)" data-filter="source" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
-                        Library
+                        Sources
                     </button>
 
                     <button onclick="setFilter('author', this)" data-filter="author" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
@@ -398,12 +399,12 @@
                 </div>
 
                 <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
-                    <span class="text-xs opacity-50 font-mono">CMD://</span>
+                    <svg aria-hidden="true" class="w-3.5 h-3.5 text-aurelia-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"></path></svg>
                     <!-- oninput, not onkeyup: a mouse paste, a drag-and-drop, an
                          autofill and most IME composition all change the value
                          without ever releasing a key, so onkeyup silently
                          ignored every one of them. `input` covers typing too. -->
-                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="SEARCH_DATABASE..." class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
+                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -416,10 +417,10 @@
             <div class="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.08)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] pointer-events-none"></div>
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--aurelia-bg-main)_100%)] z-10 opacity-50 pointer-events-none"></div>
             <div class="absolute bottom-6 left-8 z-20 pointer-events-none">
-                <h1 class="display-lg text-aurelia-text drop-shadow-[0_0_22px_color-mix(in_srgb,var(--aurelia-primary)_35%,transparent)]">DIGITAL_GARDEN</h1>
+                <h1 class="display-lg text-aurelia-text drop-shadow-[0_0_22px_color-mix(in_srgb,var(--aurelia-primary)_35%,transparent)]">The Garden</h1>
                 <p class="field-label text-aurelia-primary mt-3 flex items-center gap-3">
                     <span class="w-2 h-2 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_10px_var(--aurelia-primary)]"></span>
-                    SYSTEM STATUS: ONLINE // VIEW: <span id="view-mode-label">GRID_MATRIX</span>
+                    View: <span id="view-mode-label">Grid</span>
                 </p>
             </div>
         </div>
@@ -430,12 +431,12 @@
                  reader hears nothing at all when 245 results become 0 -- which
                  is what would make the keyboard navigation below merely
                  possible rather than usable. aria-atomic so the whole
-                 "TOTAL_NODES: n" phrase is re-read, not the bare digit. -->
+                 "Notes shown: n" phrase is re-read, not the bare digit. -->
             <p class="field-label text-aurelia-muted" aria-live="polite" aria-atomic="true">
-                // TOTAL_NODES: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
+                Notes shown: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
             </p>
             <p class="field-label text-aurelia-tertiary" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
-                DUE_FOR_REVIEW: <span id="review-count" class="text-aurelia-tertiary text-base font-extrabold tabular-nums">0</span>
+                Due for review: <span id="review-count" class="text-aurelia-tertiary text-base font-extrabold tabular-nums">0</span>
             </p>
         </div>
 
@@ -455,14 +456,14 @@
         <div id="review-queue" class="surface hidden mb-10 border border-aurelia-tertiary/40 rounded-theme p-5">
             <div class="flex items-center justify-between mb-3">
                 <span class="field-label text-aurelia-tertiary" title="Grounded in the spacing effect + retrieval practice: revisiting seeds and growing notes before they go stale helps them mature.">
-                    🧠 RETRIEVAL_QUEUE // Notes Due For Review
+                    🧠 Notes due for review
                 </span>
                 <span class="field-label text-aurelia-muted">Click to review →</span>
             </div>
             <div id="review-queue-items" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <div id="grid-empty" class="hidden text-center py-20 field-label text-aurelia-muted">No nodes match the current filter</div>
+        <div id="grid-empty" class="hidden text-center py-20 field-label text-aurelia-muted">No notes match the current filter</div>
 
         <!-- No auto-rows-fr. `grid-auto-rows: minmax(0, 1fr)` sizes every row
              in the grid to the tallest card on the *page*, not the tallest in
@@ -533,7 +534,7 @@
                             <div class="h-px bg-aurelia-border flex-grow mx-4 opacity-50"></div>
                             
                             <span class="text-[10px] text-aurelia-muted font-mono border border-aurelia-border bg-aurelia-bg px-2 py-0.5 rounded-theme">
-                                {{ group|length }} NODES
+                                {{ group|length }} notes
                             </span>
                         </summary>
 
@@ -565,7 +566,7 @@
                                     </div>
 
                                     <div class="flex items-center gap-1 text-[9px] font-bold text-aurelia-primary tracking-wider">
-                                        <span>ACCESS</span>
+                                        <span>Open</span>
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                     </div>
                                 </div>
@@ -579,7 +580,7 @@
 
         <div id="graphView" class="hidden">
             <div class="mb-4 flex items-center justify-between field-label text-aurelia-muted">
-                <span>Scroll to zoom · drag to pan · click a node to open</span>
+                <span>Scroll to zoom · drag to pan · click a note to open</span>
                 <div class="flex items-center gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-tertiary"></span>Log</span>
@@ -593,7 +594,7 @@
             <div id="graph-canvas-wrap" class="relative border border-aurelia-border bg-aurelia-bg/40 rounded-theme overflow-hidden" style="height: 70vh;">
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
                 <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-xs font-mono text-aurelia-text shadow-lg"></div>
-                <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-aurelia-muted uppercase tracking-widest">No nodes match the current filter</div>
+                <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-aurelia-muted uppercase tracking-widest">No notes match the current filter</div>
             </div>
         </div>
 
@@ -786,7 +787,7 @@
             }
         });
 
-        viewLabel.innerText = mode === 'grid' ? "GRID_MATRIX" : mode === 'tree' ? "TREE_DIRECTORY" : "NEURAL_GRAPH";
+        viewLabel.innerText = mode === 'grid' ? "Grid" : mode === 'tree' ? "Tree" : "Graph";
         // DELETED: The lines that set filterControls.style.opacity/pointerEvents
         // Filters now remain active in every mode.
 
@@ -1433,7 +1434,7 @@
         if (titleEl) titleEl.textContent = title;
         const typeEl = document.getElementById('modal-type');
         // data-label is the human label cards.py already chose for this type
-        // ("LIBRARY", "SYS_LOG"); it is not derivable from the type slug, so
+        // ("SOURCE", "DAILY LOG"); it is not derivable from the type slug, so
         // the fallback is the slug itself rather than a second lookup table.
         if (typeEl) typeEl.textContent = (card && card.dataset.label) || type.toUpperCase();
 
@@ -1482,11 +1483,11 @@
         const wordCount = (modalContent.innerText || '').trim().split(/\s+/).filter(Boolean).length;
         const minutes = Math.max(1, Math.round(wordCount / 200));
         const readtimeEl = document.getElementById('modal-readtime');
-        if (readtimeEl) readtimeEl.innerText = `~${minutes} MIN READ // ${wordCount} WORDS`;
+        if (readtimeEl) readtimeEl.innerText = `~${minutes} min read · ${wordCount} words`;
 
         const previousVisit = reviewLog[noteId];
         const reviewedEl = document.getElementById('modal-reviewed');
-        if (reviewedEl) reviewedEl.innerText = previousVisit ? `LAST SEEN: ${daysAgoLabel(previousVisit).toUpperCase()}` : 'FIRST VISIT';
+        if (reviewedEl) reviewedEl.innerText = previousVisit ? `Last seen: ${daysAgoLabel(previousVisit)}` : 'First visit';
         markReviewed(noteId);
 
         modalBackdrop.classList.remove('hidden');
@@ -2072,7 +2073,7 @@
         };
         // If both paths fail the URL is still in the address bar, so say
         // what to do rather than reporting a failure the reader can't act on.
-        writeToClipboard(location.href).then(ok => done(ok ? '✓ COPIED' : '⚠ PRESS ⌘C'));
+        writeToClipboard(location.href).then(ok => done(ok ? '✓ Copied' : '⚠ Press ⌘C'));
     }
 
     function daysAgoLabel(ts) {
@@ -2373,7 +2374,7 @@
                 tooltip.classList.remove('hidden');
                 tooltip.style.left = `${e.clientX - canvas.getBoundingClientRect().left + 14}px`;
                 tooltip.style.top = `${e.clientY - canvas.getBoundingClientRect().top + 10}px`;
-                tooltip.innerHTML = `${escapeHtml(hit.title)} <span class="opacity-50">// ${escapeHtml(hit.type)}</span>`;
+                tooltip.innerHTML = `${escapeHtml(hit.title)} <span class="opacity-50">· ${escapeHtml(hit.type)}</span>`;
             } else {
                 canvas.style.cursor = 'grab';
                 tooltip.classList.add('hidden');

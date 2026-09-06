@@ -184,7 +184,7 @@ def test_deep_dive_card_shows_no_links_placeholder_when_related_empty():
     meta = {"type": "deep-dive", "maturity": "seed", "tags": []}
     body = "*A premise*\n\n## Part 3: Summary\n\nSome text.\n"
     html = generate_garden_card_html(meta, "N.md", "note-n", body, "search")
-    assert "NO_LINKS_DETECTED" in html
+    assert "No links yet" in html
 
 
 def test_card_carries_the_attributes_the_garden_sorts_on():
@@ -252,9 +252,9 @@ def test_card_carries_the_type_label_the_reader_displays():
     # is NOT a transform of the type slug -- see the pairs below.
     for note_type, filename, expected in [
         ("concept", "A.md", "CONCEPT"),
-        ("source/book", "B.md", "LIBRARY"),
-        ("author", "C.md", "PROFILE"),
-        ("discipline", "D.md", "FIELD"),
+        ("source/book", "B.md", "SOURCE"),
+        ("author", "C.md", "AUTHOR"),
+        ("discipline", "D.md", "DISCIPLINE"),
         ("gemini-notebook", "E.md", "GEMINI NOTEBOOK"),
         ("deep-dive", "F.md", "DEEP DIVE"),
     ]:
@@ -270,7 +270,7 @@ def test_daily_log_card_carries_its_type_label():
     # Daily logs are detected by filename shape, not by a `type:` key, so
     # they reach the label through a different branch than the six above.
     html = generate_garden_card_html({"tags": []}, "2026-03-07.md", "note-2026-03-07", "body", "s")
-    assert 'data-label="SYS_LOG"' in html
+    assert 'data-label="DAILY LOG"' in html
 
 
 def test_card_type_label_is_escaped():

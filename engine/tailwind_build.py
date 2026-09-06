@@ -77,7 +77,12 @@ module.exports = {{
       }},
       borderRadius: {{ theme: 'var(--aurelia-radius)' }},
       fontFamily: {{
-        sans: ['Inter', 'sans-serif'],
+        // Body/paragraph face. Defaults to 'Inter' for every theme that
+        // doesn't set font_body (see engine/theming.py's _DEFAULTS), so
+        // this is theme-independent in effect for every existing theme --
+        // only a theme with its own editorial brief (TIMBERLINE) overrides
+        // the variable it reads from.
+        sans: ['var(--aurelia-font-body)', 'Inter', 'sans-serif'],
         mono: ['var(--aurelia-font-mono)', 'monospace'],
         // Headings. Defaults to the theme's own mono (the house style is
         // mono-first display type); a theme can point font_display at a

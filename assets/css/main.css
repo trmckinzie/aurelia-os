@@ -138,7 +138,7 @@ a, button, .carousel-card, .searchable-item, .glass, input {
    to be manual hex+alpha-suffix concatenation (e.g. {{ color }}80) --
    var() substitutes a value, not text, so that concatenation trick no
    longer works once the color itself is a variable. */
-.text-shadow-cyan { text-shadow: 0 0 10px color-mix(in srgb, var(--aurelia-primary) 50%, transparent); }
+.text-shadow-cyan { text-shadow: 0 0 10px color-mix(in srgb, var(--aurelia-primary) var(--aurelia-halo), transparent); }
 .text-shadow-white { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 
 body {
@@ -425,7 +425,7 @@ body {
 .field-label {
     font-family: var(--aurelia-font-mono);
     font-size: 10px;
-    font-weight: 700;
+    font-weight: var(--aurelia-label-weight);
     line-height: 1.4;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -439,7 +439,7 @@ body {
     gap: 0.65rem;
     font-family: var(--aurelia-font-mono);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: var(--aurelia-label-weight);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.95rem 1.6rem;
@@ -499,7 +499,7 @@ body {
     gap: 0.5rem;
     font-family: var(--aurelia-font-mono);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: var(--aurelia-label-weight);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
@@ -798,17 +798,28 @@ body {
 /* Mono-first display type. Headings use font-display (which defaults to
    the theme's own mono -- see engine/theming.py) at a heavy weight with
    tight tracking, which is what makes a mono heading read as deliberate
-   rather than as unstyled code. */
+   rather than as unstyled code. Weight/tracking/leading are theme-driven
+   (--aurelia-display-*, engine/theming.py) with defaults that reproduce
+   these exact former hard-coded values (800 / -0.03em / 0.95), so every
+   theme that doesn't set them renders byte-for-byte the same as before --
+   a theme with its own type register (serif display, lighter weight; see
+   TIMBERLINE in config.py) just overrides the variables. */
 .display-xl, .display-lg, .display-md {
     font-family: var(--aurelia-font-display);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 0.95;
+    font-weight: var(--aurelia-display-weight);
+    letter-spacing: var(--aurelia-display-tracking);
+    line-height: var(--aurelia-display-leading);
     text-wrap: balance;
 }
 .display-xl { font-size: clamp(2.75rem, 7vw, 6.5rem); }
 .display-lg { font-size: clamp(1.75rem, 3.5vw, 3rem); }
-.display-md { font-size: clamp(1.25rem, 2vw, 1.75rem); letter-spacing: -0.02em; }
+/* display-md tightens tracking a further notch past the base display
+   tracking, at a fixed ratio (+0.01em looser than the base, i.e. a smaller
+   negative value) rather than a second literal, so a theme that changes
+   --aurelia-display-tracking keeps the same relative relationship between
+   display-md and its larger siblings instead of the smaller size silently
+   reverting to CYBER_PRIME's own -0.02em. */
+.display-md { font-size: clamp(1.25rem, 2vw, 1.75rem); letter-spacing: calc(var(--aurelia-display-tracking) + 0.01em); }
 
 @media (prefers-reduced-motion: reduce) {
     /* Neutralize the depth system's motion, but keep its *appearance* --

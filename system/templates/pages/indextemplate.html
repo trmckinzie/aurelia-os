@@ -53,15 +53,18 @@
         -webkit-text-fill-color: transparent;
         background-clip: text;
         color: transparent;
-        filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent));
+        /* Halo strength is theme-driven (--aurelia-halo, engine/theming.py):
+           multipliers keep the historical 20/40/80% at the 50% default and
+           collapse to nothing on a theme that sets it to 0%. */
+        filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) calc(var(--aurelia-halo) * 0.8), transparent));
         animation: bio-pulse 4s ease-in-out infinite alternate;
     }
     @keyframes bio-pulse {
-        0% { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--aurelia-primary) 20%, transparent)); opacity: 0.8; }
-        100% { filter: drop-shadow(0 0 25px color-mix(in srgb, var(--aurelia-primary) 80%, transparent)); opacity: 1; }
+        0% { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--aurelia-primary) calc(var(--aurelia-halo) * 0.4), transparent)); opacity: 0.8; }
+        100% { filter: drop-shadow(0 0 25px color-mix(in srgb, var(--aurelia-primary) calc(var(--aurelia-halo) * 1.6), transparent)); opacity: 1; }
     }
     @media (prefers-reduced-motion: reduce) {
-        .hero-name { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) 40%, transparent)); }
+        .hero-name { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) calc(var(--aurelia-halo) * 0.8), transparent)); }
     }
 </style>
 {% endblock %}
@@ -171,7 +174,7 @@
         <h2 class="display-md text-aurelia-text mb-5">Garden status</h2>
 
         <div class="flex items-baseline gap-3 mb-5">
-            <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="font-display text-5xl font-extrabold text-aurelia-accent tabular-nums leading-none drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-accent)_45%,transparent)]">{{ stats.total_notes }}</span>
+            <span id="lobby-total-notes" data-target="{{ stats.total_notes }}" class="font-display text-5xl font-extrabold text-aurelia-accent tabular-nums leading-none drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-accent)_calc(var(--aurelia-halo)*0.9),transparent)]">{{ stats.total_notes }}</span>
             <span class="field-label text-aurelia-muted">published notes</span>
         </div>
 
@@ -220,7 +223,7 @@
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
                 <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
-                <h2 class="display-lg text-aurelia-text drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_50%,transparent)]">
+                <h2 class="display-lg text-aurelia-text drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_var(--aurelia-halo),transparent)]">
                     Toolkit
                 </h2>
                 <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
@@ -394,7 +397,15 @@
                     const anim = animate(seg, { width: ['0%', target] },
                                          { duration: 0.8, easing: 'ease-out' });
                     const settle = () => {
-                        try { anim.cancel(); } catch (e) { /* already finished */ }
+                        // stop(), not cancel(): Motion's cancel() reverts the
+                        // element to the animation's *first* keyframe (0%) on
+                        // the next frame, and settle runs twice (finished
+                        // promise + safety timeout) -- the second cancel()
+                        // landed after the width below was written and left
+                        // the bar empty. stop() halts and keeps the value.
+                        try {
+                            if (typeof anim.stop === 'function') anim.stop(); else anim.cancel();
+                        } catch (e) { /* already finished */ }
                         seg.style.width = target;
                     };
                     if (anim && anim.finished) anim.finished.then(settle).catch(settle);
@@ -517,7 +528,7 @@
 
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_20%,transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_60%,transparent)] transition duration-500">
+                        <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*0.4),transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*1.2),transparent)] transition duration-500">
                             ${tech.icon}
                         </div>
 

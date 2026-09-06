@@ -11,7 +11,7 @@ TARGET_DIR = os.path.join(SOURCE_DIR, TARGET_DIR_NAME)
 # --- 2. THE "WHITE LABEL" IDENTITY ---
 # Ships a Garden + Lobby product -- matches what engine/ actually builds.
 FACTORY_CONFIG = {
-    "system_name": "AURELIA // OS",
+    "system_name": "[INSERT SITE NAME]",
     "system_version": "v1.0.0 (Factory)",
     "status_message": "Portfolio & working notebook",
     "author": {
@@ -21,7 +21,7 @@ FACTORY_CONFIG = {
         "email": "user@university.edu",
         "location": "Global",
         "bio_short": "Digital Knowledge Management System.",
-        "bio_long": "Aurelia OS is a local-first digital garden designed to augment biological cognition through structured data workflows."
+        "bio_long": "The engine is a local-first digital garden designed to augment biological cognition through structured data workflows."
     },
     # Brand block read by base.html (nav label, <title>, canonical URL).
     # `domain` stays empty in the factory: a non-empty value makes the build
@@ -216,7 +216,7 @@ Change `type:` in the frontmatter to switch note types: `concept`, `source`,
 
     # --- B. DEMO GEMINI NOTEBOOK (With Flashcards & References) ---
     # First, create the CSV
-    csv_data = "Question,Answer\nWhat is Gemini Notebook?,An AI research assistant by Google.\nHow does Aurelia handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
+    csv_data = "Question,Answer\nWhat is Gemini Notebook?,An AI research assistant by Google.\nHow does the engine handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
     with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8") as f:
         f.write(csv_data)
 
@@ -242,7 +242,7 @@ assets/flashcards/demo_deck.csv
 
 # 📚 Sources
 > **References**
-> - Aurelia Systems. (2026). *The Architecture of Digital Memory*.
+> - Example Press. (2026). *The Architecture of Digital Memory*.
 > - Google Research. (2024). *Gemini Notebook Technical Report*.
 """
     with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "Gemini_Notebook_Demo.md"), "w", encoding="utf-8") as f:
@@ -251,7 +251,7 @@ assets/flashcards/demo_deck.csv
     print_step("Blueprint Notes created.")
 
 def create_readme():
-    readme_text = """# AURELIA // OS [FACTORY EDITION]
+    readme_text = """# Site Engine [Factory Edition]
 
 ## ✅ Prerequisites
 - Python 3.10+
@@ -305,7 +305,7 @@ A note only appears on the site once its frontmatter has `publish: true`.
         f.write(readme_text)
 
 def main():
-    print("\n💠 INITIATING AURELIA FACTORY DEPLOYMENT 💠")
+    print("\n💠 INITIATING SITE ENGINE FACTORY DEPLOYMENT 💠")
     print("==========================================")
     
     create_structure()

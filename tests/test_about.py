@@ -390,12 +390,12 @@ def test_canonical_for_the_lobby_points_at_the_site_root():
 def test_brand_label_comes_from_config():
     branded = render_about()
     assert "AL<span" in branded
-    assert "AURELIA_OS<span" not in branded
+    assert "SITE<span" not in branded
 
     # A config predating the `site` block (the factory clone writes one) must
-    # still render -- degraded to the old hardcoded brand, not to an error.
+    # still render -- degraded to the generic fallback brand, not to an error.
     legacy = render_about(config=make_config(include_site=False))
-    assert "AURELIA_OS<span" in legacy
+    assert "SITE<span" in legacy
     assert 'rel="canonical"' not in legacy
 
 

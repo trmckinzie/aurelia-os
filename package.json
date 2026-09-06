@@ -2,7 +2,7 @@
   "name": "aurelia-os",
   "private": true,
   "license": "MIT",
-  "description": "Build-time Tailwind CSS compilation for Aurelia OS (see build.py / engine/).",
+  "description": "Build-time Tailwind CSS compilation for the static-site generator behind trmckinzie's personal site (see build.py / engine/).",
   "devDependencies": {
     "tailwindcss": "3.4.19"
   }

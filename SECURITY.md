@@ -1,8 +1,8 @@
 # Security Policy
 
-Aurelia OS is a personal project (a static-site generator for a single-author digital garden) with
-no dedicated security team and no bug bounty program. That said, reports about the generator itself
-are welcome and taken seriously.
+This repository holds the static-site generator behind trmckinzie's personal site (a single-author
+digital garden), a personal project with no dedicated security team and no bug bounty program. That
+said, reports about the generator itself are welcome and taken seriously.
 
 ## Scope
 

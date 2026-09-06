@@ -1,4 +1,4 @@
-name: Deploy Aurelia OS
+name: Deploy personal site
 
 on:
   push:

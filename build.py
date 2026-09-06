@@ -15,7 +15,7 @@ from engine.pipeline import build_all
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(
         prog="build.py",
-        description="Build the Aurelia OS site into dist/.",
+        description="Build the site into dist/.",
     )
     parser.add_argument(
         "--no-sort",

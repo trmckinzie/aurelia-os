@@ -21,22 +21,28 @@ extractors, were deliberately removed (see "Recent history" below) — don't rei
 being asked. About does not bring them back: there is no `type: project` card, and nothing about
 the page reads from `vault/`.
 
-**The site is at the start of a rebrand.** The "Aurelia" name collides with an unrelated software
-company, so the plan is to move the site to a personal professional domain (working name
-`travisrmckinzie.com`, not yet purchased) and let the "evolutionary theory meets cognitive science"
-framing give way to web design, cognitive psychology, digital ergonomics, and Travis's professional
-roles. What has landed so far is the plumbing: `user_config.json` has a `site` block (`name`,
-`nav_label`, `tagline`, `domain`) that `base.html` reads for the nav brand, `<title>`, and
-canonical URL, and a non-empty `site.domain` makes the build write `dist/CNAME`. The Lobby, the
-shared chrome in `base.html`, the 404 page, and the search-index seed entries were rewritten in a
-second pass (2026-09-05): the "AURELIA" manifesto modal and the operator-bio modal are gone (the
-About page replaced both), the Lobby shows a profile card fed from `profile.json`, and the
-terminal-voice copy (`SYSTEM_READY`, `NEURAL_LOADOUT`, `NODES CONNECTED`, and so on) is plain
-English. **The Garden page's own chrome copy (`SEARCH_DATABASE...`, `TOTAL_NODES`, `CMD://`) is
-still the old voice** — `gardentemplate.html` was mid-edit in another session when the pass ran,
-so it was deliberately left for a third pass. The `aurelia-*` CSS class names, `--aurelia-*`
-custom properties, JS identifiers, and localStorage keys are internal identifiers, not branding;
-leave them alone.
+**The site has been rebranded away from "Aurelia".** The name collided with an unrelated
+software company, and the site is now Travis's professional portfolio and working notebook
+(working domain `travisrmckinzie.com`, not yet purchased — `site.domain` in `user_config.json`
+stays empty until it is; a non-empty value makes the build write `dist/CNAME`). Three passes
+landed this, all in 2026-09: (1) the plumbing — the `site` block (`name`, `nav_label`,
+`tagline`, `domain`) that `base.html` reads for the nav brand, `<title>`, and canonical URL, plus
+the About page; (2) the Lobby, shared chrome, 404 page, and search-index seeds rewritten from
+terminal voice to plain English, the manifesto and operator-bio modals removed; (3) the Garden
+chrome (`CMD://`, `SEARCH_DATABASE...`, `TOTAL_NODES`, `GRID_MATRIX`) and every card label
+(`SYS_LOG`/`LIBRARY`/`PROFILE`/`FIELD` → `DAILY LOG`/`SOURCE`/`AUTHOR`/`DISCIPLINE`; `> BIO_MATRIX:`
+→ `Bio:` and so on) rewritten, the product name removed from README, `package.json`, the deploy
+workflow, `build.py`, the build banner, `SECURITY.md` and the `deploy.py` factory, the favicon
+replaced by a "T" monogram, and a new default theme, **`TIMBERLINE`** (see "CSS" and "Recent
+history" item 16). What remains "Aurelia" is deliberately not branding: the GitHub repo name and
+Pages URL, the `aurelia-*` CSS class names, `--aurelia-*` custom properties, JS identifiers
+(`aureliaReveal`), the `aurelia_theme` localStorage key, the `AURELIA_SKIP_DROPZONE` env var, and
+the `20_AURELIA` vault folder. Leave those alone.
+
+**Voice rule for anything user-facing:** plain, professional English. No `//` separators, no
+`SNAKE_CASE` labels, no "nodes"/"neural"/"matrix"/"vault" jargon; notes are notes, the collection
+is the Garden. Short uppercase words are fine only where `.field-label`/`.chip` styling expects a
+label. `tests/test_lobby.py` pins a list of the old tokens so they cannot come back silently.
 
 ## Commands
 
@@ -49,7 +55,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (229 tests as of this writing)
+python -m pytest tests/ -q             # full suite (345 tests as of this writing)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -91,12 +97,18 @@ nobody. Keep the flag on any workflow that builds this site.
 real logic lives in `engine/`:
 
 - **`config.py`** — paths (`VAULT_PATH`, `TEMPLATE_DIR`, `OUTPUT_DIR`), the Jinja2 `env`, the theme
-  system (`THEME_CONFIG`, currently four presets: `CYBER_PRIME` dark/neon, `THE_PATRIOT`
-  light/civic, `THE_STOA` Stoic/Helvetic, `GRIZZ` dark/collegiate), and `load_user_config()`
-  (reads `user_config.json`). `CURRENT_THEME` selects the *default* only — every theme is shipped
-  and switchable at runtime (see `theming.py`). Adding a theme means adding a dict entry here and
-  nothing else: the CSS generator, the Tailwind config, and the switcher UI all derive from these
-  keys.
+  system (`THEME_CONFIG`, five presets in switcher order: **`TIMBERLINE` light/professional, the
+  default since 2026-09**, then `CYBER_PRIME` dark/neon, `THE_PATRIOT` light/civic, `THE_STOA`
+  Stoic/Helvetic, `GRIZZ` dark/collegiate), and `load_user_config()` (reads `user_config.json`).
+  `CURRENT_THEME` selects the *default* only — every theme is shipped and switchable at runtime
+  (see `theming.py`). Adding a theme means adding a dict entry here and nothing else: the CSS
+  generator, the Tailwind config, and the switcher UI all derive from these keys. Only `colors` is
+  mandatory; the optional keys (each with a default in `theming.py` that reproduces the historical
+  hard-coded value) are `font_mono`, `font_display`, `font_body`, `font_reader_heading`,
+  `display_weight`/`display_tracking`/`display_leading`, `label_weight`, `halo` (text-glow
+  strength; `0%` turns every neon halo off), `rounded`, the glass/scanline keys, the depth-system
+  keys, and `cursor_default`/`cursor_interactive` (`auto`/`pointer` opts out of the SVG cursors).
+  TIMBERLINE is the reference for a theme that uses all of them.
 
   `env` is built with **`autoescape=True`** (audit #21 — it used to take Jinja's default of off,
   so every `{{ }}` emitted raw). It is unconditional rather than `select_autoescape()`, so a
@@ -474,7 +486,28 @@ knowing so you don't "fix" something that was a deliberate decision:
     made brand-config-driven (nav label, title, canonical, `dist/CNAME`), the skip link and
     `<main id="main-content">` landmark were added, and the author `role`/`bio_*` strings were
     rewritten to the new positioning. The Lobby's hero/manifesto and the terminal-flavored chrome
-    copy are the *next* rebrand pass, listed in the intro above.
+    copy were the next two passes (see the intro above and item 16).
+16. **`TIMBERLINE` theme, de-branding, and the Garden/card voice pass (2026-09-05/06).** A fifth
+    theme became the default: a light, editorial "Helvetica + Times" register — Cormorant Garamond
+    display type with Times New Roman as the declared fallback, system Helvetica for body text and
+    tracked-caps labels, ivory paper, hairlines instead of shadows, no scanline/grid/halo/custom
+    cursor. Its colors are derived from Rocky Mountain Automation AI's live brand tokens (deep
+    indigo `#24214c` primary, rust `#7a2a0a`, sand tints; the signal orange `#f04800` fails AA as
+    text on paper at 3.4:1, so text roles use a darkened `#b93700` and the true orange appears
+    nowhere — the sand tint is the decorative light source instead). Every text role was
+    contrast-checked against all three surfaces (tightest pairing 4.63:1); `tests/test_theming.py`
+    now enforces that with its own WCAG implementation. Expressing the register required making
+    six more things theme-driven that had been hard-coded for CYBER_PRIME: body font, display
+    weight/tracking/leading, label weight, and the glow-halo strength (`--aurelia-halo`, consumed
+    by `.text-shadow-cyan` and the Lobby's drop-shadows via `calc(var(--aurelia-halo) * k)` so the
+    other themes are byte-identical at the 50% default), plus a `font_reader_heading` token for
+    headings inside the note reader. In the same pass the user-facing "Aurelia" branding was
+    removed everywhere it was branding (see the intro), the Garden chrome and card labels were
+    rewritten to plain English, and a Lobby bug was fixed on the way: the maturity bar animated to
+    0% and stayed there because Motion's `cancel()` reverts an element to its *first* keyframe on
+    the next frame, and the settle handler (which runs twice) called it after writing the real
+    width — it uses `stop()` now. The Garden's filter strip clipping at narrow viewports is
+    pre-existing and untouched.
 
 ## Known gaps / deliberately not done
 
@@ -482,9 +515,9 @@ knowing so you don't "fix" something that was a deliberate decision:
   templating engine for everything else. This was considered and explicitly deferred as
   higher-risk-for-the-reward while there were 3 separate card-generator functions; now that only
   `generate_garden_card_html()` remains, it may be worth reconsidering, but hasn't been done.
-- **Card body vocabulary isn't unified.** Each note type has its own field labels for the same
-  conceptual slot (`> DEFINITION:` vs `AUTH:` vs `:: FIELD_SCOPE` vs `> BIO_MATRIX:`) — discussed,
-  not yet standardized.
+- **Card body vocabulary was unified in the 2026-09 voice pass** (`Definition:`, `Author:`,
+  `Scope:`, `Bio:`, `Summary:` and so on, all rendered through `.field-label`). The *markup* is
+  still per-type f-strings — see the bullet above.
 - **`vault/90_SYSTEM/92_Templates/TPL_Synthesis_Note.md`** is a richer note-taking template (a
   "Crane not Skyhook" mechanistic Input/Processing/Logic/Output framework) with no YAML frontmatter
   at all, so notes written from it never publish and there's no card type that could render its

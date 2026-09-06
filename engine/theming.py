@@ -29,6 +29,12 @@ _COLOR_KEYS = [
 # has to define what makes it actually different.
 _DEFAULTS = {
     "font_mono": "'JetBrains Mono', monospace",
+    "font_body": "'Inter', sans-serif",
+    "display_weight": "800",
+    "display_tracking": "-0.03em",
+    "display_leading": "0.95",
+    "label_weight": "700",
+    "halo": "50%",
     "rounded": "2px",
     "glass_opacity": "0.6",
     "glass_border": "none",
@@ -218,7 +224,40 @@ def _variables_for(theme):
     # headings" is the house style, and a theme that wants an actual display
     # family (a condensed poster face, a serif) just sets font_display.
     variables["--aurelia-font-display"] = theme.get("font_display", font_mono)
+    # The body/paragraph face. Independent of font_mono/font_display: the
+    # house style up to TIMBERLINE hard-coded 'Inter' as the body sans
+    # everywhere (base.html's <body> gets Tailwind's font-sans, which used
+    # to be a literal ['Inter', 'sans-serif'] in tailwind_build.py) so every
+    # theme's prose rendered in the same face regardless of its own voice.
+    # Defaulting this to 'Inter' keeps that exact behavior for every theme
+    # that doesn't set it -- only a theme with an actual editorial brief
+    # (see TIMBERLINE in config.py) overrides it.
+    variables["--aurelia-font-body"] = theme.get("font_body", _DEFAULTS["font_body"])
+    # Headings *inside a note* (the Garden's .obsidian-reader). They used
+    # to simply inherit the reader's body face; that stays the default so
+    # no existing theme changes, but an editorial theme can point them at
+    # its serif display face without dragging the site chrome's mono-first
+    # .display-* headings along with it.
+    variables["--aurelia-font-reader-heading"] = theme.get(
+        "font_reader_heading", variables["--aurelia-font-body"])
     variables["--aurelia-radius"] = theme.get("rounded", _DEFAULTS["rounded"])
+
+    # Display-heading type tuning (weight/tracking/leading) and the shared
+    # label weight (.field-label/.btn/.chip). Defaults reproduce main.css's
+    # former hard-coded values exactly (800 / -0.03em / 0.95 / 700), so every
+    # existing theme renders byte-for-byte the same as before these became
+    # theme-driven -- only a theme that sets them (see TIMBERLINE) departs
+    # from the "heavy mono-first" house voice.
+    variables["--aurelia-display-weight"] = theme.get("display_weight", _DEFAULTS["display_weight"])
+    variables["--aurelia-display-tracking"] = theme.get("display_tracking", _DEFAULTS["display_tracking"])
+    variables["--aurelia-display-leading"] = theme.get("display_leading", _DEFAULTS["display_leading"])
+    variables["--aurelia-label-weight"] = theme.get("label_weight", _DEFAULTS["label_weight"])
+
+    # Strength of text-shadow halos (main.css's .text-shadow-cyan) as a
+    # color-mix() percentage. Defaults to the previous hard-coded 50%; a
+    # theme going for a hairline/print register (TIMBERLINE) sets this to
+    # "0%" to turn the glow off entirely rather than just dimming it.
+    variables["--aurelia-halo"] = theme.get("halo", _DEFAULTS["halo"])
 
     # Depth system -- a theme's own value wins, otherwise it's derived from
     # that theme's palette (see _DERIVED above).
@@ -234,8 +273,14 @@ def _variables_for(theme):
     variables["--aurelia-scanline-bg"] = theme.get("scanline_bg", _DEFAULTS["scanline_bg"])
     variables["--aurelia-scanline-opacity"] = theme.get("scanline_opacity", _DEFAULTS["scanline_opacity"])
 
-    variables["--aurelia-cursor-default"] = _cursor_default(colors)
-    variables["--aurelia-cursor-interactive"] = _cursor_interactive(colors)
+    # Theme-overridable the same way the depth-system keys above are: a
+    # theme's own value wins, otherwise it's derived from that theme's
+    # palette. A professional theme (see TIMBERLINE in config.py) sets
+    # these to the plain CSS keywords "auto"/"pointer" to opt out of the
+    # custom SVG arrow/reticle cursors entirely -- a tactical-HUD cursor
+    # reads as novelty rather than polish on a CV-adjacent page.
+    variables["--aurelia-cursor-default"] = theme.get("cursor_default", _cursor_default(colors))
+    variables["--aurelia-cursor-interactive"] = theme.get("cursor_interactive", _cursor_interactive(colors))
 
     return variables
 

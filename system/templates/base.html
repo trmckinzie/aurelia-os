@@ -24,7 +24,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}{{ site.get('name', 'Aurelia OS') }}{% endblock %}</title>
+    <title>{% block title %}{{ site.get('name', 'Personal site') }}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ config.author.bio_short }}{% endblock %}">
     <meta name="author" content="{{ config.author.name }}">
 
@@ -40,13 +40,22 @@
     <link rel="canonical" href="https://{{ site.get('domain') }}/{% if active_page != 'index' %}{{ active_page }}.html{% endif %}">
     {% endif %}
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💠</text></svg>">
+    <!-- Theme-independent monogram favicon: a rounded #24214c square with a
+         bold white "T" -- deliberately not tied to any THEME_CONFIG color,
+         since the tab icon should stay stable across theme switches. -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%2324214c%22/><text x=%2250%22 y=%2250%22 font-family=%22system-ui,sans-serif%22 font-size=%2264%22 font-weight=%22700%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>T</text></svg>">
     
     <!-- Every family a theme can select at runtime has to be loaded up front,
          because the theme switcher is a pure CSS swap with no rebuild: the
          font is chosen by --aurelia-font-mono / --aurelia-font-display (see
          THEME_CONFIG in engine/config.py), not by a class in the markup. So:
-           Inter          -- body text on every theme
+           Inter          -- body text on every theme except TIMBERLINE
+                             (which sets font_body to system Helvetica); 800
+                             is loaded because .display-* headings default
+                             to that weight on the other themes
+           Cormorant Garamond -- TIMBERLINE's display face (serif), with
+                             Times New Roman as its declared fallback; 500/600
+                             /700 plus a 500 italic for decks and quotes
            JetBrains Mono -- CYBER_PRIME; also the default display face, which
                              is why 800 is requested (headings at 800 were
                              previously synthesized faux-bold, since only
@@ -55,10 +64,12 @@
            Courier Prime  -- THE_PATRIOT's font_mono (typewriter). Was never
                              loaded, so that theme had always been silently
                              falling back to Courier New.
-         THE_STOA needs nothing here -- it uses system Helvetica by design. -->
+         THE_STOA needs nothing here -- it uses system Helvetica by design.
+         (Five themes total: CYBER_PRIME, THE_PATRIOT, THE_STOA, GRIZZ,
+         TIMBERLINE.) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Oswald:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;600;700;800&family=Oswald:wght@400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind is compiled at build time (engine/tailwind_build.py) into
          assets/css/main.css, not loaded from a CDN. Its aurelia-* utility
@@ -109,7 +120,7 @@
                 <span class="text-aurelia-text font-bold group-hover:text-aurelia-primary transition-colors duration-300 whitespace-nowrap">
                     <!-- &nbsp; not a plain space: an inline-block strips leading
                          whitespace, which ate the gap before the "//". -->
-                    {{ site.get('nav_label', 'AURELIA_OS') }}<span class="nav-sub inline-block align-bottom">&nbsp;// <span class="opacity-50">{% block nav_title %}HUB{% endblock %}</span></span>
+                    {{ site.get('nav_label', 'SITE') }}<span class="nav-sub inline-block align-bottom">&nbsp;/ <span class="opacity-50">{% block nav_title %}HOME{% endblock %}</span></span>
                 </span>
             </a>
 

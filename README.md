@@ -1,9 +1,11 @@
-# Aurelia OS
+# Travis R. McKinzie — personal site and digital garden
 
-A personal static-site generator that turns an [Obsidian](https://obsidian.md) vault into a
-published digital garden — an **external cortex**: atomic notes (concepts, sources, authors,
-disciplines, daily logs, Gemini Notebook syntheses, deep dives) linked the way a Zettelkasten links, rendered,
-styled, and published as a real website with the link graph itself made visible and navigable.
+This repo (still named `aurelia-os` on GitHub, its original codename) is the generator behind
+Travis R. McKinzie's professional site and working notebook: a personal static-site generator that
+turns an [Obsidian](https://obsidian.md) vault into a published digital garden / working notebook —
+atomic notes (concepts, sources, authors, disciplines, daily logs, Gemini Notebook syntheses, deep
+dives) linked the way a Zettelkasten links, rendered, styled, and published as a real website with
+the link graph itself made visible and navigable.
 
 **Live site:** [trmckinzie.github.io/aurelia-os](https://trmckinzie.github.io/aurelia-os/)
 
@@ -19,10 +21,12 @@ styled, and published as a real website with the link graph itself made visible 
   schema.org `Person` structured data — rendered from a repo-root `profile.json`. The file is
   validated strictly at build time (unknown keys, non-`http`/`https`/`mailto` URLs, over-long or
   missing fields all fail the build), and every value is escaped on output; it carries no HTML.
-- Four runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
+- Five runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
   single CSS-variable source of truth), each with its own palette, typography, and material
-  language: `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA`
-  (Stoic Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State University green/black/white).
+  language: `TIMBERLINE` (light/professional, the default, palette derived from Rocky Mountain
+  Automation AI's brand colors), `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic,
+  USWDS-grounded), `THE_STOA` (Stoic Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State
+  University green/black/white).
 - Gemini Notebook export support: audio/video overviews, flashcard decks, mind maps and other
   synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,
   with each top-level section collapsible in the note reader. **Note:** the media files themselves
