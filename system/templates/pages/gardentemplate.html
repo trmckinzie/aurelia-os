@@ -45,6 +45,18 @@
     }
 
     /* 4. ACTIVE BUTTON STATE */
+    /* The page content sits under a fixed toolbar whose height depends on
+       breakpoint and on how many rows the filter chips wrap to. It was a
+       fixed pt-12, tuned for one row; the offset now follows --toolbar-h,
+       which publishToolbarHeight() (below) keeps current via ResizeObserver.
+       The fallback covers the frame before that script runs. */
+    .garden-content {
+        /* The wrapper's top already sits one --nav-h below the toolbar's
+           top (base.html's nav offset), so only the toolbar's excess over
+           that, plus breathing room, is needed. Fallback before the script
+           runs: 6rem - 4rem + 1.5rem = 56px, about the old fixed pt-12. */
+        padding-top: calc(var(--toolbar-h, 6rem) - var(--nav-h, 4rem) + 1.5rem);
+    }
     .filter-btn.active {
         background: color-mix(in srgb, var(--aurelia-text-main) 8%, transparent);
         border-color: var(--aurelia-text-main);
@@ -307,9 +319,31 @@
         still above all in-flow content, and the note modal (z-[60]) and command
         palette (z-[100]) still sit above both. -->
     <div class="nav-anchored fixed left-0 w-full z-40 bg-aurelia-bg/90 backdrop-blur border-b border-aurelia-border py-4 px-6 shadow-2xl">
-        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            
-            <div class="flex items-center gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+        {# Layout by breakpoint. Below md: two stacked rows, the filter strip a
+           single swipeable line (touch has no trouble with that). md to 2xl:
+           the strip takes a full row (all eight chips fit on one line from
+           ~1130px) and the tools/search group drops to its own row. 2xl and
+           up: one row, the strip takes whatever the tools leave and its
+           chips wrap inside it. Sharing the row any earlier (tried lg and
+           xl) squeezed the chips into three rows at 1024px and 1280px.
+
+           Previously the strip was md:w-auto beside a shrink-0 group holding a
+           fixed 24rem search box, so between 768px and ~1100px that group took
+           ~780px, the strip collapsed to ~40px, and every filter chip sat
+           clipped behind the view toggle -- reachable only by a horizontal
+           scroll whose scrollbar .no-scrollbar hides. A filter bar has to show
+           its filters, so above md the chips wrap instead of scrolling. The
+           toolbar's height is measured by the ROVING FOCUS script into
+           --toolbar-h, so a second chip row does not break card scroll-into-
+           view. #}
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:flex-wrap 2xl:flex-nowrap justify-between items-center gap-4">
+
+            {# xl:basis-0, not basis-auto: with an auto basis the strip claims
+               its single-row max-content (~1100px) before shrinking, and the
+               tools group -- whose children are shrink-0 -- was pushed past
+               the right edge, search box and all. A zero basis hands the
+               tools their width first and gives the strip the remainder. #}
+            <div class="flex items-center gap-4 overflow-x-auto md:overflow-visible w-full md:basis-full 2xl:basis-0 2xl:flex-1 min-w-0 pb-2 md:pb-0 no-scrollbar">
                 
                 <div class="flex items-center bg-aurelia-bg/50 border border-aurelia-border rounded-theme p-1 shrink-0">
                     <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid View">
@@ -325,7 +359,7 @@
 
                 <div class="h-6 w-px bg-aurelia-border shrink-0"></div>
 
-                <div id="filter-controls" class="flex gap-2 transition-opacity duration-300">
+                <div id="filter-controls" class="flex gap-2 md:flex-wrap transition-opacity duration-300">
                     <button onclick="setFilter('all', this)" data-filter="all" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All Notes
                     </button>
@@ -360,15 +394,26 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-3 w-full md:w-auto shrink-0">
+            {# The three tool buttons show their text labels only from 2xl
+               (they were lg). At lg/xl the labels widened this group to ~700px
+               and left the filter strip beside it too narrow for its chips;
+               each button keeps its title attribute, so the label is still
+               available on hover and to assistive tech at every width. #}
+            {# flex-wrap below md: three icon buttons plus the sort select run
+               ~370px, wider than a 375px phone's 327px content box, so the
+               search box (w-full, but last in a nowrap row) used to sit
+               ~150px past the right edge, its input unreachable. Now the
+               select is capped on phones (native selects truncate their own
+               text) and the search box wraps to a full-width line. #}
+            <div class="flex flex-wrap md:flex-nowrap items-center gap-3 w-full 2xl:w-auto shrink-0 2xl:shrink 2xl:min-w-0">
                 <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <span>🏷️</span>
-                    <span class="hidden lg:inline uppercase tracking-wider">Topics</span>
+                    <span class="hidden 2xl:inline uppercase tracking-wider">Topics</span>
                 </button>
 
                 <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <span>🎲</span>
-                    <span class="hidden lg:inline uppercase tracking-wider">Random</span>
+                    <span class="hidden 2xl:inline uppercase tracking-wider">Random</span>
                 </button>
 
                 <!-- The address bar already carries the current view, so this
@@ -377,7 +422,7 @@
                      URL is worth copying. -->
                 <button onclick="copyViewLink()" id="btn-share" title="Copy a link to the current filter, search and view" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <span>🔗</span>
-                    <span class="hidden lg:inline uppercase tracking-wider">Share View</span>
+                    <span class="hidden 2xl:inline uppercase tracking-wider">Share View</span>
                 </button>
 
                 <!-- A select rather than a chip group: the toolbar already
@@ -386,10 +431,10 @@
                      mobile. Hidden in tree/graph, which have no linear order.
                      "Relevance" is listed but only meaningful with a query --
                      it is selected automatically when you type. -->
-                <div id="sort-control" class="shrink-0">
+                <div id="sort-control" class="shrink-0 max-w-[7.5rem] md:max-w-none">
                     <label class="sr-only" for="sort-select">Sort notes</label>
                     <select id="sort-select" onchange="setSort(this.value)" title="Order the notes"
-                            class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
+                            class="chip max-w-full border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
                         <option value="relevance">↕ Relevance</option>
                         <option value="connected">↕ Most connected</option>
                         <option value="recent">↕ Recently created</option>
@@ -398,7 +443,7 @@
                     </select>
                 </div>
 
-                <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-96">
+                <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-auto md:flex-1 md:min-w-[10rem] md:max-w-96">
                     <svg aria-hidden="true" class="w-3.5 h-3.5 text-aurelia-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"></path></svg>
                     <!-- oninput, not onkeyup: a mouse paste, a drag-and-drop, an
                          autofill and most IME composition all change the value
@@ -410,7 +455,7 @@
         </div>
     </div>
 
-    <div class="flex-grow pt-12 pb-20 px-6 w-full max-w-[1600px] mx-auto">
+    <div class="garden-content flex-grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
         <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-theme overflow-hidden border border-aurelia-border bg-aurelia-bg h-64">
             <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
@@ -480,8 +525,20 @@
         <div id="treeView" class="hidden">
             <div class="max-w-5xl border-l border-aurelia-border ml-4 pl-8 pt-6 pb-20">
                 
+                {# Folder headers show a human name, not the frontmatter slug:
+                   the slug rendered as "daily bridge" / "gemini notebook".
+                   Plural to match the filter chips above the grid. Types
+                   arrive uppercased from pipeline._scan_vault(); anything
+                   not listed falls back to the slug with hyphens spaced. #}
+                {% set type_names = {
+                    'daily-bridge': 'Daily logs', 'log': 'Daily logs',
+                    'concept': 'Concepts', 'source': 'Sources', 'source/book': 'Sources',
+                    'author': 'Authors', 'discipline': 'Disciplines',
+                    'gemini-notebook': 'Gemini Notebooks', 'deep-dive': 'Deep dives',
+                    'note': 'Notes'
+                } %}
                 {% for type, group in cards|groupby('type') %}
-                    
+
                     {% set group_color = "text-aurelia-muted" %}
                     {% set group_border = "border-aurelia-border" %}
                     {% set folder_icon = "📁" %}
@@ -528,7 +585,7 @@
                             
                             <div class="flex items-center gap-3">
                                 <span class="text-lg opacity-80">{{ folder_icon }}</span>
-                                <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type|replace('-', ' ') }}</span>
+                                <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type_names.get(type|lower, type|lower|replace('-', ' ')) }}</span>
                             </div>
                             
                             <div class="h-px bg-aurelia-border flex-grow mx-4 opacity-50"></div>
