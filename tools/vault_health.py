@@ -35,6 +35,20 @@ from engine.pipeline import _build_link_graph, _scan_vault  # noqa: E402
 
 _WIKILINK_RE = re.compile(r'\[\[(.*?)\]\]')
 
+
+def _garden_cards():
+    """The published card list, and nothing else, from a fresh vault scan.
+
+    _scan_vault() returns (garden_cards, backlinks, edges). Every report
+    below only wants the first element, and each used to iterate the whole
+    tuple as if it were the list -- which crashed the CLI on its first line
+    (`TypeError: list indices must be integers`) while every test, all of
+    which inject their cards, stayed green. One unpacking site, so the next
+    change to _scan_vault's return shape has one place to break loudly.
+    """
+    garden_cards, _backlinks, _edges = _scan_vault()
+    return garden_cards
+
 # The "permanent notes" and "structure notes" in zettelkasten terms -- the
 # ones meant to be densely cross-linked. Daily Log (fleeting) and
 # Source/Gemini Notebook (literature) naturally have asymmetric link patterns
@@ -62,7 +76,7 @@ def find_pending_atomization(vault_path=VAULT_PATH, known_ids=None):
     full _scan_vault() when the caller already has one.
     """
     if known_ids is None:
-        known_ids = {c["id"] for c in _scan_vault()}
+        known_ids = {c["id"] for c in _garden_cards()}
 
     target_refs = defaultdict(set)
     for root, _, files in os.walk(vault_path):
@@ -114,7 +128,7 @@ def find_orphans(garden_cards=None, types=None):
     degree, then title.
     """
     if garden_cards is None:
-        garden_cards = _scan_vault()
+        garden_cards = _garden_cards()
     types = types or PERMANENT_STRUCTURE_TYPES
 
     _, edges = _build_link_graph(garden_cards)
@@ -141,7 +155,7 @@ def find_promotion_candidates(garden_cards=None):
              "growing_to_evergreen": [(id, title, discipline_count), ...]}
     """
     if garden_cards is None:
-        garden_cards = _scan_vault()
+        garden_cards = _garden_cards()
 
     backlinks, _ = _build_link_graph(garden_cards)
     id_to_card = {c["id"]: c for c in garden_cards}

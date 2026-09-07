@@ -82,3 +82,8 @@ vault/20_AURELIA/
 # ignore-rule probe.
 .env.*
 !.env.example
+
+# --- IGNORE PLAYWRIGHT MCP SCRATCH ---
+# The Playwright MCP server drops page snapshots here whenever a session
+# drives a browser from this folder. Tool output, never source.
+.playwright-mcp/

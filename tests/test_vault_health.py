@@ -110,3 +110,38 @@ def test_find_promotion_candidates_ignores_evergreen_notes():
     ]
     candidates = find_promotion_candidates(cards)
     assert candidates == {"seed_to_growing": [], "growing_to_evergreen": []}
+
+
+# --- default-path guard -----------------------------------------------------
+# Every report can be called with nothing injected, in which case it scans the
+# vault itself. _scan_vault() returns a (cards, backlinks, edges) tuple, and
+# the tool once iterated that tuple as if it were the card list: every
+# injected-argument test passed while `python tools/vault_health.py` crashed
+# on line one. These pin the uninjected path against the real return shape.
+
+def _fake_scan(cards):
+    return lambda: (cards, {}, [])
+
+
+def test_find_pending_atomization_default_path_unpacks_scan_vault(tmp_path, monkeypatch):
+    import vault_health
+
+    monkeypatch.setattr(vault_health, "_scan_vault", _fake_scan([_card("note-a", "A", "")]))
+    _write(tmp_path, "10_GARDEN/12_Concepts", "B.md", _FRONTMATTER + "**Related:** [[A]] and [[Ghost]]")
+
+    pending = find_pending_atomization(vault_path=str(tmp_path))
+    assert pending == [("note-ghost", ["note-b"])]
+
+
+def test_find_orphans_default_path_unpacks_scan_vault(monkeypatch):
+    import vault_health
+
+    monkeypatch.setattr(vault_health, "_scan_vault", _fake_scan([_card("note-a", "A", "no links")]))
+    assert find_orphans() == [("note-a", "A", "concept", 0)]
+
+
+def test_find_promotion_candidates_default_path_unpacks_scan_vault(monkeypatch):
+    import vault_health
+
+    monkeypatch.setattr(vault_health, "_scan_vault", _fake_scan([_card("note-a", "A", "no links", maturity="seed")]))
+    assert find_promotion_candidates() == {"seed_to_growing": [], "growing_to_evergreen": []}
