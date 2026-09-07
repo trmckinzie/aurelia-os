@@ -166,9 +166,13 @@ real logic lives in `engine/`:
   *not* synced, so anything sorted there stays off the **website**; it does *not* thereby become
   private, see "Privacy model" below).
 
-  **No media is currently committed.** `vault/assets/` holds empty `audio/`, `images/`, and
-  `flashcards/` directories; the only tracked assets are `assets/css`, `assets/js`, and five
-  flashcard CSVs. All Gemini Notebook audio and mind-map images were removed from the repo *and its
+  **No vault media is committed.** `vault/assets/` holds empty `audio/`, `images/`, and
+  `flashcards/` directories; the only tracked assets are `assets/css`, `assets/js`, five
+  flashcard CSVs, and two site images in `assets/images/` added 2026-09-07 — `headshot.webp`
+  (650×650, 43 KB, no EXIF/XMP; referenced by `profile.json`'s optional `identity.photo` and
+  validated by `engine/profile.py` as a real file under `assets/images/`) and
+  `social-preview.jpg` (1200×630, the `og:image`, generated from the headshot with ffmpeg on
+  TIMBERLINE's paper color). All Gemini Notebook audio and mind-map images were removed from the repo *and its
   history* in 2026 (see "Recent history" item 9), so 15 notes still reference `assets/audio/...`
   and `assets/images/...` paths that no longer resolve — those widgets render as dead players
   until media hosting is re-established off-repo. The compression path above still works and is

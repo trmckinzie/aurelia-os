@@ -5,7 +5,8 @@
         "name": "Travis R. McKinzie",
         "headline": "Web Solutions Lead & IT Professional — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
         "location": "Colorado, USA",
-        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website."
+        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website.",
+        "photo": { "src": "assets/images/headshot.webp", "alt": "Travis R. McKinzie" }
     },
 
     "roles": [

@@ -407,6 +407,31 @@ def test_description_block_feeds_both_meta_description_and_og():
     assert "<title>Ada Lovelace — Analyst &amp; Metaphysician</title>" in html
 
 
+# --- photo --------------------------------------------------------------
+
+def _profile_with_photo(alt="Ada Lovelace, portrait"):
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["photo"] = {"src": "assets/images/headshot.webp", "alt": alt}
+    return profile
+
+
+def test_about_renders_photo_with_alt():
+    hostile_alt = '"><script>alert(1)</script>'
+    html = render_about(profile=_profile_with_photo(alt=hostile_alt))
+    header = html[html.index("<header"):html.index("</header>")]
+    assert '<img src="assets/images/headshot.webp"' in header
+    assert 'width="650" height="650"' in header
+    assert "<script>alert" not in html
+    assert '"><script>' not in html
+
+
+def test_about_without_photo_renders_no_img_in_header():
+    html = render_about()
+    header = html[html.index("<header"):html.index("</header>")]
+    assert "<img" not in header
+
+
 def test_about_does_not_rely_on_the_reveal_animation():
     # [data-reveal] starts at opacity 0 and is brought in by script. On a CV
     # page that would mean "invisible without JavaScript", and invisible in

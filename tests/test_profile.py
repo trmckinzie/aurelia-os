@@ -1,8 +1,10 @@
 import json
+import os
 
 import pytest
 
 from engine import pipeline
+from engine.config import ROOT_DIR
 from engine.profile import (
     PROFILE_FILENAME,
     ProfileError,
@@ -175,6 +177,82 @@ def test_rejects_empty_skills_items():
     profile["skills"][0]["items"] = []
     with pytest.raises(ProfileError):
         validate_profile(profile)
+
+
+# --- identity.photo validation -------------------------------------------
+#
+# validate_profile() takes no filesystem root by default, so these run
+# shape-only checks the same way every test above does. Only the last three
+# tests pass `root=` explicitly to exercise the resolve-then-verify existence
+# check (see engine.profile._photo_file_exists).
+
+def test_photo_optional_absent_is_valid():
+    profile = minimal_profile()
+    assert "photo" not in profile["identity"]
+    validate_profile(profile)  # must not raise
+
+
+def test_photo_requires_src_and_alt():
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {"src": "assets/images/x.webp"}
+    with pytest.raises(ProfileError, match=r"identity\.photo\.alt"):
+        validate_profile(profile)
+
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {"alt": "A photo"}
+    with pytest.raises(ProfileError, match=r"identity\.photo\.src"):
+        validate_profile(profile)
+
+
+def test_photo_rejects_unknown_key():
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {
+        "src": "assets/images/x.webp", "alt": "A photo", "caption": "nope",
+    }
+    with pytest.raises(ProfileError, match="unknown key 'caption'"):
+        validate_profile(profile)
+
+
+@pytest.mark.parametrize("src", [
+    "../assets/images/x.webp",
+    "assets/images/../../secret.png",
+    "/assets/images/x.webp",
+    "assets\\images\\x.webp",
+    "https://evil.example/x.webp",
+    "assets/images/x.svg",
+    "assets/audio/x.webp",
+    "assets/images/.hidden.webp",
+])
+def test_photo_rejects_bad_src(src):
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {"src": src, "alt": "A photo"}
+    with pytest.raises(ProfileError, match=r"identity\.photo\.src"):
+        validate_profile(profile)
+
+
+def test_photo_missing_file_raises(tmp_path):
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {"src": "assets/images/nope.webp", "alt": "A photo"}
+    with pytest.raises(ProfileError, match="photo not found"):
+        validate_profile(profile, root=str(tmp_path))
+
+
+def test_photo_existing_file_passes(tmp_path):
+    images_dir = tmp_path / "assets" / "images"
+    images_dir.mkdir(parents=True)
+    (images_dir / "x.webp").write_bytes(b"not a real image, existence is all that matters")
+
+    profile = minimal_profile()
+    profile["identity"]["photo"] = {"src": "assets/images/x.webp", "alt": "A photo"}
+    validate_profile(profile, root=str(tmp_path))  # must not raise
+
+
+def test_repo_profile_photo_exists():
+    profile = load_profile()
+    photo = profile["identity"].get("photo")
+    assert photo, "profile.json's identity.photo should be set"
+    resolved = os.path.realpath(os.path.join(ROOT_DIR, photo["src"]))
+    assert os.path.isfile(resolved)
 
 
 # --- person_jsonld -----------------------------------------------------

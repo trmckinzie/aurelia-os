@@ -71,13 +71,28 @@
 
     <header class="pb-12 mb-12 border-b border-aurelia-border">
 
-        <p class="field-label text-aurelia-primary mb-5">Profile</p>
+        {# Photo beside the name/headline on sm+ (image first, text after,
+           vertically top-aligned so a tall headline doesn't recenter the
+           portrait); the image stacks above the text on mobile since it's
+           first in document order and the column direction is the default.
+           Optional -- the factory clone's placeholder profile has no photo,
+           and this whole block is a no-op without one. #}
+        <div class="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8">
+            {% if profile.identity.photo %}
+            <img src="{{ profile.identity.photo.src }}" alt="{{ profile.identity.photo.alt }}"
+                 width="650" height="650" decoding="async"
+                 class="w-28 h-28 sm:w-36 sm:h-36 rounded-full shrink-0 border border-aurelia-border object-cover mx-auto sm:mx-0">
+            {% endif %}
+            <div class="min-w-0">
+                <p class="field-label text-aurelia-primary mb-5">Profile</p>
 
-        <h1 class="display-lg text-aurelia-text mb-5">{{ profile.identity.name }}</h1>
+                <h1 class="display-lg text-aurelia-text mb-5">{{ profile.identity.name }}</h1>
 
-        <p class="text-lg md:text-xl text-aurelia-text/90 leading-snug max-w-3xl text-pretty">
-            {{ profile.identity.headline }}
-        </p>
+                <p class="text-lg md:text-xl text-aurelia-text/90 leading-snug max-w-3xl text-pretty">
+                    {{ profile.identity.headline }}
+                </p>
+            </div>
+        </div>
 
         <dl class="mt-9 grid grid-cols-1 sm:grid-cols-[auto_minmax(0,1fr)] gap-x-6 gap-y-3 max-w-2xl">
             <dt class="field-label text-aurelia-muted sm:pt-0.5">Location</dt>

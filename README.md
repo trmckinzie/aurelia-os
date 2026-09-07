@@ -124,9 +124,11 @@ If you fork this or run it on your own vault, decide up front which of these you
 
 ## Media
 
-**No audio, video, or image files are committed to this repository.** `vault/assets/` holds empty
-`audio/`, `images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input
-CSS, one shared JS file, and five small flashcard CSVs.
+**No vault media is committed to this repository.** `vault/assets/` holds empty `audio/`,
+`images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input CSS, one
+shared JS file, five small flashcard CSVs, and two small site images under `assets/images/` (the
+author headshot shown on the home and About pages, and the social-preview card it was generated
+from).
 
 Gemini Notebook audio exports ran 64–79 MB each and had grown to ~858 MB, which pushed the published
 site to 88% of GitHub Pages' 1 GB ceiling and made every clone and CI checkout pay for all of it.

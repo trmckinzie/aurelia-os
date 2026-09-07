@@ -128,6 +128,22 @@ def test_lobby_readout_is_seeded_server_side_from_the_first_tech_item():
     assert 'activeTech.name + " //"' not in html
 
 
+def test_lobby_renders_headshot_when_present():
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["photo"] = {"src": "assets/images/headshot.webp", "alt": "Ada Lovelace, portrait"}
+    html = render_index(profile=profile)
+    header = html[html.index("<header"):html.index("</header>")]
+    assert '<img src="assets/images/headshot.webp" alt="Ada Lovelace, portrait"' in header
+    assert 'width="650" height="650"' in header
+
+
+def test_lobby_without_photo_has_no_hero_img():
+    html = render_index()
+    header = html[html.index("<header"):html.index("</header>")]
+    assert "<img" not in header
+
+
 def test_search_index_seed_titles_are_plain():
     seeds = {
         entry["url"]: entry

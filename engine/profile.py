@@ -40,6 +40,13 @@ ALLOWED_URL_SCHEMES = frozenset({"http", "https", "mailto"})
 
 _DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
 
+# A repo-relative reference into the one publishable image directory
+# (assets/images/ -- see assets_pipeline.PUBLISHABLE_ASSET_DIRS). No leading
+# slash, no "..", no backslashes, no scheme: this is a path, not a URL, so
+# _validate_url's scheme allowlist doesn't apply and doesn't need to.
+_PHOTO_SRC_RE = re.compile(
+    r'^assets/images/[A-Za-z0-9][A-Za-z0-9._-]{0,120}\.(?:webp|png|jpe?g)$')
+
 
 class ProfileError(RuntimeError):
     """Raised for any problem loading or validating profile.json.
@@ -161,7 +168,7 @@ _TOP_LEVEL_KEYS = {
     "projects", "links", "meta",
 }
 
-_IDENTITY_ALLOWED = {"name", "headline", "location", "summary", "pronouns"}
+_IDENTITY_ALLOWED = {"name", "headline", "location", "summary", "pronouns", "photo"}
 _IDENTITY_REQUIRED = {"name", "headline", "location", "summary"}
 _IDENTITY_SPECS = {
     "name": (80, False),
@@ -170,6 +177,11 @@ _IDENTITY_SPECS = {
     "summary": (1200, True),
     "pronouns": (30, False),
 }
+
+# identity.photo is optional, but when present both keys are required --
+# there is no such thing as an image with no alt text on a published page.
+_PHOTO_ALLOWED = {"src", "alt"}
+_PHOTO_REQUIRED = {"src", "alt"}
 
 _ROLE_ALLOWED = {"org", "title", "period", "description", "url", "primary"}
 _ROLE_REQUIRED = {"org", "title", "period", "description", "primary"}
@@ -208,11 +220,52 @@ _META_ALLOWED = {"updated", "availability"}
 _META_REQUIRED = {"updated"}
 
 
-def _validate_identity(value, path):
+def _photo_file_exists(src, root):
+    """True if `src` (already regex-validated) resolves to a real file inside
+    <root>/assets/images.
+
+    Resolve-then-verify, the same pattern content.resolve_asset() uses for
+    vault media (see that function's docstring): a bounded regex alone isn't
+    a boundary, containment after realpath() is what actually settles it.
+    Reimplemented locally rather than imported from engine.content, which
+    resolves against VAULT_PATH/ROOT_DIR for a different asset root and whose
+    helper is a private, vault-scanning-pipeline implementation detail -- this
+    module already avoids taking on dependencies (see the module docstring).
+    """
+    images_dir = os.path.realpath(os.path.join(root, "assets", "images"))
+    candidate = os.path.realpath(os.path.join(root, src))
+    within = os.path.normcase(candidate).startswith(
+        os.path.normcase(images_dir) + os.sep)
+    return within and os.path.isfile(candidate)
+
+
+def _validate_photo(value, path, root):
+    _check_object(value, path, _PHOTO_ALLOWED, _PHOTO_REQUIRED)
+    if "src" in value:
+        src = value["src"]
+        src_path = _join(path, "src")
+        if not isinstance(src, str) or isinstance(src, bool):
+            _fail(src_path, "must be a string")
+        elif not _PHOTO_SRC_RE.match(src):
+            _fail(src_path, "must be a path like assets/images/<name>.(webp|png|jpg|jpeg), "
+                            "with no '..', leading slash, backslash, or URL scheme")
+        elif root is not None and not _photo_file_exists(src, root):
+            # A missing image is fatal, not a warning: an <img> with no file
+            # behind it is exactly the silent-failure-on-the-published-page
+            # this validator otherwise never lets through (see module
+            # docstring's "Why fail loud").
+            _fail(src_path, f"photo not found: {src}")
+    if "alt" in value:
+        _check_str(value["alt"], _join(path, "alt"), 160, multiline=False)
+
+
+def _validate_identity(value, path, root):
     _check_object(value, path, _IDENTITY_ALLOWED, _IDENTITY_REQUIRED)
     for field, (max_len, multiline) in _IDENTITY_SPECS.items():
         if field in value:
             _check_str(value[field], _join(path, field), max_len, multiline)
+    if "photo" in value:
+        _validate_photo(value["photo"], _join(path, "photo"), root)
 
 
 def _validate_roles(value, path):
@@ -311,11 +364,19 @@ def _validate_schema_version(value, path):
         _fail(path, f"must equal {SCHEMA_VERSION}")
 
 
-def validate_profile(data):
+def validate_profile(data, root=None):
     """Validates `data` against profile.json's schema, hand-written (see
     module docstring for why no jsonschema). Rejects unknown keys at every
     depth and never coerces types -- a bool or int where a string is
     expected is an error, not a silent cast.
+
+    `root`, when given, additionally verifies that identity.photo.src (if
+    present) resolves to a real file under <root>/assets/images -- see
+    _photo_file_exists. Pass None (the default) to skip that filesystem
+    check and validate shape only, which is what every existing caller and
+    test does; load_profile() always passes ROOT_DIR, since a photo the
+    build would 404 on is exactly the kind of silent failure this module
+    exists to prevent (see "Why fail loud" above).
 
     Raises ProfileError with a path-qualified message on the first problem
     found. Returns `data` unchanged on success.
@@ -323,7 +384,7 @@ def validate_profile(data):
     _check_object(data, "", _TOP_LEVEL_KEYS, _TOP_LEVEL_KEYS)
 
     _validate_schema_version(data["schema_version"], "schema_version")
-    _validate_identity(data["identity"], "identity")
+    _validate_identity(data["identity"], "identity", root)
     _validate_roles(data["roles"], "roles")
     _validate_education(data["education"], "education")
     _validate_skills(data["skills"], "skills")
@@ -358,7 +419,7 @@ def load_profile(path=None):
     except json.JSONDecodeError as e:
         raise ProfileError(f"profile.json: invalid JSON in {path}: {e}") from e
 
-    return validate_profile(data)
+    return validate_profile(data, root=ROOT_DIR)
 
 
 def person_jsonld(profile):
