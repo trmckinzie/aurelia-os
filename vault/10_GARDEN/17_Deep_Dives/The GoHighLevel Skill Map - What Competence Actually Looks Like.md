@@ -1,0 +1,96 @@
+---
+created: 2026-09-01
+tags:
+  - type/deep-dive
+  - maturity/growing
+  - status/active
+  - topic/business
+  - topic/artificial-intelligence
+type: deep-dive
+maturity: growing
+status: active
+publish: false
+---
+**🔗 Related:** [[Claude Code, Demystified]]
+
+---
+
+# The GoHighLevel Skill Map: What Competence Actually Looks Like
+
+*A ~10-minute orientation on what GoHighLevel actually is underneath the marketing, where its own builder gives out, and what it takes to build custom sites against it with Claude Code*
+
+---
+
+Genuine competence in GoHighLevel splits into two halves that rarely live in the same person: knowing the platform well enough to run an agency on it, and knowing its integration surfaces well enough to build custom software against it. This is a map of both — what the platform actually is, what it costs, where its own builder gives out, and what an AI coding agent genuinely changes about the work.
+
+> [!note] Figures verified 2026-09-01
+> Pricing, the official MCP endpoint, and all four GitHub repository statistics below were independently re-checked against primary sources on the date of writing. Repository activity in particular is a moving target — re-pull those numbers before relying on them.
+
+## What GoHighLevel Actually Is
+
+GoHighLevel (now branded HighLevel, with LeadConnector as its API-facing identity) is a CRM with a page builder and an automation engine attached, sold through a two-tier hierarchy. **Agencies** are the paying customers; each agency hosts **sub-accounts**, also called **locations**, typically one per end client. Every contact, pipeline, calendar, and workflow is scoped to a sub-account, while branding, snapshots, and billing sit at the agency level ([Agency vs Sub-Account](https://marketplace.gohighlevel.com/docs/oauth/AgencyVsSubAccount/index.html)). This hierarchy is not merely organizational — it propagates directly into authentication, where tokens are issued at either agency or location scope, and an agency token can mint a location token through a dedicated endpoint ([OAuth 2.0 docs](https://marketplace.gohighlevel.com/docs/Authorization/OAuth2.0/index.html)).
+
+Authentication has two supported paths and one retired one. **API v1**, authenticated by a static API key, reached official end-of-support on **December 31, 2025** — existing integrations continue to function but receive no fixes ([HighLevel API documentation](https://help.gohighlevel.com/support/solutions/articles/48001060529-highlevel-api-documentation)). Everything current runs on **API v2** ([Marketplace docs](https://marketplace.gohighlevel.com/docs/)). Against v2 you authenticate either with a **Private Integration Token (PIT)** — a scoped token generated in Settings → Private Integrations, intended for internal tools and single-account work ([Private Integrations guide](https://help.gohighlevel.com/support/solutions/articles/155000003054-private-integrations-everything-you-need-to-know)) — or with **OAuth 2.0 Authorization Code Grant**, which is mandatory for Marketplace apps and anything serving multiple locations. OAuth access tokens expire in roughly 24 hours; refresh tokens last up to a year ([OAuth 2.0 docs](https://marketplace.gohighlevel.com/docs/Authorization/OAuth2.0/index.html)). OAuth also exposes a strictly wider scope catalog than a PIT does, which is the real reason to prefer it once an integration outgrows a single account.
+
+Rate limits are documented plainly: a burst ceiling of **100 requests per 10 seconds** and **200,000 requests per day**, scoped per Marketplace app *per resource* — meaning each sub-account install gets its own budget rather than dividing a shared pool ([Rate limits](https://marketplace.gohighlevel.com/docs/other/rate-limits)). This is generous for a single site and constraining only for bulk operations run sequentially across many sub-accounts under one credential.
+
+**Webhooks** are configured at the app level in the Marketplace dashboard, where a developer sets a URL and subscribes to specific events from a catalog of fifty-plus types spanning contacts, opportunities, appointments, invoicing, and account changes; unlike scopes, webhook subscriptions can be changed on a live app ([Webhook Integration Guide](https://marketplace.gohighlevel.com/docs/webhook/WebhookIntegrationGuide/)). Payloads carry a `webhookId` for deduplication, and endpoints falling below a success threshold across large delivery volumes get circuit-broken and require manual re-enabling.
+
+Signature verification is migrating: the current `X-GHL-Signature` (Ed25519) replaces the legacy `X-WH-Signature` (RSA-SHA256), whose deprecation date is **September 1, 2026** — which has now arrived, so any receiver still validating the legacy header needs attention immediately rather than eventually.
+
+One caution for anyone building retry-tolerant receivers: HighLevel's own two documents disagree about retry behavior. The Webhook Integration Guide describes exponential backoff on any non-2xx response for up to twelve attempts, while a separate official article on automated webhook retries describes 429s retried at fixed ten-minute intervals for six attempts and states that 5xx errors are treated as permanent and *not* retried ([Automated webhook retries](https://help.gohighlevel.com/support/solutions/articles/155000007071-automated-webhook-retries)). Build your receiver idempotent and assume the stricter reading. Distinct from all of this is the workflow-level **Webhook (Outbound)** action, a no-code step a non-developer drops into a workflow to POST data out ([Workflow action: Webhook](https://help.gohighlevel.com/support/solutions/articles/155000003299-workflow-action-webhook-outbound-)); conflating the two is a common source of confusion.
+
+The **marketplace app model** divides apps into public and private. Private apps are capped at installation in **up to five agencies** under a policy dated November 18, 2025; a sixth install is blocked unless the developer either publishes publicly or passes a formal Security Review ([Private app install limits](https://marketplace.gohighlevel.com/docs/MarketplacePolicies/PrivateAppInstallLimits/)). Public review is substantive: a Loom video demonstrating the app, a second Loom justifying every requested OAuth scope, and test credentials for any third-party service the app touches ([Stronger app review process](https://ideas.gohighlevel.com/changelog/marketplace-stronger-app-review-process-for-new-apps)). White-label compliance rules also forbid user-facing use of the terms "HighLevel," "GHL," "sub-account," or "agency" in apps marketed to white-labeled end customers ([App review guidelines](https://marketplace.gohighlevel.com/docs/oauth/AppReviewGuidelines/)). A "restricted public" tier — listed but installable only by approved accounts — is described by a vendor dev-shop blog ([ConsultEvo](https://consultevo.com/gohighlevel-marketplace-app-distribution-types/)) and **is not confirmed in HighLevel's own distribution-type documentation** ([Marketplace app distribution type](https://help.gohighlevel.com/support/solutions/articles/155000002141-marketplace-app-distribution-type)); treat it as community characterization, not official taxonomy.
+
+Finally, the **embeddable surfaces** — forms, surveys, calendars, and the live chat widget — are officially supported copy-paste snippets with platform-specific instructions published for WordPress, Wix, Squarespace, and Shopify ([forms](https://help.gohighlevel.com/support/solutions/articles/155000004524-embedding-highlevel-forms-on-non-highlevel-websites), [calendars](https://help.gohighlevel.com/support/solutions/articles/48000982201-embed-a-highlevel-calendar), [chat widget](https://help.gohighlevel.com/support/solutions/articles/155000007601-how-to-create-an-embedded-live-chat-widget)). These are the sanctioned seam for custom sites. The line between supported and unsupported is sharp and documented: you can *read* a funnel page's full JSON structure via the API, but there is no write endpoint, no corresponding OAuth scope, and a developer's open GitHub issue records `PUT /funnels/page` returning 401 across every auth method tried — PIT, OAuth 2.0, and Firebase JWT — leaving browser automation as the only working path ([highlevel-api-docs issue #267](https://github.com/GoHighLevel/highlevel-api-docs/issues/267)).
+
+## Pricing and White-Label Economics
+
+Per HighLevel's own pricing page ([gohighlevel.com/pricing](https://www.gohighlevel.com/pricing)), **Starter** runs **$97/month** ($970/year) with three sub-accounts; **Unlimited** runs **$297/month** ($2,970/year) with unlimited sub-accounts and phone/email rebilling at cost; and **Agency Pro / SaaS Pro** runs **$497/month** ($4,970/year), adding SaaS mode — automated sub-account provisioning, custom resale pricing, and rebilling with markup. Enterprise is sales-quoted. SaaS mode is bundled into Agency Pro, not sold separately ([HighLevel pricing guide](https://help.gohighlevel.com/support/solutions/articles/155000001156-highlevel-pricing-guide)).
+
+The add-ons are where the economics turn. A **white-label mobile app** costs an additional **$497/month, or $1,491/quarter**, on top of Agency Pro. A **branded client portal app** costs **$49/month per enabled sub-account**. **HIPAA compliance** is **$297/month** and, once enabled, non-cancelable. So a fully branded white-label SaaS business starts at roughly **$994/month in fixed cost** before a single client is billed.
+
+That the mobile app price is real friction rather than settled consensus is visible on HighLevel's own idea board, where an unresolved post titled "Whitelabel Mobile App is Too Expensive" continues to collect votes ([idea board](https://ideas.gohighlevel.com/mobile-app/p/whitelabel-mobile-app-is-too-expensive)). Affiliate and reseller sites repeat these same figures alongside claims like "Starter replaces $1,142/month of other tools" ([gohighlevel.ai](https://gohighlevel.ai/blog/gohighlevel-pricing-2026)) — **that comparison is affiliate marketing framing, not a verifiable fact**, and the honest move is to do the arithmetic yourself against the official page.
+
+## The Build Decision
+
+The choice between GoHighLevel's native builder and a custom site wired in through the API has documented limits on both sides, and it is worth stating them from first-party sources rather than competitor blogs.
+
+Against the native builder: HighLevel maintains a dedicated support article on improving funnel and website page speed, listing image optimization, reduced custom code, and CDN hygiene as remedies and noting a platform change that trimmed average HTML output by about 10% ([page speed article](https://help.gohighlevel.com/support/solutions/articles/155000006268-how-to-improve-funnel-website-page-speed)) — an implicit first-party acknowledgment that default performance needs manual work. On HighLevel's public idea board, an open request to "Reduce Bloated HTML Output in the Website Builder" cites SEMrush flags for poor text-to-HTML ratio ([idea board](https://ideas.gohighlevel.com/website/p/reduce-bloated-html-output-in-the-website-builder)), and a separate request to bring the builder "to the same level as Elementor" carries 685 votes and is marked *in progress* by HighLevel itself ([idea board](https://ideas.gohighlevel.com/funnels/p/major-upgrade-to-website-funnel-builder-to-be-on-the-same-level-as-elementor)) — the platform conceding its own ceiling on its own roadmap.
+
+A report that the newer AI Studio builder is client-side-rendered with no SSR or prerendering, and therefore structurally hostile to SEO, comes from an agency blog selling a competing Astro theme ([Zeon Studio](https://zeon.studio/blog/why-ghl-ai-studio-websites-fail-seo)) and **must be flagged as an affiliate-adjacent source**; the architectural claim is plausible and the general risk of unmitigated CSR is well known, but it is not independently confirmed. Similar caveats apply to agency-authored comparisons citing specific Core Web Vitals failures or the absence of a schema builder and redirect manager ([Automate the Journey](https://automatethejourney.com/blog/ghl-page-speed-core-web-vitals), [Orign](https://orignapp.io/blog/gohighlevel-website-builder-vs-wordpress), [Net Partners](https://netpartners.marketing/gohighlevel-website-builder/)) — **all reseller or agency blogs**.
+
+The hardest constraint is not aesthetic. Because there is no API write path into the page builder, native pages cannot be version-controlled, code-reviewed, or deployed through CI. That is a permanent ceiling for anyone who works the way software teams work. Developers report the same strain in automation: one long-term user describes GHL's native webhook and API automation as something that "gets limiting very quickly — kinda forces you to use an additional middleware layer" ([r/gohighlevel](https://www.reddit.com/r/gohighlevel/comments/1pviseq/anyone_here_using_gohighlevel_longterm_curious)), with another describing difficulty firing two push APIs reliably in sequence ([r/gohighlevel](https://www.reddit.com/r/gohighlevel/comments/1ryu3vk/automations_apis_help)).
+
+What the custom path buys is rendering control (true SSR or static generation), full SEO tooling, independent hosting, and deployability. What it gives up is genuine: drag-and-drop speed, built-in split testing, and single-dashboard simplicity for non-technical operators. The defensible rule is narrower than "custom is better." Build native when the artifact is a short-lived lead-capture funnel and build speed dominates. Build custom when organic search, page-speed guarantees, or deployment discipline are actual requirements. In both cases, keep GoHighLevel as the CRM and automation layer underneath, connected through the supported embed and webhook seams — not through attempts to drive the page builder programmatically.
+
+## The Claude Code Angle
+
+In practice, building GHL integrations with an AI coding agent means working the ordinary REST surface faster: reading the v2 docs, generating typed clients for contacts, opportunities, calendars, and webhooks, scaffolding signature verification and idempotent receivers, and wiring embeds into a custom site. There is no AI-only integration surface — with one real exception.
+
+**An official MCP server exists, and it is first-party.** HighLevel operates a hosted **LeadConnector MCP server** at `https://services.leadconnectorhq.com/mcp/{client}/v2`, with the Claude endpoint live at `/mcp/anthropic/v2`, documented on HighLevel's own developer portal ([MCP docs](https://marketplace.gohighlevel.com/docs/other/mcp)). It exposes six meta-tools — `search`, `fetch`, `search_operations`, `describe_operation`, `execute_operation`, `list_locations` — routing into **625 operations across 40 product domains**, and supports multi-account connection so one install can work across authorized locations ([multi-account support](https://help.gohighlevel.com/support/solutions/articles/155000008360-highlevel-mcp-multi-account-support-for-claude), modified 6 August 2026). It authenticates with **either OAuth or a Private Integration Token, with OAuth recommended** for its broader scope catalog.
+
+Note that an older setup article still answers "Is OAuth supported?" with "planned for a future release" ([MCP setup article](https://help.gohighlevel.com/support/solutions/articles/155000005741-how-to-setup-and-use-the-highlevel-mcp-server), modified 9 July 2026) — HighLevel's docs contradict each other here, and the newer, OAuth-supported guidance is the correct one. There is no repository to audit, but documentation updated within the past month is the strongest available maintenance signal.
+
+Community servers exist alongside it, mostly as stdio bridges to that same HTTP endpoint for clients like Claude Desktop ([HighLevelScaling/ghl-mcp-server](https://github.com/HighLevelScaling/ghl-mcp-server)). Their maintenance varies sharply, and popularity is not a proxy for it. Verified through GitHub's API on 1 September 2026:
+
+| Repository | Stars | Forks | Last push | License |
+|---|---:|---:|---|---|
+| [mastanley13/GoHighLevel-MCP](https://github.com/mastanley13/GoHighLevel-MCP) | 197 | 204 | 2025-07-06 | Other |
+| [BusyBee3333/Go-High-Level-MCP-2026-Complete](https://github.com/BusyBee3333/Go-High-Level-MCP-2026-Complete) | 102 | 80 | 2026-09-01 | Other |
+| [basicmachines-co/open-ghl-mcp](https://github.com/basicmachines-co/open-ghl-mcp) | 50 | 30 | 2026-07-08 | AGPL-3.0 |
+| [tkturners/gohighlevel-mcp](https://github.com/tkturners/gohighlevel-mcp) | 0 | 0 | 2026-05-23 | MIT |
+
+The most-cited repo across MCP directories is `mastanley13/GoHighLevel-MCP` — and it is **stale by over a year**, self-described in its own README as a "base-level foundational project." That gap between citation count and actual maintenance is the whole lesson. `BusyBee3333` is the most recently active, though its README discloses a referral affiliate link — not deceptive, but a commercial interest worth knowing.
+
+The verdict is simple: use HighLevel's own hosted server as the default. Reach for a community project only to bridge a stdio-only client, and check its last push date before you do.
+
+## Part 3: The Plain-English Summary
+
+Strip out the acronyms and this skill set is two things. First, knowing how to move a business's leads, bookings, and follow-up messages through one system reliably — which means understanding that GoHighLevel is really a CRM with a website builder and an automation engine bolted on, sold at $97 to $497 a month depending on how many clients you manage and whether you want to resell it under your own brand. Second, knowing when that built-in website builder is good enough and when it isn't, and being able to build the site properly somewhere else and plug it back in.
+
+The technical parts are not exotic. The API is standard REST with normal OAuth login; the old, less secure key-based version was retired at the end of 2025. Forms, calendars, and chat widgets are designed to be pasted into any website, and that is the officially blessed way to combine a custom site with GoHighLevel's CRM. The honest gap is documented in HighLevel's own bug tracker: you can read a funnel page through the API but you cannot write one back. Anyone promising fully automated GHL website deployment is either mistaken or quietly driving a browser, and should say which.
+
+An honest learning path runs in order. Build a sub-account by hand until the agency/sub-account model, forms, and calendars feel obvious. Generate a Private Integration Token and make real API calls against your own test account until v2's shape is second nature. Build one small custom page that embeds a GHL form and calendar, so you have walked the supported custom-site path yourself. Connect Claude Code to HighLevel's own hosted MCP server and use it against a sandbox account rather than reaching first for a community wrapper. Then read the platform's idea board and its GitHub issues periodically — that is where current limitations surface long before any blog covers them.
+
+Anyone selling GoHighLevel expertise who cannot point to the page-builder write-API gap, the published rate limits, or the actual pricing page has not done the homework. That, more than any certification, is the bar.
