@@ -133,7 +133,7 @@
             </div>
 
             {% if profile.roles %}
-            <div class="text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6 leading-relaxed">
+            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6 leading-relaxed">
                 {% for role in profile.roles if role.primary %}{% if loop.index <= 2 %}{% if not loop.first %}<br>{% endif %}
                 {{ role.title }} &mdash; {{ role.org }}
                 {% endif %}{% endfor %}
@@ -160,7 +160,7 @@
                 </p>
             </div>
 
-            <div class="text-xs text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6">
+            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6">
                 Concepts &middot; Sources &middot; Authors &middot; Disciplines &middot; Deep dives
             </div>
         </div>
@@ -199,18 +199,18 @@
             </span>
             <div class="flex flex-col">
                 {% for hub in stats.hub_notes %}
-                <a href="garden.html#{{ hub.id }}" class="hub-row group/hub flex items-center justify-between gap-3 text-xs font-mono text-aurelia-text/80 hover:text-aurelia-accent border-b border-aurelia-border py-1.5">
+                <a href="garden.html#{{ hub.id }}" class="hub-row group/hub flex items-center justify-between gap-3 text-[0.8125rem] font-mono text-aurelia-text/80 hover:text-aurelia-accent border-b border-aurelia-border py-1.5">
                     <span class="truncate">{{ hub.title }}</span>
                     <span class="opacity-50 group-hover/hub:opacity-100 shrink-0 tabular-nums">{{ hub.connections }} &#10231;</span>
                 </a>
                 {% else %}
-                <span class="text-xs text-aurelia-muted">Link notes together to surface hubs here</span>
+                <span class="text-[0.8125rem] text-aurelia-muted">Link notes together to surface hubs here</span>
                 {% endfor %}
             </div>
         </div>
 
         <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-border">
-            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-xs font-mono text-aurelia-tertiary hover:text-aurelia-text transition-colors">
+            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-[0.8125rem] font-mono text-aurelia-tertiary hover:text-aurelia-text transition-colors">
                 <span>🧠 <span id="lobby-review-count">0</span> notes due for review</span>
                 <span>→</span>
             </a>

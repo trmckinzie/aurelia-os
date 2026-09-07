@@ -449,7 +449,7 @@
                          autofill and most IME composition all change the value
                          without ever releasing a key, so onkeyup silently
                          ignored every one of them. `input` covers typing too. -->
-                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-xs font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
+                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -585,12 +585,12 @@
                             
                             <div class="flex items-center gap-3">
                                 <span class="text-lg opacity-80">{{ folder_icon }}</span>
-                                <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.2em]">{{ type_names.get(type|lower, type|lower|replace('-', ' ')) }}</span>
+                                <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.08em]">{{ type_names.get(type|lower, type|lower|replace('-', ' ')) }}</span>
                             </div>
                             
                             <div class="h-px bg-aurelia-border flex-grow mx-4 opacity-50"></div>
                             
-                            <span class="text-[10px] text-aurelia-muted font-mono border border-aurelia-border bg-aurelia-bg px-2 py-0.5 rounded-theme">
+                            <span class="text-[0.8125rem] text-aurelia-muted font-mono border border-aurelia-border bg-aurelia-bg px-2 py-0.5 rounded-theme">
                                 {{ group|length }} notes
                             </span>
                         </summary>
@@ -607,7 +607,7 @@
                                  data-tags="{{ card.tags|join(' ') }}">
                                 
                                 <div class="flex items-center gap-3 overflow-hidden">
-                                    <span class="text-aurelia-muted text-[10px] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
+                                    <span class="text-aurelia-muted text-[0.8125rem] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
                                     <span class="text-sm font-mono text-aurelia-muted group-hover/node:text-aurelia-text transition-colors truncate">{{ card.title }}</span>
                                 </div>
 
@@ -618,11 +618,11 @@
                                     
                                     <div class="flex gap-1">
                                         {% for tag in card.tags[:2] %}
-                                        <span class="text-[9px] font-mono text-aurelia-muted border border-aurelia-border px-1.5 py-0.5 rounded-theme bg-aurelia-bg">#{{ tag }}</span>
+                                        <span class="text-[0.75rem] font-mono text-aurelia-muted border border-aurelia-border px-1.5 py-0.5 rounded-theme bg-aurelia-bg">#{{ tag }}</span>
                                         {% endfor %}
                                     </div>
 
-                                    <div class="flex items-center gap-1 text-[9px] font-bold text-aurelia-primary tracking-wider">
+                                    <div class="flex items-center gap-1 text-[0.75rem] font-bold text-aurelia-primary tracking-wider">
                                         <span>Open</span>
                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                     </div>
@@ -637,7 +637,11 @@
 
         <div id="graphView" class="hidden">
             <div class="mb-4 flex items-center justify-between field-label text-aurelia-muted">
-                <span>Scroll to zoom · drag to pan · click a note to open</span>
+                <!-- normal-case: this is a sentence, not a label. It inherits
+                     .field-label's uppercase from the row, and all-caps costs
+                     real reading speed once a string runs past a few words --
+                     the legend chips beside it are one word each and keep it. -->
+                <span class="normal-case tracking-normal">Scroll to zoom · drag to pan · click a note to open</span>
                 <div class="flex items-center gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-tertiary"></span>Log</span>
@@ -650,8 +654,8 @@
             </div>
             <div id="graph-canvas-wrap" class="relative border border-aurelia-border bg-aurelia-bg/40 rounded-theme overflow-hidden" style="height: 70vh;">
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
-                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-xs font-mono text-aurelia-text shadow-lg"></div>
-                <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-xs font-mono text-aurelia-muted uppercase tracking-widest">No notes match the current filter</div>
+                <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-[0.8125rem] font-mono text-aurelia-text shadow-lg"></div>
+                <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-[0.8125rem] font-mono text-aurelia-muted uppercase tracking-[0.06em]">No notes match the current filter</div>
             </div>
         </div>
 
@@ -728,7 +732,7 @@
             <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-14 right-3 sm:right-4 border border-aurelia-border rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
                 <label class="flex flex-col gap-1.5">
                     VOICE
-                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[11px] normal-case tracking-normal"></select>
+                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[0.8125rem] normal-case tracking-normal"></select>
                 </label>
                 <label class="flex flex-col gap-1.5">
                     SPEED: <span id="tts-rate-label" class="text-aurelia-primary">1.0x</span>
@@ -1597,14 +1601,14 @@
         // there are at most a dozen or so here, and the reader already traps
         // focus around its own content, so they cost nothing to tab through.
         const pill = (r) => `
-                    <button type="button" onclick="openNote('${r.id}')" class="text-xs font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
+                    <button type="button" onclick="openNote('${r.id}')" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
         container.innerHTML = `
             <div class="mt-6 pt-6 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
                 <div class="flex flex-wrap gap-2">
                     ${shown.map(pill).join('')}
                     ${rest.length ? `<span id="backlinks-rest" hidden>${rest.map(pill).join('')}</span>` : ''}
-                    ${rest.length ? `<button type="button" onclick="expandBacklinks(this)" class="text-xs font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
+                    ${rest.length ? `<button type="button" onclick="expandBacklinks(this)" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
                 </div>
             </div>
         `;
@@ -1653,7 +1657,7 @@
                 <span class="field-label text-aurelia-accent block mb-3">✦ Related by Topic</span>
                 <div class="flex flex-wrap gap-2">
                     ${related.map(r => `
-                    <button type="button" onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-xs font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
+                    <button type="button" onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
                     `).join('')}
                 </div>
             </div>
@@ -2268,12 +2272,12 @@
         const shown = queue.slice(0, REVIEW_QUEUE_SHOWN);
         const overflow = queue.length - shown.length;
         container.innerHTML = shown.map(item => `
-            <button type="button" onclick="openNote('${item.id}')" class="text-xs font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
+            <button type="button" onclick="openNote('${item.id}')" class="text-[0.8125rem] font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
                 <span>${escapeHtml(item.title)}</span>
-                <span class="opacity-50 text-[9px]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
+                <span class="opacity-50 text-[0.75rem]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
             </button>
         `).join('') + (overflow > 0 ? `
-            <span class="text-xs font-mono px-3 py-1.5 text-aurelia-muted opacity-70 flex items-center">+${overflow} more due</span>
+            <span class="text-[0.8125rem] font-mono px-3 py-1.5 text-aurelia-muted opacity-70 flex items-center">+${overflow} more due</span>
         ` : '');
     }
 

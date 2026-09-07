@@ -234,6 +234,35 @@ body {
 }
 
 /* ============================================================
+   TYPE SCALE -- the readable floor
+   ============================================================
+   The site was built almost entirely out of very small text. Measured by
+   walking every visible text node: 45% of the Garden rendered at 10-11px
+   (1,565 nodes at 10px alone) and 60% of the Lobby at 12px or under,
+   against a 16px web norm. Contrast was never the problem -- card copy
+   measures 14.4:1 -- so this is a size and spacing fix, not a colour one.
+
+   rem, not px, so a reader who has raised their browser's default text
+   size gets a proportionally larger site. Pixel sizes silently override
+   that preference, which is the most common accessibility complaint about
+   small-text sites. Nothing sets a font-size on <html>, so 1rem is the
+   browser's own default (16px unless the reader says otherwise).
+
+   --text-2xs is the floor: nothing on the site should go below it.
+
+   The ~50 inline `text-[...]` sizes in cards.py and the templates use the
+   plain rem values from this scale rather than var() references. Tailwind
+   needs a `length:` type hint to accept a custom property as a font size,
+   and adding that at 50 call sites buys nothing behavioural -- this
+   comment is the mapping. */
+:root {
+    --text-2xs: 0.75rem;    /* 12px -- incidental metadata, keycaps */
+    --text-xs:  0.8125rem;  /* 13px -- micro-labels, chips, pills */
+    --text-sm:  0.875rem;   /* 14px -- buttons, dense secondary text */
+    --text-md:  1rem;       /* 16px -- body copy */
+}
+
+/* ============================================================
    NAV HEIGHT -- one source of truth
    ============================================================
    The nav's height used to be hardcoded in three unrelated places that
@@ -424,10 +453,16 @@ body {
    caller via a text-aurelia-* utility (color: inherit here on purpose). */
 .field-label {
     font-family: var(--aurelia-font-mono);
-    font-size: 10px;
+    font-size: var(--text-xs);
     font-weight: var(--aurelia-label-weight);
     line-height: 1.4;
-    letter-spacing: 0.12em;
+    /* Tracking falls as size rises. 0.12em existed to keep uppercase mono
+       legible at 10px, where letters crowd; at 13px it pulls words apart
+       instead, and these are read as whole labels. Uppercase stays: 98% of
+       the site's uppercased strings are one to three words, where the
+       all-caps reading penalty (a passage-level effect, from losing word
+       shape across a line) is negligible. */
+    letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
@@ -438,9 +473,9 @@ body {
     align-items: center;
     gap: 0.65rem;
     font-family: var(--aurelia-font-mono);
-    font-size: 12px;
+    font-size: var(--text-sm);
     font-weight: var(--aurelia-label-weight);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.95rem 1.6rem;
     border: 1px solid transparent;
@@ -498,9 +533,9 @@ body {
     align-items: center;
     gap: 0.5rem;
     font-family: var(--aurelia-font-mono);
-    font-size: 11px;
+    font-size: var(--text-xs);
     font-weight: var(--aurelia-label-weight);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
     padding: 0.55rem 1rem;
@@ -732,7 +767,7 @@ body {
 
 .kbd {
     font-family: var(--aurelia-font-mono);
-    font-size: 10px;
+    font-size: var(--text-2xs);
     line-height: 1;
     padding: 0.3rem 0.4rem;
     border: 1px solid var(--aurelia-border-main);
@@ -839,7 +874,7 @@ body {
     display: inline-flex;
     align-items: center;
     font-family: var(--aurelia-font-mono);
-    font-size: 11px;
+    font-size: var(--text-xs);
     font-weight: 500;
     letter-spacing: 0.02em;
     line-height: 1.4;

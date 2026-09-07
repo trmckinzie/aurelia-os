@@ -110,7 +110,7 @@
     <div class="scanline"></div>
 
     <nav class="nav-shell fixed top-0 w-full z-50 backdrop-blur-md">
-        <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[10px] tracking-[0.2em]">
+        <div class="max-w-[1600px] mx-auto px-6 h-full flex items-center justify-between font-mono text-[0.8125rem] tracking-[0.06em]">
 
             <a href="index.html" class="flex items-center gap-3 group shrink-0">
                 <div class="relative flex items-center justify-center">
@@ -179,7 +179,7 @@
                 <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_8px_currentColor] text-aurelia-primary"></div>
                 <span class="text-aurelia-primary">{{ site.get('name', config.system_name) }}</span>
             </div>
-            <div class="text-aurelia-text normal-case tracking-normal font-mono text-xs">{{ config.author.bio_short }}</div>
+            <div class="text-aurelia-text normal-case tracking-normal font-mono text-[0.8125rem]">{{ config.author.bio_short }}</div>
             <div class="flex gap-6">
                 <span class="text-aurelia-primary">{{ config.system_version }}</span>
                 <span>NO TRACKING</span>
@@ -351,10 +351,10 @@
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-aurelia-text/5 transition-colors ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
                         <span class="flex-grow">
-                            <span class="block text-xs font-bold">${escapeHtml(t.label)}</span>
-                            <span class="block text-[10px] text-aurelia-muted">${escapeHtml(t.description)}</span>
+                            <span class="block text-[0.8125rem] font-bold">${escapeHtml(t.label)}</span>
+                            <span class="block text-[0.8125rem] text-aurelia-muted">${escapeHtml(t.description)}</span>
                         </span>
-                        ${t.key === active ? '<span class="text-xs">✓</span>' : ''}
+                        ${t.key === active ? '<span class="text-[0.8125rem]">✓</span>' : ''}
                     </button>
                 `).join('');
             }
@@ -364,8 +364,8 @@
                 mobile.innerHTML = AVAILABLE_THEMES.map(t => `
                     <button onclick="setTheme('${t.key}')" class="flex items-center gap-3 py-2 text-left ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
-                        <span class="text-xs">${escapeHtml(t.label)}</span>
-                        ${t.key === active ? '<span class="text-xs ml-auto">✓</span>' : ''}
+                        <span class="text-[0.8125rem]">${escapeHtml(t.label)}</span>
+                        ${t.key === active ? '<span class="text-[0.8125rem] ml-auto">✓</span>' : ''}
                     </button>
                 `).join('');
             }
@@ -553,7 +553,7 @@
                         </span>
                         <span class="font-bold text-aurelia-text group-hover:text-aurelia-text font-mono">${escapeHtml(item.title)}</span>
                     </div>
-                    <span class="text-aurelia-muted text-xs font-mono group-hover:text-aurelia-primary">${selected ? 'ENTER ↵' : 'JUMP ->'}</span>
+                    <span class="text-aurelia-muted text-[0.8125rem] font-mono group-hover:text-aurelia-primary">${selected ? 'ENTER ↵' : 'JUMP ->'}</span>
                 </a>
                 `;
             }).join('');
