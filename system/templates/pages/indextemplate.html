@@ -222,13 +222,6 @@
                 {% endfor %}
             </div>
         </div>
-
-        <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-border">
-            <a href="garden.html" title="Grounded in the spacing effect: notes come due for a revisit on an interval keyed to their maturity." class="flex items-center justify-between text-[0.8125rem] font-mono text-aurelia-tertiary hover:text-aurelia-text transition-colors">
-                <span>🧠 <span id="lobby-review-count">0</span> notes due for review</span>
-                <span>→</span>
-            </a>
-        </div>
     </div>
 
 </div>
@@ -305,37 +298,6 @@
 
 {% block scripts %}
 <script>
-    /* --- SPACED-REVIEW TEASER ---
-       Mirrors the maturity-weighted due calculation in garden.html, reading
-       the same aurelia_review_log localStorage key Garden writes to when a
-       note is opened. REVIEW_SEED carries only id/title/maturity (no note
-       bodies) -- see engine/pipeline.py._build_lobby_context. */
-    (function() {
-        const REVIEW_SEED = {{ review_seed }};
-        const REVIEW_INTERVAL_DAYS = { seed: 1, growing: 5, evergreen: 14 };
-        const DEFAULT_INTERVAL_DAYS = 3;
-
-        let log = {};
-        try { log = JSON.parse(localStorage.getItem('aurelia_review_log') || '{}'); } catch (e) {}
-
-        const now = Date.now();
-        const dueCount = REVIEW_SEED.filter(n => {
-            const last = log[n.id];
-            if (!last) return true;
-            const intervalMs = (REVIEW_INTERVAL_DAYS[n.maturity] || DEFAULT_INTERVAL_DAYS) * 86400000;
-            return (now - last) / intervalMs >= 1;
-        }).length;
-
-        if (dueCount > 0) {
-            const teaser = document.getElementById('lobby-review-teaser');
-            const countEl = document.getElementById('lobby-review-count');
-            if (teaser && countEl) {
-                countEl.innerText = dueCount;
-                teaser.classList.remove('hidden');
-            }
-        }
-    })();
-
     /* Read once and shared by the entrance animations and the carousel's
        readout swap below. The hero name's glow is CSS-only and opts itself
        out via its own @media block. */

@@ -130,13 +130,6 @@ def test_lobby_context_latest_log_date_is_none_without_daily_logs():
     assert stats["latest_log_date"] is None
 
 
-def test_lobby_context_review_seed_carries_id_title_maturity():
-    cards = [_lobby_card("note-a", "A", "seed")]
-    graph_index = {"nodes": [], "edges": []}
-    stats = _build_lobby_context(cards, graph_index)
-    assert stats["review_seed"] == [{"id": "note-a", "title": "A", "maturity": "seed"}]
-
-
 def test_degree_from_edges_counts_both_endpoints():
     edges = [
         {"source": "note-a", "target": "note-b"},
@@ -368,7 +361,7 @@ def _render_args():
     """Minimal arguments for _render_pages(); the render itself is stubbed."""
     return dict(
         user_config={}, garden_cards=[], json_index="{}", backlinks_json="{}",
-        graph_json="{}", lobby_stats={}, review_seed_json="{}", deep_search_json="{}",
+        graph_json="{}", lobby_stats={}, deep_search_json="{}",
         profile=minimal_profile(),
     )
 

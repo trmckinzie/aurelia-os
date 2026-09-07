@@ -94,9 +94,9 @@ def _maturity_slug(meta):
     active/reading/queued/archive; maturity/* is seed/growing/evergreen), so
     a status/* tag is no longer a maturity signal at all.
 
-    Exposed separately from the badge HTML (see _maturity_badge) so the
-    client-side review-queue JS in gardentemplate.html can read a note's
-    maturity via a data-maturity attribute without re-parsing rendered HTML.
+    Exposed separately from the badge HTML (see _maturity_badge) so
+    client-side JS can read a note's maturity off the card's data-maturity
+    attribute without re-parsing rendered HTML.
     """
     slug = str(meta.get("maturity", "")).lower().strip()
     if slug in _MATURITY_BADGES:

@@ -480,9 +480,6 @@
             <p class="field-label text-aurelia-muted" aria-live="polite" aria-atomic="true">
                 Notes shown: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
             </p>
-            <p class="field-label text-aurelia-tertiary" title="Notes due for spaced review, weighted by maturity (seed/growing/evergreen) and time since last opened.">
-                Due for review: <span id="review-count" class="text-aurelia-tertiary text-base font-extrabold tabular-nums">0</span>
-            </p>
         </div>
 
         <div id="topic-cloud" class="surface hidden mb-8 border border-aurelia-border rounded-theme p-5">
@@ -496,16 +493,6 @@
                 </span>
             </div>
             <div id="topic-cloud-items" class="flex flex-wrap gap-2 items-center"></div>
-        </div>
-
-        <div id="review-queue" class="surface hidden mb-10 border border-aurelia-tertiary/40 rounded-theme p-5">
-            <div class="flex items-center justify-between mb-3">
-                <span class="field-label text-aurelia-tertiary" title="Grounded in the spacing effect + retrieval practice: revisiting seeds and growing notes before they go stale helps them mature.">
-                    🧠 Notes due for review
-                </span>
-                <span class="field-label text-aurelia-muted">Click to review →</span>
-            </div>
-            <div id="review-queue-items" class="flex flex-wrap gap-2"></div>
         </div>
 
         <div id="grid-empty" class="hidden text-center py-20 field-label text-aurelia-muted">No notes match the current filter</div>
@@ -742,17 +729,14 @@
             {# Two groups, not three. The session info truncates; the controls
                never shrink. Previously this row was a single flex line whose
                content overflowed its own box by 21px at 375px, clipping the
-               NEXT button off the edge where it could not be tapped -- and
-               "LAST SEEN" sat *between* PREV and NEXT, so a status label was
-               wedged inside the navigation cluster. The decorative
+               NEXT button off the edge where it could not be tapped, with a
+               status label wedged inside the navigation cluster. The decorative
                "AURELIA_OS V3.0" is gone: it was occupying the width that
                caused the overflow. (Jinja comment so the retired name does
                not ship in dist/garden.html.) #}
             <div class="px-3 sm:px-4 py-2 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-2 sm:gap-4 shrink-0">
                 <div class="flex items-center gap-2 min-w-0 overflow-hidden">
                     <span id="modal-readtime" class="truncate"></span>
-                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">·</span>
-                    <span id="modal-reviewed" class="truncate opacity-70 hidden sm:inline"></span>
                     <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden xl:inline">·</span>
                     <span class="shrink-0 hidden xl:inline opacity-70">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</span>
                 </div>
@@ -1136,9 +1120,7 @@
 
     // Shared by navigateNote and openRandomNote -- both need "whatever the
     // current filter/search leaves visible in the grid," previously
-    // re-queried and re-filtered independently in each place. Deliberately
-    // NOT used by computeReviewQueue: spaced review should scan every note
-    // regardless of the active filter, not just what's currently shown.
+    // re-queried and re-filtered independently in each place.
     function getVisibleNoteIds() {
         return Array.from(document.querySelectorAll('#cardGrid .searchable-item'))
             .filter(el => el.style.display !== 'none')
@@ -1548,11 +1530,6 @@
         const minutes = Math.max(1, Math.round(wordCount / 200));
         const readtimeEl = document.getElementById('modal-readtime');
         if (readtimeEl) readtimeEl.innerText = `~${minutes} min read · ${wordCount} words`;
-
-        const previousVisit = reviewLog[noteId];
-        const reviewedEl = document.getElementById('modal-reviewed');
-        if (reviewedEl) reviewedEl.innerText = previousVisit ? `Last seen: ${daysAgoLabel(previousVisit)}` : 'First visit';
-        markReviewed(noteId);
 
         modalBackdrop.classList.remove('hidden');
         modalPanel.classList.remove('is-closing');
@@ -1985,7 +1962,7 @@
     // --- HASH DEEP-LINKING ---
     // garden.html#note-id opens that note directly on load -- what the
     // command palette's results, the Random Note button's URL, and the
-    // Lobby's hub-note/review links all rely on. Re-checked on hashchange
+    // Lobby's hub-note links all rely on. Re-checked on hashchange
     // too, so an in-page link to a different note (e.g. a backlink pill
     // that also updates the URL) keeps working the same way.
     // Arriving with a hash already set: open it without writing history,
@@ -2140,13 +2117,6 @@
         writeToClipboard(location.href).then(ok => done(ok ? '✓ Copied' : '⚠ Press ⌘C'));
     }
 
-    function daysAgoLabel(ts) {
-        const days = Math.floor((Date.now() - ts) / 86400000);
-        if (days <= 0) return 'today';
-        if (days === 1) return '1 day ago';
-        return `${days} days ago`;
-    }
-
     // --- BROWSE BY TOPIC ---
     // A tag cloud computed client-side from GRAPH_INDEX (no separate index
     // needed -- tags were already added there for Related by Topic). Scoped
@@ -2204,81 +2174,6 @@
         } else {
             label.classList.add('hidden');
         }
-    }
-
-    // --- RETRIEVAL PRACTICE / SPACED REVIEW QUEUE ---
-    // Grounded in the spacing effect and retrieval practice: a note "comes
-    // due" on an interval keyed to its Zettelkasten maturity tag (a fresh
-    // seed needs revisiting far sooner than an evergreen note to have any
-    // chance of maturing). Tracked purely client-side via localStorage --
-    // there's no backend, so "reviewed" just means "opened the note".
-    const REVIEW_INTERVAL_DAYS = { seed: 1, growing: 5, evergreen: 14 };
-    const DEFAULT_INTERVAL_DAYS = 3;
-    const REVIEW_LOG_KEY = 'aurelia_review_log';
-
-    function loadReviewLog() {
-        try { return JSON.parse(localStorage.getItem(REVIEW_LOG_KEY) || '{}'); }
-        catch (e) { return {}; }
-    }
-    function saveReviewLog() {
-        try { localStorage.setItem(REVIEW_LOG_KEY, JSON.stringify(reviewLog)); } catch (e) {}
-    }
-    let reviewLog = loadReviewLog();
-
-    function markReviewed(noteId) {
-        reviewLog[noteId] = Date.now();
-        saveReviewLog();
-        renderReviewQueue();
-    }
-
-    // How many notes the queue panel shows at once. The *count* is deliberately
-    // not capped by this -- see renderReviewQueue.
-    const REVIEW_QUEUE_SHOWN = 8;
-
-    // Returns EVERY due note, most-overdue first. This used to end in
-    // `.slice(0, 8)`, and renderReviewQueue reported that slice's length as
-    // the count -- so DUE_FOR_REVIEW read "8" whenever 8 or more notes were
-    // due, no matter how far behind you actually were, and disagreed with the
-    // Lobby's teaser (which computes the real number from the same log and the
-    // same intervals). Truncation is a rendering concern and now lives there.
-    function computeReviewQueue() {
-        const now = Date.now();
-        const items = Array.from(document.querySelectorAll('#cardGrid .searchable-item')).map(el => {
-            const id = el.dataset.id;
-            const last = reviewLog[id];
-            const intervalMs = (REVIEW_INTERVAL_DAYS[el.dataset.maturity] || DEFAULT_INTERVAL_DAYS) * 86400000;
-            const due = last ? (now - last) / intervalMs : Infinity;
-            // dataset.title rather than the <h3>: highlightText() rewrites
-            // that element's innerHTML while a search is active, the same
-            // reason the sort comparators read the attribute.
-            return { id, title: el.dataset.title || id, due, last };
-        });
-        return items.filter(i => i.due >= 1).sort((a, b) => b.due - a.due);
-    }
-
-    function renderReviewQueue() {
-        const queue = computeReviewQueue();
-        const panel = document.getElementById('review-queue');
-        const container = document.getElementById('review-queue-items');
-        const counter = document.getElementById('review-count');
-        if (counter) counter.innerText = queue.length;
-        if (!panel || !container) return;
-
-        if (queue.length === 0) {
-            panel.classList.add('hidden');
-            return;
-        }
-        panel.classList.remove('hidden');
-        const shown = queue.slice(0, REVIEW_QUEUE_SHOWN);
-        const overflow = queue.length - shown.length;
-        container.innerHTML = shown.map(item => `
-            <button type="button" onclick="openNote('${item.id}')" class="text-[0.8125rem] font-mono px-3 py-1.5 border border-aurelia-tertiary/40 bg-aurelia-bg/40 rounded-theme hover:border-aurelia-tertiary hover:text-aurelia-tertiary cursor-pointer transition-colors flex items-center gap-2">
-                <span>${escapeHtml(item.title)}</span>
-                <span class="opacity-50 text-[0.75rem]">${item.last ? escapeHtml(daysAgoLabel(item.last)) : 'never opened'}</span>
-            </button>
-        `).join('') + (overflow > 0 ? `
-            <span class="text-[0.8125rem] font-mono px-3 py-1.5 text-aurelia-muted opacity-70 flex items-center">+${overflow} more due</span>
-        ` : '');
     }
 
     // --- KNOWLEDGE GRAPH VIEW ---
@@ -2580,7 +2475,6 @@
         };
     })();
 
-    renderReviewQueue();
     renderTopicCloud();
     restoreViewFromUrl();
     // Establishes the default order even when the URL carried no state,

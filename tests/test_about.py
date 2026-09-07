@@ -322,7 +322,6 @@ def render_index(**overrides):
         "maturity_counts": {"seed": 0, "growing": 0, "evergreen": 0},
         "hub_notes": [],
     })
-    context.setdefault("review_seed", Markup("null"))
     return env.get_template("pages/indextemplate.html").render(**context)
 
 

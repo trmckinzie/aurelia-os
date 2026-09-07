@@ -282,10 +282,7 @@ def _build_lobby_context(garden_cards, graph_index):
     """Aggregate, size-conscious stats for the Lobby's "Cortex Status" panel.
 
     Deliberately mirrors the size discipline of _build_search_index: no note
-    bodies, just counts, a handful of hub notes, and an id/title/maturity
-    triple per note (the "review_seed" the client needs to compute its own
-    spaced-review teaser from the same localStorage log the Garden uses --
-    that log only exists in the browser, so this can't be precomputed here).
+    bodies, just counts and a handful of hub notes.
     """
     maturity_counts = Counter(c['maturity'] for c in garden_cards if c['maturity'])
 
@@ -302,8 +299,6 @@ def _build_lobby_context(garden_cards, graph_index):
     log_ids = sorted((c['id'] for c in garden_cards if _DAILY_LOG_ID_RE.match(c['id'])), reverse=True)
     latest_log_date = log_ids[0].replace('note-', '', 1) if log_ids else None
 
-    review_seed = [{"id": c['id'], "title": c['title'], "maturity": c['maturity']} for c in garden_cards]
-
     return {
         "total_notes": len(garden_cards),
         "maturity_counts": {
@@ -313,7 +308,6 @@ def _build_lobby_context(garden_cards, graph_index):
         },
         "hub_notes": hub_notes,
         "latest_log_date": latest_log_date,
-        "review_seed": review_seed,
     }
 
 
@@ -423,7 +417,7 @@ def _write_deep_search_index(deep_search_json):
     return len(encoded), hashlib.sha256(encoded).hexdigest()[:10]
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json, profile):
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile):
     index_bytes, search_index_version = _write_deep_search_index(deep_search_json)
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
@@ -432,7 +426,7 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         # profile summary that links through to about.html, read from the
         # same profile.json rather than duplicated into user_config.json.
         ("pages/indextemplate.html", "index.html", {
-            "stats": lobby_stats, "review_seed": review_seed_json, "profile": profile,
+            "stats": lobby_stats, "profile": profile,
         }),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
@@ -629,9 +623,8 @@ def build_all(sort_dropzone=None):
     graph_json = dumps_for_script_tag(graph_index)
 
     lobby_stats = _build_lobby_context(garden_cards, graph_index)
-    review_seed_json = dumps_for_script_tag(lobby_stats.pop("review_seed"))
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, review_seed_json, deep_search_json, profile)
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.
