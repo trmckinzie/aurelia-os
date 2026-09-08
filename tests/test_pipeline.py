@@ -130,6 +130,54 @@ def test_lobby_context_latest_log_date_is_none_without_daily_logs():
     assert stats["latest_log_date"] is None
 
 
+def _typed_card(note_id, title, note_type):
+    return {"id": note_id, "title": title, "maturity": "", "type": note_type}
+
+
+def test_lobby_type_counts_only_include_types_with_at_least_one_note():
+    cards = [
+        _typed_card("note-a", "A", "CONCEPT"),
+        _typed_card("note-b", "B", "CONCEPT"),
+        _typed_card("note-c", "C", "AUTHOR"),
+    ]
+    graph_index = {"nodes": [], "edges": []}
+    stats = _build_lobby_context(cards, graph_index)
+    assert stats["type_counts"] == [
+        {"slug": "concept", "label": "Concepts", "count": 2},
+        {"slug": "author", "label": "Authors", "count": 1},
+    ]
+
+
+def test_lobby_type_counts_cover_every_garden_type_in_filter_order():
+    cards = [
+        _typed_card("note-1", "1", "CONCEPT"),
+        _typed_card("note-2", "2", "SOURCE/BOOK"),   # substring match, like the Garden's own filter
+        _typed_card("note-3", "3", "AUTHOR"),
+        _typed_card("note-4", "4", "DISCIPLINE"),
+        _typed_card("note-5", "5", "DEEP-DIVE"),
+        _typed_card("note-6", "6", "GEMINI-NOTEBOOK"),
+        _typed_card("note-7", "7", "DAILY-BRIDGE"),
+    ]
+    graph_index = {"nodes": [], "edges": []}
+    stats = _build_lobby_context(cards, graph_index)
+    assert [t["slug"] for t in stats["type_counts"]] == [
+        "concept", "source", "author", "discipline",
+        "deep-dive", "gemini-notebook", "daily-bridge",
+    ]
+    assert all(t["count"] == 1 for t in stats["type_counts"])
+    # source/book counts under the "source" slug, the same substring match
+    # gardentemplate.html's setFilter()/applyFilters() use against a card's
+    # data-type -- so this count always equals what garden.html?type=source
+    # actually shows.
+    source_entry = next(t for t in stats["type_counts"] if t["slug"] == "source")
+    assert source_entry["label"] == "Sources"
+
+
+def test_lobby_type_counts_empty_without_garden_cards():
+    stats = _build_lobby_context([], {"nodes": [], "edges": []})
+    assert stats["type_counts"] == []
+
+
 def test_degree_from_edges_counts_both_endpoints():
     edges = [
         {"source": "note-a", "target": "note-b"},

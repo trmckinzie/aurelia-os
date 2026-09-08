@@ -1,4 +1,5 @@
 """Paths, theme presets, and user_config.json loading."""
+import datetime
 import json
 import os
 
@@ -26,6 +27,27 @@ OUTPUT_DIR = os.path.join(ROOT_DIR, "dist")
 # Note-derived HTML (a note's rendered body) is neither: it is sanitized
 # through engine/sanitize.py before it is marked safe.
 env = Environment(loader=FileSystemLoader(TEMPLATE_DIR), autoescape=True)
+
+
+def _longdate(value):
+    """'2026-09-07' -> 'September 7, 2026' -- no leading zero on the day
+    (the platform-specific %-d/%#d strftime flags aren't portable across
+    Windows and POSIX, so the day is formatted separately as a plain int).
+
+    Every value this reaches (a vault daily log's frontmatter date, a
+    profile.json `meta.updated`) is free text a human typed, not a
+    validated date type -- returning the input unchanged on anything that
+    doesn't parse as an ISO date means a typo degrades to "the raw string
+    shows up", not a build-breaking exception in a Jinja filter.
+    """
+    try:
+        parsed = datetime.date.fromisoformat(str(value))
+    except (ValueError, TypeError):
+        return value
+    return f"{parsed:%B} {parsed.day}, {parsed.year}"
+
+
+env.filters["longdate"] = _longdate
 
 # --- THEME ENGINE V3: RUNTIME-SWITCHABLE (see engine/theming.py) ---
 # Every value here becomes a CSS custom property (--aurelia-*), generated

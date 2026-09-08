@@ -317,6 +317,11 @@ body {
     pointer-events: none;
 }
 .nav-indicator.is-ready { opacity: 1; }
+/* Suppresses the left/width transition for exactly one placement -- see
+   base.html's moveIndicator(), which adds this only for the indicator's
+   first-ever positioning (page load) so it doesn't visibly slide in from
+   the unset 0/0 origin, then removes it so hover/resize moves keep gliding. */
+.nav-indicator.no-transition { transition: none; }
 
 .nav-link { position: relative; transition: color var(--dur-2) ease, text-shadow var(--dur-2) ease; }
 .nav-link:hover { color: var(--aurelia-text-main); }
@@ -880,6 +885,19 @@ body {
     line-height: 1.4;
     padding: 0.3rem 0.7rem;
     border-radius: var(--aurelia-radius);
+}
+
+/* Hides the scrollbar on an element that still scrolls -- referenced by the
+   Garden's filter strip (system/templates/pages/gardentemplate.html) but
+   never defined anywhere in this file, so a phone-width viewport showed a
+   visible scrollbar across a horizontally-scrolling strip that was meant to
+   read as a swipeable chip row. */
+.no-scrollbar {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* old Edge/IE */
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;              /* Chrome/Safari/new Edge */
 }
 
 /* === PRINT: the About page as a CV ==========================================

@@ -3,6 +3,11 @@
 {% set active_page = "garden" %}
 {% block nav_title %}GARDEN{% endblock %}
 
+{# The site-wide default is the author bio, which describes the person rather
+   than this page -- a search result or a shared link for the Garden should say
+   what the collection is. #}
+{% block description %}Published notes on cognition, learning, design, and systems, with links between them.{% endblock %}
+
 {% block head_extra %}
 <!-- The deep-search index (~0.95 MB, note_id -> full body text). Kept out of
      the HTML so it caches across visits rather than being re-downloaded and
@@ -306,6 +311,28 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--aurelia-border-main); border-radius: 5px; }
     .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--aurelia-primary) 53%, transparent); }
+
+    /* 9. COMPACT TOOLBAR CONTROLS ON PHONES
+       Below md the three tool buttons and the sort select share one ~342px
+       row; the search box has the next row to itself, so it keeps .chip's
+       normal padding and is not tightened here. .chip's 1rem side padding is
+       sized for a chip with a word in it, and with the labels hidden it just
+       pads air, so square the icon buttons until md, where the row has room
+       again and every value returns to the shared one. */
+    @media (max-width: 767.98px) {
+        .toolbar-icon-btn { padding: 0.5rem; }
+        /* .chip's tracked caps cost this select ~35px: "MOST CONNECTED"
+           measures 124px against "Most connected" at 84px, and a native
+           select sizes to its widest option, so the caps alone were the
+           difference between a fitting label and a clipped one. Still worth
+           keeping now that the select shares its row only with the three
+           icon buttons -- it is what lets the closed control show its label
+           in full instead of at the max-width cap in the markup. */
+        .toolbar-sort-select {
+            padding-left: 0.5rem; padding-right: 0.25rem;
+            font-size: 0.6875rem; text-transform: none; letter-spacing: normal;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -318,7 +345,10 @@
         this page only. A page-level sub-nav belongs under the global nav; it's
         still above all in-flow content, and the note modal (z-[60]) and command
         palette (z-[100]) still sit above both. -->
-    <div class="nav-anchored fixed left-0 w-full z-40 bg-aurelia-bg/90 backdrop-blur border-b border-aurelia-border py-4 px-6 shadow-2xl">
+    {# py-3 below md: at 390px the bar was 203px tall under a 64px nav, so
+       267px of an 844px viewport was permanently chrome before a single note
+       showed. md and up keeps the original py-4. #}
+    <div class="nav-anchored fixed left-0 w-full z-40 bg-aurelia-bg/90 backdrop-blur border-b border-aurelia-border py-3 md:py-4 px-6 shadow-2xl">
         {# Layout by breakpoint. Below md: two stacked rows, the filter strip a
            single swipeable line (touch has no trouble with that). md to 2xl:
            the strip takes a full row (all eight chips fit on one line from
@@ -336,23 +366,30 @@
            toolbar's height is measured by the ROVING FOCUS script into
            --toolbar-h, so a second chip row does not break card scroll-into-
            view. #}
-        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:flex-wrap 2xl:flex-nowrap justify-between items-center gap-4">
+        <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:flex-wrap 2xl:flex-nowrap justify-between items-center gap-3 md:gap-4">
 
             {# xl:basis-0, not basis-auto: with an auto basis the strip claims
                its single-row max-content (~1100px) before shrinking, and the
                tools group -- whose children are shrink-0 -- was pushed past
                the right edge, search box and all. A zero basis hands the
                tools their width first and gives the strip the remainder. #}
-            <div class="flex items-center gap-4 overflow-x-auto md:overflow-visible w-full md:basis-full 2xl:basis-0 2xl:flex-1 min-w-0 pb-2 md:pb-0 no-scrollbar">
+            {# pb-2 was reserving space for the horizontal scrollbar this strip
+               used to show; .no-scrollbar hides it, so the padding was 8px of
+               dead height on every phone. #}
+            <div class="flex items-center gap-3 md:gap-4 overflow-x-auto md:overflow-visible w-full md:basis-full 2xl:basis-0 2xl:flex-1 min-w-0 no-scrollbar">
                 
                 <div class="flex items-center bg-aurelia-bg/50 border border-aurelia-border rounded-theme p-1 shrink-0">
-                    <button onclick="switchView('grid')" id="btn-grid" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid View">
+                    {# aria-pressed, kept current by switchView(): the selected
+                       toggle is signalled only by a background tint, which a
+                       screen reader cannot see and a colour-blind reader can
+                       easily miss. #}
+                    <button onclick="switchView('grid')" id="btn-grid" aria-label="Grid view" aria-pressed="true" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid view">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     </button>
-                    <button onclick="switchView('tree')" id="btn-tree" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Tree View">
+                    <button onclick="switchView('tree')" id="btn-tree" aria-label="List view" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="List view">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <button onclick="switchView('graph')" id="btn-graph" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge Graph">
+                    <button onclick="switchView('graph')" id="btn-graph" aria-label="Knowledge graph" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge graph">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" stroke-width="2"></circle><circle cx="18" cy="6" r="2.5" stroke-width="2"></circle><circle cx="12" cy="18" r="2.5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"></path></svg>
                     </button>
                 </div>
@@ -360,35 +397,35 @@
                 <div class="h-6 w-px bg-aurelia-border shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 md:flex-wrap transition-opacity duration-300">
-                    <button onclick="setFilter('all', this)" data-filter="all" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
+                    <button onclick="setFilter('all', this)" data-filter="all" aria-pressed="true" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge', this)" data-filter="daily-bridge" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
+                    <button onclick="setFilter('daily-bridge', this)" data-filter="daily-bridge" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept', this)" data-filter="concept" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
+                    <button onclick="setFilter('concept', this)" data-filter="concept" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" data-filter="source" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
+                    <button onclick="setFilter('source', this)" data-filter="source" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
                         Sources
                     </button>
 
-                    <button onclick="setFilter('author', this)" data-filter="author" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
+                    <button onclick="setFilter('author', this)" data-filter="author" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline', this)" data-filter="discipline" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
+                    <button onclick="setFilter('discipline', this)" data-filter="discipline" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('gemini-notebook', this)" data-filter="gemini-notebook" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
+                    <button onclick="setFilter('gemini-notebook', this)" data-filter="gemini-notebook" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
                         Gemini Notebook
                     </button>
 
-                    <button onclick="setFilter('deep-dive', this)" data-filter="deep-dive" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
+                    <button onclick="setFilter('deep-dive', this)" data-filter="deep-dive" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
                         Deep Dive
                     </button>
                 </div>
@@ -399,20 +436,28 @@
                and left the filter strip beside it too narrow for its chips;
                each button keeps its title attribute, so the label is still
                available on hover and to assistive tech at every width. #}
-            {# flex-wrap below md: three icon buttons plus the sort select run
-               ~370px, wider than a 375px phone's 327px content box, so the
-               search box (w-full, but last in a nowrap row) used to sit
-               ~150px past the right edge, its input unreachable. Now the
-               select is capped on phones (native selects truncate their own
-               text) and the search box wraps to a full-width line. #}
-            <div class="flex flex-wrap md:flex-nowrap items-center gap-3 w-full 2xl:w-auto shrink-0 2xl:shrink 2xl:min-w-0">
-                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
-                    <span>🏷️</span>
+            {# One nowrap row from md up. Below md this group wraps into two
+               lines: the three tool buttons (square padding via
+               .toolbar-icon-btn, in the style block above) plus the sort
+               select on the first, the search box full-width on the second.
+               All five on one line did fit -- that is what got the phone
+               toolbar to 116px -- but it left the search input 45px wide, and
+               search is the control this page is mostly used through. One
+               extra ~46px row buys it the full content width. #}
+            <div class="flex flex-wrap md:flex-nowrap items-center gap-2 md:gap-3 w-full 2xl:w-auto shrink-0 2xl:shrink 2xl:min-w-0">
+                {# Inline SVGs, matching the view toggles above: the emoji these
+                   replaced (🏷️ 🎲 🔗) are drawn by the OS, so they arrived
+                   full-colour and a different shape on every platform, next to
+                   monochrome stroke icons. aria-label because the icon-only
+                   form (everything below 2xl) has no accessible name otherwise
+                   -- title alone is not reliably announced. #}
+                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" aria-label="Browse by topic" aria-expanded="false" aria-controls="topic-cloud" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.53 0 1.04.21 1.41.59l7 7a2 2 0 010 2.82l-7 7a2 2 0 01-2.82 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Topics</span>
                 </button>
 
-                <button onclick="openRandomNote()" title="Open a random note" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
-                    <span>🎲</span>
+                <button onclick="openRandomNote()" title="Open a random note" aria-label="Open a random note" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Random</span>
                 </button>
 
@@ -420,8 +465,8 @@
                      is a convenience rather than the mechanism -- but without
                      something visible, a reader has no reason to suspect the
                      URL is worth copying. -->
-                <button onclick="copyViewLink()" id="btn-share" title="Copy a link to the current filter, search and view" class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
-                    <span>🔗</span>
+                <button onclick="copyViewLink()" id="btn-share" title="Copy a link to this view" aria-label="Copy a link to this view" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.83 10.17a4 4 0 010 5.66l-3 3a4 4 0 01-5.66-5.66l1.5-1.5M10.17 13.83a4 4 0 010-5.66l3-3a4 4 0 015.66 5.66l-1.5 1.5"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Share View</span>
                 </button>
 
@@ -431,25 +476,42 @@
                      mobile. Hidden in tree/graph, which have no linear order.
                      "Relevance" is listed but only meaningful with a query --
                      it is selected automatically when you type. -->
-                <div id="sort-control" class="shrink-0 max-w-[7.5rem] md:max-w-none">
+                {# Labels carry no ↕ prefix any more: the select draws its own
+                   chevron, so five stacked arrows were noise, and the width
+                   they cost is the width a phone needs for the search box.
+                   Values are unchanged -- setSort()/the ?sort= URL parameter
+                   read those, not the labels. #}
+                {# Still capped on phones, but loosely. A native select sizes
+                   itself to its widest option, and with the search box moved
+                   to its own row the select shares a ~342px line with only
+                   three 32px icon buttons, so "Most connected" now fits
+                   uncapped. The cap stays as a floor-width guard: at 320px
+                   the buttons leave ~150px, and without it a wider option
+                   label would wrap the select onto a fourth row. #}
+                <div id="sort-control" class="shrink-0 max-w-[9rem] md:max-w-none">
                     <label class="sr-only" for="sort-select">Sort notes</label>
                     <select id="sort-select" onchange="setSort(this.value)" title="Order the notes"
-                            class="chip max-w-full border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
-                        <option value="relevance">↕ Relevance</option>
-                        <option value="connected">↕ Most connected</option>
-                        <option value="recent">↕ Recently created</option>
-                        <option value="maturity">↕ Maturity</option>
-                        <option value="title">↕ A–Z</option>
+                            class="chip toolbar-sort-select max-w-full border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
+                        <option value="relevance">Relevance</option>
+                        <option value="connected">Most connected</option>
+                        <option value="recent">Newest</option>
+                        <option value="maturity">Maturity</option>
+                        <option value="title">A–Z</option>
                     </select>
                 </div>
 
-                <div class="flex items-center gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full md:w-auto md:flex-1 md:min-w-[10rem] md:max-w-96">
+                {# w-full below md: the search box owns the group's second
+                   wrapped line outright rather than splitting one row with the
+                   buttons and the select, which is what had squeezed it to
+                   45px. From md up it is flex-1 inside a nowrap row again, so
+                   md and above is byte-identical to before. #}
+                <div class="flex items-center gap-2 md:gap-3 border border-aurelia-border bg-aurelia-bg/50 rounded-theme px-4 py-2 w-full min-w-0 md:w-auto md:flex-1 md:min-w-[10rem] md:max-w-96">
                     <svg aria-hidden="true" class="w-3.5 h-3.5 text-aurelia-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"></path></svg>
                     <!-- oninput, not onkeyup: a mouse paste, a drag-and-drop, an
                          autofill and most IME composition all change the value
                          without ever releasing a key, so onkeyup silently
                          ignored every one of them. `input` covers typing too. -->
-                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full placeholder-[var(--aurelia-text-muted)]">
+                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full min-w-0 placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -826,6 +888,9 @@
         }
 
         [[btnGrid, 'grid'], [btnTree, 'tree'], [btnGraph, 'graph']].forEach(([btn, m]) => {
+            // The tint below is the only visual cue for "this view is
+            // selected"; aria-pressed is the same statement made out loud.
+            btn.setAttribute('aria-pressed', String(m === mode));
             if (m === mode) {
                 btn.classList.add('bg-aurelia-text/10', 'text-aurelia-primary');
                 btn.classList.remove('text-aurelia-muted');
@@ -860,8 +925,16 @@
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
-        const particleCount = 60;
-        const connectionDistance = 150; 
+        /* Particle count follows the banner's area rather than being a flat
+           60. connectionDistance is fixed at 150px, so on a phone -- where
+           the banner is ~327x256 instead of ~1550x256 -- those same 60 dots
+           sat inside each other's connection radius and the "sparse network"
+           rendered as a solid scribble. /5600 puts it back at 60 across
+           desktop widths and about 15 on a phone. */
+        const PARTICLE_AREA_PER = 5600;
+        const particleTarget = () =>
+            Math.max(10, Math.min(60, Math.round((width * height) / PARTICLE_AREA_PER)));
+        const connectionDistance = 150;
         const mouseDistance = 200; 
 
         /* The backing store is sized in device pixels, the drawing surface
@@ -882,9 +955,17 @@
             canvas.width = Math.round(width * dpr);
             canvas.height = Math.round(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            syncParticles();
+        }
+        // Add or drop particles to match the new size instead of rebuilding
+        // the array: a full rebuild on every resize event teleports every
+        // surviving dot, which reads as a glitch during a window drag.
+        function syncParticles() {
+            const target = particleTarget();
+            while (particles.length > target) particles.pop();
+            while (particles.length < target) particles.push(new Particle());
         }
         window.addEventListener('resize', resize);
-        resize();
 
         const mouse = { x: null, y: null };
         canvas.parentElement.addEventListener('mousemove', (e) => {
@@ -916,7 +997,9 @@
             }
             draw(rgb) { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(${rgb}, 0.5)`; ctx.fill(); }
         }
-        for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        // First sizing happens here rather than above, because resize() now
+        // populates the array and `new Particle()` needs the class declared.
+        resize();
 
         // Canvas fillStyle/strokeStyle can't read a CSS var() directly, so
         // this used to be hardcoded cyan regardless of theme -- neon
@@ -992,6 +1075,9 @@
 
             // Add inactive state
             btn.classList.add('border-aurelia-border', 'text-aurelia-muted');
+            // Same reason as the view toggles: which filter is on is
+            // otherwise carried entirely by colour.
+            btn.setAttribute('aria-pressed', 'false');
         });
 
         // 2. Activate Target Button
@@ -1002,6 +1088,7 @@
         const target = btn;
         target.classList.remove('border-aurelia-border', 'text-aurelia-muted');
         target.classList.add('active');
+        target.setAttribute('aria-pressed', 'true');
 
         // 3. Apply Dynamic Color Scheme
         if (type === 'daily-bridge') {
@@ -2046,6 +2133,14 @@
                 // the grid from a panel the reader can't see.
                 const cloud = document.getElementById('topic-cloud');
                 if (cloud) cloud.classList.remove('hidden');
+                // Opened without going through toggleTopicCloud(), so the
+                // button's state has to be brought along by hand or it
+                // reports "collapsed" over an open panel.
+                const topicsBtn = document.getElementById('btn-topics');
+                if (topicsBtn) {
+                    topicsBtn.setAttribute('aria-expanded', 'true');
+                    topicsBtn.classList.add('text-aurelia-accent');
+                }
             }
 
             const sort = params.get('sort');
@@ -2103,18 +2198,23 @@
         return Promise.resolve(legacyCopy());
     }
 
+    // The button's markup is stashed rather than its text: the label used to
+    // be restored with textContent, which turned the icon + label spans into
+    // one text node -- with an emoji that merely flattened the markup, but the
+    // icon is an inline SVG now and textContent would delete it outright, so
+    // the first copy left a permanently blank button.
+    let shareButtonMarkup = null;
     function copyViewLink() {
         const btn = document.getElementById('btn-share');
         const done = (msg) => {
             if (!btn) return;
-            const original = btn.dataset.label || btn.textContent.trim();
-            btn.dataset.label = original;
+            if (shareButtonMarkup === null) shareButtonMarkup = btn.innerHTML;
             btn.textContent = msg;
-            setTimeout(() => { btn.textContent = btn.dataset.label; }, 1600);
+            setTimeout(() => { btn.innerHTML = shareButtonMarkup; }, 1600);
         };
         // If both paths fail the URL is still in the address bar, so say
         // what to do rather than reporting a failure the reader can't act on.
-        writeToClipboard(location.href).then(ok => done(ok ? '✓ Copied' : '⚠ Press ⌘C'));
+        writeToClipboard(location.href).then(ok => done(ok ? 'Copied' : 'Copy from the address bar'));
     }
 
     // --- BROWSE BY TOPIC ---
@@ -2124,8 +2224,12 @@
     // tags are structural, not subject matter, and would dominate a cloud
     // built from all tags.
     function toggleTopicCloud() {
-        document.getElementById('topic-cloud').classList.toggle('hidden');
-        document.getElementById('btn-topics').classList.toggle('text-aurelia-accent');
+        const open = !document.getElementById('topic-cloud').classList.toggle('hidden');
+        const btn = document.getElementById('btn-topics');
+        btn.classList.toggle('text-aurelia-accent');
+        // The panel appears well below the button, so nothing links the two
+        // for a screen reader without aria-expanded + aria-controls.
+        btn.setAttribute('aria-expanded', String(open));
     }
 
     function renderTopicCloud() {
@@ -2145,9 +2249,22 @@
             const activeClasses = active
                 ? 'border-aurelia-accent text-aurelia-accent bg-aurelia-accent/10'
                 : 'border-aurelia-border text-aurelia-muted hover:border-aurelia-accent hover:text-aurelia-accent';
-            return `<button onclick="toggleTopicFilter('${tag}')" class="font-mono px-2.5 py-1 rounded-theme border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
+            // data-tag + the delegated listener below, not an inline
+            // onclick="toggleTopicFilter('${tag}')": the tag is vault-authored
+            // text being dropped into a JS string literal inside an HTML
+            // attribute, so an apostrophe alone breaks the handler and a
+            // crafted tag could close the string and run its own code.
+            // escapeHtml covers the attribute; nothing is parsed as JS at all.
+            return `<button type="button" data-tag="${escapeHtml(tag)}" class="font-mono px-2.5 py-1 rounded-theme border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
         }).join('');
     }
+
+    // Delegated: renderTopicCloud() replaces the whole list on every toggle,
+    // so a per-button listener would have to be re-attached each time.
+    document.getElementById('topic-cloud-items').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-tag]');
+        if (btn) toggleTopicFilter(btn.dataset.tag);
+    });
 
     function toggleTopicFilter(tag) {
         currentTopic = (currentTopic === tag) ? '' : tag;

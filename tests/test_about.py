@@ -131,6 +131,7 @@ def base_context(**overrides):
         "available_themes_json": dumps_for_script_tag(available_themes()),
         "search_index": Markup("[]"),
         "asset_version": "test",
+        "build_year": 2026,
         "active_page": "about",
         "profile": make_profile(),
         "person_jsonld": dumps_for_script_tag({
@@ -337,7 +338,7 @@ def test_nav_links_to_about_on_index_garden_and_about():
     assert 'href="about.html" data-nav-link data-active' in about
 
     lobby = render_index()
-    assert 'href="about.html" class="btn btn-primary group"' in lobby
+    assert 'href="about.html" class="btn btn-primary group w-full sm:w-auto justify-center"' in lobby
     assert "About me" in lobby
 
 
@@ -436,3 +437,103 @@ def test_about_does_not_rely_on_the_reveal_animation():
     # page that would mean "invisible without JavaScript", and invisible in
     # print.
     assert "data-reveal" not in render_about()
+
+
+# --- footer / page title / og:image (base.html's shared chrome) -----------
+
+def _render_synthetic_child(**overrides):
+    """A minimal child template with no {% block title %}/{% block
+    nav_title %} override of its own, so base.html's own default title logic
+    can be tested in isolation -- every *real* page either has a reason to
+    override the title (About, 404) or is proven separately (the Lobby, in
+    test_lobby.py)."""
+    template = env.from_string('{% extends "base.html" %}{% block content %}{% endblock %}')
+    return template.render(**base_context(active_page="synthetic", **overrides))
+
+
+def test_default_title_uses_page_title_when_set():
+    # This is the contract the Garden (gardentemplate.html, out of scope for
+    # this suite) relies on entirely, since it declares no title block of
+    # its own -- see engine/pipeline.py._render_pages's page_title="The Garden".
+    html = _render_synthetic_child(page_title="The Garden")
+    assert "<title>The Garden — Ada Lovelace</title>" in html
+
+
+def test_default_title_falls_back_to_name_and_tagline_with_no_page_title():
+    html = _render_synthetic_child(page_title=None)
+    assert "<title>Ada Lovelace — Analysis and mechanism.</title>" in html
+
+
+def test_default_title_falls_back_to_bare_name_with_no_tagline():
+    config = make_config(site={"name": "Ada Lovelace", "nav_label": "AL", "tagline": "", "domain": ""})
+    html = _render_synthetic_child(page_title=None, config=config)
+    assert "<title>Ada Lovelace</title>" in html
+
+
+def test_404_title_names_the_site():
+    html = render_404()
+    assert "<title>Page not found — Ada Lovelace</title>" in html
+
+
+def _site_footer_of(html):
+    # About renders its own <footer> ("Last updated ...") inside <main>,
+    # ahead of base.html's shared site-wide one -- the closing-tag search has
+    # to start from the site footer's own opening tag, or it matches the
+    # nearer (About's own) </footer> first and returns an empty slice.
+    start = html.index('<footer class="site-footer')
+    end = html.index("</footer>", start) + len("</footer>")
+    return html[start:end]
+
+
+def test_footer_shows_copyright_nav_and_privacy_note():
+    html = render_about()
+    footer = _site_footer_of(html)
+
+    assert "&copy; 2026 Ada Lovelace" in footer
+    assert "No analytics or tracking." in footer
+    assert 'aria-label="Footer"' in footer
+    assert footer.count('href="index.html"') == 1
+    assert footer.count('href="garden.html"') == 1
+    assert footer.count('href="about.html"') == 1
+    assert 'href="https://example.org/code"' in footer   # config.links.github
+    assert 'href="mailto:ada@example.org"' in footer      # config.author.email
+
+    # The version readout and the pulsing "online" dot are both gone --
+    # neither had a reason to be public-facing on a static site.
+    assert "v3.2.0" not in footer
+    assert "animate-pulse" not in footer
+
+
+def test_footer_omits_github_and_email_when_not_configured():
+    config = make_config()
+    config["links"] = {}
+    config["author"] = dict(config["author"])
+    del config["author"]["email"]
+    html = render_about(config=config)
+    footer = _site_footer_of(html)
+    assert "mailto:" not in footer
+    assert "github" not in footer.lower()
+    # The three page links are unconditional either way.
+    assert footer.count('href="about.html"') == 1
+
+
+def test_og_image_is_relative_with_no_domain_and_absolute_with_one():
+    assert '<meta property="og:image" content="assets/images/social-preview.jpg">' in render_about()
+
+    config = make_config(site={"name": "Ada Lovelace", "nav_label": "AL", "tagline": "t", "domain": "example.com"})
+    html = render_about(config=config)
+    assert '<meta property="og:image" content="https://example.com/assets/images/social-preview.jpg">' in html
+
+
+def test_theme_switcher_button_has_accessible_name():
+    html = render_about()
+    assert 'id="theme-menu-btn"' in html
+    btn = html[html.index('id="theme-menu-btn"') - 200:html.index('id="theme-menu-btn"') + 100]
+    assert 'aria-label="Switch theme"' in btn
+
+
+def test_mobile_menu_search_entry_is_plain_english():
+    html = render_about()
+    assert ">Search</button>" in html
+    assert "🔍" not in html
+    assert "// ⌘K" not in html

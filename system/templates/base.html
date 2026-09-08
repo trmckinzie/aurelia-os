@@ -24,13 +24,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>{% block title %}{{ site.get('name', 'Personal site') }}{% endblock %}</title>
+    {# Home and Garden used to share this literal fallback verbatim, so a
+       browser tab/history entry couldn't tell them apart. `page_title` is an
+       opt-in context variable (see engine/pipeline.py's _render_pages --
+       only the Garden's context sets it) that becomes "<page> — <site
+       name>"; every other page falls back to "<site name> — <site
+       tagline>" (or the bare name with no tagline), which the Lobby also
+       states explicitly as its own title block rather than relying on this
+       default matching by coincidence. #}
+    <title>{% block title %}{% if page_title %}{{ page_title }} — {{ site.get('name', 'Personal site') }}{% elif site.get('tagline') %}{{ site.get('name', 'Personal site') }} — {{ site.get('tagline') }}{% else %}{{ site.get('name', 'Personal site') }}{% endif %}{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ config.author.bio_short }}{% endblock %}">
     <meta name="author" content="{{ config.author.name }}">
 
     <meta property="og:title" content="{% block og_title %}{{ site.get('name', config.system_name) }}{% endblock %}">
     <meta property="og:description" content="{{ self.description() }}">
-    <meta property="og:image" content="assets/images/social-preview.jpg">
+    {# A relative og:image resolves against whatever page shares the link --
+       fine on the site itself, broken (or ambiguous) for a crawler that has
+       no page context, which is most of them. Absolute once a real domain
+       is configured; relative fallback keeps this working with no domain
+       set (site.domain empty -- see engine/pipeline.py's _write_cname). #}
+    <meta property="og:image" content="{% if site.get('domain') %}https://{{ site.get('domain') }}/assets/images/social-preview.jpg{% else %}assets/images/social-preview.jpg{% endif %}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
@@ -144,7 +157,7 @@
                 <span id="nav-indicator" class="nav-indicator" aria-hidden="true"></span>
 
                 <div class="relative flex items-center">
-                    <button onclick="toggleThemeMenu()" id="theme-menu-btn" title="Switch theme" aria-haspopup="true" aria-expanded="false" class="flex items-center text-aurelia-muted hover:text-aurelia-text transition-colors py-2">
+                    <button onclick="toggleThemeMenu()" id="theme-menu-btn" title="Switch theme" aria-label="Switch theme" aria-haspopup="true" aria-expanded="false" class="flex items-center text-aurelia-muted hover:text-aurelia-text transition-colors py-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18c1 0 1.5-.5 1.5-1.5 0-.4-.15-.75-.4-1.02-.25-.27-.4-.62-.4-1.02 0-.83.67-1.46 1.5-1.46H16a3 3 0 003-3c0-4.42-3.58-8-8-8z"></path>
                             <circle cx="7.5" cy="10.5" r="1" fill="currentColor" stroke="none"></circle>
@@ -167,7 +180,7 @@
             <a href="index.html" class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">HOME</a>
             <a href="garden.html" class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
             <a href="about.html" class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
-            <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left field-label text-aurelia-muted">🔍 SEARCH // ⌘K</button>
+            <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left field-label text-aurelia-muted">Search</button>
             <div id="mobile-theme-menu" class="flex flex-col gap-1 pt-2 mt-2 mb-4 border-t border-aurelia-border/40 normal-case tracking-normal"></div>
         </div>
     </nav>
@@ -176,17 +189,35 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Three columns: brand/copyright, a real footer nav (mirrors the
+         header's three page links plus GitHub/Email when configured), and a
+         one-line privacy note. Replaces a version-number readout
+         (config.system_version) that had no reason to be public-facing and
+         a pulsing "online" dot that implied a live status this static site
+         doesn't have. field-label on the wrapping div is inherited by every
+         child (font, weight, tracking, uppercase are all inherited CSS
+         properties) -- the nav links keep that label look, and the
+         copyright/tracking lines opt back out with normal-case/tracking-
+         normal the same way the old bio_short line already did. -->
     <footer class="site-footer border-t border-aurelia-border bg-aurelia-bg/80 backdrop-blur py-7 mt-20 relative z-30">
         <div class="max-w-[1600px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 field-label text-aurelia-muted">
-            <div class="flex items-center gap-2.5">
-                <div class="w-1.5 h-1.5 bg-aurelia-primary rounded-full animate-pulse shadow-[0_0_8px_currentColor] text-aurelia-primary"></div>
-                <span class="text-aurelia-primary">{{ site.get('name', config.system_name) }}</span>
+            <div class="text-aurelia-text normal-case tracking-normal font-mono text-[0.8125rem]">
+                &copy; {{ build_year }} {{ site.get('name', config.system_name) }}
             </div>
-            <div class="text-aurelia-text normal-case tracking-normal font-mono text-[0.8125rem]">{{ config.author.bio_short }}</div>
-            <div class="flex gap-6">
-                <span class="text-aurelia-primary">{{ config.system_version }}</span>
-                <span>NO TRACKING</span>
-            </div>
+
+            <nav aria-label="Footer" class="flex flex-wrap justify-center items-center gap-x-6 gap-y-1">
+                <a href="index.html" class="hover:text-aurelia-text transition-colors">Home</a>
+                <a href="garden.html" class="hover:text-aurelia-text transition-colors">Garden</a>
+                <a href="about.html" class="hover:text-aurelia-text transition-colors">About</a>
+                {% if config.links and config.links.github %}
+                <a href="{{ config.links.github }}" rel="noopener noreferrer" class="hover:text-aurelia-text transition-colors">GitHub</a>
+                {% endif %}
+                {% if config.author and config.author.email %}
+                <a href="mailto:{{ config.author.email }}" rel="noopener noreferrer" class="hover:text-aurelia-text transition-colors">Email</a>
+                {% endif %}
+            </nav>
+
+            <div class="normal-case tracking-normal font-mono text-[0.8125rem]">No analytics or tracking.</div>
         </div>
     </footer>
 
@@ -234,14 +265,29 @@
         (function () {
             const links = document.getElementById('nav-links');
             const indicator = document.getElementById('nav-indicator');
+            // True until the indicator has been positioned once. main.css
+            // transitions left/width so hover/resize moves glide -- but that
+            // same transition made the very first placement animate in from
+            // its unset 0/0 origin on every page load, a slide that had
+            // nothing to do with navigation. .no-transition (main.css) is
+            // added only for that one placement, removed after a forced
+            // reflow commits the position, so every later move still glides.
+            let indicatorPlaced = false;
 
             function moveIndicator() {
                 if (!links || !indicator) return;
                 const active = links.querySelector('[data-nav-link][data-active]');
                 if (!active) { indicator.classList.remove('is-ready'); return; }
+                const firstPlacement = !indicatorPlaced;
+                if (firstPlacement) indicator.classList.add('no-transition');
                 indicator.style.left = active.offsetLeft + 'px';
                 indicator.style.width = active.offsetWidth + 'px';
                 indicator.classList.add('is-ready');
+                if (firstPlacement) {
+                    void indicator.offsetWidth; // force the position to commit before re-enabling the transition
+                    indicator.classList.remove('no-transition');
+                    indicatorPlaced = true;
+                }
             }
 
             // Hovering a link previews the indicator there; leaving returns

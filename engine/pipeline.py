@@ -6,6 +6,7 @@ rather than the vault (see engine/profile.py). Project, protocol, and
 transmission notes are recognized by type but intentionally skipped --
 there's no page left for them to link to.
 """
+import datetime
 import hashlib
 import os
 import re
@@ -277,6 +278,40 @@ def _build_graph_index(garden_cards, edges):
 
 _DAILY_LOG_ID_RE = re.compile(r'^note-\d{4}-\d{2}-\d{2}')
 
+# (slug, label) in the exact order and wording of the Garden's own filter
+# chips (system/templates/pages/gardentemplate.html's .filter-btn row) --
+# see _lobby_type_counts.
+_LOBBY_TYPE_SLUGS = [
+    ("concept", "Concepts"),
+    ("source", "Sources"),
+    ("author", "Authors"),
+    ("discipline", "Disciplines"),
+    ("deep-dive", "Deep dives"),
+    ("gemini-notebook", "Gemini notebooks"),
+    ("daily-bridge", "Daily logs"),
+]
+
+
+def _lobby_type_counts(garden_cards):
+    """[{slug, label, count}, ...] for the Lobby's Garden card -- one entry
+    per type with at least one published note, in Garden-filter order.
+
+    Matches each card the same way the Garden's own client-side filter does
+    (gardentemplate.html: `itemType.includes(currentType)`, a substring test
+    against the card's data-type) rather than an exact-equality check, so a
+    count here always equals what clicking through to
+    garden.html?type=<slug> actually shows -- including "source" counting
+    `source/book` notes and "daily-bridge" counting notes whose frontmatter
+    type is literally that slug.
+    """
+    types_lower = [str(c.get('type', '')).lower() for c in garden_cards]
+    counts = []
+    for slug, label in _LOBBY_TYPE_SLUGS:
+        count = sum(1 for t in types_lower if slug in t)
+        if count:
+            counts.append({"slug": slug, "label": label, "count": count})
+    return counts
+
 
 def _build_lobby_context(garden_cards, graph_index):
     """Aggregate, size-conscious stats for the Lobby's "Cortex Status" panel.
@@ -308,6 +343,7 @@ def _build_lobby_context(garden_cards, graph_index):
         },
         "hub_notes": hub_notes,
         "latest_log_date": latest_log_date,
+        "type_counts": _lobby_type_counts(garden_cards),
     }
 
 
@@ -425,20 +461,32 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         # `profile` also goes to the Lobby: its first module card is a short
         # profile summary that links through to about.html, read from the
         # same profile.json rather than duplicated into user_config.json.
+        #
+        # page_title feeds base.html's default {% block title %}: None means
+        # "use the site name (plus tagline)" -- the Lobby and About both set
+        # their own {% block title %} anyway (see indextemplate.html /
+        # abouttemplate.html), so it's explicit here mainly for symmetry with
+        # the Garden, which relies on this value alone since it has no title
+        # block of its own.
         ("pages/indextemplate.html", "index.html", {
-            "stats": lobby_stats, "profile": profile,
+            "stats": lobby_stats, "profile": profile, "page_title": None,
         }),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
-            "search_index_version": search_index_version,
+            "search_index_version": search_index_version, "page_title": "The Garden",
         }),
         ("pages/abouttemplate.html", "about.html", {
             "profile": profile, "person_jsonld": dumps_for_script_tag(person_jsonld(profile)),
+            "page_title": None,
         }),
-        ("404.html", "404.html", {}),
+        ("404.html", "404.html", {"page_title": None}),
     ]
 
     asset_version = _asset_version()
+    # The build's own run date, not each page's render timestamp -- a footer
+    # copyright year that could differ page-to-page on the same deploy would
+    # look like a bug, not a feature.
+    build_year = datetime.date.today().year
 
     for template_name, output_name, context in pages:
         try:
@@ -448,6 +496,7 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["search_index"] = json_index
             context["config"] = user_config
             context["asset_version"] = asset_version
+            context["build_year"] = build_year
 
             template = env.get_template(template_name)
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)

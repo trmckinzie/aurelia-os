@@ -11,6 +11,11 @@
 
 {% set active_page = "index" %}
 {% block nav_title %}HOME{% endblock %}
+{# Stated explicitly rather than left to base.html's default falling through
+   to it (the Lobby passes no page_title, so the two are identical today) --
+   see base.html's {% block title %} comment for the full "<name> — <site
+   tagline>" / "<page_title> — <name>" contract this mirrors. #}
+{% block title %}{% if site.get('tagline') %}{{ site.get('name', 'Personal site') }} — {{ site.get('tagline') }}{% else %}{{ site.get('name', 'Personal site') }}{% endif %}{% endblock %}
 
 {% block head_extra %}
 <style>
@@ -77,7 +82,7 @@
                 {{ config.status_message }}
             </span>
             {% if stats.latest_log_date %}
-            <span class="text-aurelia-muted">Latest note / {{ stats.latest_log_date }}</span>
+            <span class="text-aurelia-muted">Latest note &middot; <time datetime="{{ stats.latest_log_date }}">{{ stats.latest_log_date|longdate }}</time></span>
             {% endif %}
         </div>
 
@@ -110,18 +115,24 @@
             </p>
         </div>
 
-        <div class="mt-9 flex flex-wrap items-center gap-3">
-            <a href="about.html" class="btn btn-primary group">
+        {# flex-col on phones (each button full-width and centered) so three
+           buttons don't wrap into a ragged, mixed-width stack -- sm+ reverts
+           to the original inline row. .btn is already inline-flex, so
+           w-full alone stretches it; justify-center keeps the icon/label
+           pair centered instead of pinned left inside that full-width box. #}
+        <div class="mt-9 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+            <a href="about.html" class="btn btn-primary group w-full sm:w-auto justify-center">
                 <span>About me</span>
                 <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
             </a>
-            <a href="garden.html" class="btn btn-ghost group">
+            <a href="garden.html" class="btn btn-ghost group w-full sm:w-auto justify-center">
                 <span>Browse the notes</span>
                 <span class="group-hover:translate-x-1 transition-transform duration-200">&rarr;</span>
             </a>
-            <button onclick="toggleCmd()" title="Search every published note" class="btn btn-ghost group">
+            <button onclick="toggleCmd()" title="Search every published note" class="btn btn-ghost group w-full sm:w-auto justify-center">
                 <span>Search</span>
-                <kbd class="kbd">&#8984;K</kbd>
+                {# Hidden on phones: a keyboard shortcut hint on a touch screen is noise. #}
+                <kbd class="kbd hidden sm:inline">&#8984;K</kbd>
             </button>
         </div>
     </header>
@@ -133,7 +144,11 @@
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-secondary opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark text-aurelia-secondary" style="width:56px;height:56px;"></span>
 
-        <div class="flex flex-col h-full justify-between">
+        {# Top-down flow, not justify-between: with the card stretched to the
+           status card's height, pinning the last block to the bottom left a
+           hole in the middle of the card. Spare height now sits below the
+           content, where a shorter column reads as finished, not gapped. #}
+        <div class="flex flex-col h-full gap-6">
             <div>
                 <div class="field-label inline-block text-aurelia-inverted bg-aurelia-secondary px-2.5 py-1 mb-5 rounded-theme">
                     01 / Profile
@@ -144,10 +159,26 @@
                 <p class="mt-4 text-sm text-aurelia-muted group-hover:text-aurelia-text transition-colors leading-relaxed text-pretty">
                     {{ profile.identity.headline }}
                 </p>
+
+                {# Fills the gap this card used to leave between the headline
+                   and the roles line at desktop widths, with real profile
+                   data rather than added whitespace. No <dl> -- this is a
+                   glance-card, not the About page's own structured record. #}
+                {% if profile.identity.location %}
+                <p class="mt-4 text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors">{{ profile.identity.location }}</p>
+                {% endif %}
+
+                {% if profile.skills %}
+                <ul class="mt-3 flex flex-wrap gap-2">
+                    {% for group in profile.skills[:5] %}
+                    <li class="chip-static border border-aurelia-border text-aurelia-text/85">{{ group.group }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
             </div>
 
             {% if profile.roles %}
-            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6 leading-relaxed">
+            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 leading-relaxed">
                 {% for role in profile.roles if role.primary %}{% if loop.index <= 2 %}{% if not loop.first %}<br>{% endif %}
                 {{ role.title }} &mdash; {{ role.org }}
                 {% endif %}{% endfor %}
@@ -157,28 +188,52 @@
     </a>
     {% endif %}
 
-    <a href="garden.html" data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-primary/50">
+    {# Not an <a>: the type-count rows below are each their own link, and a
+       nested <a> is invalid HTML. The heading is the card's one real link
+       instead; `group` stays on this wrapper so the existing hover styling
+       (border, bracket-mark, spine) still activates over the whole card,
+       not just the heading. #}
+    <div data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-primary/50">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-primary opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark text-aurelia-primary" style="width:56px;height:56px;"></span>
 
-        <div class="flex flex-col h-full justify-between">
+        {# Top-down flow, not justify-between: with the card stretched to the
+           status card's height, pinning the last block to the bottom left a
+           hole in the middle of the card. Spare height now sits below the
+           content, where a shorter column reads as finished, not gapped. #}
+        <div class="flex flex-col h-full gap-6">
             <div>
                 <div class="field-label inline-block text-aurelia-inverted bg-aurelia-primary px-2.5 py-1 mb-5 rounded-theme">
                     02 / Notes
                 </div>
-                <h2 class="display-lg text-aurelia-text group-hover:text-aurelia-primary transition-colors">
-                    The Garden
+                <h2 class="display-lg">
+                    <a href="garden.html" class="text-aurelia-text group-hover:text-aurelia-primary transition-colors">The Garden</a>
                 </h2>
                 <p class="mt-4 text-sm text-aurelia-muted group-hover:text-aurelia-text transition-colors leading-relaxed text-pretty">
                     Published notes on cognition, learning, design, and systems.
                 </p>
             </div>
 
-            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1 mt-6">
+            {% if stats.type_counts %}
+            {# Real per-type counts (engine/pipeline.py._build_lobby_context),
+               each linking straight into the Garden pre-filtered -- replaces
+               a static, unlinked list of every type name with the same
+               numbers a click-through to garden.html?type=<slug> would show. #}
+            <div class="grid grid-cols-2 gap-x-6 gap-y-1.5 border-l border-aurelia-border pl-4 py-1">
+                {% for t in stats.type_counts %}
+                <a href="garden.html?type={{ t.slug }}" class="flex items-center justify-between gap-2 text-[0.8125rem] font-mono text-aurelia-muted hover:text-aurelia-primary transition-colors">
+                    <span class="truncate">{{ t.label }}</span>
+                    <span class="tabular-nums">{{ t.count }}</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-[0.8125rem] text-aurelia-muted group-hover:text-aurelia-text transition-colors border-l border-aurelia-border pl-4 py-1">
                 Concepts &middot; Sources &middot; Authors &middot; Disciplines &middot; Deep dives
             </div>
+            {% endif %}
         </div>
-    </a>
+    </div>
 
     <div data-reveal class="surface relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden flex flex-col md:col-span-2 lg:col-span-1">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-accent opacity-70"></span>
@@ -200,10 +255,13 @@
                 <div class="bg-aurelia-secondary" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
                 {% endif %}
             </div>
-            <div class="flex justify-between field-label text-aurelia-muted mt-2">
-                <span>🌱 {{ stats.maturity_counts.seed }} Seed</span>
-                <span>🌿 {{ stats.maturity_counts.growing }} Growing</span>
-                <span>🌳 {{ stats.maturity_counts.evergreen }} Evergreen</span>
+            {# flex-wrap + explicit gaps (rather than justify-between alone)
+               so a narrow viewport wraps between items, not inside one --
+               "🌱 162 SEED" was breaking after the number on a 375px screen. #}
+            <div class="flex flex-wrap justify-start sm:justify-between gap-x-4 gap-y-1 field-label text-aurelia-muted mt-2">
+                <span class="whitespace-nowrap">🌱 {{ stats.maturity_counts.seed }} Seed</span>
+                <span class="whitespace-nowrap">🌿 {{ stats.maturity_counts.growing }} Growing</span>
+                <span class="whitespace-nowrap">🌳 {{ stats.maturity_counts.evergreen }} Evergreen</span>
             </div>
         </div>
 
@@ -277,7 +335,13 @@
                 <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
 
                 <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none opacity-20"></div>
+                    {# opacity was a flat 20% before -- on TIMBERLINE (scanline_opacity: 0%,
+                       see engine/config.py) that read as a permanently greyed-out, disabled-
+                       looking panel rather than "no atmosphere texture on this theme". Tied to
+                       the same --aurelia-scanline-opacity every other scanline/stripe overlay
+                       already uses (main.css's .scanline), so it goes fully off on TIMBERLINE
+                       and stays at its previous strength on the neon themes. #}
+                    <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none" style="opacity: var(--aurelia-scanline-opacity)"></div>
 
                     {# Seeded server-side with the first item rather than a
                        placeholder: the carousel calls updateReadout() on init,
