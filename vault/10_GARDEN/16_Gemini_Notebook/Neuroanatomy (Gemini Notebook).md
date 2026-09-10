@@ -215,12 +215,6 @@ Synthesis and Conclusion
 
 A functional mental model of the human nervous system is predicated on the integration of these disparate pillars. The navigation begins at the midbrain-diencephalic junction, where the orientation of the 3D space rotates to meet the upright demands of human posture.[1] Deep within this space, the basal ganglia and limbic system operate as interconnected loops of information, weighing motor intent against mnemonic and emotional experience.[5, 13, 15] The brainstem provides the high-density infrastructure where these signals are transmitted and the "Rule of 4" allows the clinician to localize disruptions to the millimeter.[24, 26] Finally, the vascular architecture provides the metabolic support, with the redundant Circle of Willis and vulnerable watershed zones dictating the clinical patterns of ischemia.[29, 37, 38] Through this synthesized understanding, neuroanatomy ceases to be a list of labels and becomes a coherent, predictable, and visually accessible map of human function.
 
-# 🎙️ Audio Overview
-assets/audio/Neuroanatomy_Overview.m4a
-
-# 🧠 Mind Map
-assets/images/NotebookLM-mindmap-functional-neuroanatomy.png
-
 # 📚 Sources
 
 1. Anatomical terms of neuroanatomy - Wikipedia, [https://en.wikipedia.org/wiki/Anatomical_terms_of_neuroanatomy](https://www.google.com/url?sa=E&q=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FAnatomical_terms_of_neuroanatomy)

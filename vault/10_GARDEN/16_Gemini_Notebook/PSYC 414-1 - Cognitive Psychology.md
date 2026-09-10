@@ -1332,9 +1332,6 @@ Furthermore, optimizing the mind requires high-level executive function, specifi
 
 Cognitive psychology is the study of limits and the remarkable workarounds the brain has evolved to bypass them. By understanding the bottleneck of attention, the dual-track nature of processing, and the mechanisms of memory, one can stop fighting the brain's architecture and start leveraging it for deep, lasting comprehension.
 
-# 🎙️ Audio Overview
-assets/audio/PSYC_414_Exam_3_Study_Guide.m4a
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-cog-psyc-overview-1.csv
 

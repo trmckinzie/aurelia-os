@@ -289,12 +289,6 @@ The critique of the Standard Social Science Model served a vital historical role
 
 As the field continues to mature, its primary strength lies in its "consilient" nature—its ability to bridge the gap between the natural sciences (genetics, neuroscience, biology) and the social sciences (anthropology, sociology, economics). By focusing on the _interaction_ between evolved programs and the environment, evolutionary psychology offers a robust framework for understanding the human condition in all its complexity. The move toward Registered Reports and the inclusion of non-WEIRD populations ensures that the next decade of research will be characterized by greater reliability and global relevance. Ultimately, evolutionary psychology provides the necessary foundation for a truly integrated science of human nature, fulfilling Darwin’s 1859 prophecy that psychology would one day be based on a "new foundation."
 
-# 🎙️ Audio Overview
-assets/audio/Evo_Psych_Overview.m4a
-
-# 🧠 Mind Map
-assets/images/NotebookLM Mind Map - evo-psych.png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-evo-psych.csv
 

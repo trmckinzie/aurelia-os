@@ -139,11 +139,5 @@ The functional specialization of brain regions is often revealed through **lesi
 
 • **Akinetopsia:** The inability to perceive motion, often due to damage in the dorsal "where" pathway of the parietal lobe.
 
-# 🎙️ Audio Overview
-assets/audio/Your_Brain_Constructs_Reality_In_The_Dark.m4a
-
-# 🧠 Mind Map
-assets/images/NotebookLM-mindmap-psychology-biological-cognitive-foundations.png
-
 # 📚 Sources
 > [Zotero Data Placeholder]

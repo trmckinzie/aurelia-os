@@ -658,6 +658,50 @@ knowing so you don't "fix" something that was a deliberate decision:
     graph landed was replaced with a space and a test now forbids control bytes in the template.
     The full design rationale is in the plan that drove the work
     (`~/.claude/plans/floofy-mapping-dahl.md` on the Alienware).
+19. **Gemini Notebook card repair (2026-09-10).** Both of that card's fields had rendered nothing
+    since item 14 landed collapsible sections in `4ecc9d6`: `wrap_gemini_notebook_sections()`
+    rewrites a note's `# Header` lines into `<details>`/`<summary>`, `extract_gemini_notebook_data()`
+    anchors on a literal `#`, and `_scan_vault` ran the wrap *before* card generation — so all 15
+    published notes read `"Synthesis data pending."` and `No Studio outputs yet` for a month while
+    13 of them had a real overview sitting unused. Both fields fall back silently, which is why
+    nothing failed and no test caught it. The fix is a `card_body` snapshot taken after
+    `process_wikilinks()` but before the media and section passes; the reader still gets the
+    wrapped body. **Don't collapse those two bodies back together** — `tests/test_pipeline.py`
+    pins both halves, and the pipeline comment explains why the card also needs the raw
+    `assets/...` lines.
+
+    What the card says changed with it: Overview is now the blockquote under the header (a real
+    section *is* the whole report, 20k–38k chars, so the old whole-section read truncated to a
+    fragment of paragraph one), an unfilled Templater stub renders as "Overview not written yet"
+    rather than implying a pending process, and a "what's inside" strip plus a `topic/*` chip row
+    fill the card — Gemini is the only published type with no link field of its own, averaging
+    under one outbound wikilink per note. The chips' `#cardGrid` listener **captures**; the card
+    is an `<article onclick="openNote(...)">` whose inline handler otherwise wins the bubble and
+    opens the note on top of the filter.
+
+    Three traps worth keeping, each of which cost real time here:
+
+    - **A citation URL can contain `assets/`.** These notes cite sources by URL and several of
+      those carry the segment themselves (`https://assets.csom.umn.edu/assets/166364.pdf`), so an
+      unanchored pattern reports live citations as missing files. `_ASSET_REF_RE` needs its
+      lookbehind.
+    - **`info` fails AA as small text in the dark themes** (3.97:1 CYBER_PRIME, 4.25:1 GRIZZ),
+      while `tests/test_theming.py`'s original sweep only checked TIMBERLINE — an accent-coloured
+      13px label ships a real failure with the suite green. A second test now covers
+      `text_main`/`text_muted` across every theme.
+    - **Reading a colour right after switching `data-theme` in JS returns the *previous* theme's
+      value**, even after forcing layout, while `body`'s background updates immediately — so a
+      loop over themes silently pairs each new background with the old text colour and produces
+      confident nonsense. Compute per-theme contrast in Python from `THEME_CONFIG`; use the
+      browser only for a spot-check after a real reload.
+
+    In the same pass the false claim that purged media "render as dead players" was removed from
+    this file (it was already untrue: `process_gemini_notebook_media()` drops the path and the
+    section wrapper drops the emptied section — the built page has zero `<audio>` tags), and under
+    a one-time override the 16 now-pointless media references were deleted from the 9 notes that
+    named them, which is what silenced the standing `⚠️ 16 media widget(s) skipped` build warning.
+    A Studio output now requires a resolving asset in all nine cases, replacing an "any content
+    counts" fallback that promoted a section whose only remaining text was a citation URL.
 
 ## Known gaps / deliberately not done
 

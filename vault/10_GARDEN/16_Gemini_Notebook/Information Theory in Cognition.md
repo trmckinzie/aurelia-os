@@ -132,8 +132,5 @@ This section details how the mathematical concepts above are implemented in biol
 
 • **Correlations:** Higher gaze entropy (more dispersed scanning) generally correlates with **higher cognitive load**, longer response times, and lower task performance in complex scenarios. However, specific task demands (e.g., temporal vs. mental demand) can alter this; high mental demand may sometimes lead to grouped (lower entropy) fixations as the user focuses intensely on specific areas.
 
-# 🎙️ Audio Overview
-assets/audio/Information_Theory_Deep_Dive.m4a
-
 # 📚 Sources
 > [Zotero Data Placeholder]

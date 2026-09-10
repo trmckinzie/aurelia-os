@@ -68,9 +68,6 @@ Porter notes that the greatest threat to strategy often comes from **within the
 
 To maintain a strategy, leadership must provide the **discipline to say no**, set limits, and focus on deepening a strategic position rather than compromising it in the name of "easy" growth
 
-# 🎙️ Audio Overview
-assets/audio/What_Is_Strategy_Overview.m4a
-
 # 📚 Travis M - Presenter 4 : What is Strategy ; The Role of Fit, Leadership, & The Growth Trap
 
 >This overview note is designed to help you present the final sections of Michael Porter’s **"What Is Strategy?"** focusing on why strategy is a system of activities rather than a collection of parts, and how leadership must protect this system from the "growth trap."
@@ -650,11 +647,6 @@ The evidence from past global top performers suggests that the "winning" formula
 • **A commitment to "Best Practices" training** to minimize waste and maximize the value of the workforce.[13, 21, 25]
 
 By applying these principles with consistency and rigur, the management team at Adams State University will be positioned to not only win their local industry but to compete among the elite BSG companies worldwide.[3, 30, 38] The Business Strategy Game is ultimately a test of a team's ability to think several years ahead while managing the complex, day-to-day realities of a global enterprise.[2, 4, 39]
-# 🎙️ Audio Overview
-assets/audio/BSG_Players_Manual_Overview.m4a
-
-# 🧠 Mind Map
-assets/images/NotebookLM Mind Map - BSG_Overview.png
 
 # 🃏 Flashcards
 assets/flashcards/flashcards-BSG-overview.csv

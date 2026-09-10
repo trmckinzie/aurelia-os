@@ -72,12 +72,6 @@ publish: true
 
 • **Targeted Interventions:** Educational programs like **"Perspectives"** have demonstrated efficacy in increasing IH and reducing AP by training users in constructive dialogue and conflict resolution skills. Expressing humility during a conversation has been shown to be "contagious," raising IH and lowering hostility in the listener.
 
-# 🎙️ Audio Overview
-assets/audio/Intellectual_Humility_Reduces_Political_Hatred.m4a
-
-# 🧠 Mind Map
-assets/images/NotebookLM-mindmap-ih-nfc-ap.png
-
 # 🃏 Flashcards
 assets/flashcards/flashcards-ih-nfc-ap.csv
 
