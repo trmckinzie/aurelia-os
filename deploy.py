@@ -9,7 +9,9 @@ TARGET_DIR_NAME = "Aurelia_Factory_v1"
 TARGET_DIR = os.path.join(SOURCE_DIR, TARGET_DIR_NAME)
 
 # --- 2. THE "WHITE LABEL" IDENTITY ---
-# Ships a Garden + Lobby product -- matches what engine/ actually builds.
+# Ships a Lobby + Garden + About product -- matches what engine/ actually
+# builds, and what the generated README below promises. Keep all three in
+# step: this comment claimed "Garden + Lobby" for a while after About shipped.
 FACTORY_CONFIG = {
     "system_name": "[INSERT SITE NAME]",
     "system_version": "v1.0.0 (Factory)",
