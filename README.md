@@ -48,8 +48,10 @@ the link graph itself made visible and navigable.
 
 Python + [Jinja2](https://jinja.palletsprojects.com/) for templating, [PyYAML](https://pyyaml.org/)
 for real frontmatter parsing, and [Tailwind CSS](https://tailwindcss.com/) (compiled at build time
-via the CLI, not the CDN). No JS framework or bundler — the client-side interactivity (search,
-graph rendering, modal reader) is plain JS shipped in the page templates.
+via the CLI, not the CDN). No JS framework or bundler — the client-side interactivity is plain JS:
+search, graph rendering and the modal reader ship inline in the page templates, while the study
+layer (`assets/js/review.js`), the flashcard widgets (`assets/js/flashcards.js`) and a shared
+escaping helper (`assets/js/utils.js`) ship as separately cached files.
 
 ## Getting started
 
@@ -95,7 +97,7 @@ build.py               Entry point (python build.py)
 engine/                 All real build logic: parsing, extraction, card rendering, theming, pipeline
 profile.json            The About page's content: structured data validated at build time, not a vault note
 system/templates/       Jinja2 templates (base + Lobby + Garden + About + 404)
-assets/                 Tailwind input CSS, shared client JS
+assets/                 Tailwind input CSS; client JS (utils, study layer, flashcards); site images
 vault/                  The Obsidian vault itself -- source content, not source code (see License)
 tests/                  pytest suite
 tools/                  Standalone scripts (e.g. vault frontmatter schema validator)
@@ -136,10 +138,10 @@ If you fork this or run it on your own vault, decide up front which of these you
 ## Media
 
 **No vault media is committed to this repository.** `vault/assets/` holds empty `audio/`,
-`images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input CSS, one
-shared JS file, five small flashcard CSVs, and two small site images under `assets/images/` (the
-author headshot shown on the home and About pages, and the social-preview card it was generated
-from).
+`images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input CSS, three
+JS files (`utils.js`, `review.js`, `flashcards.js`), five small flashcard CSVs, and two small site
+images under `assets/images/` (the author headshot shown on the home and About pages, and the
+social-preview card it was generated from).
 
 Gemini Notebook audio exports ran 64–79 MB each and had grown to ~858 MB, which pushed the published
 site to 88% of GitHub Pages' 1 GB ceiling and made every clone and CI checkout pay for all of it.
@@ -149,6 +151,28 @@ into the site — that's the intended direction, not yet built.
 
 `engine/assets_pipeline.py` still compresses drop-zone audio over 15 MB via ffmpeg when it's
 installed, which is what keeps new media from re-inflating the repo in the meantime.
+
+## Version history
+
+This project is not released or versioned — there are no tags and no published packages, and the
+live site is whatever `main` last built. What follows is the milestone history, dated from the
+commits themselves. For the reasoning behind each change rather than the summary, see the
+"Recent history" section of [CLAUDE.md](CLAUDE.md), which is kept in step with this list.
+
+| Date | Milestone |
+|---|---|
+| **2026-09-10** | **Garden as a study tool.** Study mode with a recall-first cover and four-step self-rating feeding an SM-2 scheduler; a review queue interleaved across note types; flashcard decks as one-card widgets; an "On this page" outline, a `?` shortcut sheet, and a phone graph list. A wikilink resolver (`content.build_link_resolver`) added `aliases:` and unique parenthetical-suffix tiers, so `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename. |
+| **2026-09-09** | **Vault wikilink cleanup.** 92 short-form links rewritten to `[[Full Title\|display text]]`, seven self-evidently-missing notes added, four linked-but-unpublished notes published, and dead media embeds removed. Dangling link occurrences fell 983 → 853. |
+| **2026-09-07** | Author headshot added to the home and About pages, with a generated social-preview card. |
+| **2026-09-05** | **`TIMBERLINE` becomes the default theme** — a light editorial register — and the "Aurelia" product branding is retired from every user-facing surface. The About page ships, rendered from a validated repo-root `profile.json`, and the Lobby, shared chrome and 404 page are rewritten from terminal voice into plain English. |
+| **2026-09-03 → 09-04** | **Security audit remediation.** Jinja2 autoescape turned on globally, an nh3 allowlist sanitizer added for note-authored HTML, `publish:` made an allowlist instead of a truthiness check, asset resolution containment-checked, the frontmatter fence anchored to whole lines, and `build.py --no-sort` added so a build need not mutate the vault. |
+| **2026-08-29** | NotebookLM renamed to **Gemini Notebook** throughout — type slug, vault folder, identifiers and labels — and its long notes made section-collapsible in the reader. |
+| **2026-08-23** | The **`deep-dive`** note type — a 7th garden type for long-form pieces pasted in whole rather than filled in field by field. |
+| **2026-08-17** | README, code-only MIT [LICENSE](LICENSE), and [SECURITY.md](SECURITY.md) added. |
+| **2026-08-16** | **Themes become runtime-switchable** rather than baked in at build time, and `THE_PATRIOT`, `THE_STOA` and `GRIZZ` join `CYBER_PRIME`. The force-directed knowledge-graph view, real backlinks, maturity badges, the random-note button, topic browsing and command-palette keyboard navigation all land. |
+| **2026-08-15** | **The refactor that made the rest possible.** A single 1,409-line `build.py` split into the `engine/` package; regex frontmatter parsing replaced with real YAML; the Tailwind Play CDN replaced with a compiled build; the Protocols/Portfolio/Transmissions/Services pages scrapped down to Lobby + Garden; the per-page search-index payload trimmed; and the first test suite added, against zero prior coverage. |
+| **2026-08** | **Privacy audit and history purge.** Committed media was removed from the repository *and its history* — see [Media](#media). The repo went from 1.09 GiB to ~25 MiB and `dist/` from ~882 MB to ~5.7 MB, retiring a looming GitHub Pages size ceiling. |
+| **2025-12-26** | First commit. |
 
 ## License
 

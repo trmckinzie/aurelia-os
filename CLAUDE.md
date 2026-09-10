@@ -55,7 +55,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (446+ tests as of 2026-09-10)
+python -m pytest tests/ -q             # full suite (448 tests as of 2026-09-10)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -250,6 +250,19 @@ other. The flow for one wikilink, end to end:
 If you add a new garden note type or a new linked-item field, follow this same pattern rather than
 extracting plain label strings — that's the bug this session's "make card-face links real" work
 fixed (pills that looked clickable but weren't, because the extractor threw away the target id).
+
+Three things to know before editing links in bulk (all learned in item 17's cleanup):
+
+- **`make_id()` lowercases and collapses punctuation.** `[[hippocampus]]`, `[[Hippocampus]]` and
+  `[[HIPPOCAMPUS]]` are one target, not three. When auditing, count by id, not by written form —
+  otherwise case variants read as separate gaps and a "fix" to one leaves its siblings behind.
+- **Prefer `[[Full Title|display text]]` over relying on the resolver.** The alias and title-suffix
+  tiers exist so a short mention still lands, but the piped full title is unambiguous, survives a
+  note gaining a second parenthetical sibling (which makes the suffix tier resolve to *neither*),
+  and reads identically to the reader. The vault was normalized to this form in item 17.
+- **A dangling link is usually deliberate.** Most of the ~850 unresolved targets are placeholders
+  for notes not yet written — that is how a zettelkasten accumulates. Don't "fix" them by
+  unlinking; `tools/vault_health.py --report pending` is the queue, not an error list.
 
 ### Templates (`system/templates/`)
 
@@ -582,7 +595,40 @@ knowing so you don't "fix" something that was a deliberate decision:
     the next frame, and the settle handler (which runs twice) called it after writing the real
     width — it uses `stop()` now. The Garden's filter strip clipping at narrow viewports is
     pre-existing and untouched.
-17. **Garden as a study tool (2026-09-10).** Four phases, each browser-verified before the next:
+17. **Vault wikilink cleanup (2026-09-09).** A read-only audit of the whole link graph found 983
+    dangling link occurrences across 680 distinct targets — but most of the biggest offenders were
+    not missing notes at all, they were **short forms of notes that already existed** under a
+    parenthetical title. `[[System 1 vs System 2]]` (35 occurrences), `[[System 2]]` (13) and
+    `[[System 1]]` (1) all meant `System 1 vs System 2 (Dual-Process Theory)`; `[[Dopamine]]` (11)
+    meant `Dopamine (Reward Prediction Error)`; and so on for 15 more targets. 92 links were
+    rewritten to `[[Full Title|original display text]]`, so nothing a reader sees changed. Seven
+    notes were added for targets whose absence was self-evident — the three Authors already named
+    on Source notes in the vault (Max Bennett, James Clear, William Golding), the three key texts
+    cited from their own Authors' notes (*Thinking, Fast and Slow*, *How the Mind Works*,
+    *The Adapted Mind*), and `Cortisol`, which at 18 inbound links across 12 notes was the single
+    most-linked missing note. Four notes that were linked-to but `publish: false` were published;
+    three dead media embeds (assets purged in item 9) and one accidentally-bracketed word were
+    removed. Net: 983 → 853 dangling occurrences, 680 → 651 targets.
+
+    Two findings from that pass are worth keeping, because both are traps:
+
+    - **A near-match is not a match.** An automated matcher proposed five retargets that were all
+      wrong and would each have destroyed a real distinction: `[[The Cognitive Neuroscience]]` is
+      Gazzaniga's *handbook* sitting in a Key Texts list, not the Discipline note;
+      `[[Blank Slate]]` is the *concept*, which `EPM.md` deliberately links beside
+      `[[The Blank Slate]]` (the Pinker book) in one sentence; `[[Perceptrons]]` is Minsky &
+      Papert, not `Perception`; `[[Waking Up App]]` is the meditation app, not the Harris book.
+      Verify a proposed retarget in its surrounding prose before applying it in bulk.
+    - **`make_id()` is case- and punctuation-insensitive**, so `[[hippocampus]]` and
+      `[[Hippocampus]]` are one target, not two gaps. Lowercase mid-sentence links are usually
+      legitimate placeholders for unwritten notes rather than typos.
+
+    This pass is also why item 18's resolver reports **0 alias/suffix hits** against the current
+    vault: the links it was built to catch had already been rewritten to full titles the day
+    before. The resolver's value there is prospective, for links written from now on — the two
+    mechanisms are complementary, not redundant.
+
+18. **Garden as a study tool (2026-09-10).** Four phases, each browser-verified before the next:
     (1) a rendered-`garden.html` voice test (`tests/voice_fixtures.py`, `tests/test_garden.py`) and
     plain-English widget labels (`Audio overview`, `Flashcards`, …) replacing `NEURAL_AUDIO_STREAM`
     / `Q_NODE` / `TAP TO DECRYPT`; the wikilink resolver (`content.build_link_resolver`) and the
@@ -620,7 +666,7 @@ knowing so you don't "fix" something that was a deliberate decision:
   `bg-aurelia-bg`, etc.) was found and deleted as dead code (it was never runnable and unreferenced
   anywhere) — but the migration it described was never finished, so both styles still coexist in
   templates and generated HTML.
-- **`garden.html` is large** (~3.8MB as of 2026-09-10) because every note's full body is embedded
+- **`garden.html` is large** (~3.6MB as of 2026-09-10) because every note's full body is embedded
   inline for the instant-open modal (no network request needed). Known, not addressed — fixing it
   means trading instant-open for a fetch-on-click UX, which wasn't chosen without discussing the
   tradeoff first. The study layer added no per-note markup to it; `review.js` and `flashcards.js`
