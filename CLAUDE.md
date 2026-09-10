@@ -172,16 +172,29 @@ real logic lives in `engine/`:
   *not* synced, so anything sorted there stays off the **website**; it does *not* thereby become
   private, see "Privacy model" below).
 
-  **No vault media is committed.** `vault/assets/` holds empty `audio/`, `images/`, and
-  `flashcards/` directories; the only tracked assets are `assets/css`, `assets/js`, five
-  flashcard CSVs, and two site images in `assets/images/` added 2026-09-07 — `headshot.webp`
+  **No vault media is committed.** `vault/assets/` does not exist at all any more (git tracks no
+  empty directories, so the placeholders an earlier revision of this file described are gone);
+  the only tracked assets are `assets/css`, `assets/js`, five
+  flashcard CSVs at the **repo root** in `assets/flashcards/` — which is why `resolve_asset()`'s
+  ROOT_DIR fallback is load-bearing rather than vestigial — and two site images in
+  `assets/images/` added 2026-09-07 — `headshot.webp`
   (650×650, 43 KB, no EXIF/XMP; referenced by `profile.json`'s optional `identity.photo` and
   validated by `engine/profile.py` as a real file under `assets/images/`) and
   `social-preview.jpg` (1200×630, the `og:image`, generated from the headshot with ffmpeg on
   TIMBERLINE's paper color). All Gemini Notebook audio and mind-map images were removed from the repo *and its
-  history* in 2026 (see "Recent history" item 9), so 15 notes still reference `assets/audio/...`
-  and `assets/images/...` paths that no longer resolve — those widgets render as dead players
-  until media hosting is re-established off-repo. The compression path above still works and is
+  history* in 2026 (see "Recent history" item 9), so **9 published notes still name 16 files that
+  no longer resolve** (10 `assets/audio/...`, 6 `assets/images/...` mind maps) — exactly the count
+  `build.py` prints as `⚠️ 16 media widget(s) skipped` on every run.
+
+  **Nothing renders as a dead player.** An earlier revision of this file said those widgets do,
+  and that was already false when written: `process_gemini_notebook_media()` checks
+  `resolve_asset()` and drops the bare path instead of emitting a widget, then
+  `wrap_gemini_notebook_sections()` drops the section it just emptied. Verified against the built
+  page — `dist/garden.html` contains **zero** `<audio>` tags and **zero** `<img src="assets/...">`.
+  A reader sees the note as prose with the section simply absent; the build warning is how the
+  *owner* hears about it. Don't go looking for a rendering bug here: the remaining work is
+  content, not code — either re-host the media or drop the references, both vault edits. The
+  compression path above still works and is
   what keeps new drop-zone audio from re-inflating the repo, but the intended long-term answer is
   object storage linked from the notes, not files in git.
 - **`tailwind_build.py`** — generates `tailwind.config.js` (gitignored) from `THEME_CONFIG` and runs

@@ -305,10 +305,11 @@ def test_extract_gemini_notebook_data_ignores_headers_with_no_content():
     assert live_features == ["flashcards"]
 
 
-def test_extract_gemini_notebook_data_keeps_text_only_studio_sections():
-    # A Studio output that is prose rather than a media file has no asset
-    # reference to resolve, so it counts on having any content -- the rule
-    # this extractor always used.
+def test_extract_gemini_notebook_data_skips_prose_only_studio_sections():
+    # A chip promises an artifact to open, and content._MEDIA_MAP expects
+    # every one of the nine outputs to be a file (Reports shares the
+    # assets/images/ matcher). A prose-only section is ordinary note content
+    # -- the section count covers it -- so it earns no chip.
     text = """
 # 📚 Lit Review Overview
 > Overview text.
@@ -316,8 +317,11 @@ def test_extract_gemini_notebook_data_keeps_text_only_studio_sections():
 # 📄 Reports
 A written report, no media file involved.
 """
-    _, live_features, _, _ = extract_gemini_notebook_data(text)
-    assert live_features == ["reports"]
+    _, live_features, _, sections = extract_gemini_notebook_data(text)
+    assert live_features == []
+    # ...and it is not counted as a body section either, since Reports is a
+    # scaffold header rather than the author's own material.
+    assert sections == 0
 
 
 def test_extract_gemini_notebook_data_strips_markdown_emphasis():
@@ -418,3 +422,41 @@ def test_extract_deep_dive_data_no_related_field_returns_empty_list():
     text = "*A premise*\n\n## Part 3: Summary\n\nSome summary text.\n\n**🔗 Related:** <!-- optional -->\n"
     _, _, related = extract_deep_dive_data(text)
     assert related == []
+
+
+def test_extract_gemini_notebook_data_ignores_asset_paths_inside_urls():
+    """An external citation URL containing "assets/" is not a vault asset.
+
+    The vault cites sources by URL and several of those URLs carry the
+    segment themselves -- "https://assets.csom.umn.edu/assets/166364.pdf" is
+    a live citation in the Evolutionary Biology note. An unanchored pattern
+    reads that as a missing local file, which is how a dead-media audit came
+    back with two false positives on its first pass.
+
+    Here the Flashcards section holds a live deck plus such a URL: the
+    feature must still count, and it must count because of the deck.
+    """
+    text = f"""
+# 📚 Lit Review Overview
+> Overview text.
+
+# 🃏 Flashcards
+{LIVE_DECK}
+See also https://assets.csom.umn.edu/assets/166364.pdf
+"""
+    _, live_features, _, _ = extract_gemini_notebook_data(text)
+    assert live_features == ["flashcards"]
+
+
+def test_extract_gemini_notebook_data_url_only_section_is_not_a_live_output():
+    # The same URL with no real asset beside it must not promote the section:
+    # there is nothing for a reader to open.
+    text = """
+# 📚 Lit Review Overview
+> Overview text.
+
+# 🎙️ Audio Overview
+https://assets.csom.umn.edu/assets/166364.pdf
+"""
+    _, live_features, _, _ = extract_gemini_notebook_data(text)
+    assert live_features == []

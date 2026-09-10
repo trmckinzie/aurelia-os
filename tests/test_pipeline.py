@@ -575,3 +575,62 @@ def test_gemini_reader_body_still_gets_collapsible_sections(tmp_path, monkeypatc
     assert "<summary" in card["body"]
     # And the card itself is not carrying reader chrome.
     assert "<details" not in card["html"]
+
+
+# --- dead media must never reach the page ---------------------------------
+
+def test_purged_media_renders_no_widget_and_no_orphan_section(tmp_path, monkeypatch):
+    """A named-but-missing asset must leave no trace on the page.
+
+    Nine published notes still name 16 files the 2026 history purge removed
+    (10 audio, 6 mind maps) -- the count build.py prints every run. The
+    handling is two-stage and easy to break independently:
+    process_gemini_notebook_media() drops the bare path rather than emitting
+    a player, and wrap_gemini_notebook_sections() then drops the section it
+    just emptied. This pins the observable result of both, since a
+    half-working version yields either an empty <audio> control or a
+    collapsible section that opens onto nothing.
+    """
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/16_Gemini_Notebook/Purged.md",
+        "publish: true\ntype: gemini-notebook",
+        body=(
+            "\n# 📚 Lit Review Overview\n> Real overview text.\n"
+            "\n# 🎙️ Audio Overview\nassets/audio/gone.m4a\n"
+            "\n# 🧠 Mind Map\nassets/images/gone.png\n"
+        ),
+    )
+    card = _scan_cards(vault, monkeypatch)["Purged"]
+
+    for surface in (card["html"], card["body"]):
+        assert "<audio" not in surface
+        assert "assets/audio/gone.m4a" not in surface
+        assert 'src="assets/images/gone.png"' not in surface
+        assert "Audio Overview" not in surface
+        assert "Mind Map" not in surface
+    # The note is not thereby emptied -- the overview still carries it.
+    assert "Real overview text." in card["html"]
+    assert "Real overview text." in card["body"]
+
+
+def test_a_resolving_asset_still_renders_its_widget(tmp_path, monkeypatch):
+    """The other side of the gate: a deck that exists must still work.
+
+    Guards against "fix the dead players" being over-applied into dropping
+    every media widget. Uses a real tracked CSV via resolve_asset()'s
+    ROOT_DIR fallback, which is what the five repo-root decks rely on.
+    """
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/16_Gemini_Notebook/Live Deck.md",
+        "publish: true\ntype: gemini-notebook",
+        body=(
+            "\n# 📚 Lit Review Overview\n> Real overview text.\n"
+            "\n# 🃏 Flashcards\nassets/flashcards/flashcards-evo-psych.csv\n"
+        ),
+    )
+    card = _scan_cards(vault, monkeypatch)["Live Deck"]
+
+    assert 'class="deck"' in card["body"]
+    assert "Flashcards" in card["html"]  # the card's own "what's inside" chip

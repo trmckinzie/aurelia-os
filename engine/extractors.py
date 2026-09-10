@@ -186,7 +186,15 @@ _GEMINI_SCAFFOLD_RE = re.compile(
     re.IGNORECASE,
 )
 
-_ASSET_REF_RE = re.compile(r'assets/[A-Za-z0-9_./\- ]+\.[A-Za-z0-9]{2,5}')
+# A *bare* vault asset reference. The lookbehind is the whole point: these
+# notes cite sources by URL, and plenty of those URLs contain the segment
+# "assets/" themselves -- "https://assets.csom.umn.edu/assets/166364.pdf" and
+# "https://www.neuropath.org/assets/docs/11.27.2023_PPT_Burns.pdf" are both in
+# the vault right now. Without it, an audit of dead media reports those two
+# working citations as missing files (they were, on the first pass). Space is
+# in the character class because real mind-map filenames contain one
+# ("NotebookLM Mind Map - BSG_Overview.png").
+_ASSET_REF_RE = re.compile(r'(?<![\w/.\-])assets/[A-Za-z0-9_./\- ]+\.[A-Za-z0-9]{2,5}')
 
 # A Templater placeholder the author never filled in -- the template writes
 # its prompts as a whole-string bracket ("[Paste the Executive Summary or Core
@@ -226,13 +234,21 @@ def extract_gemini_notebook_data(text):
     notes follow that convention too.
 
     `live_features` holds only the Studio outputs a reader can actually open.
-    A section that references media reaches the card only if at least one of
-    those references resolves on disk: the 2026 history purge took every
-    vault audio file and mind-map image with it, so 10 "Audio Overview" and 6
-    "Mind Map" sections across the vault now point at nothing, and listing
-    them was advertising a dead end. A section with no asset reference at all
-    (a text-only Report or Quiz) still counts on having any content, which is
-    the rule this function always used.
+    A section reaches the card only if it names an asset that resolves on
+    disk: the 2026 history purge took every vault audio file and mind-map
+    image with it, so 10 "Audio Overview" and 6 "Mind Map" sections across
+    the vault now point at nothing, and listing them was advertising a dead
+    end.
+
+    That asset is required for all nine outputs, not only the obvious media
+    ones -- content._MEDIA_MAP expects every one of them to be a file (the
+    Mind Map / Reports / Quiz / Infographic / Slide Deck / Data Table headers
+    all share a single `assets/images/` matcher), and the reader renders a
+    widget only when the file is present. So a chip means "there is an
+    artifact here to open", and a section holding only prose is ordinary note
+    content, which the section count below already accounts for. This
+    replaces an "any content counts" rule that promoted a section whose only
+    remaining text was an external citation URL.
 
     NOTE: this reads the note body from *before*
     content.wrap_gemini_notebook_sections() rewrites `# Header` into
@@ -251,8 +267,7 @@ def extract_gemini_notebook_data(text):
         section = section_match.group(1).strip()
         if not section:
             continue
-        refs = _ASSET_REF_RE.findall(section)
-        if refs and not any(resolve_asset(ref.strip()) for ref in refs):
+        if not any(resolve_asset(ref.strip()) for ref in _ASSET_REF_RE.findall(section)):
             continue
         live_features.append(key)
 
