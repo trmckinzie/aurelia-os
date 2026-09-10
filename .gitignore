@@ -87,3 +87,16 @@ vault/20_AURELIA/
 # The Playwright MCP server drops page snapshots here whenever a session
 # drives a browser from this folder. Tool output, never source.
 .playwright-mcp/
+
+# --- IGNORE TEST-SUITE SCREENSHOTS AND SNAPSHOTS ---
+# The test suite writes screenshots and accessibility snapshots into the repo
+# ROOT, not into .playwright-mcp/, so the rule above never covered them. Seven
+# distinct files appeared across runs on 2026-09-09 (~700KB), all untracked and
+# all committable. This is the one repo here that is public and auto-deploys to
+# Pages, so an absent-minded `git add -A` publishes them.
+#
+# Patterns rather than a list of names: the set grew from four files to seven
+# over a single evening, so an enumeration would have been out of date the same
+# night. Anchored with a leading slash so only the repo root is affected.
+/garden-*.png
+/*-snapshot.md
