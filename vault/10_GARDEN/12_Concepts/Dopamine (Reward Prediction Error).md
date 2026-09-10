@@ -11,6 +11,8 @@ type: concept
 maturity: seed
 status: active
 publish: true
+aliases:
+  - Dopamine
 ---
 # ⚛️ Dopamine (Reward Prediction Error)
 

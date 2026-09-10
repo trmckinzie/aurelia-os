@@ -237,9 +237,6 @@ By adhering to this framework, the autodidact transforms from a passive recipien
 # 🎙️ Audio Overview
 assets/audio/Autodidactic_Learning_Overview.m4a
 
-# 🃏 Flashcards
-assets/flashcards/flashcards-autodidactic_learning.csv
-
 # 📚 Sources
 
 1. Building self-directed learners: From theory to practice - Center for Innovative Teaching and Learning, [https://citl.news.niu.edu/2025/07/30/building-self-directed-learners-from-theory-to-practice/](https://www.google.com/url?sa=E&q=https%3A%2F%2Fcitl.news.niu.edu%2F2025%2F07%2F30%2Fbuilding-self-directed-learners-from-theory-to-practice%2F)

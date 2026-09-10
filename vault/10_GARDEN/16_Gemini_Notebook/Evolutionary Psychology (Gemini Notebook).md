@@ -298,9 +298,6 @@ assets/images/NotebookLM Mind Map - evo-psych.png
 # 🃏 Flashcards
 assets/flashcards/flashcards-evo-psych.csv
 
-# 📊 Infographic
-assets/flashcards/flashcards.csv
-
 # 📚 Sources
 1. Darwin's Legacy to Comparative Psychology and Ethology - Ovid, [https://www.ovid.com/journals/ampsy/pdf/10.1037/a0013385~darwins-legacy-to-comparative-psychology-and-ethology](https://www.google.com/url?sa=E&q=https%3A%2F%2Fwww.ovid.com%2Fjournals%2Fampsy%2Fpdf%2F10.1037%2Fa0013385~darwins-legacy-to-comparative-psychology-and-ethology)
 

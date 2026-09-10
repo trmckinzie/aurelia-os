@@ -13,6 +13,8 @@ type: concept
 maturity: growing
 status: active
 publish: true
+aliases:
+  - System 1 vs System 2
 ---
 # ⚛️ System 1 vs System 2 (Dual-Process Theory)
 
