@@ -154,3 +154,28 @@ def test_available_themes_entries_carry_label_and_swatch():
     for t in themes:
         assert t["label"]
         assert set(t["swatch"].keys()) == {"bg", "primary", "secondary", "accent"}
+
+
+def test_card_text_roles_meet_aa_contrast_in_every_theme():
+    """text_main and text_muted must clear AA on every surface of every theme.
+
+    The Gemini card's topic chips and its "what's inside" strip are 13px
+    text, so AA's 4.5:1 floor applies rather than the large-text exception.
+    They deliberately use text_main/text_muted instead of the card's own
+    `info` identity colour, which the theme sweep above only checks for
+    TIMBERLINE -- `info` is 3.97:1 on CYBER_PRIME's bg_layer_2 and 4.25:1 on
+    GRIZZ's, so an accent-coloured label would ship a real AA failure in both
+    dark themes while the existing test stayed green. This is the guard that
+    notices if either role drifts, or if a new theme is added with a weak one.
+    """
+    from engine.config import THEME_CONFIG
+
+    for theme, cfg in THEME_CONFIG.items():
+        colors = cfg["colors"]
+        for role in ("text_main", "text_muted"):
+            for bg in ("bg_main", "bg_layer_1", "bg_layer_2"):
+                ratio = _contrast_ratio(colors[role], colors[bg])
+                assert ratio >= 4.5, (
+                    f"{theme} {role} ({colors[role]}) on {bg} ({colors[bg]}) "
+                    f"is only {ratio:.2f}:1, below WCAG AA's 4.5:1 floor"
+                )

@@ -467,47 +467,101 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
 
     elif "gemini-notebook" in note_type:
         color = "border-aurelia-info"
-        overview, active_features = extract_gemini_notebook_data(body_content)
-        overview = escape(truncate(overview, 160))
+        overview, live_features, source_count, section_count = extract_gemini_notebook_data(body_content)
+        # 220 rather than the old 160: a real overview is either a report
+        # title or a synthesis abstract, and 160 cut most of them mid-clause.
+        overview_html = (
+            f'<p class="text-base text-aurelia-text font-sans leading-relaxed opacity-95 line-clamp-4">'
+            f'{escape(truncate(overview, 220))}</p>'
+            if overview else
+            # No quote marks and no "pending": two notes in the vault are
+            # still unfilled Templater stubs, and a card that says data is
+            # pending claims a process is running. Nothing is coming; the
+            # overview simply hasn't been written.
+            '<p class="text-base text-aurelia-muted font-sans italic opacity-70">Overview not written yet</p>'
+        )
 
-        feature_icons = {
-            'audio': '🎙️', 'video': '🎥', 'mindmap': '🧠',
-            'reports': '📄', 'flashcards': '🃏', 'quiz': '📝',
-            'infographic': '📊', 'slides': '📽️', 'datatable': '📉',
+        # No emoji here, unlike the old Studio-outputs row: at the 13px this
+        # strip renders at, 🃏 and 📽️ are indistinct dark boxes, and
+        # TIMBERLINE (the default theme) is a hairline-and-text register that
+        # a tiny colour glyph fights. Plain words also match the voice rule.
+        feature_labels = {
+            'audio': 'Audio overview', 'video': 'Video overview',
+            'mindmap': 'Mind map', 'reports': 'Reports',
+            'flashcards': 'Flashcards', 'quiz': 'Quiz',
+            'infographic': 'Infographic', 'slides': 'Slide deck',
+            'datatable': 'Data table',
         }
 
-        def render_feature(f):
-            return f"""
-                    <div class="flex items-center gap-2 px-2 py-1 bg-aurelia-info/10 border border-aurelia-info/30 rounded-theme" title="{f.upper()}">
-                        <span class="text-base">{feature_icons.get(f, "•")}</span>
-                        <span class="field-label text-aurelia-primary">{f}</span>
-                    </div>
-                    """
+        # One "what's inside" strip instead of the old Studio-outputs row.
+        # Counts first, then the outputs a reader can actually open. Each fact
+        # is silent at zero, the same way _connections_badge is: a literature
+        # note with no source list is normal, and "0 sources" reads as a
+        # defect rather than an absence.
+        facts = []
+        if source_count:
+            facts.append(f'{source_count} sources')
+        if section_count > 1:
+            facts.append(f'{section_count} sections')
+        facts.extend(feature_labels.get(f, f) for f in live_features)
+        facts_html = (
+            '<div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.8125rem] text-aurelia-muted font-mono">'
+            + '<span class="opacity-40">·</span>'.join(
+                f'<span class="whitespace-nowrap">{escape(f)}</span>' for f in facts
+            )
+            + '</div>'
+        ) if facts else ''
 
-        features_html = render_items(
-            active_features,
-            render_feature,
-            empty_html='<span class="text-[0.8125rem] text-aurelia-muted font-mono">No Studio outputs yet</span>',
-        )
+        # Topic chips. The Gemini card is the only published type with no
+        # link field of its own -- these notes average under one outbound
+        # wikilink each, so a Related row would be empty -- and this is what
+        # gives the card the bottom-anchored pill row every other type has.
+        #
+        # data-tag + the grid's delegated listener, never an inline
+        # onclick="toggleTopicFilter('...')": the tag is vault-authored text,
+        # and the topic cloud's own renderer documents why that distinction
+        # matters (an apostrophe alone breaks such a handler). escape_attr
+        # covers the attribute; nothing here is parsed as JS.
+        topics = [str(t) for t in (meta.get("tags") or []) if str(t).startswith("topic/")]
+        topics_html = ''
+        if topics:
+            chips = ''.join(
+                # Label in text-aurelia-text, not the card's own info colour.
+                # This is 13px text, so WCAG AA wants 4.5:1, and `info` does
+                # not clear it as small text in two themes -- 3.97-4.43:1 in
+                # CYBER_PRIME and 4.25:1 in GRIZZ on their card surfaces (only
+                # TIMBERLINE's info is checked by tests/test_theming.py, where
+                # it passes at 6.51+, which is what makes the dark-theme gap
+                # easy to miss). text_main is 9.75:1 or better on every
+                # surface of all five. The identity colour stays on the border
+                # and the hover tint -- the same split _maturity_badge() uses:
+                # borrow the type colour for the frame, keep the text legible.
+                f'<button type="button" data-tag="{escape_attr(t)}" '
+                f'class="card-topic font-mono text-[0.8125rem] px-2 py-0.5 rounded-theme border '
+                f'border-aurelia-info/40 text-aurelia-text hover:bg-aurelia-info/10 '
+                f'hover:border-aurelia-info transition-colors" '
+                f'title="Filter the Garden by this topic">{escape(t.split("/", 1)[1].replace("-", " "))}</button>'
+                for t in topics[:6]
+            )
+            # The wrapper carries mt-auto and the divider rule, so it is built
+            # here rather than left in the template below: an empty one would
+            # render as a stray hairline across the bottom of the card.
+            topics_html = f"""
+            <div class="mt-auto pt-3 border-t border-aurelia-border/50">
+                <span class="field-label text-aurelia-muted block mb-2">Topics:</span>
+                <div class="flex flex-wrap gap-1.5">{chips}</div>
+            </div>"""
+
         card_content = f"""
         <div class="flex flex-col h-full gap-4">
 
             <div class="relative pl-4 border-l-4 border-aurelia-info">
                 <span class="text-[0.8125rem] font-bold font-mono text-aurelia-primary tracking-[0.06em] block mb-1">Overview:</span>
-                <p class="text-base text-aurelia-text font-sans leading-relaxed opacity-95">
-                    "{overview}"
-                </p>
+                {overview_html}
             </div>
 
-            <div class="flex-grow"></div>
-
-            <div>
-                <span class="field-label text-aurelia-muted block mb-2">Studio outputs:</span>
-
-                <div class="flex flex-wrap gap-2">
-                    {features_html}
-                </div>
-            </div>
+            {facts_html}
+            {topics_html}
         </div>"""
         icon = "🧬"; label = "GEMINI NOTEBOOK"; label_color = "text-aurelia-primary"
 

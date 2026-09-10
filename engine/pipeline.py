@@ -178,6 +178,25 @@ def _scan_vault():
     resolve = build_link_resolver(pending)
     for p in pending:
         processed_body = process_wikilinks(p["body"], resolve)
+        # The card reads this snapshot, not processed_body. The two Gemini
+        # passes below rewrite the note's `# Header` lines into
+        # <details>/<summary> chrome, and extract_gemini_notebook_data()
+        # matches on a literal `#` -- so running the extractor on the wrapped
+        # body silently returned nothing for both of the card's fields, i.e.
+        # "Synthesis data pending." and "No Studio outputs yet" on all 15
+        # published Gemini notes from the day collapsible sections shipped
+        # (4ecc9d6) until this snapshot existed. The content was never
+        # missing; the header the extractor anchors on was.
+        #
+        # It also keeps the raw `assets/...` reference lines intact, which is
+        # what lets the card ask resolve_asset() whether a Studio output
+        # actually exists before advertising it -- process_gemini_notebook_media
+        # has by then replaced a live one with widget HTML and a purged one
+        # with nothing, and neither is answerable.
+        #
+        # Identical to processed_body for every other note type, which run no
+        # passes between here and there.
+        p["card_body"] = processed_body
         if "gemini-notebook" in p["note_type"]:
             processed_body = process_gemini_notebook_media(processed_body)
             processed_body = wrap_gemini_notebook_sections(processed_body)
@@ -210,7 +229,7 @@ def _scan_vault():
     garden_cards = []
     for p in pending:
         card_html = cards.generate_garden_card_html(
-            p["meta"], p["filename"], p["note_id"], p["processed_body"], known_ids,
+            p["meta"], p["filename"], p["note_id"], p["card_body"], known_ids,
             connections=degree.get(p["note_id"], 0),
             created=str(p["meta"].get("created", "")),
         )

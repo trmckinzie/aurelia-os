@@ -239,8 +239,17 @@ def test_extract_log_data_defaults_when_fields_missing():
     assert summary == ""
 
 
-def test_extract_gemini_notebook_data_overview_and_active_features():
-    text = """
+# One of the five flashcard CSVs actually tracked at the repo root, so
+# resolve_asset() finds it. The live/dead distinction below is the point of
+# these tests, and it cannot be made with invented paths alone.
+LIVE_DECK = "assets/flashcards/flashcards-evo-psych.csv"
+
+
+def test_extract_gemini_notebook_data_lists_only_studio_outputs_that_resolve():
+    # The 2026 history purge took every vault audio file and mind-map image,
+    # so a card listing them advertised a dead player. Only a reference that
+    # resolves on disk counts.
+    text = f"""
 # 📚 Lit Review Overview
 > The core synthesis text.
 
@@ -251,33 +260,100 @@ assets/audio/example.m4a
 assets/images/example.png
 
 # 🃏 Flashcards
-assets/flashcards/example.csv
+{LIVE_DECK}
 """
-    overview, active_features = extract_gemini_notebook_data(text)
+    overview, live_features, _, _ = extract_gemini_notebook_data(text)
     assert overview == "The core synthesis text."
-    assert set(active_features) == {"audio", "mindmap", "flashcards"}
+    assert live_features == ["flashcards"]
 
 
-def test_extract_gemini_notebook_data_defaults_when_overview_missing():
-    overview, active_features = extract_gemini_notebook_data("nothing here")
-    assert overview == "Synthesis data pending."
-    assert active_features == []
+def test_extract_gemini_notebook_data_empty_overview_when_missing():
+    overview, live_features, sources, sections = extract_gemini_notebook_data("nothing here")
+    # "" rather than the old "Synthesis data pending.": the card renders its
+    # own empty state, and nothing is pending.
+    assert overview == ""
+    assert live_features == []
+    assert sources == 0
+    assert sections == 0
+
+
+def test_extract_gemini_notebook_data_treats_unfilled_placeholder_as_missing():
+    # Two published notes are still unfilled Templater stubs. The template
+    # writes its prompts as a whole-string bracket, which is the convention
+    # detected -- not any one wording.
+    text = """
+# 📚 Lit Review Overview
+> [Paste the Executive Summary or Core Thesis here.]
+"""
+    overview, _, _, _ = extract_gemini_notebook_data(text)
+    assert overview == ""
 
 
 def test_extract_gemini_notebook_data_ignores_headers_with_no_content():
     # Regression guard for the bug TPL_Gemini_Notebook.md's own contract
     # warns about: an unfilled placeholder header must not count as "active".
-    text = """
+    text = f"""
 # 📚 Lit Review Overview
 > Overview text.
 
 # 🎥 Video Overview
 
-# 🎙️ Audio Overview
-assets/audio/example.m4a
+# 🃏 Flashcards
+{LIVE_DECK}
 """
-    _, active_features = extract_gemini_notebook_data(text)
-    assert active_features == ["audio"]
+    _, live_features, _, _ = extract_gemini_notebook_data(text)
+    assert live_features == ["flashcards"]
+
+
+def test_extract_gemini_notebook_data_keeps_text_only_studio_sections():
+    # A Studio output that is prose rather than a media file has no asset
+    # reference to resolve, so it counts on having any content -- the rule
+    # this extractor always used.
+    text = """
+# 📚 Lit Review Overview
+> Overview text.
+
+# 📄 Reports
+A written report, no media file involved.
+"""
+    _, live_features, _, _ = extract_gemini_notebook_data(text)
+    assert live_features == ["reports"]
+
+
+def test_extract_gemini_notebook_data_strips_markdown_emphasis():
+    # Real overviews arrive wrapped in emphasis; the card renders plain text,
+    # so the markers would just show.
+    text = """
+# 📚 Lit Review Overview
+> **Report: Information Theoretic Principles in Cognitive Systems**
+"""
+    overview, _, _, _ = extract_gemini_notebook_data(text)
+    assert overview == "Report: Information Theoretic Principles in Cognitive Systems"
+
+
+def test_extract_gemini_notebook_data_counts_sources_and_body_sections():
+    text = """
+# 📚 Lit Review Overview
+> Overview text.
+
+# 📚 Chapter 1 - Beginnings
+
+Some notes.
+
+# 📚 Chapter 2 - Middles
+
+More notes.
+
+# 📚 Sources
+1. First source, https://example.com/a
+2. Second source, https://example.com/b
+3. Third source, https://example.com/c
+"""
+    _, _, sources, sections = extract_gemini_notebook_data(text)
+    assert sources == 3
+    # Scaffold headers (Lit Review Overview, Sources, the nine Studio
+    # outputs) are not the author's own material and are not counted.
+    assert sections == 2
 
 
 def test_extract_deep_dive_data_with_wikilinked_related():

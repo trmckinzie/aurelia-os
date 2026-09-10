@@ -1529,6 +1529,11 @@
     }
 
     function rovingKeydown(e) {
+        // A Gemini card's topic chip is a real <button> inside the card, so
+        // closest() below would find the card and Enter/Space would open the
+        // note instead of applying the filter. Let the chip handle its own
+        // activation (a native button click fires on both keys).
+        if (e.target.closest('button.card-topic')) return;
         const item = e.target.closest('.searchable-item, .searchable-tree-item');
         if (!item) return;
         const cols = rovingColumns();
@@ -2771,6 +2776,41 @@
         const btn = e.target.closest('button[data-tag]');
         if (btn) toggleTopicFilter(btn.dataset.tag);
     });
+
+    // The Gemini Notebook card's own topic chips (cards.py). Delegated on the
+    // grid for the same reason plus one more: updateGrid() re-sorts and
+    // re-parents the cards, so a per-chip listener would not survive a sort.
+    //
+    // CAPTURE phase (the `true`), and that is load-bearing. The card is an
+    // <article onclick="openNote(...)"> with the chip inside it, so an
+    // inline handler on the card runs during bubbling -- i.e. BEFORE a
+    // bubble-phase listener up here on the grid. Verified: with bubbling the
+    // chip both filtered the Garden and opened the note on top of it.
+    // Capturing at the grid runs before the card's handler, so
+    // stopPropagation() actually suppresses it. (link_pill() solves the same
+    // problem the other way, with event.stopPropagation() inline on its own
+    // button; that is not available here, because the tag is vault-authored
+    // text and must not be interpolated into a JS string -- see the topic
+    // cloud's renderer.)
+    //
+    // Also reveals the cloud, so the active filter is visible somewhere the
+    // reader can clear it; filtering with no visible control is how the topic
+    // deep-link handler already justifies doing this.
+    document.getElementById('cardGrid').addEventListener('click', (e) => {
+        const chip = e.target.closest('button.card-topic[data-tag]');
+        if (!chip) return;
+        e.stopPropagation();
+        const cloud = document.getElementById('topic-cloud');
+        const topicsBtn = document.getElementById('btn-topics');
+        if (cloud && cloud.classList.contains('hidden')) {
+            cloud.classList.remove('hidden');
+            if (topicsBtn) {
+                topicsBtn.setAttribute('aria-expanded', 'true');
+                topicsBtn.classList.add('text-aurelia-accent');
+            }
+        }
+        toggleTopicFilter(chip.dataset.tag);
+    }, true);
 
     function toggleTopicFilter(tag) {
         currentTopic = (currentTopic === tag) ? '' : tag;

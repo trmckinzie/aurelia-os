@@ -510,3 +510,68 @@ def test_build_cli_maps_no_sort_to_sort_dropzone_false():
     # hard False.
     assert build.parse_args([]).no_sort is False
     assert build.parse_args(["--no-sort"]).no_sort is True
+
+
+# --- Gemini Notebook card body snapshot ------------------------------------
+
+def _scan_cards(vault, monkeypatch):
+    monkeypatch.setattr(pipeline, "VAULT_PATH", str(vault))
+    garden_cards, _, _ = pipeline._scan_vault()
+    return {c["title"]: c for c in garden_cards}
+
+
+GEMINI_NOTE_BODY = """
+# 📚 Lit Review Overview
+> These sources collectively explore the evolution of the field.
+
+# 📚 Chapter 1 - Beginnings
+
+Chapter notes.
+
+# 📚 Sources
+1. First source, https://example.com/a
+2. Second source, https://example.com/b
+"""
+
+
+def test_gemini_card_reads_the_body_from_before_the_section_wrapper(tmp_path, monkeypatch):
+    """The card must not be handed the collapsible-sections body.
+
+    wrap_gemini_notebook_sections() rewrites `# Header` into
+    <details>/<summary>, and extract_gemini_notebook_data() anchors on a
+    literal `#`. Running the extractor on the wrapped body returned nothing
+    for every field, so every published Gemini card read "Synthesis data
+    pending." and "No Studio outputs yet" from the day collapsible sections
+    shipped (4ecc9d6). Nothing noticed, because both fields have a silent
+    fallback -- hence this test rather than a comment.
+    """
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/16_Gemini_Notebook/A Notebook.md",
+        "publish: true\ntype: gemini-notebook\ntags:\n  - topic/evo-psych",
+        body=GEMINI_NOTE_BODY,
+    )
+    card = _scan_cards(vault, monkeypatch)["A Notebook"]
+
+    assert "These sources collectively explore" in card["html"]
+    assert "Synthesis data pending" not in card["html"]
+    # The facts strip and the topic row, both of which need the same headers.
+    assert "2 sources" in card["html"]
+    assert "evo psych" in card["html"]
+
+
+def test_gemini_reader_body_still_gets_collapsible_sections(tmp_path, monkeypatch):
+    """The other half of the split: the snapshot must not cost the reader its
+    collapsible sections, which is what the wrapped body is for."""
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/16_Gemini_Notebook/A Notebook.md",
+        "publish: true\ntype: gemini-notebook",
+        body=GEMINI_NOTE_BODY,
+    )
+    card = _scan_cards(vault, monkeypatch)["A Notebook"]
+
+    assert "<details" in card["body"]
+    assert "<summary" in card["body"]
+    # And the card itself is not carrying reader chrome.
+    assert "<details" not in card["html"]

@@ -8,6 +8,7 @@ linked note titles -- are factored into engine.textutils.
 """
 import re
 
+from engine.content import resolve_asset
 from engine.textutils import (
     clean_text,
     extract_links,
@@ -164,33 +165,106 @@ def extract_discipline_data(text):
     return scope, pillars[:10], canon[:10], _extract_contrasts(text, 6)
 
 
+_GEMINI_FEATURES = {
+    'audio': r'#+\s*.*Audio Overview',
+    'video': r'#+\s*.*Video Overview',
+    'mindmap': r'#+\s*.*Mind Map',
+    'reports': r'#+\s*.*Reports',
+    'flashcards': r'#+\s*.*Flashcards',
+    'quiz': r'#+\s*.*Quiz',
+    'infographic': r'#+\s*.*Infographic',
+    'slides': r'#+\s*.*Slide Deck',
+    'datatable': r'#+\s*.*Data Table',
+}
+
+# The two scaffold headers every note carries, plus the nine Studio outputs
+# above -- what's left is the author's own material (chapter breakdowns, study
+# guides, presenter notes), which is what the card's section count is about.
+_GEMINI_SCAFFOLD_RE = re.compile(
+    r'Lit Review Overview|Sources|Audio Overview|Video Overview|Mind Map'
+    r'|Reports|Flashcards|Quiz|Infographic|Slide Deck|Data Table',
+    re.IGNORECASE,
+)
+
+_ASSET_REF_RE = re.compile(r'assets/[A-Za-z0-9_./\- ]+\.[A-Za-z0-9]{2,5}')
+
+# A Templater placeholder the author never filled in -- the template writes
+# its prompts as a whole-string bracket ("[Paste the Executive Summary or Core
+# Thesis here.]", "[Zotero Data Placeholder]"), so the brackets are the
+# convention to detect rather than any one wording.
+_UNFILLED_RE = re.compile(r'^\[[^\]]*\]$')
+
+
+def _strip_emphasis(text):
+    """Removes markdown emphasis markers, which clean_text() leaves behind.
+
+    Real overviews arrive wrapped in them ("**Report: Information Theoretic
+    Principles in Cognitive Systems**") or carrying them inline, and a card
+    renders the result as plain text, so the asterisks would just show. The
+    `_x_` rule is word-boundary-guarded so it can't eat a snake_case
+    identifier or a filename.
+    """
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+    text = re.sub(r'\*([^*\n]+)\*', r'\1', text)
+    text = re.sub(r'(?<!\w)_([^_\n]+)_(?!\w)', r'\1', text)
+    return text
+
+
 def extract_gemini_notebook_data(text):
-    """Parses a Gemini Notebook note for Overview and Active Studio Features."""
-    overview_match = re.search(r'#\s*.*Lit Review Overview.*\n([\s\S]*?)(?=\n#|$)', text)
-    raw_overview = overview_match.group(1).strip() if overview_match else "Synthesis data pending."
-    clean_overview = clean_text(raw_overview).replace('>', '').strip()
+    """Parses a Gemini Notebook note for its card.
 
-    features = {
-        'audio': r'#+\s*.*Audio Overview',
-        'video': r'#+\s*.*Video Overview',
-        'mindmap': r'#+\s*.*Mind Map',
-        'reports': r'#+\s*.*Reports',
-        'flashcards': r'#+\s*.*Flashcards',
-        'quiz': r'#+\s*.*Quiz',
-        'infographic': r'#+\s*.*Infographic',
-        'slides': r'#+\s*.*Slide Deck',
-        'datatable': r'#+\s*.*Data Table',
-    }
+    Returns (overview, live_features, source_count, section_count).
 
-    active_features = []
-    for key, pattern in features.items():
-        if not re.search(pattern, text, re.IGNORECASE):
-            continue
+    `overview` is the blockquote directly under the Lit Review Overview
+    header -- the note's own dek -- and "" when that is missing or is still an
+    unfilled template placeholder, which the card renders as an honest empty
+    state rather than implying something is still processing. Deliberately not
+    the whole section, the way this used to read it: a real note's Overview
+    section IS the report (20k-38k characters across the current vault), so
+    truncating it to a card line yielded a fragment of paragraph one. Every
+    other type's prose field is the blockquote under its header, and these
+    notes follow that convention too.
+
+    `live_features` holds only the Studio outputs a reader can actually open.
+    A section that references media reaches the card only if at least one of
+    those references resolves on disk: the 2026 history purge took every
+    vault audio file and mind-map image with it, so 10 "Audio Overview" and 6
+    "Mind Map" sections across the vault now point at nothing, and listing
+    them was advertising a dead end. A section with no asset reference at all
+    (a text-only Report or Quiz) still counts on having any content, which is
+    the rule this function always used.
+
+    NOTE: this reads the note body from *before*
+    content.wrap_gemini_notebook_sections() rewrites `# Header` into
+    <details>/<summary> -- see the card_body snapshot in pipeline._scan_vault.
+    """
+    raw_overview = first_blockquote_after(text, r'#\s*.*Lit Review Overview.*') or ""
+    overview = _strip_emphasis(clean_text(raw_overview)).replace('>', '').strip()
+    if _UNFILLED_RE.match(overview):
+        overview = ""
+
+    live_features = []
+    for key, pattern in _GEMINI_FEATURES.items():
         section_match = re.search(f"{pattern}.*\\n([\\s\\S]*?)(?=\\n#|$)", text, re.IGNORECASE)
-        if section_match and section_match.group(1).strip():
-            active_features.append(key)
+        if not section_match:
+            continue
+        section = section_match.group(1).strip()
+        if not section:
+            continue
+        refs = _ASSET_REF_RE.findall(section)
+        if refs and not any(resolve_asset(ref.strip()) for ref in refs):
+            continue
+        live_features.append(key)
 
-    return clean_overview, active_features
+    sources_section = section_after_header(text, r'#\s*.*Sources.*')
+    source_count = len(re.findall(r'^\s*\d+\.\s+\S', sources_section or "", re.MULTILINE))
+
+    section_count = sum(
+        1 for header in re.findall(r'^#\s+(.+)$', text, re.MULTILINE)
+        if not _GEMINI_SCAFFOLD_RE.search(header)
+    )
+
+    return overview, live_features, source_count, section_count
 
 
 def extract_deep_dive_data(text):

@@ -376,3 +376,33 @@ def test_related_by_topic_excludes_daily_logs_from_ranked_candidates():
     fn = html[start:end]
     assert "NUDGE_EXCLUDED_TYPES" in fn
     assert "daily-bridge" in html  # confirms the set itself lists it
+
+
+def test_garden_card_topic_chip_listener_uses_the_capture_phase():
+    """The chip's grid listener must capture, not bubble.
+
+    A Gemini card is an <article onclick="openNote(...)"> and the chip sits
+    inside it, so the card's inline handler runs during bubbling -- i.e.
+    before a bubble-phase listener on #cardGrid. Verified in a browser: with
+    bubbling the chip both filtered the Garden and opened the note on top of
+    the filter. Capturing at the grid runs first, so its stopPropagation()
+    actually suppresses the card. Pinned because the trailing `true` is a
+    single easily-dropped token whose loss reintroduces exactly that bug.
+    """
+    html = render_garden()
+    start = html.index("document.getElementById('cardGrid').addEventListener('click'")
+    end = html.index("function toggleTopicFilter", start)
+    listener = html[start:end]
+    assert "button.card-topic[data-tag]" in listener
+    assert "e.stopPropagation()" in listener
+    assert "}, true);" in listener
+
+
+def test_garden_roving_keydown_defers_to_card_topic_chips():
+    # Without this guard Enter/Space on a focused chip would reach the card's
+    # roving handler and open the note instead of applying the filter, since
+    # closest('.searchable-item') matches from inside the card.
+    html = render_garden()
+    start = html.index("function rovingKeydown")
+    end = html.index("case 'ArrowRight'", start)
+    assert "button.card-topic" in html[start:end]
