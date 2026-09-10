@@ -16,7 +16,17 @@ the link graph itself made visible and navigable.
 - Only notes tagged `publish: true` are *rendered into the site*. This controls rendering, not
   access — see [Privacy model](#privacy-model) below before assuming anything in `vault/` is private.
 - Real backlinks, note-maturity badges (🌱 seed / 🌿 growing / 🌳 evergreen), topic browsing, a
-  command palette (⌘K), spaced-review surfacing, and a random-note discovery button.
+  command palette (⌘K), a random-note discovery button, an "On this page" outline for long notes,
+  and a `?` keyboard-shortcut sheet.
+- A study layer grounded in the learning-science evidence (practice testing, distributed
+  practice, interleaving, elaboration): an optional Study mode covers each note's definition with
+  a "Try to recall it first" prompt, a four-step self-rating feeds an SM-2 spaced-repetition
+  scheduler, a review queue walks the due notes interleaved across types, flashcard decks study
+  one card at a time with the same scheduler, and a small "How does this connect?" nudge suggests
+  neighbouring notes to relate. All progress lives in the reader's own browser (localStorage) with
+  a JSON export/import to move it between devices; nothing is sent anywhere.
+- Wikilinks resolve through frontmatter `aliases:` and unique parenthetical title suffixes, so
+  `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename.
 - A professional About page (`about.html`) — roles, education, skills, selected work, and
   schema.org `Person` structured data — rendered from a repo-root `profile.json`. The file is
   validated strictly at build time (unknown keys, non-`http`/`https`/`mailto` URLs, over-long or
@@ -31,7 +41,8 @@ the link graph itself made visible and navigable.
   synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,
   with each top-level section collapsible in the note reader. **Note:** the media files themselves
   are no longer committed to this repo (see [Media](#media)), so the audio and image widgets
-  currently render without their sources. Flashcard decks still work — those are small CSVs.
+  currently render without their sources. Flashcard decks still work — those are small CSVs, and
+  each renders as a one-card study widget (Show answer, rate 1–4, shuffle, "due cards only").
 
 ## Stack
 

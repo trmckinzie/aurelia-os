@@ -55,7 +55,7 @@ npm install                            # Tailwind CLI
 python build.py
 
 # Tests
-python -m pytest tests/ -q             # full suite (363 tests as of this writing)
+python -m pytest tests/ -q             # full suite (446+ tests as of 2026-09-10)
 python -m pytest tests/test_cards.py -v            # one file
 python -m pytest tests/test_cards.py::test_link_pill_renders_clickable_button_for_known_target -v  # one test
 
@@ -117,8 +117,14 @@ real logic lives in `engine/`:
   legitimately emit raw output return `markupsafe.Markup` instead — see `cards.py` and
   `textutils.dumps_for_script_tag()` — and note-authored HTML goes through `sanitize.py`.
 - **`content.py`** — markdown-level parsing: `parse_frontmatter()` (real YAML via PyYAML, not regex),
-  `parse_body()`, `make_id()` (filename → slug), `process_wikilinks()` (`[[Target]]` /
-  `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`), and
+  `parse_body()`, `make_id()` (filename → slug), `process_wikilinks(text, resolve=None)`
+  (`[[Target]]` / `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`; with no
+  resolver the target is plain `make_id(text)`, the historical behaviour),
+  `build_link_resolver(notes)` (added 2026-09-10: three tiers, an earlier one never overwritten —
+  exact `make_id(title)`, any entry in the note's frontmatter `aliases:`, and a *unique*
+  title-suffix base so `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)`; a base shared
+  by two notes resolves to neither, and a `(Gemini Notebook)` suffix is excluded because it marks
+  a source type, not a disambiguation), and
   `process_gemini_notebook_media()` (converts Gemini Notebook export headers like `# Audio Overview`
   into embedded `<audio>`/`<video>`/flashcard-CSV widgets), and `wrap_gemini_notebook_sections()`
   (wraps each top-level `#` section of a Gemini Notebook note in a collapsible `<details>`/
@@ -195,9 +201,14 @@ real logic lives in `engine/`:
   like `bg-aurelia-primary/10` need decomposable channels, not a hex string) and the per-theme
   cursor SVGs. `available_themes()` feeds the nav switcher's embedded JSON.
 - **`pipeline.py`** — orchestrates everything. `_scan_vault()` is **two-pass**: pass one walks
-  `vault/`, reads every published garden note, and computes its `note_id`, building the full
-  `known_ids` set; pass two calls `cards.generate_garden_card_html()` for each note with that set
-  now available, so card-face links know whether their targets actually exist before rendering.
+  `vault/`, reads and sanitizes every published garden note, and computes its `note_id`, building
+  the full `known_ids` set and the link resolver; pass two runs `process_wikilinks()` with that
+  resolver (it used to run per note inside pass one, before `known_ids` existed), the Gemini
+  media/section passes, and then `cards.generate_garden_card_html()` for each note, so card-face
+  links know whether their targets actually exist before rendering. `build_all()` prints a
+  `Wikilinks:` summary line (occurrences and distinct targets resolved via alias or suffix, plus
+  the still-unresolved count), and that unresolved count agrees with
+  `tools/vault_health.py --report pending` by construction — both go through the same resolver.
   `_build_backlinks_index()` scans every note's rendered body for `openNote('id')` occurrences and
   inverts the graph (note_id → list of notes that link to it) — this is what powers the modal's
   "Referenced By" section. `_build_search_index()` builds the command-palette JSON (title/type/
@@ -223,7 +234,7 @@ This is the mechanism most likely to need touching if you're asked to change how
 other. The flow for one wikilink, end to end:
 
 1. Author writes `[[Target Note]]` or `[[Target Note|Custom Label]]` in a vault note.
-2. `content.process_wikilinks()` converts it to `<button onclick="openNote('note-target-note')">Label</button>` — this happens *before* extraction.
+2. `content.process_wikilinks()` converts it to `<button onclick="openNote('note-target-note')">Label</button>` — this happens *before* extraction. The id comes from the build's link resolver (exact title, then `aliases:`, then a unique `Base (…)` title suffix — see `content.py` above), so an alias is a legitimate fix for a dangling link on the site as well as in Obsidian.
 3. Extractors call `textutils.extract_links()` on the relevant section, which regex-matches that
    button form (or, for text that was never run through `process_wikilinks`, falls back to raw
    `[[brackets]]` and derives the id itself). Every extractor field that represents a linked item
@@ -256,6 +267,63 @@ a parent's top-level `set` is not visible inside a child's blocks.
 `base.html`'s inline `<script>` embeds `SYSTEM_INDEX` (the command-palette JSON) via
 `dumps_for_script_tag`, safe against a note title containing a literal `</script`.
 `gardentemplate.html` additionally embeds `BACKLINKS_INDEX`.
+
+### Study layer (`assets/js/review.js`, `assets/js/flashcards.js`) — added 2026-09-10
+
+The Garden is a study tool as well as a browsing surface, on the strength of the learning-science
+evidence (practice testing and distributed practice rate highest in Dunlosky et al. 2013;
+interleaving, elaborative interrogation and self-explanation moderate). Everything below is
+client-side, framework-free, and keeps its state in **localStorage only** — the site is static and
+has no analytics, so a learner's progress never leaves their browser except through the Progress
+panel's export/import (JSON, merged per note by the higher `last` timestamp).
+
+- **`review.js`** exposes `window.Review`: an SM-2 scheduler (ratings Again/Hard/Good/Easy → quality
+  0/3/4/5; `ease = max(1.3, ease + 0.1 − (5−q)(0.08 + (5−q)·0.02))`; a lapse resets the interval to
+  1 day; first success seeds the interval from `data-maturity` — seed 1 d, growing 3 d, evergreen
+  7 d; second success 6 d; then `round(interval × ease)`). State lives under the `aurelia_review_log`
+  key the removed 2026-08 feature deliberately left behind, as
+  `{version: 2, notes: {id: {last, due, interval, ease, reps, lapses}}, decks: {csvPath: {index: …}}}`;
+  a v1 `{id: millis}` log is migrated lazily on the Garden. `dueCount()` counts only logged entries
+  with `due <= now`, which is why the Lobby teaser (`#lobby-review-teaser`) needs no per-note
+  payload in `index.html` — do not reintroduce `review_seed`.
+- **Read / Study mode** (`aurelia_study_mode`; absent → Read, because the public audience is a
+  recruiter, not the author). In Study mode `applyRecallCover()` runs right after `marked.parse()`
+  in `openNote()` and hides the note's "answer" block — the blockquote after the Definition /
+  Core Argument / Scope / Profile heading, or a Deep Dive's italic premise line — behind a
+  "Try to recall it first" cover; Reveal shows it and the four-button rating row, whose result
+  collapses into "Rated Good · next due in 3 days" with a Change rating link that re-rates from a
+  snapshot rather than double-counting. The cover is client-side on purpose: it must be removable
+  at runtime, it adds nothing to `#data-storage`, and it needs no `sanitize.py` change.
+- **Elaboration nudge** (`renderElaboration()`, `#modal-elaborate`): after a rating, two or three
+  linked neighbours chosen for *difference* (another permanent type first, then fewest shared
+  `topic/*` tags; daily logs and Gemini notebooks excluded) under "How does this connect?".
+  Nothing is stored.
+- **Review queue and sessions**: "Due today: N" and Start review beside the note count; a session
+  is greedily interleaved (the next note must differ in type from the last two shown), walks via
+  `openNote(next, 'replace')` so `history.length` never grows, moves focus to each Reveal button,
+  shows "Reviewing 2 of 5" in the reader header, and ends on a visible completion line. `?review=1`
+  deep-links a session; a reload recomputes the queue from the log. Cards carry a due marker, the
+  sort menu has "Due first", and the reader footer's `#modal-reviewed` slot says when a note was
+  last reviewed and when it is next due.
+- **`flashcards.js`** upgrades every `<ol class="deck" data-deck="assets/flashcards/x.csv">` that
+  `content._render_flashcards()` now emits (Q/A as child elements, never `data-*` attributes —
+  `openNote()`'s `<textarea>` decode would turn an escaped quote live) into a one-card widget:
+  Show answer, 1–4 rating through `Review.rateCard()`, "12 of 80", Shuffle, prev/next, and a
+  per-deck "Study due cards only" preference (`aurelia_deck_prefs`). It runs after every
+  `openNote()`, not just at load, because decks live inside note bodies rendered on demand. With
+  no JS the list still reads as plain Q/A pairs.
+- **Navigation aids**: an "On this page" outline (`#modal-outline`, sticky at `xl:`, a collapsed
+  `<details>` below) for notes with four or more headings, with Expand all / Collapse all for
+  Gemini sections; a `?` shortcut sheet (native `<dialog>`, so Escape and the focus trap are free
+  and cannot fight the reader's hand-rolled trap); `/` focuses search, `s` toggles Study mode; and
+  under 768 px the graph view renders `#graph-list`, the 30 most connected notes, instead of the
+  canvas. `#a11y-status` is the live region every view switch and note open announces through.
+
+There is no JS test harness: `tests/test_garden.py` pins the wiring (scripts loaded with `?v=`,
+elements and options present, no legacy voice tokens), and the behaviour is verified with
+Playwright against a local `http.server` on `dist/` — see the Verification section of the plan
+that landed this work, and note that a browser will happily serve a cached `garden.html` after a
+rebuild unless you add a query string.
 
 ### CSS
 
@@ -331,7 +399,9 @@ hues (green + grey) and a 7th shade there was already the tight end of that budg
 
 Every published `10_GARDEN` note follows one canonical frontmatter schema (`created, tags, type,
 maturity, status, publish`), standardized across all 6 original types in a 2026 migration — see
-`tools/validate_vault_schema.py` (also runs under `pytest`) for the enforced contract. Two axes that
+`tools/validate_vault_schema.py` (also runs under `pytest`) for the enforced contract. An optional
+`aliases:` list (Obsidian's own key) is honoured by the build's link resolver since 2026-09-10; the
+validator does not reject unknown keys, so it passes. Two axes that
 used to share one `status/*` tag namespace (and, for maturity, were largely just absent) are now
 separate: `maturity: seed|growing|evergreen` (the 🌱/🌿/🌳 badge) and `status: active|reading|
 queued|archive` (lifecycle; Source cards show READING/QUEUED/ARCHIVED from this). Both keys are
@@ -512,6 +582,23 @@ knowing so you don't "fix" something that was a deliberate decision:
     the next frame, and the settle handler (which runs twice) called it after writing the real
     width — it uses `stop()` now. The Garden's filter strip clipping at narrow viewports is
     pre-existing and untouched.
+17. **Garden as a study tool (2026-09-10).** Four phases, each browser-verified before the next:
+    (1) a rendered-`garden.html` voice test (`tests/voice_fixtures.py`, `tests/test_garden.py`) and
+    plain-English widget labels (`Audio overview`, `Flashcards`, …) replacing `NEURAL_AUDIO_STREAM`
+    / `Q_NODE` / `TAP TO DECRYPT`; the wikilink resolver (`content.build_link_resolver`) and the
+    two-pass restructure of `_scan_vault` it required, after a survey found 668 of 901 distinct
+    wikilink targets dangling on the site — most of them short mentions of notes whose titles
+    carry a parenthetical; the dead `full_search_text` card parameter removed; `isTypingTarget()`
+    and the `#a11y-status` live region. (2) The study layer in `review.js` and the reader
+    (recall-first cover, ratings, elaboration nudge, review queue and interleaved sessions, Read /
+    Study mode, Lobby teaser, Progress export/import). (3) Flashcard decks rebuilt as semantic
+    lists upgraded by `flashcards.js`. (4) The outline, the `?` shortcut sheet, and the phone graph
+    list. Under a one-time override four vault notes were edited mechanically: `aliases:` on the
+    two parenthetical-title concepts the resolver was built for, and two dead flashcard-CSV
+    references removed. A literal NUL byte that had sat inside `applySort()`'s memo key since the
+    graph landed was replaced with a space and a test now forbids control bytes in the template.
+    The full design rationale is in the plan that drove the work
+    (`~/.claude/plans/floofy-mapping-dahl.md` on the Alienware).
 
 ## Known gaps / deliberately not done
 
@@ -533,10 +620,20 @@ knowing so you don't "fix" something that was a deliberate decision:
   `bg-aurelia-bg`, etc.) was found and deleted as dead code (it was never runnable and unreferenced
   anywhere) — but the migration it described was never finished, so both styles still coexist in
   templates and generated HTML.
-- **`garden.html` is large** (~5MB) because every note's full body is embedded inline for the
-  instant-open modal (no network request needed). Known, not addressed — fixing it means trading
-  instant-open for a fetch-on-click UX, which wasn't chosen without discussing the tradeoff first.
-- No automated accessibility, performance (Lighthouse), or visual-regression testing.
+- **`garden.html` is large** (~3.8MB as of 2026-09-10) because every note's full body is embedded
+  inline for the instant-open modal (no network request needed). Known, not addressed — fixing it
+  means trading instant-open for a fetch-on-click UX, which wasn't chosen without discussing the
+  tradeoff first. The study layer added no per-note markup to it; `review.js` and `flashcards.js`
+  ship as separately cached files.
+- No automated accessibility, performance (Lighthouse), or visual-regression testing, and no JS
+  test harness — the study layer's behaviour is verified by hand with Playwright (see "Study layer").
+- **Study progress is per-browser.** The scheduler state is localStorage only; the Progress panel's
+  export/import is the whole sync story. A backend or a synced store was deliberately not added —
+  the site has no server and promises no tracking.
+- **The `Contrasts With` field is still empty across the vault**, and the elaboration nudge would
+  be strictly better with it: a contrast edge is exactly the confusable pair interleaved practice
+  should juxtapose. Content work, not code — `tools/vault_health.py --report promotion` lists the
+  candidates.
 
 ### Security findings from the 2026-08 audit
 

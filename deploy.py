@@ -287,6 +287,10 @@ def create_readme():
 This edition ships three pages: the Lobby (`index.html`), the Garden
 (`garden.html`), your knowledge base, and About (`about.html`), a
 professional profile rendered from `profile.json` rather than from a note.
+The Garden doubles as a study tool: an optional Study mode hides each note's
+definition behind a "recall it first" prompt, self-ratings feed a spaced-
+repetition scheduler with a due queue, and flashcard decks study one card at
+a time. Progress stays in the reader's browser (export/import as JSON).
 Every published note in `vault/` becomes a card on the Garden. Set `type:`
 in a note's frontmatter to choose its card layout:
 - **concept** -- definitions, ideas, terms (see demo)
