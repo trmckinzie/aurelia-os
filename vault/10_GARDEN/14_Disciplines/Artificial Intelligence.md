@@ -28,7 +28,7 @@ publish: true
 ### 🔑 Core Concepts (The Bricks)
 - **[[Machine Learning]] (ML):** A subset of AI where computers are not explicitly programmed for a task but are trained with data to learn patterns. Instead of writing code to "detect a cat," you feed the algorithm 10,000 images of cats and let it figure out the pixel patterns itself.
     
-- **[[Neural Networks]] (Deep Learning):** A specific type of ML algorithm modeled after the human brain. It consists of layers of "nodes" (neurons) connected by "weights" (synapses). Data passes through the layers, and the weights are adjusted (trained) to minimize error.
+- **[[Neural Network|Neural Networks]] (Deep Learning):** A specific type of ML algorithm modeled after the human brain. It consists of layers of "nodes" (neurons) connected by "weights" (synapses). Data passes through the layers, and the weights are adjusted (trained) to minimize error.
     
 - **[[Reinforcement Learning]] (RL):** A type of training where an agent learns to make decisions by performing actions in an environment and receiving rewards or punishments. This is pure **Behaviorism** (Skinner) applied to code.
     

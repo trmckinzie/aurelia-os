@@ -28,7 +28,7 @@ publish: true
 ### 📝 Key Insight
 * **The Metabolic Cost of "System 2":** Through the lens of "The Economics of Cognitive Bandwidth," the PFC is the physical hardware that runs **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]**. Because it is the most complex computational engine in the brain, it is incredibly metabolically expensive (it burns massive amounts of glucose).
     
-- **The Bandwidth Crash (Ego Depletion):** Because the PFC requires so much energy to run, it fatigues quickly. When you are stressed, hungry, or suffering from high **[[Cognitive Load Theory|Cognitive Load]]**, the PFC physically lacks the energy to fire its inhibitory signals. When the PFC goes offline, the brain defaults back to the cheaper, faster hardware—meaning the Amygdala takes over, and your behavior reverts to reactive, emotional, and impulsive **[[System 1 vs System 2|System 1]]** defaults.
+- **The Bandwidth Crash (Ego Depletion):** Because the PFC requires so much energy to run, it fatigues quickly. When you are stressed, hungry, or suffering from high **[[Cognitive Load Theory|Cognitive Load]]**, the PFC physically lacks the energy to fire its inhibitory signals. When the PFC goes offline, the brain defaults back to the cheaper, faster hardware—meaning the Amygdala takes over, and your behavior reverts to reactive, emotional, and impulsive **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** defaults.
 
 ---
 

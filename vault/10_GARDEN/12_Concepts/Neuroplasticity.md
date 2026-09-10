@@ -27,9 +27,9 @@ publish: true
 - **The Core Mechanism:** It is the biological foundation for all learning, memory, habit formation, and recovery from brain trauma. It encompasses the micro-mechanics of building receptors (**[[Long Term Potentiation (LTP)]]**), demolishing unused hardware (**[[Long Term Depression (LTD)]]**), and insulating electrical cables (**[[Myelination]]**).
 
 ### 📝 Key Insight
-* The Biology of System 1: Through the lens of "The Economics of Cognitive Bandwidth," neuroplasticity is the exact biological mechanism that builds **[[System 1 vs System 2|System 1]]**.
+* The Biology of System 1: Through the lens of "The Economics of Cognitive Bandwidth," neuroplasticity is the exact biological mechanism that builds **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]**.
     
-- **The Bandwidth Investment:** When you first learn a complex task (like driving a car), you must use **[[System 2]]** and **[[Working Memory]]**. It is metabolically exhausting because the neural pathways are weak. However, through **[[Deliberate Practice]]**, you force those specific neurons to fire together repeatedly. Neuroplasticity kicks in, makes a massive metabolic investment to strengthen the synapses (LTP), and coats the axons in Myelin.
+- **The Bandwidth Investment:** When you first learn a complex task (like driving a car), you must use **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** and **[[Working Memory]]**. It is metabolically exhausting because the neural pathways are weak. However, through **[[Deliberate Practice]]**, you force those specific neurons to fire together repeatedly. Neuroplasticity kicks in, makes a massive metabolic investment to strengthen the synapses (LTP), and coats the axons in Myelin.
     
 - **The Automated Result:** Eventually, the circuit is so physically optimized that it requires almost zero conscious bandwidth to run. You have physically transformed a high-load, exhausting System 2 task into a free, automated System 1 habit.
 
@@ -43,7 +43,7 @@ The brain reshapes itself on two distinct levels based on environmental demands:
         
 - **Structural Plasticity:** The brain's ability to actually change its physical mass and architecture as a result of intense learning.
     
-    - _Example:_ The famous "London Taxi Driver" study. Drivers who memorized the complex labyrinth of London's streets had physically larger hippocampi (the brain's spatial memory center) than average citizens. Intense **[[System 2]]** learning literally grew new gray matter.
+    - _Example:_ The famous "London Taxi Driver" study. Drivers who memorized the complex labyrinth of London's streets had physically larger hippocampi (the brain's spatial memory center) than average citizens. Intense **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** learning literally grew new gray matter.
         
 
 ---

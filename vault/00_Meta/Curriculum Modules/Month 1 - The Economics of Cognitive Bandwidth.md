@@ -16,7 +16,7 @@ publish: false
     
 - **Core Source:** [[Behave]]
     
-- **NotebookLM Note:** [[Notebook LM: Evolutionary Biology & Behavioral Endocrinology]]
+- **NotebookLM Note:** [[Evolutionary Biology & Behavioral Endocrinology (Gemini Notebook)|Notebook LM: Evolutionary Biology & Behavioral Endocrinology]]
     
 - **Target Concepts:**
     
@@ -37,7 +37,7 @@ publish: false
     
 - **Target Concepts:**
     
-    - [ ] [[Heuristics]]
+    - [ ] [[Heuristic|Heuristics]]
         
     - [ ] [[Prospect Theory]]
         

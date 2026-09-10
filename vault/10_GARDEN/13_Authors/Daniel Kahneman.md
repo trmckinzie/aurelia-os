@@ -25,7 +25,7 @@ publish: true
 - [[Judgment Under Uncertainty: Heuristics and Biases]] (The academic foundation).
 
 ### ⚛️ Core Concepts
-- **[[System 1 vs System 2]]:** The dual-process theory. **System 1** is fast, automatic, emotional, and cheap (energy-wise). **System 2** is slow, effortful, logical, and expensive. Most errors occur because System 1 runs the show while System 2 sleeps.
+- **[[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]]:** The dual-process theory. **System 1** is fast, automatic, emotional, and cheap (energy-wise). **System 2** is slow, effortful, logical, and expensive. Most errors occur because System 1 runs the show while System 2 sleeps.
 - **[[Prospect Theory]]:** The model that replaced Expected Utility Theory. It shows that people value gains and losses differently. specifically, **Loss Aversion** (losses hurt roughly 2x more than equivalent gains feel good).
 - **[[WYSIATI]] (What You See Is All There Is):** The cognitive mechanism where the mind forms judgments based _only_ on the information currently available, completely ignoring missing evidence (unknown unknowns).
 - **[[Peak-End Rule]]:** The psychological heuristic where an experience is judged not by the total sum of pleasure/pain, but by how it felt at its _peak_ and at its _end_.

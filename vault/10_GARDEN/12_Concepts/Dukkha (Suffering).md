@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Dukkha
 
-**🔗 Related:** [[Impermanence]], [[Anatta (Non-Self)]], [[Equanimity (Upekkha)]], [[Evolutionary Mismatch]], [[Dopamine]], [[Cognitive Bias]]
+**🔗 Related:** [[Impermanence]], [[Anatta|Anatta (Non-Self)]], [[Equanimity (Upekkha)]], [[Evolutionary Mismatch]], [[Dopamine (Reward Prediction Error)|Dopamine]], [[Cognitive Bias]]
 
 ---
 

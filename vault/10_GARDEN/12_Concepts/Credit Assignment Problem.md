@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Credit Assignment Problem
 
-**🔗 Related:** [[Reinforcement Learning]], [[Backpropagation]], [[Dopamine]], [[Eligibility Traces]], [[Temporal Difference Learning]], [[Causality]]
+**🔗 Related:** [[Reinforcement Learning]], [[Backpropagation]], [[Dopamine (Reward Prediction Error)|Dopamine]], [[Eligibility Traces]], [[Temporal Difference Learning]], [[Causality]]
 
 ---
 

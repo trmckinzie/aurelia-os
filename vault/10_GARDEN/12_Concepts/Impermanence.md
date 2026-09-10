@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Impermanence (Annica)
 
-**🔗 Related:** [[Dukkha (Suffering)]], [[Anatta (Non-Self)]], [[Vipassana]], [[Schema Theory]], [[Entropy]], [[Phenomenology]]
+**🔗 Related:** [[Dukkha (Suffering)]], [[Anatta|Anatta (Non-Self)]], [[Vipassana]], [[Schema Theory]], [[Entropy]], [[Phenomenology]]
 
 ---
 

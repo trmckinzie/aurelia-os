@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Nervous System
 
-**🔗 Related:** [[Neuron]], [[Central Nervous System]], [[Peripheral Nervous System]], [[Action Potential]], [[Homeostasis]], [[Sea Squirt]]
+**🔗 Related:** [[Neuron]], [[The Central Nervous System (CNS)|Central Nervous System]], [[Peripheral Nervous System]], [[Action Potential]], [[Homeostasis]], [[Sea Squirt]]
 
 ---
 

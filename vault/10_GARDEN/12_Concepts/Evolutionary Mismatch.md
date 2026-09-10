@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Evolutionary Mismatch
 
-**🔗 Related:** [[Sustained Stress]], [[The Amygdala]], [[Kin Selection]], [[Dopamine]], [[Cortisol]], [[Leda Cosmides]], [[John Tooby]], [[The Prefrontal Cortex (PFC)]]
+**🔗 Related:** [[Sustained Stress]], [[The Amygdala]], [[Kin Selection]], [[Dopamine (Reward Prediction Error)|Dopamine]], [[Cortisol]], [[Leda Cosmides]], [[John Tooby]], [[The Prefrontal Cortex (PFC)]]
 
 ---
 
@@ -29,9 +29,9 @@ publish: true
 ### 📝 Key Insight
 - **The Hardware Glitch:** Through the lens of "The Economics of Cognitive Bandwidth," evolutionary mismatch explains almost every modern behavioral dysfunction. Our biological "Wetware" operates under the ancestral assumption that calories are scarce, strangers are dangerous, and social ostracization means physical death.
     
-- **Bandwidth Exploitation:** Modern environments are explicitly engineered to exploit these ancient heuristics. For example, our **[[Dopamine]]** system evolved to reward us for finding rare, calorie-dense foods (like honey). Today, the same hardware is hijacked by ultra-processed foods, leading to the obesity epidemic. Similarly, **[[The Amygdala]]** evolved to trigger **[[Cortisol]]** when facing a predator; today, it triggers the exact same metabolic panic in response to an angry email, causing **[[Sustained Stress]]**.
+- **Bandwidth Exploitation:** Modern environments are explicitly engineered to exploit these ancient heuristics. For example, our **[[Dopamine (Reward Prediction Error)|Dopamine]]** system evolved to reward us for finding rare, calorie-dense foods (like honey). Today, the same hardware is hijacked by ultra-processed foods, leading to the obesity epidemic. Similarly, **[[The Amygdala]]** evolved to trigger **[[Cortisol]]** when facing a predator; today, it triggers the exact same metabolic panic in response to an angry email, causing **[[Sustained Stress]]**.
     
-- **The Ultimate Vulnerability:** Modern civilization—from social media algorithms to advertising—is a relentless attack on our ancient bandwidth constraints. Our **[[The Prefrontal Cortex (PFC)]]** is physically outmatched by environments perfectly tuned to trigger our **[[System 1 vs System 2|System 1]]** survival reflexes.
+- **The Ultimate Vulnerability:** Modern civilization—from social media algorithms to advertising—is a relentless attack on our ancient bandwidth constraints. Our **[[The Prefrontal Cortex (PFC)]]** is physically outmatched by environments perfectly tuned to trigger our **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** survival reflexes.
 
 ---
 

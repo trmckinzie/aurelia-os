@@ -16,7 +16,7 @@ publish: true
 ---
 # ⚛️ Working Memory
 
-**🔗 Related:** [[Short-Term Memory]], [[Cognitive Load Theory]], [[Baddeley's Model]], [[Chunking]], [[Prefrontal Cortex]], [[Attention]]
+**🔗 Related:** [[Short-Term Memory]], [[Cognitive Load Theory]], [[Baddeley's Model]], [[Chunking]], [[The Prefrontal Cortex (PFC)|Prefrontal Cortex]], [[Attention]]
 
 ---
 

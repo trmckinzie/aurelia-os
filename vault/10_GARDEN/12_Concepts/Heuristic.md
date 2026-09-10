@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Heuristic
 
-**🔗 Related:** [[Algorithm]], [[Bounded Rationality]], [[Satisficing]], [[Cognitive Bias]], [[System 1 vs System 2]], [[Ecological Rationality]]
+**🔗 Related:** [[Algorithm]], [[Bounded Rationality]], [[Satisficing]], [[Cognitive Bias]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Ecological Rationality]]
 
 ---
 

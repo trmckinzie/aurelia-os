@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Long Term Potentiation (LTP)
 
-**🔗 Related:** [[Nonlinear Excitation]], [[NMDA vs non-NMDA Receptors]], [[Pre vs Post Synaptic Changes]], [[Long Term Depression (LTD)]], [[System 1 vs System 2]]
+**🔗 Related:** [[Nonlinear Excitation]], [[NMDA vs non-NMDA Receptors]], [[Pre vs Post Synaptic Changes]], [[Long Term Depression (LTD)]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]]
 
 ---
 
@@ -28,7 +28,7 @@ publish: true
 ### 📝 Key Insight
 *  **The Hardware Upgrade:** Through the lens of "The Economics of Cognitive Bandwidth," LTP is the ultimate biological investment. The brain spends a massive amount of metabolic energy upfront (intense focus, repeated trials) to physically upgrade the hardware.
     
-- **The Creation of Cognitive Ease:** Once LTP has occurred, the synapse is "potentiated." Because there are now more receptors, it takes significantly _less_ neurotransmitter (less metabolic energy) to trigger that same neural pathway in the future. What once required exhausting, conscious **[[System 2]]** computation has now been permanently offloaded into a fast, effortless, low-bandwidth **[[System 1 vs System 2|System 1]]** habit. You spent high energy yesterday to save bandwidth tomorrow.
+- **The Creation of Cognitive Ease:** Once LTP has occurred, the synapse is "potentiated." Because there are now more receptors, it takes significantly _less_ neurotransmitter (less metabolic energy) to trigger that same neural pathway in the future. What once required exhausting, conscious **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** computation has now been permanently offloaded into a fast, effortless, low-bandwidth **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** habit. You spent high energy yesterday to save bandwidth tomorrow.
 
 ---
 

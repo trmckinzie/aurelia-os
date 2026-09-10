@@ -10,11 +10,11 @@ tags:
 type: concept
 maturity: seed
 status: active
-publish: false
+publish: true
 ---
 # ⚛️ Rationality
 
-**🔗 Related:** [[Epistemic vs. Instrumental]], [[Bayesian Inference]], [[System 1 vs System 2]], [[Game Theory]], [[Cognitive Bias]], [[The Enlightenment]]
+**🔗 Related:** [[Epistemic vs. Instrumental]], [[Bayesian Inference]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Game Theory]], [[Cognitive Bias]], [[The Enlightenment]]
 
 ---
 

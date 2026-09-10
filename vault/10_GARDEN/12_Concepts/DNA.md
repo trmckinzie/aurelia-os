@@ -23,6 +23,6 @@ publish: true
 ### 📝 Key Insight
 * DNA functions as a **[[Replicator]]**: its capacity for high-fidelity copying with occasional variation makes [[Natural Selection]] possible.
 - Information in DNA is **context-dependent**—[[Gene]] influence traits through interaction with developmental processes and environments, not as fixed blueprints.
-- The structure of DNA (double helix, complementary base pairing) explains both **stability** across generations and **[[variation]]**, the raw material of [[Evolution]].
+- The structure of DNA (double helix, complementary base pairing) explains both **stability** across generations and **[[Genetic Variation|variation]]**, the raw material of [[Evolution]].
 ---
 

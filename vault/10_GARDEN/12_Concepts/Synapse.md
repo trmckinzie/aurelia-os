@@ -18,7 +18,7 @@ publish: true
 ---
 # ⚛️ Synapse
 
-**🔗 Related:** [[Action Potential]], [[Neurotransmitters]], [[Receptors]], [[Long-Term Potentiation]], [[Hebbian Learning]], [[Plasticity]], [[Exocytosis]]
+**🔗 Related:** [[Action Potential]], [[Neurotransmitters]], [[Receptors]], [[Long Term Potentiation (LTP)|Long-Term Potentiation]], [[Hebbian Learning]], [[Plasticity]], [[Exocytosis]]
 
 ---
 

@@ -12,11 +12,11 @@ tags:
 type: concept
 maturity: seed
 status: active
-publish: false
+publish: true
 ---
 # ⚛️ Mind
 
-**🔗 Related:** [[Consciousness]], [[The Hard Problem]], [[Dualism vs. Monism]], [[Computational Theory of Mind]], [[Qualia]], [[Embodied Cognition]], [[Self-Concept]]
+**🔗 Related:** [[Consciousness]], [[The Hard Problem of Consciousness|The Hard Problem]], [[Dualism vs. Monism]], [[Computational Theory of Mind]], [[Qualia]], [[Embodied Cognition]], [[Self-Concept]]
 
 ---
 

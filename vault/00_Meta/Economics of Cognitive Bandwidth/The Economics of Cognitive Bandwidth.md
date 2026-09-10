@@ -9,9 +9,9 @@
 
 The overarching framework governing every note in this vault is **The Economics of Cognitive Bandwidth**.
 
-The human brain is the most complex computational engine in the known universe, but it operates under severe metabolic and physical constraints. It consumes 20% of the body's energy while making up only 2% of its mass. Because true, high-resolution computation (**[[System 2]]**) is so expensive, evolution designed the brain to aggressively compress data, take shortcuts, and generate illusions to ensure survival.
+The human brain is the most complex computational engine in the known universe, but it operates under severe metabolic and physical constraints. It consumes 20% of the body's energy while making up only 2% of its mass. Because true, high-resolution computation (**[[System 1 vs System 2 (Dual-Process Theory)|System 2]]**) is so expensive, evolution designed the brain to aggressively compress data, take shortcuts, and generate illusions to ensure survival.
 
-Every human behavior, cognitive bias, emotional trigger, and spiritual friction point (**[[Dukkha]]**) can be reverse-engineered by understanding how the brain manages this limited bandwidth.
+Every human behavior, cognitive bias, emotional trigger, and spiritual friction point (**[[Dukkha (Suffering)|Dukkha]]**) can be reverse-engineered by understanding how the brain manages this limited bandwidth.
 
 ---
 

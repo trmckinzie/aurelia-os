@@ -32,7 +32,7 @@ publish: true
     
 - **The Cortisol Death Spiral:** The rate at which you generate new neurons is highly sensitive to your chemical weather. **[[Sustained Stress]]** and the resulting bath of **[[Cortisol]]** strictly inhibit neurogenesis. When the body is burdened by high **[[Allostatic Load]]**, the brain refuses to spend metabolic energy on building new hardware, meaning chronic stress literally strips you of the physical ability to adapt to new problems.
     
-- **The Biological Antidote:** To trigger the survival and integration of new neurons, the brain requires explicit signals that the environment is demanding but safe. The most powerful known triggers for adult neurogenesis are vigorous physical exercise, rich environmental stimulation, and intense, unbroken **[[System 2]]** learning. It is the ultimate biological reward for pushing your bandwidth to its healthy limits.
+- **The Biological Antidote:** To trigger the survival and integration of new neurons, the brain requires explicit signals that the environment is demanding but safe. The most powerful known triggers for adult neurogenesis are vigorous physical exercise, rich environmental stimulation, and intense, unbroken **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** learning. It is the ultimate biological reward for pushing your bandwidth to its healthy limits.
 
 ---
 

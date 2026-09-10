@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ The Amygdala
 
-**🔗 Related:** [[The Prefrontal Cortex (PFC)]], [[System 1 vs System 2]], [[Fear Conditioning]], [[Evolutionary Mismatch]], [[Heuristics]], [[Robert Sapolsky]]
+**🔗 Related:** [[The Prefrontal Cortex (PFC)]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Fear Conditioning]], [[Evolutionary Mismatch]], [[Heuristic|Heuristics]], [[Robert Sapolsky]]
 
 ---
 

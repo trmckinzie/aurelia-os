@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Cognitive Bias
 
-**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)]], [[Heuristics]], [[Daniel Kahneman]], [[Amos Tversky]], [[Metacognition]], [[Evolutionary Mismatch]]
+**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)]], [[Heuristic|Heuristics]], [[Daniel Kahneman]], [[Amos Tversky]], [[Metacognition]], [[Evolutionary Mismatch]]
 
 ---
 

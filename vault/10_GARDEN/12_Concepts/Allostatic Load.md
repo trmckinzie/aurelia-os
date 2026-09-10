@@ -30,7 +30,7 @@ publish: true
     
 - **The Structural Collapse:** High allostatic load physically destroys your cognitive bandwidth. The chronic bath of glucocorticoids causes the **[[The Prefrontal Cortex (PFC)]]** (logic/bandwidth) and Hippocampus (memory/learning) to physically atrophy and shrink, while simultaneously causing **[[The Amygdala]]** (fear/reactivity) to hypertrophy and grow larger.
     
-- **The Root of the Poverty Trap:** This is the exact biological mechanism behind the destructive nature of **[[Social Hierarchy]]**. Low socioeconomic status enforces a relentless, inescapable Allostatic Load, literally rewiring the brain to prioritize immediate, reactive **[[System 1 vs System 2|System 1]]** survival at the direct expense of long-term planning and executive function.
+- **The Root of the Poverty Trap:** This is the exact biological mechanism behind the destructive nature of **[[Social Hierarchy]]**. Low socioeconomic status enforces a relentless, inescapable Allostatic Load, literally rewiring the brain to prioritize immediate, reactive **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** survival at the direct expense of long-term planning and executive function.
 
 ---
 

@@ -16,7 +16,7 @@ publish: true
 ---
 # ⚛️ System 1 vs System 2 (Dual-Process Theory)
 
-**🔗 Related:** [[Daniel Kahneman]], [[Amos Tversky]], [[Working Memory]], [[Cognitive Load Theory]], [[Schema Theory]], [[Heuristics]], [[Cognitive Bias]], [[The Prefrontal Cortex (PFC)]], [[The Amygdala]], [[Evolutionary Mismatch]], [[Executive Function]], [[Myelination]]
+**🔗 Related:** [[Daniel Kahneman]], [[Amos Tversky]], [[Working Memory]], [[Cognitive Load Theory]], [[Schema Theory]], [[Heuristic|Heuristics]], [[Cognitive Bias]], [[The Prefrontal Cortex (PFC)]], [[The Amygdala]], [[Evolutionary Mismatch]], [[Executive Function]], [[Myelination]]
 
 ---
 

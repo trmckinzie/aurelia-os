@@ -26,7 +26,6 @@ publish: true
 ### 📝 Key Insight
 * **The Biological Logic Gate:** A single neuron is effectively a biological calculator performing a continuous "If/Then" operation. It engages in **Summation** (adding up all the excitatory and inhibitory inputs). If the sum is positive enough (Excitatory > Inhibitory), it fires. If not, it remains silent. This mechanism allows the brain to make complex decisions by layering millions of these simple "voting" units. It is the physical hardware that permits the software of "thought" to run.
 
-![[neuron-image.png]]
 
 ---
 

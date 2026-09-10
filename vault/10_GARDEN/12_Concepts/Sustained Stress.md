@@ -29,7 +29,7 @@ publish: true
 ### 📝 Key Insight
 - **The Cost of Psychological Time Travel:** Through the lens of "The Economics of Cognitive Bandwidth," sustained stress is the ultimate **[[Evolutionary Mismatch]]**. A zebra only feels stress when it is actively being hunted. Humans, however, possess a **[[The Prefrontal Cortex (PFC)|Prefrontal Cortex]]** capable of simulating the future and remembering the past. We can trigger the exact same biological panic response just by _thinking_ about a mortgage payment or a social slight.
     
-- **Hardware Degradation:** Because the stress response is so metabolically expensive, running it continuously physically damages the hardware. Chronic cortisol exposure literally shrinks the hippocampus (memory) and the Prefrontal Cortex (executive function), while enlarging **[[The Amygdala]]** (fear detection). Sustained stress doesn't just make you feel bad; it aggressively degrades your **[[System 2]]** computational capacity, locking you into reactive, **[[System 1 vs System 2|System 1]]** behavior.
+- **Hardware Degradation:** Because the stress response is so metabolically expensive, running it continuously physically damages the hardware. Chronic cortisol exposure literally shrinks the hippocampus (memory) and the Prefrontal Cortex (executive function), while enlarging **[[The Amygdala]]** (fear detection). Sustained stress doesn't just make you feel bad; it aggressively degrades your **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** computational capacity, locking you into reactive, **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** behavior.
 
 ---
 

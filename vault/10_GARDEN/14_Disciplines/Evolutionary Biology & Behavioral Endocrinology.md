@@ -27,7 +27,7 @@ publish: true
     
 - [[Kin Selection]]
     
-- [[Dopamine]]
+- [[Dopamine (Reward Prediction Error)|Dopamine]]
     
 - [[Cortisol]]
     

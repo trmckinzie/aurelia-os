@@ -4,10 +4,14 @@ tags:
   - type/concept
   - maturity/seed
   - status/active
+  - topic/cognitive-science
+  - topic/phil-mind
+  - topic/artificial-intelligence
+  - topic/psychology
 type: concept
 maturity: seed
 status: active
-publish: false
+publish: true
 ---
 # ⚛️ Cognitive Hexagon
 

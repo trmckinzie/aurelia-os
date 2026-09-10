@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Habit
 
-**🔗 Related:** [[System 1 vs System 2]], [[Neuroplasticity]], [[Dopamine (Reward Prediction Error)]], [[Myelination]], [[Long Term Potentiation (LTP)]], [[The Prefrontal Cortex (PFC)]]
+**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Neuroplasticity]], [[Dopamine (Reward Prediction Error)]], [[Myelination]], [[Long Term Potentiation (LTP)]], [[The Prefrontal Cortex (PFC)]]
 
 ---
 
@@ -27,7 +27,7 @@ publish: true
 - **The "Atomic" Nature:** An atomic habit refers to a tiny change, a marginal gain, or a 1% improvement. It is a fundamental building block—a highly compressed algorithm—of the broader system of human behavior.
 
 ### 📝 Key Insight
-- **The Metabolic Shortcut:** Through the lens of "The Economics of Cognitive Bandwidth," a habit is the brain's ultimate energy-saving algorithm. Moving a novel behavior from the metabolically expensive, conscious **[[The Prefrontal Cortex (PFC)]]** (**[[System 2]]**) into the heavily automated basal ganglia (**[[System 1 vs System 2|System 1]]**) drastically reduces the ATP required to execute it. Mother Nature builds habits strictly to conserve cognitive bandwidth.
+- **The Metabolic Shortcut:** Through the lens of "The Economics of Cognitive Bandwidth," a habit is the brain's ultimate energy-saving algorithm. Moving a novel behavior from the metabolically expensive, conscious **[[The Prefrontal Cortex (PFC)]]** (**[[System 1 vs System 2 (Dual-Process Theory)|System 2]]**) into the heavily automated basal ganglia (**[[System 1 vs System 2 (Dual-Process Theory)|System 1]]**) drastically reduces the ATP required to execute it. Mother Nature builds habits strictly to conserve cognitive bandwidth.
     
 - **The Dopaminergic Engine:** The "Craving" phase of Clear's loop is governed entirely by **[[Dopamine (Reward Prediction Error)]]**. The dopamine spike does not occur when the reward is received; it occurs the moment the _Cue_ is recognized. This creates the chemical currency required to overcome the friction of the _Response_.
     

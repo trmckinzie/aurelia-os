@@ -11,7 +11,7 @@ tags:
 type: concept
 maturity: seed
 status: active
-publish: false
+publish: true
 ---
 # ⚛️ Genetic Variation
 

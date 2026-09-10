@@ -29,7 +29,7 @@ publish: true
 - **The Mechanism:** The body cannot easily press both pedals at once. They operate in a teeter-totter dynamic. If the SNS is firing, the PNS is forcibly suppressed.
 
 ### 📝 Key Insight
-- **The Bandwidth Switchboard:** Through the lens of "The Economics of Cognitive Bandwidth," the ANS is the master switchboard for metabolic energy allocation. When the SNS (gas pedal) is pressed, the body abandons all long-term biological projects. It diverts precious glucose and oxygen away from the **[[The Prefrontal Cortex (PFC)]]** (sacrificing conscious reasoning) to feed the immediate physical reflexes of **[[System 1 vs System 2|System 1]]**.
+- **The Bandwidth Switchboard:** Through the lens of "The Economics of Cognitive Bandwidth," the ANS is the master switchboard for metabolic energy allocation. When the SNS (gas pedal) is pressed, the body abandons all long-term biological projects. It diverts precious glucose and oxygen away from the **[[The Prefrontal Cortex (PFC)]]** (sacrificing conscious reasoning) to feed the immediate physical reflexes of **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]**.
     
 - **The Speed of System 1:** The ANS is the reason System 1 is so incredibly fast. It is heavily **[[Myelination|myelinated]]** and completely bypasses the neocortex. When you touch a hot stove or see a snake, the signal travels down the SNS and triggers an adrenaline spike fractions of a second before your conscious System 2 even registers what happened.
     

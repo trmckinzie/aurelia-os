@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Evolutionary Brain Stratification
 
-**🔗 Related:** [[Evolutionary Mismatch]], [[The Limbic System]], [[The Prefrontal Cortex (PFC)]], [[The Central Nervous System (CNS)]], [[System 1 vs System 2]], [[The Amygdala]]
+**🔗 Related:** [[Evolutionary Mismatch]], [[The Limbic System]], [[The Prefrontal Cortex (PFC)]], [[The Central Nervous System (CNS)]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[The Amygdala]]
 
 ---
 
@@ -32,7 +32,7 @@ publish: true
 ### 📝 Key Insight
 - **The Architecture of Conflict:** Through the lens of "The Economics of Cognitive Bandwidth," stratification is the physical reason human beings experience internal conflict. You are not a single, unified computer; you are three distinct biological operating systems crammed into one skull, often fighting for control of the same physical body.
     
-- **The Hardware Mismatch:** When you experience an **[[Evolutionary Mismatch]]**, it is literally Layer 2 (ancient, paranoid, and metabolically cheap) aggressively overriding Layer 3 (modern, logical, but easily exhausted). **[[System 1 vs System 2|System 1]]** is the dominant, rapid-fire voice of the older, deeper layers, while **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** is the fragile, energy-hungry voice of the newest cortical layer trying desperately to maintain executive control.
+- **The Hardware Mismatch:** When you experience an **[[Evolutionary Mismatch]]**, it is literally Layer 2 (ancient, paranoid, and metabolically cheap) aggressively overriding Layer 3 (modern, logical, but easily exhausted). **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** is the dominant, rapid-fire voice of the older, deeper layers, while **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** is the fragile, energy-hungry voice of the newest cortical layer trying desperately to maintain executive control.
 
 ---
 

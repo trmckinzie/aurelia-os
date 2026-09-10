@@ -16,7 +16,7 @@ publish: true
 ---
 # ⚛️ Metacognition
 
-**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)]], [[Deliberate Practice]], [[The Illusion of Competence]], [[Working Memory]], [[Prefrontal Cortex]], [[Dunning-Kruger Effect]]
+**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)]], [[Deliberate Practice]], [[The Illusion of Competence]], [[Working Memory]], [[The Prefrontal Cortex (PFC)|Prefrontal Cortex]], [[Dunning-Kruger Effect]]
 
 ---
 

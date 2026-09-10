@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Intuition
 
-**🔗 Related:** [[System 1 vs System 2]], [[Pattern Recognition]], [[Heuristic]], [[Gary Klein]], [[Recognition-Primed Decision Model]], [[Expertise]]
+**🔗 Related:** [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Pattern Recognition]], [[Heuristic]], [[Gary Klein]], [[Recognition-Primed Decision Model]], [[Expertise]]
 
 ---
 

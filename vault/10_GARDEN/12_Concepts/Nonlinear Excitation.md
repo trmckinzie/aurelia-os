@@ -13,7 +13,7 @@ publish: true
 ---
 # ⚛️ Nonlinear Excitation
 
-**🔗 Related:** [[NMDA vs non-NMDA Receptors]], [[Long Term Potentiation (LTP)]], [[System 1 vs System 2]], [[Working Memory]], [[Pre vs Post Synaptic Changes]]
+**🔗 Related:** [[NMDA vs non-NMDA Receptors]], [[Long Term Potentiation (LTP)]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Working Memory]], [[Pre vs Post Synaptic Changes]]
 
 ---
 
@@ -27,7 +27,7 @@ publish: true
 ### 📝 Key Insight
 - **The Activation Energy of Learning:** Through the lens of "The Economics of Cognitive Bandwidth," Nonlinear Excitation is the biological barrier to entry for permanent learning. Evolution designed the brain so that minor, passive experiences never cross this threshold. It is a protective mechanism to ensure we do not waste precious metabolic energy rewiring our hardware for trivial data.
     
-- **The Failure of Multitasking:** This is the precise biological reason why divided attention prevents deep learning. If you give 20% of your attention to a task, you only generate linear excitation. You never build up enough concentrated electrical charge to pop the NMDA plugs. To permanently alter your Wetware, you must apply intense, unbroken **[[System 2]]** focus to force the synapse into a state of Nonlinear Excitation.
+- **The Failure of Multitasking:** This is the precise biological reason why divided attention prevents deep learning. If you give 20% of your attention to a task, you only generate linear excitation. You never build up enough concentrated electrical charge to pop the NMDA plugs. To permanently alter your Wetware, you must apply intense, unbroken **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** focus to force the synapse into a state of Nonlinear Excitation.
 
 ---
 

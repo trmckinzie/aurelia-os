@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ The Limbic System
 
-**🔗 Related:** [[The Amygdala]], [[Hormone]], [[Sustained Stress]], [[The Prefrontal Cortex (PFC)]], [[System 1 vs System 2]], [[Evolutionary Mismatch]]
+**🔗 Related:** [[The Amygdala]], [[Hormone]], [[Sustained Stress]], [[The Prefrontal Cortex (PFC)]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Evolutionary Mismatch]]
 
 ---
 
@@ -26,7 +26,7 @@ publish: true
 - **The Mechanism:** The limbic system acts as the ultimate biological translator. It receives sensory data, tags that data with an emotional valence (e.g., "this is scary," "this is desirable"), and then communicates with the endocrine system via the hypothalamus to release **[[Hormone|Hormones]]** that physically prepare the body to react.
 
 ### 📝 Key Insight
-- **The Heuristic Engine:** Through the lens of "The Economics of Cognitive Bandwidth," the Limbic System is the physical hardware that runs our most crucial biological heuristics. Conscious calculation in the **[[The Prefrontal Cortex (PFC)]]** is too slow and metabolically expensive for immediate survival. The limbic system solves this bottleneck by turning complex data into blunt, visceral emotions, forcing the organism into immediate, **[[System 1 vs System 2|System 1]]** action.
+- **The Heuristic Engine:** Through the lens of "The Economics of Cognitive Bandwidth," the Limbic System is the physical hardware that runs our most crucial biological heuristics. Conscious calculation in the **[[The Prefrontal Cortex (PFC)]]** is too slow and metabolically expensive for immediate survival. The limbic system solves this bottleneck by turning complex data into blunt, visceral emotions, forcing the organism into immediate, **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** action.
     
 - **The Bandwidth Hijack:** Because the limbic system is older and more structurally embedded than the PFC, it has priority access to the brain's energy reserves. When the limbic system is highly activated (such as during **[[Sustained Stress]]**), it aggressively hoards metabolic resources, effectively starving the PFC. This means that highly emotional states physically destroy your **[[Executive Function]]**—you literally do not have the bandwidth to think clearly when the limbic system is running the show.
     

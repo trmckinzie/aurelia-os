@@ -27,7 +27,7 @@ publish: true
 ### 📝 Key Insight
 - **The Biological Spam Filter:** Through the lens of "The Economics of Cognitive Bandwidth," NMDA receptors are the ultimate metabolic gatekeepers. As established in **[[Pre vs Post Synaptic Changes]]**, rewiring the physical brain is incredibly expensive. If NMDA receptors opened for every minor sensory input, the brain would burn through its energy reserves instantly, memorizing useless noise.
     
-- **Forcing the Upgrade (System 2 Focus):** To build a new skill or long-term memory, you must cross a biological threshold. You have to focus intensely or repeat an action enough times (requiring intense **[[System 2]]** effort) that the non-NMDA receptors flood the cell with electricity. Only then does the magnesium plug pop out of the NMDA receptor, allowing a massive influx of calcium that triggers the permanent hardware upgrade. Without NMDA activation, permanent learning is biologically impossible.
+- **Forcing the Upgrade (System 2 Focus):** To build a new skill or long-term memory, you must cross a biological threshold. You have to focus intensely or repeat an action enough times (requiring intense **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** effort) that the non-NMDA receptors flood the cell with electricity. Only then does the magnesium plug pop out of the NMDA receptor, allowing a massive influx of calcium that triggers the permanent hardware upgrade. Without NMDA activation, permanent learning is biologically impossible.
 
 ---
 

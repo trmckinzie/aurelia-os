@@ -17,7 +17,7 @@ publish: true
 ---
 # ⚛️ Brain
 
-**🔗 Related:** [[The Mind]], [[Neuron]], [[Action Potential]], [[Neuroplasticity]], [[Prefrontal Cortex]], [[The Hard Problem]], [[Predictive Processing]]
+**🔗 Related:** [[Mind|The Mind]], [[Neuron]], [[Action Potential]], [[Neuroplasticity]], [[The Prefrontal Cortex (PFC)|Prefrontal Cortex]], [[The Hard Problem of Consciousness|The Hard Problem]], [[Predictive Processing]]
 
 ---
 
@@ -43,7 +43,7 @@ From a biological perspective, the brain is an evolved survival mechanism. It is
 2. **The Limbic System (The Animal Brain):** Includes the Amygdala and Hippocampus. It handles emotion, memory, and the "Four F's" of survival (feeding, fighting, fleeing, and reproduction).
 3. **The Neocortex (The Human Computer):** The wrinkled outer layer. This is where high-level processing occurs. It is divided into four lobes:
 
-- _Frontal:_ Executive function, planning, impulse control (**[[Prefrontal Cortex]]**).
+- _Frontal:_ Executive function, planning, impulse control (**[[The Prefrontal Cortex (PFC)|Prefrontal Cortex]]**).
     
 - _Parietal:_ Sensory integration and spatial navigation.
     
@@ -55,7 +55,7 @@ From a biological perspective, the brain is an evolved survival mechanism. It is
 
 If the brain is just meat and chemistry, how does it produce the "Mind"?
 
-- **The Explanatory Gap:** Science can trace the exact pathway of light hitting the retina, traveling up the optic nerve, and firing neurons in the occipital lobe. But no equation can explain how those physical electrical spikes transform into the subjective, private _feeling_ of seeing the color red. This is **[[The Hard Problem]]** of consciousness.
+- **The Explanatory Gap:** Science can trace the exact pathway of light hitting the retina, traveling up the optic nerve, and firing neurons in the occipital lobe. But no equation can explain how those physical electrical spikes transform into the subjective, private _feeling_ of seeing the color red. This is **[[The Hard Problem of Consciousness|The Hard Problem]]** of consciousness.
     
 - **The Free Will Problem:** The brain obeys the laws of physics and chemistry. If every neural firing is caused by a previous physical event (a chain reaction of ions), where is the room for "Choice"? Experiments (like the Libet experiment) show that the brain initiates motor actions _before_ the person is consciously aware of deciding to act. Is consciousness just a passenger that thinks it's the driver?
 

@@ -15,7 +15,7 @@ publish: true
 ---
 # ⚛️ Myelination
 
-**🔗 Related:** [[Axon]], [[Glial Cells]], [[Action Potential]], [[Saltatory Conduction]], [[Neuroplasticity]], [[White Matter]], [[Long Term Potentiation (LTP)]], [[Cognitive Ease]], [[System 1 vs System 2]], [[Executive Function]], [[Pre vs Post Synaptic Changes]]
+**🔗 Related:** [[Axon]], [[Glial Cells]], [[Action Potential]], [[Saltatory Conduction]], [[Neuroplasticity]], [[White Matter]], [[Long Term Potentiation (LTP)]], [[Cognitive Ease]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Executive Function]], [[Pre vs Post Synaptic Changes]]
 
 ---
 
@@ -37,9 +37,9 @@ publish: true
 ### 📝 Key Insight
 * **The Bandwidth Constraint:** Myelination is the brain's way of solving the "Space vs. Speed" trade-off. To get high speeds without myelin, axons would have to be incredibly thick (like the Giant Squid Axon). Myelin allows the brain to pack millions of high-speed "wires" into a very small skull
 
-- **The Ultimate Bandwidth Upgrade:** Through the lens of "The Economics of Cognitive Bandwidth," Myelination is the final stage of physical automation. While **[[Long Term Potentiation (LTP)]]** makes the _connection_ stronger, Myelination makes the _transit_ vastly cheaper. Pushing an electrical signal down a bare, unmyelinated axon requires immense metabolic energy (glucose) and intense **[[System 2]]** focus.
+- **The Ultimate Bandwidth Upgrade:** Through the lens of "The Economics of Cognitive Bandwidth," Myelination is the final stage of physical automation. While **[[Long Term Potentiation (LTP)]]** makes the _connection_ stronger, Myelination makes the _transit_ vastly cheaper. Pushing an electrical signal down a bare, unmyelinated axon requires immense metabolic energy (glucose) and intense **[[System 1 vs System 2 (Dual-Process Theory)|System 2]]** focus.
     
-- **The Physical Reality of "Cognitive Ease":** Once a neural pathway has been heavily myelinated, it requires almost zero conscious energy to fire. This is the literal, biological explanation for Kahneman's concept of **[[Cognitive Ease]]**. When you first learn to drive a car, it is exhausting because you are forcing electricity down bare wires. After years of practice, the pathway is thickly myelinated, and driving becomes a metabolically cheap, effortless **[[System 1 vs System 2|System 1]]** background process. You have permanently insulated your hardware against bandwidth loss.
+- **The Physical Reality of "Cognitive Ease":** Once a neural pathway has been heavily myelinated, it requires almost zero conscious energy to fire. This is the literal, biological explanation for Kahneman's concept of **[[Cognitive Ease]]**. When you first learn to drive a car, it is exhausting because you are forcing electricity down bare wires. After years of practice, the pathway is thickly myelinated, and driving becomes a metabolically cheap, effortless **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** background process. You have permanently insulated your hardware against bandwidth loss.
 
 ### 🏎️ The Physics: Saltatory Conduction
 

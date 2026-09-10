@@ -26,6 +26,6 @@ publish: true
 - **The Feedback Loop:** In a healthy, ancestral environment, once the physical threat (a predator) is gone, the high levels of cortisol circulating in the blood signal the hypothalamus and pituitary to shut off the cascade, returning the body to homeostasis.
 
 ### 📝 Key Insight
-- **The Pipeline of Mismatch:** Through the lens of "The Economics of Cognitive Bandwidth," the HPA axis is the exact biological machinery where an abstract, psychological stressor (like an unread email or low **[[Social Hierarchy (Biology)]]**) is converted into tangible, physical damage. It is the anatomical root of an **[[Evolutionary Mismatch]]**.
+- **The Pipeline of Mismatch:** Through the lens of "The Economics of Cognitive Bandwidth," the HPA axis is the exact biological machinery where an abstract, psychological stressor (like an unread email or low **[[Social Hierarchy|Social Hierarchy (Biology)]]**) is converted into tangible, physical damage. It is the anatomical root of an **[[Evolutionary Mismatch]]**.
     
 - **The Hardware Degradation:** When the HPA axis is trapped in a state of chronic activation due to **[[Sustained Stress]]**, the feedback loop breaks. The constant bath of cortisol directly attacks the brain's hardware. It accelerates **[[Allostatic Load]]**, halts **[[Neurogenesis]]**, and physically shrinks the **[[The Prefrontal Cortex (PFC)]]**, systematically destroying your available bandwidth to handle complex problems.

@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Executive Function
 
-**🔗 Related:** [[The Prefrontal Cortex (PFC)]], [[Working Memory]], [[System 1 vs System 2]], [[Cognitive Load Theory]], [[Sustained Stress]]
+**🔗 Related:** [[The Prefrontal Cortex (PFC)]], [[Working Memory]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[Cognitive Load Theory]], [[Sustained Stress]]
 
 ---
 

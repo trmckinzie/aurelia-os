@@ -14,7 +14,7 @@ publish: true
 ---
 # ⚛️ Kin Selection
 
-**🔗 Related:** [[The Amygdala]], [[Evolutionary Mismatch]], [[Reciprocal Altruism]], [[System 1 vs System 2]], [[The Selfish Gene]]
+**🔗 Related:** [[The Amygdala]], [[Evolutionary Mismatch]], [[Reciprocal Altruism]], [[System 1 vs System 2 (Dual-Process Theory)|System 1 vs System 2]], [[The Selfish Gene]]
 
 ---
 
@@ -28,7 +28,7 @@ publish: true
 ### 📝 Key Insight
 * **The Heuristic of the "In-Group":** Through the lens of "The Economics of Cognitive Bandwidth," true, universal altruism is computationally impossible. If your brain tried to care about every human on Earth equally, your emotional reserves and **[[Working Memory]]** would crash instantly.
     
-- **The Biological Shortcut:** To solve this bandwidth problem, the brain hardwired a **[[Heuristics|Heuristic]]**: _Protect those who look, smell, or behave like you._ This allows **[[System 1 vs System 2|System 1]]** to make instant, life-or-death moral decisions without needing the **[[The Prefrontal Cortex (PFC)]]** to perform complex, metabolically expensive ethical calculus.
+- **The Biological Shortcut:** To solve this bandwidth problem, the brain hardwired a **[[Heuristic]]**: _Protect those who look, smell, or behave like you._ This allows **[[System 1 vs System 2 (Dual-Process Theory)|System 1]]** to make instant, life-or-death moral decisions without needing the **[[The Prefrontal Cortex (PFC)]]** to perform complex, metabolically expensive ethical calculus.
     
 - **The Glitch (Mismatch):** While this hardware kept early hominids alive in small family bands, it is the exact root of a massive **[[Evolutionary Mismatch]]**. The biological shortcut of Kin Selection is the neurological foundation of tribalism, nepotism, and out-group hostility (often triggered by **[[The Amygdala]]**) when we are forced to navigate a modern, globalized society.
 
