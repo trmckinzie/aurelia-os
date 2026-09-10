@@ -18,6 +18,12 @@
 {% block title %}{% if site.get('tagline') %}{{ site.get('name', 'Personal site') }} — {{ site.get('tagline') }}{% else %}{{ site.get('name', 'Personal site') }}{% endif %}{% endblock %}
 
 {% block head_extra %}
+<!-- Review engine (window.Review), for the spaced-review teaser below.
+     Same file and cache-busting pattern as the Garden's own load -- see
+     gardentemplate.html's head_extra comment for why ?v= is the site-wide
+     asset hash rather than a content hash of its own. Not loaded in
+     base.html: About and 404 have no use for it. -->
+<script src="assets/js/review.js?v={{ asset_version }}"></script>
 <style>
     /* === 3D CAROUSEL SCENE === */
     .carousel-scene {
@@ -280,6 +286,21 @@
                 {% endfor %}
             </div>
         </div>
+
+        {# Client-side only -- see the SPACED-REVIEW TEASER script below.
+           Starts hidden; no count or note data is rendered here or anywhere
+           else on this page, unlike the removed 2026-09-07 feature's
+           server-side payload (245 id/title/maturity triples baked
+           straight into this file). A Jinja comment, not an HTML one, so
+           the retired parameter name it names doesn't ship in
+           dist/index.html -- same discipline base.html already follows for
+           retired branding. #}
+        <div id="lobby-review-teaser" class="hidden mt-4 pt-3 border-t border-aurelia-border">
+            <a href="garden.html?review=1" title="Notes come due for review on a spaced schedule -- revisiting them when they're due is what actually strengthens recall." class="flex items-center justify-between text-[0.8125rem] font-mono text-aurelia-primary hover:text-aurelia-text transition-colors">
+                <span><span id="lobby-review-count">0</span> notes due for review</span>
+                <span aria-hidden="true">&rarr;</span>
+            </a>
+        </div>
     </div>
 
 </div>
@@ -362,6 +383,29 @@
 
 {% block scripts %}
 <script>
+    /* --- SPACED-REVIEW TEASER ---
+       Purely client-side: reads Review.dueCount() (assets/js/review.js),
+       which itself reads only the aurelia_review_log localStorage key --
+       no per-note payload is embedded in this page for it, unlike the
+       removed 2026-09-07 feature's server-side payload (245 id/title/
+       maturity triples baked into index.html). Hidden whenever the count is 0 or
+       the log can't be read -- including a not-yet-migrated v1 log, which
+       Review.dueCount() deliberately treats as empty on a page with no
+       note DOM to migrate it against (see review.js's load()). */
+    (function () {
+        if (!window.Review) return;
+        let due = 0;
+        try { due = Review.dueCount(); } catch (e) { due = 0; }
+        if (due > 0) {
+            const teaser = document.getElementById('lobby-review-teaser');
+            const countEl = document.getElementById('lobby-review-count');
+            if (teaser && countEl) {
+                countEl.textContent = due;
+                teaser.classList.remove('hidden');
+            }
+        }
+    })();
+
     /* Read once and shared by the entrance animations and the carousel's
        readout swap below. The hero name's glow is CSS-only and opts itself
        out via its own @media block. */

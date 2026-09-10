@@ -991,3 +991,534 @@ body {
         margin-top: 2.5rem;
     }
 }
+
+/* === SPACED REVIEW (Phase 2) ==========================================
+   The recall-first reader (Study mode), the SM-2 due queue, and the due
+   marker on grid cards. Colors and geometry reuse the reader's existing
+   --note-accent custom property and the .chip/.field-label components
+   rather than inventing a parallel vocabulary -- a rating button should
+   read as part of the note reader, not as a separate widget bolted on. */
+
+/* The panel that covers a note's answer block in Study mode. Sits where
+   the blockquote/dek it replaces would otherwise be, so revealing it
+   doesn't shift surrounding layout by more than the swap itself. */
+.recall-cover {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.5rem 0 1.25rem;
+    padding: 1.1rem 1.4rem;
+    border: 1px dashed var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-1);
+}
+.recall-cover p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--aurelia-text-muted);
+}
+
+/* The rating row (Again/Hard/Good/Easy), rendered after Reveal. */
+.rate-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1.25rem;
+}
+
+/* Shared by the Reveal button and the four rating buttons. 24px is the
+   WCAG 2.5.8 Target Size (Minimum) floor -- the reader's other icon
+   buttons (.reader-icon-btn) are a more generous 34px, but these sit in a
+   row of up to five and only need to clear the floor, not match exactly. */
+.rate-btn {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-1);
+    color: var(--aurelia-text-main);
+    font-family: var(--aurelia-font-mono);
+    font-size: var(--text-xs);
+    transition: border-color var(--dur-2) ease, background-color var(--dur-2) ease;
+}
+.rate-btn:hover { border-color: var(--note-accent, var(--aurelia-primary)); }
+.rate-btn[aria-pressed="true"] {
+    border-color: var(--note-accent, var(--aurelia-primary));
+    background: color-mix(in srgb, var(--note-accent, var(--aurelia-primary)) 12%, transparent);
+}
+.rate-btn:disabled { opacity: 0.55; cursor: default; }
+/* The bare shortcut digit under each rating label -- matches .field-label's
+   muted-secondary-text convention without pulling the whole class in. */
+.rate-btn .rate-key { font-size: 0.6875rem; opacity: 0.6; }
+
+/* Same focus-ring convention as .reader-icon-btn (both live inside the
+   reader), so a keyboard user sees one consistent ring style throughout
+   the modal rather than two different treatments a few pixels apart. */
+.rate-btn:focus-visible {
+    outline: 2px solid var(--note-accent, var(--aurelia-primary));
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rate-btn { transition: none; }
+}
+
+/* The confirmation line that replaces .rate-row's four buttons once a
+   grade has been submitted outside an active review session (fix #1), and
+   also the end-of-session "Session complete" line (showSessionComplete()
+   in gardentemplate.html) -- same shape, different copy. tabindex="-1" is
+   set in the markup, not here; :focus-visible on it comes from the global
+   rule above, no extra ring needed. */
+.rate-confirm {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0.5rem 0 1.25rem;
+    font-size: var(--text-sm);
+    color: var(--aurelia-text-muted);
+}
+
+/* "Change rating" / "Back to the Garden" -- a plain text action, not a
+   bordered .rate-btn/.chip, so it reads as secondary to the confirmation
+   sentence it sits inside rather than competing with it. */
+.rate-change-btn {
+    color: var(--note-accent, var(--aurelia-primary));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-family: var(--aurelia-font-mono);
+    font-size: var(--text-xs);
+}
+.rate-change-btn:hover { opacity: 0.8; }
+
+/* === FLASHCARD DECKS (Phase 3) ==========================================
+   engine/content.py's _render_flashcards() emits a plain <ol class="deck">
+   of <li class="deck-card"> Q/A pairs -- readable with no JS at all.
+   assets/js/flashcards.js finds each one at runtime and hides it in favor
+   of an interactive one-card-at-a-time widget, reusing .rate-btn/.rate-row/
+   .field-label from the spaced-review styles above rather than inventing a
+   parallel set: a flashcard reveal is the same interaction as the note
+   reader's recall cover, just repeated per card. */
+
+/* The no-JS list itself. Stays in the DOM (just `hidden`) once upgraded, so
+   turning JS off -- or a browser that never runs flashcards.js -- still
+   gets sensible Q/A pairs instead of nothing. */
+.deck {
+    list-style: none;
+    margin: 0.5rem 0 1.25rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.deck-card {
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-1);
+}
+.deck-q {
+    margin: 0 0 0.35rem;
+    font-weight: 700;
+    color: var(--aurelia-text-main);
+}
+.deck-a {
+    margin: 0;
+    color: var(--aurelia-text-muted);
+}
+
+/* The upgraded widget. Same card-shaped container as .recall-cover/
+   .deck-card (border + surface-1), so it reads as belonging to the reader
+   rather than as a separate component. */
+.deck-widget {
+    margin: 0.5rem 0 1.25rem;
+    padding: 1.1rem 1.4rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-1);
+}
+.deck-widget-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+/* The checkbox's own box is sized to the 24px WCAG 2.5.8 target-size floor
+   directly (rather than relying on the label's padding alone to grow the
+   hit area), and accent-color ties it to the reader's --note-accent so it
+   reads as part of the same widget as the rating buttons. */
+.deck-due-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 24px;
+    font-size: var(--text-sm);
+    color: var(--aurelia-text-muted);
+    cursor: pointer;
+}
+.deck-due-checkbox {
+    width: 1.5rem;
+    height: 1.5rem;
+    accent-color: var(--note-accent, var(--aurelia-primary));
+    cursor: pointer;
+}
+.deck-question {
+    margin: 0 0 0.75rem;
+    font-size: var(--text-md);
+    font-weight: 700;
+    color: var(--aurelia-text-main);
+}
+.deck-answer {
+    margin: 0 0 0.75rem;
+    font-size: var(--text-sm);
+    color: var(--aurelia-text-muted);
+}
+.deck-empty {
+    margin: 0 0 0.85rem;
+    font-size: var(--text-sm);
+    color: var(--aurelia-text-muted);
+}
+.deck-widget-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+.deck-progress {
+    margin: 0;
+    font-family: var(--aurelia-font-mono);
+    font-size: var(--text-xs);
+    color: var(--aurelia-text-muted);
+    letter-spacing: 0.04em;
+}
+/* .rate-btn already floors width/height at 24px -- Shuffle, the nav
+   arrows, Show answer, and Study all all reuse it as-is (see the shared
+   rule above); .deck-nav-btn only adds a touch more horizontal padding so
+   a single-glyph arrow doesn't read as a tiny square next to the wordier
+   buttons in the same row. */
+.deck-nav-btn {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+}
+
+/* Grid-card due marker, toggled by a class rather than an injected element:
+   cards are static HTML from engine/cards.py, and building/discarding a
+   real DOM node per card on every updateGrid() sweep (245 cards, once per
+   keystroke) would cost far more than a class check. The log itself is
+   still read only once per sweep -- see refreshDueState() in
+   gardentemplate.html -- this rule just paints whatever that sweep found. */
+.searchable-item.is-due {
+    border-color: color-mix(in srgb, var(--aurelia-primary) 55%, var(--aurelia-border-main));
+}
+.searchable-item.is-due::after {
+    content: "Due";
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    z-index: 1;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--aurelia-primary) 40%, transparent);
+    border-radius: var(--aurelia-radius);
+    background: color-mix(in srgb, var(--aurelia-primary) 14%, transparent);
+    color: var(--aurelia-primary);
+    font-family: var(--aurelia-font-mono);
+    font-size: 0.625rem;
+    font-weight: var(--aurelia-label-weight);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+/* Read/Study mode toggle -- one visual state shared by the toolbar icon
+   button and the modal-footer button (see gardentemplate.html's
+   setStudyModeButtons()), so the two controls plainly read as the same
+   switch rather than as two unrelated buttons that happen to agree. */
+.study-toggle-btn[aria-pressed="true"] {
+    color: var(--aurelia-primary);
+    border-color: color-mix(in srgb, var(--aurelia-primary) 55%, transparent);
+    background: color-mix(in srgb, var(--aurelia-primary) 10%, transparent);
+}
+
+/* The Progress <details> panel (export/import). A native <summary> marker
+   is left in place -- same choice main.css already makes for the Garden's
+   type-grouped tree folders -- rather than styled away and replaced. */
+.progress-panel summary {
+    list-style: none;
+}
+.progress-panel summary::-webkit-details-marker {
+    display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .study-toggle-btn { transition: none; }
+}
+
+/* === LONG-NOTE OUTLINE (Phase 4) ======================================
+   gardentemplate.html's buildOutline() populates two render targets that
+   share one generated list -- a sticky sidebar for xl and up, a collapsed
+   <details> below that -- rather than one element trying to be both; see
+   the template comment beside #modal-outline for why. */
+
+/* #modal-scroll is the reader's actual scroll container (not the
+   document), and buildOutline()'s click handler sets its scrollTop from
+   `heading.offsetTop`. offsetTop is relative to the nearest *positioned*
+   ancestor, and without this rule that's #modal-panel (position: relative,
+   two levels further up) rather than #modal-scroll -- which would
+   overshoot every scroll by the height of the header strip sitting above
+   #modal-scroll inside the panel. Making #modal-scroll itself the
+   positioned ancestor is what makes the plain offsetTop arithmetic
+   correct; it changes no layout since no offset values are set. */
+#modal-scroll { position: relative; }
+
+.reader-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Sidebar target: never shown below xl, regardless of its own hidden
+   class -- only #modal-outline-mobile renders there. */
+.modal-outline { display: none; }
+
+@media (min-width: 1280px) {
+    /* xl and up: a sticky sidebar to the left of .reader-column. The panel
+       is max-w-[90vw] (#modal-panel in gardentemplate.html), so there is
+       room without narrowing the reading column itself. Centering the row
+       (rather than the column alone) means .reader-column drifts slightly
+       right of true-center once the sidebar is visible -- reads better
+       than leaving the pair uncentered altogether. */
+    .reader-layout {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 2.5rem;
+    }
+    /* :not(.hidden) rather than an unconditional display: block -- the
+       specificity beats the bare .modal-outline rule above only when
+       buildOutline() actually populated the sidebar (>= 4 entries); with
+       .hidden present this simply doesn't match, leaving Tailwind's own
+       .hidden { display: none } as the only rule in effect. */
+    .modal-outline:not(.hidden) {
+        display: block;
+        width: 15rem;
+        flex-shrink: 0;
+        position: sticky;
+        top: 2rem;
+        /* #modal-panel is h-[90vh] (gardentemplate.html), not the full
+           viewport, so a calc(100vh - ...) budget -- right for a
+           page-level sticky TOC -- let a 19-entry outline run past the
+           bottom of #modal-scroll's own visible area. A sticky element
+           doesn't get clipped-with-a-scrollbar there: once "stuck" it
+           just renders past the edge, and since the page behind the
+           reader doesn't scroll, the overrun was permanently unreachable.
+
+           The chrome sharing #modal-panel with #modal-scroll, measured
+           from the template: the header strip (py-2.5 = 20px padding
+           around a 34px .reader-icon-btn, plus its 1px border-b) = 55px;
+           .reader-accent-rule = 2px; the progress-bar strip = 2px; the
+           footer strip (py-2 = 16px padding around a 34px
+           .reader-icon-btn, plus its 1px border-t) = 51px. Total 110px
+           (6.875rem) of fixed chrome outside #modal-scroll's own box,
+           plus this rule's 2rem sticky offset and 1rem of bottom
+           breathing room inside it -- rounded up to 10rem so border and
+           line-height rounding can't reopen the gap. */
+        max-height: calc(90vh - 10rem);
+        overflow-y: auto;
+    }
+    /* The sidebar takes over entirely at this width -- forced off
+       regardless of buildOutline()'s own hidden/open state, which only
+       matters below xl. */
+    .modal-outline-mobile { display: none !important; }
+}
+
+.modal-outline-heading {
+    color: var(--aurelia-text-muted);
+    margin: 0 0 0.75rem;
+}
+
+.modal-outline-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0 0 0.85rem;
+}
+.modal-outline-action {
+    font-family: var(--aurelia-font-mono);
+    font-size: var(--text-xs);
+    color: var(--note-accent, var(--aurelia-primary));
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.modal-outline-action:hover { opacity: 0.8; }
+
+.modal-outline-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.modal-outline-link {
+    display: block;
+    width: 100%;
+    padding: 0.3rem 0.5rem;
+    text-align: left;
+    border-radius: var(--aurelia-radius);
+    color: var(--aurelia-text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.4;
+    transition: color var(--dur-2) ease, background-color var(--dur-2) ease;
+}
+.modal-outline-link:hover,
+.modal-outline-link:focus-visible {
+    color: var(--aurelia-text-main);
+    background: var(--aurelia-surface-1);
+}
+.modal-outline-link:focus-visible {
+    outline: 2px solid var(--note-accent, var(--aurelia-primary));
+    outline-offset: -2px;
+}
+
+/* Below xl: a collapsed <details> at the top of .reader-column, styled
+   after the tree view's own folder rows (details > summary, .folder-arrow
+   -- see gardentemplate.html's own <style> block) rather than a new
+   pattern. */
+.modal-outline-mobile {
+    margin: 0 0 1.5rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    padding: 0.6rem 0.9rem;
+}
+.modal-outline-summary {
+    color: var(--aurelia-text-muted);
+}
+.modal-outline-mobile-body {
+    margin-top: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .modal-outline-link { transition: none; }
+}
+
+/* === KEYBOARD-SHORTCUTS SHEET (Phase 4) ================================
+   A native <dialog> (gardentemplate.html's #shortcut-sheet) rather than a
+   div+backdrop pair -- showModal() supplies the focus trap and Escape
+   handling for free. Geometry/surface reuse .surface-raised's own tokens
+   directly since that class only targets normal-flow elements, not a
+   top-layer <dialog>. */
+.shortcut-sheet {
+    width: min(34rem, calc(100vw - 2rem));
+    max-height: min(32rem, calc(100vh - 4rem));
+    margin: auto;
+    padding: 1.5rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-2);
+    box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-3);
+    color: var(--aurelia-text-main);
+}
+.shortcut-sheet::backdrop {
+    background: var(--aurelia-bg-main);
+    opacity: 0.85;
+}
+.shortcut-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+}
+.shortcut-sheet-header h2 { margin: 0; }
+/* The heading takes focus programmatically on open (openShortcutSheet()),
+   the same choice openNote() makes for #modal-panel -- no visible ring
+   needed for a target that isn't reachable by Tab. */
+.shortcut-sheet-header h2:focus-visible,
+.shortcut-sheet-header h2:focus { outline: none; }
+
+/* A two-column definition list: dt/dd pairs wrapped in <div>s (valid <dl>
+   content per HTML5 -- see the template markup), unrolled with `display:
+   contents` so the grid tracks below apply to the dt/dd themselves rather
+   than to the wrapping divs. */
+.shortcut-sheet-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.6rem 1rem;
+    margin: 0;
+}
+.shortcut-sheet-list > div { display: contents; }
+.shortcut-sheet-list dt {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+.shortcut-sheet-list dd {
+    margin: 0;
+    align-self: center;
+    color: var(--aurelia-text-muted);
+    font-size: var(--text-sm);
+}
+
+@media (max-width: 479px) {
+    .shortcut-sheet-list { grid-template-columns: 1fr; }
+    .shortcut-sheet-list dd { margin-bottom: 0.5rem; }
+}
+
+/* === GRAPH LIST FALLBACK (Phase 4) ====================================
+   Below 768px the pan/zoom canvas (#graph-canvas-wrap) is hidden in favor
+   of #graph-list (see isGraphListMode()/renderGraphList() in
+   gardentemplate.html) -- a plain ranked list of the most-connected notes,
+   actually usable on a phone where drag-to-pan is not. */
+.graph-list-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.graph-list-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-1);
+    color: var(--aurelia-text-main);
+    text-align: left;
+    transition: border-color var(--dur-2) ease, background-color var(--dur-2) ease;
+}
+.graph-list-row:hover,
+.graph-list-row:focus-visible {
+    border-color: var(--aurelia-primary);
+}
+.graph-list-row:focus-visible {
+    outline: 2px solid var(--aurelia-primary);
+    outline-offset: 2px;
+}
+.graph-list-title {
+    font-size: var(--text-sm);
+}
+.graph-list-degree {
+    flex-shrink: 0;
+    font-family: var(--aurelia-font-mono);
+    font-size: var(--text-xs);
+    color: var(--aurelia-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .graph-list-row { transition: none; }
+}

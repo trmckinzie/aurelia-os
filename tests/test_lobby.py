@@ -18,24 +18,11 @@ from tests.test_about import (
     render_404,
     render_index,
 )
+from tests.test_garden import make_card
+from tests.voice_fixtures import LEGACY_TOKENS
 
 from engine.pipeline import _build_search_index
-
-
-# Copy that belonged to the old voice. Every one of these was on the page (or
-# in the shared chrome) before the rebrand.
-LEGACY_TOKENS = (
-    "AURELIA OS",
-    "WHAT IS AURELIA",
-    "SYSTEM_READY",
-    "NEURAL_LOADOUT",
-    "CORTEX",
-    "MOD_01",
-    "OPERATOR_PROFILE",
-    "TERM_v3",
-    "Initiate Neural Query",
-    "NODES CONNECTED",
-)
+from engine.textutils import dumps_for_script_tag
 
 
 def test_lobby_renders_profile_card_from_profile():
@@ -211,6 +198,54 @@ def test_lobby_carousel_readout_stripe_opacity_is_theme_driven():
     html = render_index()
     assert 'style="opacity: var(--aurelia-scanline-opacity)"' in html
     assert "bg-[size:100%_4px] pointer-events-none opacity-20" not in html
+
+
+def test_lobby_has_review_teaser_and_loads_review_js():
+    html = render_index()
+    assert '<div id="lobby-review-teaser"' in html
+    assert '<span id="lobby-review-count">0</span>' in html
+    assert 'href="garden.html?review=1"' in html
+    # "hidden" by default -- shown only client-side by the teaser script
+    # once Review.dueCount() says there's actually something due.
+    assert 'id="lobby-review-teaser" class="hidden' in html
+    assert 'src="assets/js/review.js?v=test"' in html
+
+
+def test_lobby_has_no_embedded_per_note_review_payload():
+    # The removed 2026-09-07 feature embedded a review_seed of 245
+    # id/title/maturity triples straight into index.html; the rebuilt
+    # teaser is 100% client-side (Review.dueCount(), reading only the
+    # aurelia_review_log localStorage key -- see the teaser script in
+    # indextemplate.html). This proves neither the literal "review_seed"
+    # name nor any garden note id leaked back in anywhere -- including
+    # inside the page's own SYSTEM_INDEX command-palette blob, which
+    # legitimately carries every note's id in its url field (as
+    # "garden.html#note-a") and would otherwise make this check pass for
+    # the wrong reason.
+    cards = [
+        make_card("note-a", "A", "CONCEPT"),
+        make_card("note-b", "B", "SOURCE"),
+        make_card("note-c", "C", "AUTHOR"),
+    ]
+    search_index = dumps_for_script_tag(_build_search_index(cards, make_profile()))
+    html = render_index(search_index=search_index)
+
+    assert "review_seed" not in html
+
+    # Scope the note-id check to everything OUTSIDE the SYSTEM_INDEX
+    # script's own JSON blob (mirrors how base.html embeds it: `const
+    # SYSTEM_INDEX = {{ search_index }};`).
+    before, marker, after = html.partition("const SYSTEM_INDEX = ")
+    assert marker, "SYSTEM_INDEX script tag not found in rendered Lobby HTML"
+    _, _, after_blob = after.partition(";")
+    outside_index = before + after_blob
+
+    for note_id in ("note-a", "note-b", "note-c"):
+        assert note_id in html, f"sanity check: {note_id} should be in the page via SYSTEM_INDEX"
+        assert note_id not in outside_index, (
+            f"{note_id} appears outside the search index -- a per-note review "
+            "payload may have leaked into the Lobby template"
+        )
 
 
 def test_search_index_seed_titles_are_plain():

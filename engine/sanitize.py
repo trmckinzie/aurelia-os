@@ -18,10 +18,12 @@ WHY THIS RUNS BEFORE process_wikilinks(), NOT AFTER
 ---------------------------------------------------
 The body that reaches gardentemplate.html is a *mix*: note-authored markdown
 plus HTML the engine injects itself -- wikilink <button onclick="openNote(...)">
-elements, <audio>/<video>/<img> media widgets, the flashcard deck's flip
-handlers, the <details> section wrappers. Those carry exactly the things a
-sanitizer is built to remove (event handlers, media tags nh3 does not allow),
-so sanitizing the finished body would delete the site's core feature set.
+elements, <audio>/<video>/<img> media widgets, the flashcard deck's
+`<ol data-deck="...">` markup (upgraded into an interactive widget at
+runtime by assets/js/flashcards.js, not by anything emitted here), the
+<details> section wrappers. Those carry exactly the things a sanitizer is
+built to remove (event handlers, media tags nh3 does not allow), so
+sanitizing the finished body would delete the site's core feature set.
 
 Sanitizing the raw note body first, and letting the engine add its own HTML
 afterwards, keeps both properties: the untrusted half is cleaned, and the

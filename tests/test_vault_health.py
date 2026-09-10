@@ -62,6 +62,75 @@ def test_find_pending_atomization_skips_unpublished_notes(tmp_path):
     assert pending == []
 
 
+# --- pending resolution is wired through content.build_link_resolver -------
+#
+# So this report's "still dangling" count agrees with the real build's own
+# "targets still unresolved" summary line for the same vault (both now go
+# through the same resolver) -- see find_pending_atomization's docstring.
+
+def test_find_pending_atomization_resolves_via_alias(tmp_path):
+    # Title deliberately has no "Base (...)"/"Base: ..." shape, so only tier
+    # 2 (alias) can resolve this -- isolates it from the suffix test below.
+    aliased = _FRONTMATTER.replace("publish: true", 'publish: true\naliases: ["Dopamine"]')
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Reward Prediction Error.md", aliased + "Some body.")
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Other.md", _FRONTMATTER + "**Related:** [[Dopamine]]")
+
+    pending = find_pending_atomization(
+        vault_path=str(tmp_path),
+        known_ids={"note-reward-prediction-error", "note-other"},
+    )
+    assert pending == []
+
+
+def test_find_pending_atomization_without_the_alias_still_shows_pending(tmp_path):
+    # Baseline for the test above: with no `aliases:` field, [[Dopamine]]
+    # doesn't resolve to the real note and stays a pending target -- proves
+    # the alias wiring is actually doing something, not a structural no-op.
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Reward Prediction Error.md", _FRONTMATTER + "Some body.")
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Other.md", _FRONTMATTER + "**Related:** [[Dopamine]]")
+
+    pending = find_pending_atomization(
+        vault_path=str(tmp_path),
+        known_ids={"note-reward-prediction-error", "note-other"},
+    )
+    assert pending == [("note-dopamine", ["note-other"])]
+
+
+def test_find_pending_atomization_resolves_via_unique_title_suffix(tmp_path):
+    _write(tmp_path, "10_GARDEN/12_Concepts", "System 1 vs System 2 (Dual-Process Theory).md",
+           _FRONTMATTER + "Some body.")
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Other.md",
+           _FRONTMATTER + "**Related:** [[System 1 vs System 2]]")
+
+    pending = find_pending_atomization(
+        vault_path=str(tmp_path),
+        known_ids={"note-system-1-vs-system-2-dual-process-theory", "note-other"},
+    )
+    assert pending == []
+
+
+def test_pending_count_agrees_with_the_build_unresolved_count(tmp_path, monkeypatch):
+    # The actual requirement: this report's count and the real build's
+    # "targets still unresolved" count must agree for the same vault.
+    import engine.pipeline as pipeline
+    from engine.content import get_unresolved_wikilink_targets, reset_wikilink_resolution_counts
+
+    aliased = _FRONTMATTER.replace("publish: true", 'publish: true\naliases: ["Dopamine"]')
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Dopamine (Reward Prediction Error).md",
+           aliased + "Some body.")
+    _write(tmp_path, "10_GARDEN/12_Concepts", "Other.md",
+           _FRONTMATTER + "**Related:** [[Dopamine]] and [[Totally Missing]]")
+
+    reset_wikilink_resolution_counts()
+    monkeypatch.setattr(pipeline, "VAULT_PATH", str(tmp_path))
+    garden_cards, _backlinks, _edges = pipeline._scan_vault()
+    known_ids = {c["id"] for c in garden_cards}
+    build_unresolved = len(get_unresolved_wikilink_targets())
+
+    pending = find_pending_atomization(vault_path=str(tmp_path), known_ids=known_ids)
+    assert len(pending) == build_unresolved
+
+
 def test_find_orphans_returns_notes_with_degree_at_most_one():
     cards = [
         _card("note-hub", "Hub", "<button onclick=\"openNote('note-a')\">A</button>"

@@ -333,6 +333,40 @@ def test_scan_vault_keeps_a_body_horizontal_rule_out_of_the_frontmatter(tmp_path
     assert "After the rule." in garden_cards[0]["body"]
 
 
+# --- wikilink alias/suffix resolution reaches the full pipeline (Phase 1d) -
+
+def test_scan_vault_resolves_an_aliased_wikilink_into_a_real_backlink(tmp_path, monkeypatch):
+    # An alias closes a dangling link into a real one, which should show up
+    # everywhere a resolved link normally does: the backlinks index, the
+    # knowledge-graph edges, and (via _degree_from_edges) the target's
+    # connection count.
+    vault = tmp_path / "vault"
+    _write_note(
+        vault, "10_GARDEN/Dopamine (Reward Prediction Error).md",
+        'publish: true\ntype: concept\naliases: ["Dopamine"]',
+        body="A note about dopamine.\n",
+    )
+    _write_note(
+        vault, "10_GARDEN/Other.md",
+        "publish: true\ntype: concept",
+        body="**Related:** [[Dopamine]]\n",
+    )
+    monkeypatch.setattr(pipeline, "VAULT_PATH", str(vault))
+    garden_cards, backlinks, edges = pipeline._scan_vault()
+
+    target_id = "note-dopamine-reward-prediction-error"
+    source_id = "note-other"
+    assert backlinks.get(target_id) == [{"id": source_id, "title": "Other"}]
+    assert {"source": source_id, "target": target_id} in edges or \
+        {"source": target_id, "target": source_id} in edges
+
+    degree = pipeline._degree_from_edges(edges)
+    assert degree[target_id] == 1
+    # The card itself carries the bumped connection count too.
+    target_card = next(c for c in garden_cards if c["id"] == target_id)
+    assert target_card["connections"] == 1
+
+
 # --- the build can be told not to touch vault/ (audit #26) -----------------
 #
 # organize_assets() moves files inside vault/. These tests must never call the

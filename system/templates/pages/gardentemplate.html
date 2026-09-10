@@ -21,6 +21,19 @@
      parse time, so this has to have executed first. It is a plain assignment,
      so there is no execution cost beyond the parse. -->
 <script src="assets/js/search-index.js?v={{ search_index_version }}"></script>
+<!-- Review engine (SM-2 scheduler + the aurelia_review_log localStorage
+     log): window.Review, loaded early like utils.js above. ?v= is the
+     site-wide asset hash (engine/pipeline.py._asset_version), NOT its own
+     content hash the way search-index.js's ?v= is -- review.js is small
+     and static per build, so it shares utils.js/main.css's cache-busting
+     version rather than needing one of its own. -->
+<script src="assets/js/review.js?v={{ asset_version }}"></script>
+<!-- Flashcard deck widget (window.upgradeFlashcardDecks): finds every
+     `.deck` a note body renders (engine/content.py's _render_flashcards)
+     and upgrades it into an interactive study widget on top of window.Review
+     above. Same ?v= as review.js/utils.js/main.css -- see
+     engine/pipeline.py._asset_version, which now hashes this file too. -->
+<script src="assets/js/flashcards.js?v={{ asset_version }}"></script>
 <style>
     /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
@@ -470,6 +483,28 @@
                     <span class="hidden 2xl:inline uppercase tracking-wider">Share View</span>
                 </button>
 
+                <!-- Read/Study mode toggle. Study mode covers a note's
+                     answer block until you try to recall it first (see
+                     applyRecallCover() below); Read mode -- the default for
+                     a first-time visitor -- shows notes exactly as before.
+                     A second instance lives in the modal footer; both share
+                     the .study-toggle-btn class and are kept in sync by
+                     setStudyModeButtons(). -->
+                <button onclick="toggleStudyMode()" id="btn-study-mode" title="Study mode: try to recall each note's answer before revealing it" aria-label="Toggle Study mode" aria-pressed="false" class="chip toolbar-icon-btn study-toggle-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span class="hidden 2xl:inline uppercase tracking-wider">Study Mode</span>
+                </button>
+
+                <!-- Keyboard-shortcuts reference (Phase 4). Opens
+                     #shortcut-sheet, a native <dialog> -- see
+                     openShortcutSheet() in the scripts block. Also reachable
+                     with the '?' key from anywhere on the page (the global
+                     keydown handler below). -->
+                <button type="button" onclick="openShortcutSheet()" id="btn-shortcuts" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M9.09 9a3 3 0 015.83 1c0 2-3 2-3 4"></path><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"></circle></svg>
+                    <span class="hidden 2xl:inline uppercase tracking-wider">Shortcuts</span>
+                </button>
+
                 <!-- A select rather than a chip group: the toolbar already
                      scrolls horizontally at desktop width, so five more chips
                      would crowd it, and a native select is far better on
@@ -497,6 +532,7 @@
                         <option value="recent">Newest</option>
                         <option value="maturity">Maturity</option>
                         <option value="title">A–Z</option>
+                        <option value="due">Due first</option>
                     </select>
                 </div>
 
@@ -532,16 +568,64 @@
             </div>
         </div>
 
-        <div class="mb-8 flex justify-between items-end border-b border-aurelia-border pb-4 gap-4">
-            <!-- The page's only live region. Filtering and searching change the
-                 result count with no other feedback, so without this a screen
-                 reader hears nothing at all when 245 results become 0 -- which
-                 is what would make the keyboard navigation below merely
-                 possible rather than usable. aria-atomic so the whole
-                 "Notes shown: n" phrase is re-read, not the bare digit. -->
-            <p class="field-label text-aurelia-muted" aria-live="polite" aria-atomic="true">
-                Notes shown: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
-            </p>
+        <div class="mb-8 flex flex-col gap-3 border-b border-aurelia-border pb-4">
+            <div class="flex justify-between items-end gap-4">
+                <!-- The page's only live region. Filtering and searching change the
+                     result count with no other feedback, so without this a screen
+                     reader hears nothing at all when 245 results become 0 -- which
+                     is what would make the keyboard navigation below merely
+                     possible rather than usable. aria-atomic so the whole
+                     "Notes shown: n" phrase is re-read, not the bare digit. -->
+                <p class="field-label text-aurelia-muted" aria-live="polite" aria-atomic="true">
+                    Notes shown: <span id="node-count" class="text-aurelia-text text-base font-extrabold tabular-nums">{{ cards|length }}</span>
+                </p>
+                <!-- A second, general-purpose live region for announcements that
+                     aren't a result count -- view switches and note opens (see
+                     announce(), called from switchView()/openNote()). Kept
+                     separate from the count's own aria-live region above so the
+                     two never talk over each other or get concatenated into one
+                     confusing utterance. Visually hidden -- this exists for
+                     assistive tech only. -->
+                <div id="a11y-status" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+            </div>
+
+            <!-- Due count + session start, and the Progress panel. Both are
+                 entirely client-side (see review.js): the count starts at 0
+                 and Start review starts disabled, populated by
+                 refreshDueState() once the (already-loaded) log is read --
+                 no per-note review payload is rendered server-side, the
+                 same reasoning the Lobby teaser follows. -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <p class="field-label text-aurelia-muted flex items-center gap-3 flex-wrap">
+                    Due today: <span id="due-count" class="text-aurelia-text text-base font-extrabold tabular-nums">0</span>
+                    <button type="button" id="btn-start-review" onclick="startReviewSession()" disabled
+                            title="No notes are due for review yet. Rate a note in Study mode to add it to the queue."
+                            class="chip border border-aurelia-primary text-aurelia-primary bg-aurelia-primary/10 hover:bg-aurelia-primary/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-aurelia-primary/10">
+                        Start review
+                    </button>
+                </p>
+
+                <details id="progress-panel" class="progress-panel">
+                    <summary class="chip border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer select-none">
+                        Progress
+                    </summary>
+                    <div class="surface border border-aurelia-border rounded-theme p-4 mt-2 flex flex-col gap-3 max-w-sm">
+                        <p class="text-[0.8125rem] text-aurelia-muted">
+                            Your review history lives only in this browser. Export it to keep a copy, or import one from another device.
+                        </p>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button type="button" onclick="exportReviewProgress()" class="chip border border-aurelia-border text-aurelia-muted hover:border-aurelia-primary hover:text-aurelia-primary">
+                                Export progress
+                            </button>
+                            <label class="chip border border-aurelia-border text-aurelia-muted hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
+                                Import progress
+                                <input type="file" id="import-progress-input" accept="application/json" class="sr-only" onchange="importReviewProgress(this.files[0]); this.value = '';">
+                            </label>
+                        </div>
+                        <p id="progress-panel-result" class="text-[0.8125rem] text-aurelia-muted" role="status"></p>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <div id="topic-cloud" class="surface hidden mb-8 border border-aurelia-border rounded-theme p-5">
@@ -655,8 +739,7 @@
                                  data-type="{{ card.type|lower }}"
                                  data-tags="{{ card.tags|join(' ') }}">
                                 
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <span class="text-aurelia-muted text-[0.8125rem] group-hover/node:text-aurelia-primary transition-colors font-mono">::</span>
+                                <div class="flex items-center overflow-hidden">
                                     <span class="text-sm font-mono text-aurelia-muted group-hover/node:text-aurelia-text transition-colors truncate">{{ card.title }}</span>
                                 </div>
 
@@ -690,7 +773,7 @@
                      .field-label's uppercase from the row, and all-caps costs
                      real reading speed once a string runs past a few words --
                      the legend chips beside it are one word each and keep it. -->
-                <span class="normal-case tracking-normal">Scroll to zoom · drag to pan · click a note to open</span>
+                <span id="graph-hint" class="normal-case tracking-normal">Scroll to zoom · drag to pan · click a note to open</span>
                 <div class="flex items-center gap-4 flex-wrap">
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-primary"></span>Concept</span>
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-tertiary"></span>Log</span>
@@ -705,6 +788,17 @@
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
                 <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-[0.8125rem] font-mono text-aurelia-text shadow-lg"></div>
                 <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-[0.8125rem] font-mono text-aurelia-muted uppercase tracking-[0.06em]">No notes match the current filter</div>
+            </div>
+
+            <!-- Small-screen fallback (Phase 4): pan/zoom canvas interaction
+                 doesn't work well below 768px, so initGraph() hides the
+                 canvas above and shows this ranked list instead --
+                 see isGraphListMode()/renderGraphList() in the scripts
+                 block. Hidden by default; untouched at 768px and up. -->
+            <div id="graph-list" class="hidden border border-aurelia-border bg-aurelia-bg/40 rounded-theme p-5">
+                <p class="field-label modal-outline-heading">Most connected notes</p>
+                <ol id="graph-list-items" class="graph-list-items"></ol>
+                <p id="graph-list-empty" class="hidden text-[0.8125rem] font-mono text-aurelia-muted uppercase tracking-[0.06em]">No notes match the current filter</p>
             </div>
         </div>
 
@@ -756,6 +850,14 @@
                 <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                     <span id="modal-maturity" class="field-label text-aurelia-muted hidden md:inline"></span>
                     <span id="modal-connections" class="field-label text-aurelia-muted hidden lg:inline"></span>
+                    <!-- "Reviewing 2 of 5" -- visible only while a review session
+                         is active (see updateSessionProgress(), called from
+                         applyNoteChrome() on every openNote() and from
+                         endReviewSession()). `hidden` is the plain Tailwind
+                         utility, toggled by class the same way
+                         #topic-active-label handles its own conditional (not
+                         responsive-breakpoint) visibility. -->
+                    <span id="modal-session" class="hidden field-label text-aurelia-muted"></span>
                     <button type="button" onclick="copyNoteLink()" id="btn-copy-note" class="reader-icon-btn" aria-label="Copy link to this note" title="Copy link to this note">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"></path></svg>
                     </button>
@@ -769,10 +871,37 @@
                 <div id="modal-progress" class="h-full" style="width: 0%; background: var(--note-accent); box-shadow: 0 0 10px var(--note-accent)"></div>
             </div>
             <div id="modal-scroll" class="flex-grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
-                <div class="reader-column">
-                    <div id="modal-content" class="obsidian-reader"></div>
-                    <div id="modal-backlinks"></div>
-                    <div id="modal-related"></div>
+                <div class="reader-layout">
+                    <!-- On-page outline for long notes (Phase 4), built by
+                         buildOutline() (scripts block) right after
+                         marked.parse(). Left empty and hidden whenever a
+                         note has fewer than 4 top-level headings -- most
+                         notes never show either target below. Two targets
+                         share one generated list rather than one element
+                         trying to be both: this sticky sidebar for xl and
+                         up (the panel is max-w-[90vw], so there is room
+                         beside .reader-column without narrowing it -- see
+                         .modal-outline in assets/css/main.css), and
+                         #modal-outline-mobile inside .reader-column below
+                         for narrower viewports, where there's no room for a
+                         sidebar. -->
+                    <nav id="modal-outline" aria-label="On this page" class="modal-outline custom-scrollbar hidden"></nav>
+                    <div class="reader-column">
+                        <!-- Collapsed counterpart to #modal-outline above --
+                             same generated content, shown instead of it
+                             below xl. -->
+                        <details id="modal-outline-mobile" class="modal-outline-mobile hidden"></details>
+                        <div id="modal-content" class="obsidian-reader"></div>
+                        <div id="modal-backlinks"></div>
+                        <div id="modal-related"></div>
+                        <!-- Elaborative-interrogation nudge, rendered by
+                             renderElaboration() after a rating is submitted
+                             (see submitRating() in the scripts block below).
+                             Empty/absent otherwise, and cleared again on every
+                             openNote() so a previous note's nudge never lingers
+                             on one that hasn't been rated yet. -->
+                        <div id="modal-elaborate"></div>
+                    </div>
                 </div>
             </div>
             <!-- bottom-14 clears the footer (8px padding + 34px control + 8px
@@ -798,7 +927,24 @@
                not ship in dist/garden.html.) #}
             <div class="px-3 sm:px-4 py-2 border-t border-aurelia-border flex justify-between items-center field-label text-aurelia-muted gap-2 sm:gap-4 shrink-0">
                 <div class="flex items-center gap-2 min-w-0 overflow-hidden">
+                    <!-- Second instance of the Read/Study toggle (see the
+                         toolbar's #btn-study-mode) -- hidden below `sm` on
+                         purpose: this footer row already overflowed once at
+                         375px (see the comment above this block), and the
+                         toolbar's copy of the control is reachable from
+                         every breakpoint, so nothing is lost by keeping this
+                         one off the tightest viewport. -->
+                    <button type="button" id="btn-study-mode-modal" onclick="toggleStudyMode()" aria-pressed="false" aria-label="Toggle Study mode" title="Study mode: try to recall each note's answer before revealing it" class="reader-icon-btn study-toggle-btn hidden sm:inline-flex shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </button>
+                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">·</span>
                     <span id="modal-readtime" class="truncate"></span>
+                    <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">·</span>
+                    <!-- "Last reviewed N days ago · next due in M days", or
+                         "Never reviewed" -- see updateReviewedFooter() in
+                         the scripts block. hidden sm:inline for the same
+                         overflow reason as the toggle above. -->
+                    <span id="modal-reviewed" class="truncate hidden sm:inline"></span>
                     <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden xl:inline">·</span>
                     <span class="shrink-0 hidden xl:inline opacity-70">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</span>
                 </div>
@@ -823,6 +969,41 @@
             </div>
         </div>
     </div>
+
+    <!-- Keyboard-shortcuts reference (Phase 4). Deliberately outside
+         #modal-backdrop -- a native <dialog> opened with showModal() sits
+         in the browser's own top layer and makes the rest of the page
+         (including an open note reader) inert on its own, so it needs no
+         relationship to the reader's markup or its hand-rolled focus trap.
+         showModal() also supplies Escape handling for free; the global
+         keydown handler in the scripts block below explicitly steps aside
+         while this is open rather than fighting it (see the guard at the
+         top of that handler). z-[100] matches the command palette
+         (#cmd-backdrop in base.html) by convention, though the top layer
+         already stacks this above it regardless. -->
+    <dialog id="shortcut-sheet" aria-labelledby="shortcut-sheet-title" class="shortcut-sheet z-[100]">
+        <div class="shortcut-sheet-header">
+            <h2 id="shortcut-sheet-title" tabindex="-1" class="font-display font-bold text-base text-aurelia-text">Keyboard shortcuts</h2>
+            <button type="button" id="btn-shortcut-sheet-close" onclick="closeShortcutSheet()" class="reader-icon-btn" aria-label="Close" title="Close (Esc)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <dl class="shortcut-sheet-list">
+            <div><dt><span class="kbd">/</span></dt><dd>Focus search</dd></div>
+            <div><dt><span class="kbd">?</span></dt><dd>This shortcuts sheet</dd></div>
+            <div><dt><span class="kbd">Ctrl</span>/<span class="kbd">⌘</span> <span class="kbd">K</span></dt><dd>Command palette</dd></div>
+            <div><dt><span class="kbd">↑</span> <span class="kbd">↓</span> <span class="kbd">←</span> <span class="kbd">→</span></dt><dd>Move between cards</dd></div>
+            <div><dt><span class="kbd">Home</span> / <span class="kbd">End</span></dt><dd>First / last card</dd></div>
+            <div><dt><span class="kbd">Enter</span> / <span class="kbd">Space</span></dt><dd>Open the focused card</dd></div>
+            <div><dt><span class="kbd">Esc</span></dt><dd>Close</dd></div>
+            <div><dt><span class="kbd">[</span></dt><dd>Previous note</dd></div>
+            <div><dt><span class="kbd">]</span></dt><dd>Next note</dd></div>
+            <div><dt><span class="kbd">r</span></dt><dd>Read the open note aloud</dd></div>
+            <div><dt><span class="kbd">Space</span> / <span class="kbd">Enter</span></dt><dd>Reveal a covered answer (Study mode)</dd></div>
+            <div><dt><span class="kbd">1</span>–<span class="kbd">4</span></dt><dd>Rate a note after revealing it</dd></div>
+            <div><dt><span class="kbd">s</span></dt><dd>Toggle Read / Study mode</dd></div>
+        </dl>
+    </dialog>
 {% endblock %}
 
 {% block scripts %}
@@ -855,6 +1036,36 @@
     // "Related by Topic" doesn't need its own separate embedded index.
     const NODE_BY_ID = {};
     GRAPH_INDEX.nodes.forEach(n => { NODE_BY_ID[n.id] = n; });
+
+    // True while focus sits in something that consumes ordinary keystrokes
+    // as text (or, for a checkbox/radio/button, Space) rather than as a
+    // shortcut -- the global keydown handler below (and future ones, e.g.
+    // Phase 2's rating keys) need to defer to that rather than fight it.
+    // isContentEditable covers a future rich-text field; none exists on this
+    // page yet, but the check costs nothing to include now.
+    function isTypingTarget(e) {
+        const el = e.target;
+        if (!el) return false;
+        if (el.isContentEditable) return true;
+        const tag = el.tagName;
+        return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+    }
+
+    // Announces `text` to assistive tech via the visually-hidden #a11y-status
+    // live region (see the template comment beside it). Writing the same
+    // string twice in a row wouldn't otherwise re-announce it (most screen
+    // readers only speak on a *change*), so this clears the region first --
+    // matters here because "Grid view" can legitimately repeat, e.g.
+    // switching Tree -> Graph -> Grid across three quick clicks.
+    const a11yStatusEl = document.getElementById('a11y-status');
+    function announce(text) {
+        if (!a11yStatusEl) return;
+        a11yStatusEl.textContent = '';
+        // One frame's delay so the clear above actually registers as a
+        // change before the new text lands -- same reasoning as openNote()'s
+        // setTimeout for the modal's open-state transition.
+        setTimeout(() => { a11yStatusEl.textContent = text; }, 10);
+    }
 
     // --- 1. VIEW SWITCHER LOGIC (NEW) ---
     const gridView = document.getElementById('cardGrid');
@@ -903,6 +1114,13 @@
         viewLabel.innerText = mode === 'grid' ? "Grid" : mode === 'tree' ? "Tree" : "Graph";
         // DELETED: The lines that set filterControls.style.opacity/pointerEvents
         // Filters now remain active in every mode.
+
+        // Matches each button's own aria-label/title (see the toolbar
+        // markup) rather than viewLabel's shorter text above, so the
+        // announcement and the visible label never say different things.
+        if (previous !== mode) {
+            announce(mode === 'grid' ? "Grid view" : mode === 'tree' ? "List view" : "Knowledge graph");
+        }
 
         if (mode === 'graph') initGraph();
         updateSortControlVisibility();
@@ -1036,6 +1254,7 @@
     const modalContent = document.getElementById('modal-content');
     const modalScroll = document.getElementById('modal-scroll');
     const modalProgress = document.getElementById('modal-progress');
+    const shortcutSheet = document.getElementById('shortcut-sheet');
 
     // Reading-progress bar under the modal header, and the source of the
     // "reset scroll on note change" fix below: without an id to target,
@@ -1182,8 +1401,15 @@
         const gridEmpty = document.getElementById('grid-empty');
         if (gridEmpty) gridEmpty.classList.toggle('hidden', visibleCount > 0);
 
-        // 4. REFRESH GRAPH DIMMING (if that's the active view)
-        if (currentView === 'graph' && graphState && graphState.laidOut) drawGraph();
+        // 4. REFRESH GRAPH DIMMING/LIST (if that's the active view). Below
+        // 768px (Phase 4) the graph is a ranked list instead of the canvas
+        // (see initGraph()/renderGraphList() further down) -- it re-filters
+        // through the same graphNodeMatches() the canvas's own dimming
+        // uses, so a filter/search change is reflected in both equally.
+        if (currentView === 'graph') {
+            if (isGraphListMode()) renderGraphList();
+            else if (graphState && graphState.laidOut) drawGraph();
+        }
 
         // 5. KEEP THE KEYBOARD TAB STOP VALID
         // Everything above can hide or reorder the item currently carrying
@@ -1191,6 +1417,13 @@
         // reachable by Tab at all, so re-apply and clamp after every sweep.
         // Never steals focus -- this runs on every keystroke in the search box.
         syncRoving(false);
+
+        // 6. DUE MARKERS (Phase 2). updateGrid() runs on every keystroke
+        // over 245 cards, so the log is read ONCE per sweep (refreshDueState)
+        // into a Set; each card then does a plain membership check
+        // (applyDueMarkers) rather than a localStorage read of its own.
+        refreshDueState();
+        applyDueMarkers();
     }
 
     function graphNodeMatches(node) {
@@ -1362,7 +1595,7 @@
        only visual position, so "next note" would silently disagree with
        what the reader sees. Moving nodes keeps them in step -- and makes
        prev/next follow the active sort for free. */
-    const SORTS = ['relevance', 'connected', 'recent', 'maturity', 'title'];
+    const SORTS = ['relevance', 'connected', 'recent', 'maturity', 'title', 'due'];
     const DEFAULT_SORT = 'connected';
     let currentSort = DEFAULT_SORT;
     // Set once the reader picks a sort themselves, so auto-relevance below
@@ -1414,10 +1647,24 @@
                               || byTitle(a, b);
             case 'title':
                 return byTitle;
+            case 'due':
+                // Ascending due date -- soonest due first. A note with no
+                // review entry sorts last (Infinity), not first: "never
+                // reviewed" isn't "most urgent," it's simply unranked.
+                return (a, b) => dueSortValue(a) - dueSortValue(b) || byTitle(a, b);
             case 'connected':
             default:
                 return (a, b) => cardConnections(b) - cardConnections(a) || byTitle(a, b);
         }
+    }
+
+    // Only meaningful once review.js has loaded and the log has been read
+    // (see the REVIEW INIT block near the end of this script) -- both are
+    // guaranteed by the time a reader could actually select "Due first"
+    // from the sort control.
+    function dueSortValue(el) {
+        const state = window.Review ? Review.stateFor(el.dataset.id) : null;
+        return (state && typeof state.due === 'number') ? state.due : Infinity;
     }
 
     // Reordering 245 nodes is only worth doing when the order could
@@ -1431,7 +1678,7 @@
         if (!grid) return;
         const mode = effectiveSort();
         const q = currentQuery;
-        const key = mode + ' ' + (mode === 'relevance' ? q : '');
+        const key = mode + ' ' + (mode === 'relevance' ? q : '');
         if (!force && key === lastSortKey) return;
         lastSortKey = key;
 
@@ -1581,6 +1828,7 @@
             const n = parseInt((card && card.dataset.connections) || '0', 10);
             connEl.textContent = n > 0 ? `◉ ${n} ${n === 1 ? 'LINK' : 'LINKS'}` : '';
         }
+        updateSessionProgress();
     }
     const MATURITY_EMOJI = { seed: '🌱', growing: '🌿', evergreen: '🌳' };
 
@@ -1605,18 +1853,42 @@
         const txt = document.createElement("textarea");
         txt.innerHTML = rawEl.innerHTML;
         modalContent.innerHTML = marked.parse(txt.value, { breaks: true });
+        // Study mode only (applyRecallCover no-ops in Read mode). Placed
+        // right after the note body is parsed in, before backlinks/related,
+        // so the cover panel sits directly over the answer element it's
+        // covering rather than after content inserted later.
+        applyRecallCover(noteId);
+        // On-page outline (Phase 4) -- headings/Gemini sections are part of
+        // the static parsed body above, so this can run before backlinks/
+        // related/flashcards, none of which add h2/h3 or .gemini-note-
+        // section elements of their own.
+        buildOutline(noteId);
         renderBacklinks(noteId);
         renderRelatedByTopic(noteId);
+        // Upgrades any flashcard deck(s) this note's body just rendered
+        // (see assets/js/flashcards.js) into an interactive widget. Has to
+        // run on every open, not just once at page load: the body itself
+        // -- decks included -- is only ever parsed in here, on demand.
+        if (typeof window.upgradeFlashcardDecks === 'function') upgradeFlashcardDecks(modalContent);
+        // The elaboration nudge only appears after a rating (see
+        // submitRating() below) -- clear any previous note's nudge here so
+        // it never lingers on a note that hasn't been rated yet.
+        const elaborateEl = document.getElementById('modal-elaborate');
+        if (elaborateEl) elaborateEl.innerHTML = '';
         modalScroll.scrollTop = 0;
         modalProgress.style.width = '0%';
 
         currentModalNoteId = noteId;
         applyNoteChrome(noteId);
         writeNoteToUrl(noteId, history_);
+        // NODE_BY_ID is built from GRAPH_INDEX.nodes (every published note),
+        // so this is a fallback for defensiveness only, not an expected path.
+        announce((NODE_BY_ID[noteId] && NODE_BY_ID[noteId].title) || noteId);
         const wordCount = (modalContent.innerText || '').trim().split(/\s+/).filter(Boolean).length;
         const minutes = Math.max(1, Math.round(wordCount / 200));
         const readtimeEl = document.getElementById('modal-readtime');
         if (readtimeEl) readtimeEl.innerText = `~${minutes} min read · ${wordCount} words`;
+        updateReviewedFooter(noteId);
 
         modalBackdrop.classList.remove('hidden');
         modalPanel.classList.remove('is-closing');
@@ -1630,6 +1902,110 @@
         // and Escape/[/] all listen on document anyway.
         if (!wasOpen) modalPanel.focus({ preventScroll: true });
     }
+
+    /* === ON-PAGE OUTLINE (Phase 4) =====================================
+       h2/h3 headings for a normal note, or each Gemini Notebook section's
+       own .gemini-note-summary text (wrap_gemini_notebook_sections in
+       engine/content.py) for a gemini-notebook note -- real ones run to
+       15+ sections, and note-psyc-414-1-cognitive-psychology has 20.
+       Shown only once a note actually needs one (>= 4 entries); populates
+       both #modal-outline (sticky sidebar, xl and up) and
+       #modal-outline-mobile (collapsed <details>, below xl) with the same
+       generated list, since only one of the two is ever visible at a given
+       width -- see the CSS in assets/css/main.css for which. */
+    function outlineEntryText(headingEl) {
+        // Strips the folder-arrow glyph (▶, added by
+        // wrap_gemini_notebook_sections) rather than assuming it's always
+        // the very first character -- robust to whatever whitespace/markup
+        // surrounds it -- and, separately, a leading emoji/pictograph
+        // authors prefix a heading with by hand ("📚 Chapter 2 - Brain &
+        // Cognition"). Both are visual signposts inside the note body, not
+        // label text the outline strip should repeat verbatim, so both
+        // branches of buildOutline() (Gemini section summaries and plain
+        // h2/h3 headings) route through this one function.
+        const clone = headingEl.cloneNode(true);
+        clone.querySelectorAll('.folder-arrow').forEach((el) => el.remove());
+        // U+FE0F (variation selector-16) and U+200D (zero-width joiner)
+        // ride alongside \p{Extended_Pictographic} so a multi-codepoint
+        // emoji (e.g. one joined to a modifier) is stripped whole instead
+        // of leaving a stray joiner or selector behind as visible junk.
+        const EMOJI_PREFIX = /^(?:[\p{Extended_Pictographic}\uFE0F\u200D])+\s*/u;
+        return clone.textContent.trim().replace(EMOJI_PREFIX, '').trim();
+    }
+
+    function buildOutline(noteId) {
+        const sidebar = document.getElementById('modal-outline');
+        const mobile = document.getElementById('modal-outline-mobile');
+        if (!sidebar || !mobile) return;
+
+        sidebar.innerHTML = '';
+        mobile.innerHTML = '';
+        sidebar.classList.add('hidden');
+        mobile.classList.add('hidden');
+
+        const node = NODE_BY_ID[noteId];
+        const isGemini = !!node && node.type === 'gemini-notebook';
+        const entries = isGemini
+            ? [...modalContent.querySelectorAll('.gemini-note-summary')].map((summary) => ({
+                el: summary.closest('details'),
+                text: outlineEntryText(summary),
+            })).filter((entry) => entry.el)
+            : [...modalContent.querySelectorAll('h2, h3')].map((el) => ({ el, text: outlineEntryText(el) }));
+
+        if (entries.length < 4) return;
+
+        entries.forEach((entry, i) => { entry.el.id = `outline-${i + 1}`; });
+
+        const listHtml = `<ol class="modal-outline-list">${entries.map((entry) => `
+            <li><button type="button" class="modal-outline-link" data-outline-target="${entry.el.id}">${escapeHtml(entry.text)}</button></li>
+        `).join('')}</ol>`;
+
+        const actionsHtml = isGemini ? `
+            <div class="modal-outline-actions">
+                <button type="button" class="modal-outline-action" onclick="setAllGeminiSections(true)">Expand all</button>
+                <button type="button" class="modal-outline-action" onclick="setAllGeminiSections(false)">Collapse all</button>
+            </div>` : '';
+
+        sidebar.innerHTML = `<p class="field-label modal-outline-heading">On this page</p>${actionsHtml}${listHtml}`;
+        sidebar.classList.remove('hidden');
+
+        mobile.innerHTML = `<summary class="modal-outline-summary field-label">On this page</summary>
+            <div class="modal-outline-mobile-body">${actionsHtml}${listHtml}</div>`;
+        mobile.classList.remove('hidden');
+    }
+
+    // "Expand all / Collapse all" in the outline's own actions row, only
+    // rendered for a gemini-notebook note.
+    function setAllGeminiSections(open) {
+        modalContent.querySelectorAll('.gemini-note-section').forEach((d) => { d.open = open; });
+    }
+
+    // Delegated on both render targets -- their contents are rebuilt on
+    // every openNote(), so binding to the (stable) container once here
+    // avoids re-attaching a listener per rebuild.
+    ['modal-outline', 'modal-outline-mobile'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', (e) => {
+            const btn = e.target.closest('.modal-outline-link');
+            if (!btn) return;
+            const target = document.getElementById(btn.dataset.outlineTarget);
+            if (!target) return;
+            // Gemini sections start collapsed except the first -- clicking
+            // an entry for a collapsed one must open it before scrolling,
+            // or the heading being scrolled to has zero height.
+            if (target.tagName === 'DETAILS') target.open = true;
+            // el.offsetTop is relative to #modal-scroll specifically (see
+            // the `#modal-scroll { position: relative; }` rule in
+            // assets/css/main.css and its comment) -- without that, this
+            // would be relative to #modal-panel two levels up instead, and
+            // overshoot every scroll by the header strip's height.
+            modalScroll.scrollTo({
+                top: target.offsetTop - 16,
+                behavior: aureliaMotionOff() ? 'auto' : 'smooth',
+            });
+        });
+    });
 
     // Moves to the next/previous note within whatever's currently visible
     // (respects the active filter/search, same pool as openRandomNote) --
@@ -1705,11 +2081,26 @@
         }
         const tagSet = new Set(topicTags);
 
-        const related = Object.values(NODE_BY_ID)
+        const scoredAll = Object.values(NODE_BY_ID)
             .filter(n => n.id !== noteId)
             .map(n => ({ node: n, shared: (n.tags || []).filter(t => tagSet.has(t)).length }))
-            .filter(r => r.shared > 0)
-            .sort((a, b) => b.shared - a.shared || a.node.title.localeCompare(b.node.title))
+            .filter(r => r.shared > 0);
+
+        // Same candidate policy as renderElaboration() below: daily logs and
+        // Gemini Notebook dumps rack up shared topic/* tags just by being
+        // course material, which used to fill this strip with five
+        // 2026-02-12-style daily logs on a course note instead of anything
+        // actually related. They're excluded from the ranked list and only
+        // reintroduced -- merged back into the full pool, not appended -- if
+        // fewer than two non-excluded candidates remain, so a thin note
+        // still gets a strip instead of an empty section.
+        const preferred = scoredAll.filter(r => !NUDGE_EXCLUDED_TYPES.has(r.node.type));
+        const pool = preferred.length >= 2 ? preferred : scoredAll;
+
+        const related = pool
+            .sort((a, b) => b.shared - a.shared
+                || nudgeTypeRank(a.node.type) - nudgeTypeRank(b.node.type)
+                || a.node.title.localeCompare(b.node.title))
             .slice(0, 5);
 
         if (related.length === 0) {
@@ -1739,6 +2130,10 @@
        garden.html#note-x, where we pushed nothing -- only strip the hash,
        because going back there would walk off the site entirely. */
     function closeModal(dueToHistory) {
+        // Ends any active review session first, so the URL loses ?review=1
+        // (via endReviewSession()'s own syncViewToUrl() call) before the
+        // history navigation below runs.
+        if (reviewSessionActive) endReviewSession();
         stopReading();
         const st = window.history.state;
         const trailDepth = (st && st.aureliaNote) ? (st.aureliaDepth || 1) : 0;
@@ -1821,7 +2216,78 @@
     }
     window.addEventListener('popstate', syncModalToLocation);
 
+    /* === KEYBOARD-SHORTCUTS SHEET (Phase 4) ============================
+       showModal() gives #shortcut-sheet a free focus trap and native
+       Escape handling (see the guard at the top of the global keydown
+       handler below), and being a real <dialog> it also makes the rest of
+       the page -- an open note reader included -- inert while it's shown,
+       with no coordination needed against that reader's own markup. */
+    let shortcutSheetReturnFocus = null;
+
+    function openShortcutSheet() {
+        shortcutSheetReturnFocus = document.activeElement;
+        shortcutSheet.showModal();
+        // Not the Close button: the heading is what a screen reader should
+        // announce first, matching how openNote() focuses the panel (whose
+        // content) rather than a control inside it.
+        const title = document.getElementById('shortcut-sheet-title');
+        if (title) title.focus();
+    }
+
+    function closeShortcutSheet() {
+        shortcutSheet.close();
+    }
+
+    // Fires on every close path alike -- Esc, the Close button, or a
+    // programmatic .close() -- so focus returns to whatever opened the
+    // sheet (the toolbar button or wherever '?' was pressed) exactly once,
+    // regardless of how it was dismissed. The '?' key path usually leaves
+    // document.activeElement on <body> (nothing was focused when it was
+    // pressed) -- body.focus() is a silent no-op, so that case and any
+    // element that's gone missing since open both fall back to the
+    // toolbar button rather than dropping focus on the floor.
+    shortcutSheet.addEventListener('close', () => {
+        const target = (shortcutSheetReturnFocus
+            && shortcutSheetReturnFocus !== document.body
+            && typeof shortcutSheetReturnFocus.focus === 'function'
+            && document.contains(shortcutSheetReturnFocus))
+            ? shortcutSheetReturnFocus
+            : document.getElementById('btn-shortcuts');
+        if (target && typeof target.focus === 'function') target.focus();
+        shortcutSheetReturnFocus = null;
+    });
+
     document.addEventListener('keydown', (e) => {
+        // While the shortcut sheet is open, it and the browser's native
+        // Escape/focus-trap handling own all keyboard input (see
+        // openShortcutSheet() below) -- nothing here should also react,
+        // e.g. '[' navigating a note reader that happens to be open
+        // underneath the sheet, or this handler's own Escape branch below
+        // fighting the dialog's native close.
+        if (shortcutSheet.open) return;
+
+        // '?' and '/' work anywhere on the page, not gated on the note
+        // reader being open -- they're entry points into "how do I use
+        // this" and "find a note", not reading controls, so they sit above
+        // the modal-open guard below rather than inside it.
+        if (e.key === '?' && !isTypingTarget(e)) { e.preventDefault(); openShortcutSheet(); return; }
+        if (e.key === '/' && !isTypingTarget(e)) {
+            // Only when the note reader isn't open: moving focus to the
+            // search box behind an aria-modal dialog would break its focus
+            // trap (the reader has no visible search field of its own).
+            if (modalBackdrop.classList.contains('hidden')) {
+                e.preventDefault();
+                const input = document.getElementById('searchInput');
+                if (input) input.focus();
+            }
+            return;
+        }
+        // Read/Study mode toggle -- same global reach as '?'/'/' above.
+        // toggleStudyMode() already re-runs the recall-cover pass on
+        // whatever note is open, so this is safe whether or not the
+        // reader is currently open.
+        if (e.key === 's' && !isTypingTarget(e)) { toggleStudyMode(); return; }
+
         // The open-check has to gate Escape too, not just the reading keys.
         // closeModal() now moves history (see its comment), and this handler
         // fires on every Escape anywhere on the page -- so dismissing the
@@ -1830,9 +2296,29 @@
         // belongs to whatever is actually open.
         if (modalBackdrop.classList.contains('hidden')) return;
         if (e.key === 'Escape') { closeModal(); return; }
+        // The reading/navigation keys below are plain letters and brackets,
+        // not modified combos -- indistinguishable from ordinary typing if
+        // focus happens to be in a field inside the modal (the modal has
+        // none today, but Phase 2's rating keys and future controls will).
+        // Escape is deliberately exempt: it's never text input, and closing
+        // the reader out from under a focused field is the expected move.
+        if (isTypingTarget(e)) return;
         if (e.key === ']') navigateNote(1);
         if (e.key === '[') navigateNote(-1);
         if (e.key === 'r' || e.key === 'R') toggleReading();
+        // Rating shortcuts (Again/Hard/Good/Easy), only meaningful once the
+        // rating row exists (after Reveal) -- see revealAnswer() below.
+        // isTypingTarget above already excludes text fields; there are
+        // none in this modal today, but a stray keypress while, say, a
+        // search box elsewhere on the page happens to hold focus should
+        // never rate a note the reader can't currently see the buttons for.
+        if (['1', '2', '3', '4'].includes(e.key)) {
+            const row = modalContent.querySelector('.rate-row');
+            if (row) {
+                const btn = row.querySelector(`button[data-grade="${e.key}"]`);
+                if (btn && !btn.disabled) { e.preventDefault(); btn.click(); }
+            }
+        }
     });
 
     /* Focus trap. aria-modal="true" tells assistive tech that the rest of
@@ -2100,6 +2586,12 @@
         // derived from the query, so recording it would pin the sort for
         // whoever opens the link and stop it adapting to their search.
         if (sortExplicit && currentSort !== DEFAULT_SORT) params.set('sort', currentSort);
+        // A review session is in-memory state, not localStorage (see
+        // startReviewSession()) -- this is the only record of "a session
+        // was active" that survives a reload, and restoreViewFromUrl()
+        // recomputes the actual queue fresh from the log rather than
+        // trying to restore its exact order.
+        if (reviewSessionActive) params.set('review', '1');
 
         const qs = params.toString();
         // Keep the hash: it may be holding an open note.
@@ -2154,6 +2646,20 @@
                 const input = document.getElementById('searchInput');
                 if (input) input.value = q;
                 currentQuery = q.toLowerCase().trim();
+            }
+
+            // A review session never persists its queue -- reloading with
+            // ?review=1 recomputes it fresh from the log (see the plan's
+            // own "reload recomputes from the log" note), rather than
+            // trying to restore exact queue order across a reload. Doesn't
+            // force-navigate: if the URL also carries a note hash (the
+            // normal case mid-session), openNoteFromHash() opens it
+            // separately once init finishes.
+            if (window.Review && params.get('review') === '1') {
+                reviewSessionActive = true;
+                const allIds = Array.from(document.querySelectorAll('.searchable-item')).map(el => el.dataset.id);
+                reviewQueue = buildInterleavedQueue(Review.dueIds(allIds));
+                reviewSessionTotal = reviewQueue.length;
             }
         } finally {
             restoring = false;
@@ -2328,10 +2834,83 @@
         return fallback;
     }
 
+    // Shared by initGraph()'s canvas path and renderGraphList() below --
+    // both need every node's degree, and computing it is O(nodes+edges)
+    // either way, so there's no reason for the list path to wait on
+    // graphState (which also carries the force-directed layout, the
+    // expensive part this function deliberately skips in list mode).
+    function computeGraphDegrees() {
+        const degree = {};
+        GRAPH_INDEX.nodes.forEach(n => degree[n.id] = 0);
+        GRAPH_INDEX.edges.forEach(e => {
+            degree[e.source] = (degree[e.source] || 0) + 1;
+            degree[e.target] = (degree[e.target] || 0) + 1;
+        });
+        return degree;
+    }
+
+    function isGraphListMode() {
+        return window.innerWidth < 768;
+    }
+
+    // Small-screen fallback for the knowledge graph (Phase 4): drag-to-pan
+    // and scroll-to-zoom don't work well below 768px, and the graph used
+    // to just render illegibly small there. Lists the top 30 notes by
+    // degree, filtered through the same graphNodeMatches() the canvas's
+    // own dimming uses, so it honors the active type filter/search too.
+    // Makes the graph's content reachable on a phone for the first time --
+    // not a substitute for the graph's actual shape.
+    function renderGraphList() {
+        const container = document.getElementById('graph-list-items');
+        const empty = document.getElementById('graph-list-empty');
+        if (!container) return;
+        const degree = computeGraphDegrees();
+        const matches = GRAPH_INDEX.nodes
+            .filter(graphNodeMatches)
+            .sort((a, b) => (degree[b.id] || 0) - (degree[a.id] || 0))
+            .slice(0, 30);
+
+        if (empty) empty.classList.toggle('hidden', matches.length > 0);
+        container.innerHTML = matches.map((n) => {
+            const d = degree[n.id] || 0;
+            return `<li>
+                <button type="button" onclick="openNote('${n.id}')" class="graph-list-row">
+                    <span class="graph-list-title">${escapeHtml(n.title)}</span>
+                    <span class="graph-list-degree">◉ ${d} ${d === 1 ? 'LINK' : 'LINKS'}</span>
+                </button>
+            </li>`;
+        }).join('');
+    }
+
+    // Only announces the list-mode switch on an actual transition into it
+    // (see initGraph() below) -- initGraph() also re-runs on every resize
+    // while the graph view is active, and re-announcing on each of those
+    // while already in list mode would spam a screen reader for no reason.
+    let lastGraphListMode = null;
+
     function initGraph() {
         const canvas = document.getElementById('graph-canvas');
         const wrap = document.getElementById('graph-canvas-wrap');
+        const list = document.getElementById('graph-list');
         if (!canvas || !wrap) return;
+
+        // The pan/zoom hint describes the canvas; in list mode it would be
+        // instructing the reader to drag a list.
+        const hint = document.getElementById('graph-hint');
+        if (isGraphListMode()) {
+            wrap.classList.add('hidden');
+            if (list) list.classList.remove('hidden');
+            if (hint) hint.classList.add('hidden');
+            renderGraphList();
+            if (lastGraphListMode !== true) announce('Graph view, shown as a list on small screens');
+            lastGraphListMode = true;
+            return;
+        }
+        if (list) list.classList.add('hidden');
+        if (hint) hint.classList.remove('hidden');
+        wrap.classList.remove('hidden');
+        lastGraphListMode = false;
+
         /* Backing store in device pixels, drawing surface in CSS pixels --
            same reasoning as the neural canvas above.
 
@@ -2592,6 +3171,590 @@
         };
     })();
 
+    /* === SPACED REVIEW (Phase 2) ======================================
+       Recall-first reader (Study mode), the elaboration nudge, and the
+       SM-2 due queue -- built on window.Review (assets/js/review.js),
+       which owns the localStorage log and the scheduling math. Everything
+       here is page wiring: DOM, events, and the greedy-interleave ordering
+       a review session walks through. */
+
+    // --- Read / Study mode ---------------------------------------------
+    // localStorage key aurelia_study_mode; absent means Read mode (the
+    // default for a first-time visitor). Switching modes re-runs the
+    // recall-cover pass on whatever note is currently open.
+    const STUDY_MODE_KEY = 'aurelia_study_mode';
+    let studyMode = false;
+    try { studyMode = localStorage.getItem(STUDY_MODE_KEY) === 'study'; } catch (e) { /* Safari private mode */ }
+
+    function setStudyModeButtons() {
+        document.querySelectorAll('.study-toggle-btn').forEach(btn => {
+            btn.setAttribute('aria-pressed', String(studyMode));
+        });
+    }
+
+    function toggleStudyMode() {
+        studyMode = !studyMode;
+        try { localStorage.setItem(STUDY_MODE_KEY, studyMode ? 'study' : 'read'); } catch (e) { /* ignore */ }
+        setStudyModeButtons();
+        announce(studyMode ? 'Study mode on' : 'Read mode on');
+        if (currentModalNoteId) applyRecallCover(currentModalNoteId);
+    }
+
+    // A note's maturity only ever lives on its card's data-maturity
+    // attribute (GRAPH_INDEX carries no maturity field -- see
+    // engine/pipeline.py._build_graph_index), so every maturity lookup in
+    // this section, including the v1 migration below, goes through this.
+    function noteMaturity(noteId) {
+        const card = document.querySelector(`.searchable-item[data-id="${CSS.escape(noteId)}"]`);
+        return (card && card.dataset.maturity) || '';
+    }
+
+    // --- Recall cover (Study mode) --------------------------------------
+    // Anchors a note's "answer" element and hides it behind a cover panel
+    // until the reader chooses to reveal it -- practice testing instead of
+    // recognition. No match found -> no cover is applied, and the note is
+    // never blocked either way.
+    const RECALL_HEADING_RE = /Definition|Core Argument|Thesis|Profile & Context/i;
+
+    function findRecallAnchor() {
+        // Concept/Source/Discipline/Author: an <h3> whose text matches the
+        // pattern above, immediately followed by a <blockquote> -- the
+        // extractor's actual rendered shape for these fields (see
+        // engine/extractors.py and engine/cards.py). Case-insensitive: the
+        // heading text convention is consistent in practice, but nothing
+        // about matching it should hinge on capitalization no reader can see.
+        const headings = modalContent.querySelectorAll('h3');
+        for (const h of headings) {
+            if (!RECALL_HEADING_RE.test(h.textContent || '')) continue;
+            const sib = h.nextElementSibling;
+            if (sib && sib.tagName === 'BLOCKQUOTE') return { answer: sib };
+        }
+        // Deep dives: the first <p> whose ONLY child node is an <em> -- the
+        // dek/premise line convention documented in TPL_Deep_Dive.md's own
+        // HTML-comment contract (see CLAUDE.md's Content Model section).
+        const paragraphs = modalContent.querySelectorAll('p');
+        for (const p of paragraphs) {
+            if (p.childNodes.length === 1 && p.firstElementChild && p.firstElementChild.tagName === 'EM') {
+                return { answer: p };
+            }
+        }
+        return null;
+    }
+
+    function removeRecallCover() {
+        const existingCover = modalContent.querySelector('.recall-cover');
+        if (existingCover) existingCover.remove();
+        const existingRow = modalContent.querySelector('.rate-row');
+        if (existingRow) existingRow.remove();
+        modalContent.querySelectorAll('[data-recall-hidden]').forEach(el => {
+            el.hidden = false;
+            el.removeAttribute('data-recall-hidden');
+        });
+    }
+
+    function applyRecallCover(noteId) {
+        // Always starts clean: called both on every openNote() and on every
+        // mode toggle, and a stale cover/rate-row from whatever was on
+        // screen before must never persist into the new state.
+        removeRecallCover();
+        if (!studyMode) return;
+        const anchor = findRecallAnchor();
+        if (!anchor) return;
+
+        const cover = document.createElement('div');
+        cover.className = 'recall-cover';
+        cover.innerHTML = `
+            <p>Try to recall it first.</p>
+            <button type="button" class="rate-btn recall-reveal-btn">Reveal</button>
+        `;
+        anchor.answer.hidden = true;
+        anchor.answer.setAttribute('data-recall-hidden', '1');
+        anchor.answer.before(cover);
+
+        const revealBtn = cover.querySelector('.recall-reveal-btn');
+        const reveal = () => revealAnswer(noteId, anchor, cover);
+        revealBtn.addEventListener('click', reveal);
+        // Space/Enter when the Reveal button itself has focus. The global
+        // keydown handler already ignores typing targets and this button
+        // isn't one, so no extra guard is needed here.
+        revealBtn.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); reveal(); }
+        });
+    }
+
+    const RATE_BUTTONS = [
+        { grade: 1, label: 'Again', key: '1' },
+        { grade: 2, label: 'Hard', key: '2' },
+        { grade: 3, label: 'Good', key: '3' },
+        { grade: 4, label: 'Easy', key: '4' }
+    ];
+
+    // Builds (or rebuilds) the four Again/Hard/Good/Easy buttons inside
+    // `row`. Split out from revealAnswer() so "Change rating" (see
+    // changeRating() below) can restore the same markup without duplicating
+    // it -- innerHTML replacement means any previously-bound listeners are
+    // gone, so every call site pairs this with wireRateButtons().
+    function renderRateButtons(row) {
+        row.innerHTML = `
+            <p class="field-label text-aurelia-muted w-full">How well did you remember it?</p>
+            ${RATE_BUTTONS.map(r => `
+                <button type="button" class="rate-btn" data-grade="${r.grade}">
+                    <span>${r.label}</span>
+                    <span class="rate-key" aria-hidden="true">${r.key}</span>
+                </button>
+            `).join('')}
+        `;
+    }
+
+    function wireRateButtons(row, noteId) {
+        row.querySelectorAll('button[data-grade]').forEach(btn => {
+            btn.addEventListener('click', () => submitRating(noteId, parseInt(btn.dataset.grade, 10), row));
+        });
+    }
+
+    function revealAnswer(noteId, anchor, cover) {
+        anchor.answer.hidden = false;
+        anchor.answer.removeAttribute('data-recall-hidden');
+        cover.remove();
+
+        const row = document.createElement('div');
+        row.className = 'rate-row';
+        row.setAttribute('role', 'group');
+        row.setAttribute('aria-label', 'How well did you remember it?');
+        renderRateButtons(row);
+        anchor.answer.after(row);
+        wireRateButtons(row, noteId);
+        row.querySelector('button[data-grade]').focus({ preventScroll: true });
+    }
+
+    // Confirmation line shown in place of the rating row once a grade has
+    // been submitted (outside an active review session -- see
+    // submitRating() below). tabindex="-1" on the <p> (set here, not in
+    // CSS) is what lets it be focused: the button the reader just clicked
+    // is gone, replaced by this element, so focus has to be moved onto
+    // something inside the reader or it falls out to <body>.
+    function showRateConfirmation(row, noteId, grade) {
+        const label = (RATE_BUTTONS.find(r => r.grade === grade) || {}).label || '';
+        const state = window.Review ? Review.stateFor(noteId) : null;
+        const duePhrase = state ? nextDuePhrase(state) : '';
+        row.innerHTML = `
+            <p class="rate-confirm" tabindex="-1">Rated ${label}${duePhrase ? ' · ' + duePhrase : ''}
+                <button type="button" class="rate-change-btn">Change rating</button>
+            </p>
+        `;
+        const confirmEl = row.querySelector('.rate-confirm');
+        const changeBtn = row.querySelector('.rate-change-btn');
+        if (changeBtn) changeBtn.addEventListener('click', () => changeRating(row, noteId));
+        if (confirmEl) confirmEl.focus({ preventScroll: true });
+    }
+
+    // "Change rating": restores the SM-2 log entry to exactly what it was
+    // before the rating this row is currently confirming (see the snapshot
+    // taken in submitRating() below, via Review.restore() in review.js),
+    // then shows the four buttons again. Restoring first is what makes a
+    // second rate() call safe -- it runs from the same clean pre-rating
+    // state the first click did, rather than compounding onto the already-
+    // rated entry, so the SM-2 log never double-counts one recall attempt.
+    function changeRating(row, noteId) {
+        if (window.Review && typeof Review.restore === 'function') {
+            Review.restore(noteId, row._preRatingSnapshot || null);
+        }
+        delete row._preRatingSnapshot;
+        updateReviewedFooter(noteId);
+        refreshDueState();
+        applyDueMarkers();
+        renderRateButtons(row);
+        wireRateButtons(row, noteId);
+        const firstBtn = row.querySelector('button[data-grade]');
+        if (firstBtn) firstBtn.focus({ preventScroll: true });
+    }
+
+    function submitRating(noteId, grade, row) {
+        if (!window.Review) return;
+        // Snapshot BEFORE rating -- this is the state "Change rating" (see
+        // changeRating() above) restores if the reader wants a do-over. A
+        // shallow copy: rate() below assigns a brand-new object into the
+        // log rather than mutating this one in place, so the copy is
+        // belt-and-braces rather than strictly required.
+        const priorState = Review.stateFor(noteId);
+        const snapshot = priorState ? Object.assign({}, priorState) : null;
+        Review.rate(noteId, grade, noteMaturity(noteId));
+        updateReviewedFooter(noteId);
+        refreshDueState();
+        applyDueMarkers();
+        renderElaboration(noteId);
+
+        if (reviewSessionActive) {
+            advanceReviewSession(noteId);
+            return;
+        }
+        // Not in a session: nothing to advance to. Replace the rating row
+        // with a confirmation line rather than leaving it inert or removing
+        // it out from under the reader (see fix #1/#2 -- this is also what
+        // keeps keyboard focus inside the reader instead of falling out to
+        // <body>).
+        if (row) {
+            row._preRatingSnapshot = snapshot;
+            showRateConfirmation(row, noteId, grade);
+        }
+    }
+
+    // --- "Last reviewed / next due" footer ------------------------------
+    function relativeDayPhrase(deltaMs, direction) {
+        const days = Math.round(Math.abs(deltaMs) / DAY_MS);
+        if (days === 0) return 'today';
+        return direction === 'ago' ? `${days} day${days === 1 ? '' : 's'} ago` : `in ${days} day${days === 1 ? '' : 's'}`;
+    }
+
+    // Shared by #modal-reviewed (updateReviewedFooter, below) and the
+    // post-rating confirmation line (showRateConfirmation, above) -- one
+    // place computing "next due", not two copies of the same date math.
+    function nextDuePhrase(state) {
+        const now = Date.now();
+        return `next due ${state.due <= now ? 'now' : relativeDayPhrase(state.due - now, 'in')}`;
+    }
+
+    function updateReviewedFooter(noteId) {
+        const el = document.getElementById('modal-reviewed');
+        if (!el || !window.Review) return;
+        const state = Review.stateFor(noteId);
+        if (!state) { el.textContent = 'Never reviewed'; return; }
+        const lastPhrase = relativeDayPhrase(Date.now() - state.last, 'ago');
+        el.textContent = `Last reviewed ${lastPhrase} · ${nextDuePhrase(state)}`;
+    }
+
+    // --- Elaboration nudge -----------------------------------------------
+    // Runs after a rating is submitted (see submitRating() above).
+    // Candidates come from this note's explicit backlinks (BACKLINKS_INDEX)
+    // unioned with its graph neighbours (GRAPH_INDEX.edges), ranked by
+    // DIFFERENCE from the current note -- a different type first, then
+    // fewest shared topic/* tags -- so the nudge surfaces genuinely
+    // different material to connect to (the plan's Interleaving principle),
+    // not more of the same.
+    function noteTopicTags(id) {
+        const node = NODE_BY_ID[id];
+        return node ? (node.tags || []).filter(t => t.startsWith('topic/')) : [];
+    }
+
+    function sharedTopicCount(idA, idB) {
+        const a = new Set(noteTopicTags(idA));
+        return noteTopicTags(idB).filter(t => a.has(t)).length;
+    }
+
+    function graphNeighbours(noteId) {
+        const ids = new Set();
+        (GRAPH_INDEX.edges || []).forEach(edge => {
+            if (edge.source === noteId) ids.add(edge.target);
+            else if (edge.target === noteId) ids.add(edge.source);
+        });
+        return ids;
+    }
+
+    // Daily logs and Gemini Notebook dumps are course material, not
+    // concepts -- an elaboration prompt against one ("How does this connect
+    // to 2026-02-12?") is useless, so these are hard-excluded regardless of
+    // how well they'd otherwise score. Everything else the vault publishes
+    // (concept/source/author/discipline/deep-dive) is fair game, ranked by
+    // NUDGE_TYPE_PREFERENCE below.
+    const NUDGE_EXCLUDED_TYPES = new Set(['daily-bridge', 'log', 'gemini-notebook']);
+    // Tie-break preference among different-type candidates, most to least
+    // preferred. Doesn't need to be exhaustive: any type not listed here
+    // (there isn't one among the surviving, non-excluded types today) sorts
+    // after every listed one via nudgeTypeRank()'s fallback.
+    const NUDGE_TYPE_PREFERENCE = ['discipline', 'author', 'source', 'deep-dive', 'concept'];
+
+    function nudgeTypeRank(type) {
+        const idx = NUDGE_TYPE_PREFERENCE.indexOf(type);
+        return idx === -1 ? NUDGE_TYPE_PREFERENCE.length : idx;
+    }
+
+    function renderElaboration(noteId) {
+        const container = document.getElementById('modal-elaborate');
+        if (!container) return;
+        const current = NODE_BY_ID[noteId];
+        const currentType = current ? current.type : '';
+        const currentTags = new Set(noteTopicTags(noteId));
+
+        const candidateIds = new Set();
+        (BACKLINKS_INDEX[noteId] || []).forEach(r => candidateIds.add(r.id));
+        graphNeighbours(noteId).forEach(id => candidateIds.add(id));
+        candidateIds.delete(noteId);
+
+        const scored = Array.from(candidateIds)
+            .map(id => NODE_BY_ID[id])
+            .filter(Boolean)
+            .filter(node => !NUDGE_EXCLUDED_TYPES.has(node.type))
+            .map(node => ({
+                node,
+                // 1 when the type differs -- sorted to the top below.
+                differentType: node.type !== currentType ? 1 : 0,
+                typeRank: nudgeTypeRank(node.type),
+                shared: (node.tags || []).filter(t => currentTags.has(t)).length
+            }))
+            // Different type first; among ties, prefer discipline > author >
+            // source > deep-dive > concept (NUDGE_TYPE_PREFERENCE); among
+            // further ties, fewer shared topic tags first (more genuinely
+            // different material). Same-type concepts are never filtered
+            // out, just sorted to the bottom -- the plan's fallback rule:
+            // show them as a last resort rather than render nothing.
+            .sort((a, b) => b.differentType - a.differentType
+                || a.typeRank - b.typeRank
+                || a.shared - b.shared)
+            .slice(0, 3);
+
+        if (scored.length === 0) { container.innerHTML = ''; return; }
+
+        container.innerHTML = `
+            <div class="mt-6 pt-6 border-t border-aurelia-border">
+                <span class="field-label text-aurelia-insight block mb-3">How does this connect?</span>
+                <div class="flex flex-col gap-2">
+                    ${scored.map(r => `
+                    <p class="text-[0.8125rem] text-aurelia-muted">
+                        How does this connect to
+                        <button type="button" onclick="openNote('${r.node.id}')" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-insight hover:text-aurelia-insight cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>?
+                    </p>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // --- Due state (grid markers, due count, "Start review") -------------
+    // dueIdSet is rebuilt once per updateGrid() sweep (see its own "6. DUE
+    // MARKERS" step) -- never once per card. Review.dueIds() itself only
+    // touches localStorage on the very first call on this page (the log is
+    // cached in review.js's module state after that), so this is cheap on
+    // every subsequent keystroke.
+    let dueIdSet = new Set();
+
+    function refreshDueState() {
+        if (!window.Review) return;
+        const allIds = Array.from(document.querySelectorAll('.searchable-item')).map(el => el.dataset.id);
+        dueIdSet = new Set(Review.dueIds(allIds));
+
+        const dueCountEl = document.getElementById('due-count');
+        if (dueCountEl) dueCountEl.textContent = dueIdSet.size;
+
+        const startBtn = document.getElementById('btn-start-review');
+        if (startBtn) {
+            startBtn.disabled = dueIdSet.size === 0;
+            startBtn.title = dueIdSet.size === 0
+                ? 'No notes are due for review yet. Rate a note in Study mode to add it to the queue.'
+                : `Start a review session for ${dueIdSet.size} due note${dueIdSet.size === 1 ? '' : 's'}`;
+        }
+    }
+
+    function applyDueMarkers() {
+        document.querySelectorAll('.searchable-item').forEach(el => {
+            el.classList.toggle('is-due', dueIdSet.has(el.dataset.id));
+        });
+    }
+
+    // --- Review session (queue, greedy interleave, auto-advance) ---------
+    let reviewSessionActive = false;
+    let reviewQueue = [];
+    // Snapshot of the queue's starting length, taken once when a session
+    // begins (startReviewSession()) or is recomputed on reload
+    // (restoreViewFromUrl()). reviewQueue itself shrinks as notes are
+    // rated, so this is what lets updateSessionProgress() below say
+    // "Reviewing 2 of 5" rather than only knowing how many are left.
+    let reviewSessionTotal = 0;
+
+    // "Reviewing N of M" in the modal header strip (#modal-session, next to
+    // #modal-connections) -- visible only while a session is active. Called
+    // from applyNoteChrome() on every openNote() (so it's always current
+    // for whatever note is on screen) and from endReviewSession() (so it
+    // hides immediately when a session ends without opening a new note --
+    // see showSessionComplete() below).
+    function updateSessionProgress() {
+        const el = document.getElementById('modal-session');
+        if (!el) return;
+        if (!reviewSessionActive) {
+            el.textContent = '';
+            el.classList.add('hidden');
+            return;
+        }
+        const position = reviewSessionTotal - reviewQueue.length + 1;
+        el.textContent = `Reviewing ${position} of ${reviewSessionTotal}`;
+        el.classList.remove('hidden');
+    }
+
+    // Replaces the rating row (and clears the elaboration nudge) with a
+    // visible "Session complete" line and a Back to the Garden button, once
+    // the last due note in a session has been rated and there's nothing
+    // left to advance to (see advanceReviewSession() below). Reuses
+    // .rate-row/.rate-confirm rather than a new component -- this is the
+    // same confirmation-line shape submitRating() already uses, just with
+    // different copy and a different action.
+    function showSessionComplete(count) {
+        let row = modalContent.querySelector('.rate-row');
+        if (!row) {
+            row = document.createElement('div');
+            row.className = 'rate-row';
+            modalContent.appendChild(row);
+        }
+        const elaborateEl = document.getElementById('modal-elaborate');
+        if (elaborateEl) elaborateEl.innerHTML = '';
+        row.innerHTML = `
+            <p class="rate-confirm" tabindex="-1">Session complete: ${count} note${count === 1 ? '' : 's'} reviewed.
+                <button type="button" class="rate-change-btn" onclick="closeModal()">Back to the Garden</button>
+            </p>
+        `;
+        const confirmEl = row.querySelector('.rate-confirm');
+        if (confirmEl) confirmEl.focus({ preventScroll: true });
+    }
+
+    function noteType(id) {
+        const card = document.querySelector(`.searchable-item[data-id="${CSS.escape(id)}"]`);
+        if (card) return (card.dataset.type || '').toLowerCase();
+        const node = NODE_BY_ID[id];
+        return node ? (node.type || '').toLowerCase() : '';
+    }
+
+    /* Greedy interleave: repeatedly pick, from the remaining due pool, a
+       note whose type differs from the type of EACH of the last two notes
+       shown (if such a note exists), tie-breaking among valid candidates by
+       fewest shared topic/* tags with the immediately preceding note --
+       falling back to the best-available candidate (same tie-break) when
+       no candidate can satisfy the type constraint. Surfaces genuinely
+       different material back-to-back rather than letting the queue run
+       through, say, six concepts in a row just because six concepts
+       happened to be due. */
+    function buildInterleavedQueue(dueIdList) {
+        const pool = dueIdList.slice();
+        const ordered = [];
+        let lastTwoTypes = [];
+        let previous = null;
+
+        while (pool.length) {
+            let candidates = pool.filter(id => !lastTwoTypes.includes(noteType(id)));
+            if (candidates.length === 0) candidates = pool.slice();
+
+            candidates.sort((a, b) => {
+                const sharedA = previous ? sharedTopicCount(previous, a) : 0;
+                const sharedB = previous ? sharedTopicCount(previous, b) : 0;
+                return sharedA - sharedB;
+            });
+
+            const chosen = candidates[0];
+            ordered.push(chosen);
+            pool.splice(pool.indexOf(chosen), 1);
+            lastTwoTypes = [noteType(chosen), lastTwoTypes[0]].filter(Boolean).slice(0, 2);
+            previous = chosen;
+        }
+        return ordered;
+    }
+
+    function startReviewSession() {
+        if (!window.Review) return;
+        const visible = getVisibleNoteIds();
+        const candidates = visible.length
+            ? visible
+            : Array.from(document.querySelectorAll('.searchable-item')).map(el => el.dataset.id);
+        const due = Review.dueIds(candidates);
+        if (due.length === 0) return;
+        reviewQueue = buildInterleavedQueue(due);
+        reviewSessionTotal = reviewQueue.length;
+        reviewSessionActive = true;
+        syncViewToUrl();
+        openNote(reviewQueue[0], 'push');
+    }
+
+    function endReviewSession() {
+        if (!reviewSessionActive) return;
+        reviewSessionActive = false;
+        reviewQueue = [];
+        syncViewToUrl();
+        updateSessionProgress();
+    }
+
+    // Called after a rating is submitted, when a session is active: drops
+    // the just-rated note from the queue and opens the next one.
+    // 'replace' mirrors navigateNote's own reasoning (see its comment
+    // above) -- stepping through an entire session stays ONE history
+    // entry, not one per note.
+    function advanceReviewSession(justRatedId) {
+        reviewQueue = reviewQueue.filter(id => id !== justRatedId);
+        if (reviewQueue.length === 0) {
+            const reviewedCount = reviewSessionTotal;
+            endReviewSession();
+            showSessionComplete(reviewedCount);
+            announce('Review session complete');
+            return;
+        }
+        openNote(reviewQueue[0], 'replace');
+        // openNote() only moves focus into the panel when the modal was
+        // previously closed (see its own comment) -- here it's already
+        // open, so focus has to be moved explicitly or a keyboard user is
+        // left on the just-removed rating button (about to be detached)
+        // with nowhere to land but <body>. One frame so the new note's
+        // recall cover (built by applyRecallCover, called from openNote)
+        // exists to focus into.
+        requestAnimationFrame(() => {
+            const revealBtn = modalContent.querySelector('.recall-reveal-btn');
+            if (revealBtn) revealBtn.focus({ preventScroll: true });
+        });
+    }
+
+    // --- Progress panel (export / import) ---------------------------------
+    function exportReviewProgress() {
+        if (!window.Review) return;
+        const blob = new Blob([JSON.stringify(Review.export(), null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date().toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `garden-progress-${today}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function importReviewProgress(file) {
+        const resultEl = document.getElementById('progress-panel-result');
+        if (!file || !window.Review) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+            let data;
+            try {
+                data = JSON.parse(reader.result);
+            } catch (e) {
+                if (resultEl) resultEl.textContent = 'That file is not valid JSON.';
+                return;
+            }
+            const result = Review.import(data);
+            if (!result.ok) {
+                if (resultEl) resultEl.textContent = result.error;
+                return;
+            }
+            if (resultEl) {
+                resultEl.textContent = `Imported — kept whichever review was more recent for each note (${result.merged} updated).`;
+            }
+            refreshDueState();
+            applyDueMarkers();
+            if (currentModalNoteId) updateReviewedFooter(currentModalNoteId);
+        };
+        reader.onerror = () => { if (resultEl) resultEl.textContent = 'Could not read that file.'; };
+        reader.readAsText(file);
+    }
+
+    const DAY_MS = 24 * 60 * 60 * 1000;
+
+    // --- Review init -------------------------------------------------------
+    // Loads (and, on a v1 log, migrates -- see review.js's migrateV1())
+    // before restoreViewFromUrl() below, since that may itself need to
+    // recompute a due queue from ?review=1. save() persists a v1->v2
+    // migration immediately rather than leaving it to redo in memory on
+    // every future reload.
+    if (window.Review) {
+        try {
+            Review.load({ getMaturity: noteMaturity });
+            Review.save();
+        } catch (e) { /* localStorage unavailable -- Review already no-ops safely */ }
+    }
+    setStudyModeButtons();
+
     renderTopicCloud();
     restoreViewFromUrl();
     // Establishes the default order even when the URL carried no state,
@@ -2600,5 +3763,10 @@
     syncSortControl();
     updateSortControlVisibility();
     openNoteFromHash();
+    // Populates the due count/"Start review" state and grid markers on
+    // first paint -- restoreViewFromUrl() only calls updateGrid() (which
+    // does this) when the URL actually carried state to restore.
+    refreshDueState();
+    applyDueMarkers();
 </script>
 {% endblock %}

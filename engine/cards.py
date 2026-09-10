@@ -164,7 +164,7 @@ def _connection_badge(count, color):
             f'title="{count} {label} to or from this note">&#9673; {count}</span>')
 
 
-def generate_garden_card_html(meta, filename, note_id, body_content, full_search_text,
+def generate_garden_card_html(meta, filename, note_id, body_content,
                               known_ids=frozenset(), connections=0, created=""):
     # str() guards against frontmatter values YAML infers as non-strings
     # (e.g. an unquoted "type: 2026" would parse as an int, not text).

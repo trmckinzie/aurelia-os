@@ -19,10 +19,14 @@ from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
 from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env, load_user_config
 from engine.content import (
+    build_link_resolver,
     dim_dangling_links,
     get_malformed_count,
     get_missing_asset_count,
     get_missing_assets,
+    get_resolved_wikilink_targets,
+    get_unresolved_wikilink_targets,
+    get_wikilink_resolution_counts,
     make_id,
     parse_body,
     parse_frontmatter,
@@ -30,6 +34,7 @@ from engine.content import (
     process_wikilinks,
     reset_malformed_count,
     reset_missing_asset_count,
+    reset_wikilink_resolution_counts,
     wrap_gemini_notebook_sections,
 )
 from engine.paths import escapes
@@ -74,6 +79,7 @@ def _scan_vault():
     """
     reset_malformed_count()
     reset_missing_asset_count()
+    reset_wikilink_resolution_counts()
     pending = []
 
     # Resolved once, outside the walk: every note found below has to prove it
@@ -140,19 +146,42 @@ def _scan_vault():
             tag_text = ' '.join(str(t) for t in meta.get("tags", []))
             full_search_text = f"{raw_search} {tag_text}".replace('\n', ' ').replace('"', "").replace("'", "").lower()
 
-            processed_body = process_wikilinks(body)
-            if "gemini-notebook" in note_type:
-                processed_body = process_gemini_notebook_media(processed_body)
-                processed_body = wrap_gemini_notebook_sections(processed_body)
+            # Coerced str -> [str] the same way parse_frontmatter already
+            # coerces `tags` -- an author writing a single alias unquoted as
+            # `aliases: Some Alias` is valid YAML (a bare string), not a list.
+            aliases = meta.get("aliases") or []
+            if isinstance(aliases, str):
+                aliases = [aliases]
+            aliases = [str(a).strip() for a in aliases if str(a).strip()]
 
+            # Wikilink resolution (process_wikilinks + the Gemini media/
+            # section passes) is deliberately NOT done here. An alias or a
+            # "Base (...)" title suffix can point at a note this walk hasn't
+            # reached yet, so build_link_resolver() needs every pending
+            # note's id/title/aliases at once -- see the second pass below.
             pending.append({
                 "meta": meta,
                 "filename": filename,
                 "note_id": note_id,
                 "title": title,
-                "processed_body": processed_body,
+                "note_type": note_type,
+                "body": body,
+                "aliases": aliases,
                 "full_search_text": full_search_text,
             })
+
+    # Second pass: now that every published note's id/title/aliases is
+    # known, resolve wikilinks (aliases, unique title-suffix bases -- see
+    # content.build_link_resolver) and run the Gemini Notebook media/section
+    # passes, which depend on wikilink-resolved bodies for their own regex
+    # scans same as before.
+    resolve = build_link_resolver(pending)
+    for p in pending:
+        processed_body = process_wikilinks(p["body"], resolve)
+        if "gemini-notebook" in p["note_type"]:
+            processed_body = process_gemini_notebook_media(processed_body)
+            processed_body = wrap_gemini_notebook_sections(processed_body)
+        p["processed_body"] = processed_body
 
     known_ids = {p["note_id"] for p in pending}
 
@@ -181,7 +210,7 @@ def _scan_vault():
     garden_cards = []
     for p in pending:
         card_html = cards.generate_garden_card_html(
-            p["meta"], p["filename"], p["note_id"], p["processed_body"], p["full_search_text"], known_ids,
+            p["meta"], p["filename"], p["note_id"], p["processed_body"], known_ids,
             connections=degree.get(p["note_id"], 0),
             created=str(p["meta"].get("created", "")),
         )
@@ -415,7 +444,8 @@ def _asset_version():
     needlessly bust every visitor's cache.
     """
     digest = hashlib.sha256()
-    for rel in ("assets/css/main.css", "assets/js/utils.js"):
+    for rel in ("assets/css/main.css", "assets/js/utils.js", "assets/js/review.js",
+                "assets/js/flashcards.js"):
         path = os.path.join(ROOT_DIR, rel)
         try:
             with open(path, "rb") as f:
@@ -661,6 +691,17 @@ def build_all(sort_dropzone=None):
             print(f"        - {path}")
         if len(unique) > 3:
             print(f"        ... and {len(unique) - 3} more")
+
+    # Alias/suffix resolution (see content.build_link_resolver) closes some
+    # of the gap between what Travis wrote and what the site could already
+    # show as a live link; this reports how much, and points at the report
+    # that lists what's still dangling -- see tools/vault_health.py.
+    alias_resolved, suffix_resolved = get_wikilink_resolution_counts()
+    resolved_targets = get_resolved_wikilink_targets()
+    unresolved_targets = get_unresolved_wikilink_targets()
+    print(f"   + Wikilinks: {alias_resolved + suffix_resolved} link occurrences "
+          f"({len(resolved_targets)} distinct targets) resolved via alias or title suffix; "
+          f"{len(unresolved_targets)} targets still unresolved (tools/vault_health.py --report pending)")
 
     master_index = _build_search_index(garden_cards, profile)
     json_index = dumps_for_script_tag(master_index)

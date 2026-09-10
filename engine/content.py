@@ -2,6 +2,7 @@
 import csv
 import os
 import re
+from collections import defaultdict
 
 import yaml
 
@@ -134,8 +135,17 @@ def parse_body(content):
     return parts[2].strip()
 
 
-def process_wikilinks(text):
-    """Converts [[Link]] / [[Target|Label]] to clickable modal-open buttons."""
+def process_wikilinks(text, resolve=None):
+    """Converts [[Link]] / [[Target|Label]] to clickable modal-open buttons.
+
+    `resolve` maps the raw target text of a wikilink to a note id -- defaults
+    to plain make_id(), the historical behavior (an exact filename/title
+    slug), so every caller that doesn't pass one gets byte-identical output.
+    Pass a function built by build_link_resolver() to also resolve aliases
+    and unique title-suffix bases (see that function's docstring).
+    """
+    resolve = resolve or make_id
+
     def replace_link(match):
         link_content = match.group(1)
         if '|' in link_content:
@@ -143,12 +153,179 @@ def process_wikilinks(text):
         else:
             target, label = link_content, link_content
 
-        target_id = make_id(target)
+        target_id = resolve(target)
         return (f'<button onclick="openNote(\'{target_id}\')" '
                 f'class="text-aurelia-primary hover:underline font-bold bg-transparent '
                 f'border-none cursor-pointer p-0 inline">{label}</button>')
 
     return re.sub(r'\[\[(.*?)\]\]', replace_link, text)
+
+
+# --- wikilink resolution (aliases, unique title-suffix bases) --------------
+#
+# 74% of the wikilinks written in the vault were dangling on the published
+# site -- most of them not because the target note doesn't exist, but
+# because the author wrote a shorter mention ([[System 1 vs System 2]]) of a
+# note whose actual title carries a disambiguating suffix ("System 1 vs
+# System 2 (Dual-Process Theory)"), or an alias never spelled out in the
+# link text. build_link_resolver() closes that gap without touching how a
+# note's own id is computed (still plain make_id() of its filename/title).
+
+# "Base (...)" -- a trailing parenthetical, captured separately so the
+# marker itself can be inspected (see _suffix_base's Gemini Notebook
+# exclusion below).
+_SUFFIX_PAREN_RE = re.compile(r'^(.+?)\s*\(([^()]*)\)\s*$')
+# "Base: ..." -- everything after the first colon.
+_SUFFIX_COLON_RE = re.compile(r'^([^:]+):\s+.+$')
+# A "(Gemini Notebook)" parenthetical marks a note's *content type*, not a
+# disambiguator -- see _suffix_base.
+_GEMINI_NOTEBOOK_MARKER_RE = re.compile(r'^gemini notebook$', re.IGNORECASE)
+
+# Counters in the _missing_asset_count style, read by pipeline.py to print a
+# build summary line and by tools/vault_health.py to keep its own "pending"
+# report's unresolved count in agreement with the real build's.
+_alias_resolved_count = 0
+_suffix_resolved_count = 0
+# Distinct raw target slugs (make_id() of the wikilink text as written, e.g.
+# "note-dopamine") that resolved via alias or suffix at least once. A single
+# popular mention like [[System 1 vs System 2]] repeated 35 times is one
+# entry here, not 35 -- this is what lets the build summary report "N link
+# occurrences (M distinct targets)" instead of conflating the two.
+_resolved_wikilink_targets = set()
+# Populated by dim_dangling_links() below, not by resolve() itself: a target
+# id can fail alias/suffix resolution and still turn out fine (e.g. it
+# resolves to itself via plain make_id and IS a known note) -- "still
+# unresolved" is properly decided where dangling links are actually detected
+# against the known-ids set, which is what dim_dangling_links already does.
+_unresolved_wikilink_targets = set()
+
+
+def get_wikilink_resolution_counts():
+    """(alias_resolved, suffix_resolved) occurrence counts since the last reset."""
+    return _alias_resolved_count, _suffix_resolved_count
+
+
+def get_resolved_wikilink_targets():
+    """Distinct raw target slugs resolved via alias or suffix -- see
+    _resolved_wikilink_targets above for why this is not the same number as
+    get_wikilink_resolution_counts()'s occurrence totals."""
+    return set(_resolved_wikilink_targets)
+
+
+def get_unresolved_wikilink_targets():
+    return set(_unresolved_wikilink_targets)
+
+
+def reset_wikilink_resolution_counts():
+    global _alias_resolved_count, _suffix_resolved_count
+    _alias_resolved_count = 0
+    _suffix_resolved_count = 0
+    _resolved_wikilink_targets.clear()
+    _unresolved_wikilink_targets.clear()
+
+
+def _suffix_base(title):
+    """Returns the 'Base' of a 'Base (...)' or 'Base: ...' title, else None.
+
+    "(Gemini Notebook)" is excluded from the parenthetical case: it marks a
+    note as a Gemini Notebook literature note (a different content type),
+    not a disambiguating suffix of some other note's title. Without this
+    exclusion, [[Neuroanatomy]] could silently resolve to "Neuroanatomy
+    (Gemini Notebook)" whenever an unpublished Concept note shared the base
+    title "Neuroanatomy" -- a semantically wrong match, since the literature
+    note isn't a disambiguation of the concept, it's an unrelated note that
+    happens to share a name. A title with a genuine non-marker parenthetical
+    still resolves normally.
+    """
+    match = _SUFFIX_PAREN_RE.match(title)
+    if match:
+        base, marker = match.group(1).strip(), match.group(2).strip()
+        if not _GEMINI_NOTEBOOK_MARKER_RE.match(marker):
+            return base
+    match = _SUFFIX_COLON_RE.match(title)
+    if match:
+        return match.group(1).strip()
+    return None
+
+
+def build_link_resolver(notes):
+    """Builds resolve(target_text) -> note_id from three tiers, an earlier
+    tier never overwritten by a later one:
+
+      1. Exact: make_id(target_text) is itself a known note id (i.e. the
+         wikilink text matches some note's title/filename exactly). Handled
+         directly in resolve() against known_ids -- needs no lookup table.
+      2. Alias: a note's frontmatter `aliases:` list (coerced str -> [str],
+         same as `tags` in parse_frontmatter). An alias slug claimed by more
+         than one note is ambiguous and dropped, with a single warning.
+      3. Unique title-suffix base: for titles shaped "Base (...)" or
+         "Base: ...", make_id(Base) resolves to that note only when exactly
+         one published note shares that base.
+
+    `notes`: iterable of dicts with "note_id", "title", and optionally
+    "aliases" (a list of alias strings). Extra keys are ignored, so the
+    pipeline's own pending-note dicts can be passed directly.
+    """
+    known_ids = {n["note_id"] for n in notes}
+
+    alias_candidates = defaultdict(set)
+    for n in notes:
+        aliases = n.get("aliases") or []
+        # `aliases: Some Alias` is valid YAML (a bare string), not a list --
+        # coerce the same way parse_frontmatter does for tags (content.py's
+        # own precedent). pipeline.py already does this before building its
+        # note dicts, but build_link_resolver() shouldn't assume every
+        # caller does; a bare string here would otherwise iterate character
+        # by character.
+        if isinstance(aliases, str):
+            aliases = [aliases]
+        for alias in aliases:
+            alias_candidates[make_id(str(alias))].add(n["note_id"])
+
+    alias_map = {}
+    warned_alias_collision = False
+    for alias_id, note_ids in alias_candidates.items():
+        if alias_id in known_ids:
+            # A real note's own title always wins -- resolve() checks
+            # known_ids before ever consulting alias_map, so this alias
+            # would never be reached anyway. Not registering it keeps the
+            # map itself an honest record of what it actually decides.
+            continue
+        if len(note_ids) > 1:
+            if not warned_alias_collision:
+                print(f"   ⚠️  Alias '{alias_id}' is claimed by multiple notes -- dropping it")
+                warned_alias_collision = True
+            continue
+        alias_map[alias_id] = next(iter(note_ids))
+
+    suffix_candidates = defaultdict(set)
+    for n in notes:
+        base = _suffix_base(n["title"])
+        if base:
+            suffix_candidates[make_id(base)].add(n["note_id"])
+
+    suffix_map = {
+        base_id: next(iter(note_ids))
+        for base_id, note_ids in suffix_candidates.items()
+        if len(note_ids) == 1 and base_id not in known_ids and base_id not in alias_map
+    }
+
+    def resolve(target_text):
+        global _alias_resolved_count, _suffix_resolved_count
+        target_id = make_id(target_text)
+        if target_id in known_ids:
+            return target_id
+        if target_id in alias_map:
+            _alias_resolved_count += 1
+            _resolved_wikilink_targets.add(target_id)
+            return alias_map[target_id]
+        if target_id in suffix_map:
+            _suffix_resolved_count += 1
+            _resolved_wikilink_targets.add(target_id)
+            return suffix_map[target_id]
+        return target_id
+
+    return resolve
 
 
 _WIKILINK_BUTTON_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
@@ -161,11 +338,26 @@ def dim_dangling_links(html, known_ids):
     structured fields (Related, Core Concepts, ...), extended here to cover plain
     in-prose wikilinks, which link_pill() never sees since it only runs on
     extractor-parsed fields, not a note's full body.
+
+    Also the one place that records a target as genuinely unresolved (see
+    _unresolved_wikilink_targets above) -- this is where "does this link's
+    target actually exist" is decided, alias/suffix resolution included,
+    since resolve() itself has already run by the time this sees the body.
     """
     def replace(match):
         target_id, label = match.group(1), match.group(2)
         if target_id in known_ids:
             return match.group(0)
+        if target_id != "note-":
+            # "note-" is what an unfilled "[[ ]]" placeholder slugifies to
+            # (make_id("") == "note-") -- some published Concept notes still
+            # carry this from TPL_Concept.md's old Related-field default. It
+            # isn't a real dangling link to a concept that doesn't exist yet,
+            # so it shouldn't inflate the "still unresolved" count -- the
+            # same placeholder tools/vault_health.py's find_pending_atomization
+            # already skips via its own blank-target_text guard, which is
+            # what this count is meant to agree with (see build_all()).
+            _unresolved_wikilink_targets.add(target_id)
         return f'<span class="opacity-70 grayscale cursor-default" title="Not yet published">{label}</span>'
 
     return _WIKILINK_BUTTON_RE.sub(replace, html)
@@ -216,8 +408,7 @@ def _render_audio(path):
     return f"""
 <div class="my-6 p-4 border-l-2 border-aurelia-info bg-aurelia-info/5 rounded-r-theme">
 <div class="flex items-center justify-between mb-3">
-<span class="field-label text-aurelia-info">:: NEURAL_AUDIO_STREAM</span>
-<span class="text-[10px] font-mono text-aurelia-info animate-pulse">● LIVE_ASSET</span>
+<span class="field-label text-aurelia-info">Audio overview</span>
 </div>
 <audio controls class="w-full h-8 opacity-80 hover:opacity-100 transition-opacity">
 <source src="{path}" type="{mime}">
@@ -230,7 +421,7 @@ def _render_video(path):
 <div class="my-6 border border-aurelia-border rounded-theme overflow-hidden bg-aurelia-bg">
 <div class="p-2 border-b border-aurelia-border bg-aurelia-card/50 flex items-center gap-2">
 <span class="w-2 h-2 bg-aurelia-info rounded-full animate-pulse"></span>
-<span class="field-label text-aurelia-muted">VISUAL_FEED</span>
+<span class="field-label text-aurelia-muted">Video overview</span>
 </div>
 <video controls class="w-full max-h-[400px]">
 <source src="{path}" type="video/mp4">
@@ -242,7 +433,7 @@ def _render_image(path):
     return f"""
 <div class="my-6 group relative border border-aurelia-border rounded-theme overflow-hidden bg-aurelia-bg/50 hover:border-aurelia-info/50 transition-colors">
 <div class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-<a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-border rounded-theme hover:bg-aurelia-info hover:text-aurelia-inverted">ENLARGE</a>
+<a href="{path}" target="_blank" class="px-2 py-1 bg-aurelia-bg/80 text-[10px] font-mono text-aurelia-text border border-aurelia-border rounded-theme hover:bg-aurelia-info hover:text-aurelia-inverted">Open full size</a>
 </div>
 <img src="{path}" class="w-full h-auto opacity-90 group-hover:opacity-100 transition-opacity" alt="Gemini Notebook Asset">
 </div>"""
@@ -321,18 +512,31 @@ def _note_missing_asset(path):
 
 
 def _render_flashcards(path):
+    """Emits a semantic, sanitize-safe Q/A list for a flashcard deck.
+
+    Phase 3 of the study-tool plan replaced the old 3D-flip strip (an
+    all-visible horizontal scroll of tap-to-flip cards, no scoring, no
+    keyboard) with a plain <ol> that reads as sensible Q/A pairs with no JS
+    at all, plus a `data-deck` asset path. assets/js/flashcards.js finds
+    every `.deck` at runtime and upgrades it into an interactive one-card-
+    at-a-time widget (reveal, SM-2 rating, shuffle, due filter) -- see that
+    file and gardentemplate.html's openNote(). Q/A text is emitted as CHILD
+    ELEMENTS (`.deck-q`/`.deck-a`), never as a `data-*` attribute: openNote()
+    reads a note's stored body through a <textarea> entity-decode, so an
+    escaped quote in an attribute would come back live and break out of it.
+    """
     csv_path = resolve_asset(path)
     if csv_path is None:
         # Same treatment as the cells: these two diagnostic branches also
         # emit into the published page.
-        return ('<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV NOT FOUND: '
+        return ('<div class="text-aurelia-secondary font-mono text-xs">Flashcard file not found: '
                 f'{sanitize_to_text(path)}</div>')
 
     cards_html = ""
     try:
         with open(csv_path, 'r', encoding='utf-8') as f:
             rows = list(csv.reader(f))
-        for i, row in enumerate(rows):
+        for row in rows:
             if len(row) < 2:
                 continue
             # A CSV cell is plain text by contract, and this HTML is built
@@ -344,34 +548,17 @@ def _render_flashcards(path):
             # <textarea>. Escaping only closes the first; see
             # sanitize.sanitize_to_text.
             q, a = sanitize_to_text(row[0]), sanitize_to_text(row[1])
-            cards_html += f"""
-<div class="snap-center shrink-0 w-64 h-40 relative group perspective-1000 cursor-pointer" onclick="this.querySelector('.inner-card').classList.toggle('rotate-y-180')">
-<div class="inner-card w-full h-full relative preserve-3d transition-transform duration-500 shadow-lg">
-<div class="absolute inset-0 backface-hidden bg-aurelia-card border border-aurelia-info/30 p-4 flex flex-col items-center justify-center text-center rounded-theme group-hover:border-aurelia-info transition-colors">
-<span class="field-label text-aurelia-info absolute top-2 left-2">Q_NODE // 0{i+1}</span>
-<p class="text-xs font-bold text-aurelia-text font-sans leading-relaxed">{q}</p>
-<span class="text-[9px] text-aurelia-muted absolute bottom-2 animate-pulse">TAP TO DECRYPT</span>
-</div>
-<div class="absolute inset-0 backface-hidden rotate-y-180 bg-aurelia-info/10 border border-aurelia-info p-4 flex flex-col items-center justify-center text-center rounded-theme">
-<span class="field-label text-aurelia-info absolute top-2 left-2">A_DATA</span>
-<p class="text-xs text-aurelia-text/80 font-mono leading-relaxed">{a}</p>
-</div>
-</div>
-</div>"""
+            cards_html += f'<li class="deck-card"><p class="deck-q">{q}</p><p class="deck-a">{a}</p></li>'
     except Exception as e:
-        return ('<div class="text-aurelia-secondary font-mono text-xs">⚠️ CSV ERROR: '
+        return ('<div class="text-aurelia-secondary font-mono text-xs">Flashcard file could not be read: '
                 f'{sanitize_to_text(str(e))}</div>')
 
-    return f"""
-<div class="my-6">
-<div class="flex items-center gap-2 mb-3">
-<span class="field-label text-aurelia-info">:: MEMORY_BANK_LOADED</span>
-<div class="h-px bg-aurelia-info/30 flex-grow"></div>
-</div>
-<div class="flex gap-4 overflow-x-auto pb-6 pt-2 px-1 snap-x no-scrollbar">
-{cards_html}
-</div>
-</div>"""
+    return (
+        '<div class="deck-wrap">'
+        '<p class="field-label">Flashcards</p>'
+        f'<ol class="deck" data-deck="{path}">{cards_html}</ol>'
+        '</div>'
+    )
 
 
 _MEDIA_RENDERERS = {

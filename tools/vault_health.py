@@ -30,7 +30,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from engine.config import VAULT_PATH  # noqa: E402
-from engine.content import make_id, parse_body, parse_frontmatter  # noqa: E402
+from engine.content import build_link_resolver, make_id, parse_body, parse_frontmatter  # noqa: E402
 from engine.pipeline import _build_link_graph, _scan_vault  # noqa: E402
 
 _WIKILINK_RE = re.compile(r'\[\[(.*?)\]\]')
@@ -74,11 +74,21 @@ def find_pending_atomization(vault_path=VAULT_PATH, known_ids=None):
     discarded the moment it's found (see _build_link_graph), never tracked
     anywhere. known_ids can be injected (e.g. in tests) to avoid a second
     full _scan_vault() when the caller already has one.
+
+    Targets are resolved through content.build_link_resolver() -- the same
+    alias/title-suffix resolution the real build applies via
+    engine.pipeline._scan_vault() -- built fresh from every published note
+    found in this walk (id/title/aliases). Without this, a note that added
+    `aliases:` to close a dangling link would keep showing up here as
+    "pending" even though the site itself already resolves it; this report
+    exists specifically to tell Travis what's still actually dangling, so
+    its count is meant to agree with the build's own "targets still
+    unresolved" summary line (see build_all()) for the same vault.
     """
     if known_ids is None:
         known_ids = {c["id"] for c in _garden_cards()}
 
-    target_refs = defaultdict(set)
+    notes = []
     for root, _, files in os.walk(vault_path):
         for filename in sorted(files):
             if not filename.endswith(".md"):
@@ -94,21 +104,41 @@ def find_pending_atomization(vault_path=VAULT_PATH, known_ids=None):
             if "project" in note_type or "protocol" in note_type or "transmission" in note_type:
                 continue
 
-            note_id = make_id(filename)
-            body = parse_body(content)
-            for raw in _WIKILINK_RE.findall(body):
-                target_text = raw.split("|", 1)[0].strip()
-                if not target_text:
-                    # An unfilled "[[ ]]" placeholder (some published Concept
-                    # notes still carry this from TPL_Concept.md's old
-                    # Related-field default) -- skip before make_id() turns
-                    # it into a fake "note-" entry that would otherwise look
-                    # like a real, in-demand target.
-                    continue
-                target_id = make_id(target_text)
-                if target_id == note_id:
-                    continue
-                target_refs[target_id].add(note_id)
+            # Coerced str -> [str] the same way pipeline._scan_vault does,
+            # which is itself the same coercion parse_frontmatter already
+            # applies to `tags`.
+            aliases = meta.get("aliases") or []
+            if isinstance(aliases, str):
+                aliases = [aliases]
+            aliases = [str(a).strip() for a in aliases if str(a).strip()]
+
+            notes.append({
+                "note_id": make_id(filename),
+                "title": filename.replace(".md", "").replace("_", " "),
+                "aliases": aliases,
+                "body": parse_body(content),
+            })
+
+    # Built once over every published note this walk found -- an alias or a
+    # "Base (...)" suffix can point at a note discovered later in the walk,
+    # same reasoning as the two-pass split in pipeline._scan_vault.
+    resolve = build_link_resolver(notes)
+
+    target_refs = defaultdict(set)
+    for n in notes:
+        for raw in _WIKILINK_RE.findall(n["body"]):
+            target_text = raw.split("|", 1)[0].strip()
+            if not target_text:
+                # An unfilled "[[ ]]" placeholder (some published Concept
+                # notes still carry this from TPL_Concept.md's old
+                # Related-field default) -- skip before resolve() turns
+                # it into a fake "note-" entry that would otherwise look
+                # like a real, in-demand target.
+                continue
+            target_id = resolve(target_text)
+            if target_id == n["note_id"]:
+                continue
+            target_refs[target_id].add(n["note_id"])
 
     dangling = {t: refs for t, refs in target_refs.items() if t not in known_ids}
     return sorted(

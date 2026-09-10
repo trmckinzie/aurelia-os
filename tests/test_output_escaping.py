@@ -52,7 +52,7 @@ def test_dumps_for_script_tag_still_breaks_up_a_closing_script_tag():
 def test_generate_garden_card_html_returns_markup():
     # gardentemplate.html renders this with a bare {{ card.html }}; without
     # Markup, autoescape would emit the card as visible literal HTML.
-    html = generate_garden_card_html({"type": "concept", "tags": []}, "A.md", "note-a", "b", "s")
+    html = generate_garden_card_html({"type": "concept", "tags": []}, "A.md", "note-a", "b")
     assert isinstance(html, Markup)
 
 
@@ -60,7 +60,7 @@ def test_card_heading_escapes_a_hostile_filename():
     # data-title was already escaped (finding #22); the visible <h3> was not.
     html = generate_garden_card_html(
         {"type": "concept", "tags": []},
-        "Note <img src=x onerror=alert(1)>.md", "note-x", "b", "s")
+        "Note <img src=x onerror=alert(1)>.md", "note-x", "b")
     # The payload survives as inert text -- what matters is that the `<` is
     # encoded, so the browser never starts a tag and never runs the handler.
     assert "<img" not in html
@@ -84,7 +84,7 @@ def test_card_prose_field_escapes_an_unterminated_tag():
     # encoder, and the card escapes at the point of interpolation instead.
     body = "### Definition\n> <img src=x onerror=alert(1)\n"
     html = generate_garden_card_html(
-        {"type": "concept", "tags": []}, "A.md", "note-a", body, "s")
+        {"type": "concept", "tags": []}, "A.md", "note-a", body)
     # Again: the text is allowed to survive, the tag start is not.
     assert "<img" not in html
     assert "&lt;img src=x onerror=alert(1)" in html
@@ -95,6 +95,6 @@ def test_card_prose_escaping_is_not_double_applied():
     # was already escaped would show "&amp;amp;" to a reader. Neither here.
     body = "### Definition\n> Newell & Simon's symposium\n"
     html = generate_garden_card_html(
-        {"type": "concept", "tags": []}, "A.md", "note-a", body, "s")
+        {"type": "concept", "tags": []}, "A.md", "note-a", body)
     assert "Newell &amp; Simon&#39;s symposium" in html
     assert "&amp;amp;" not in html
