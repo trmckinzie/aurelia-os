@@ -1,16 +1,16 @@
 ---
-type: deep-dive
-origin: aurelia
-agent: Vault Scribe
-run_id: 7490316c-6c03-440d-8696-5c6796e511a6
-generated: 2026-09-10
-publish: true
-maturity: seed
-status: active
+created: 2026-09-10
 tags:
   - type/deep-dive
   - maturity/seed
   - status/active
+  - topic/evolution
+  - topic/biology
+  - topic/naturalism
+type: deep-dive
+maturity: seed
+status: active
+publish: true
 ---
 
 # Nature's "Missing Law," and What the Paper Actually Claims
