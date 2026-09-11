@@ -47,7 +47,7 @@ from engine.theming import available_themes, default_theme_slug, generate_theme_
 
 # Vault directories the build never publishes from, whatever a note's
 # `publish:` flag says. The publish surface is otherwise one boolean unbounded
-# by directory (see CLAUDE.md's privacy model), so a folder whose contents are
+# by directory (see docs/ARCHITECTURE.md, "Privacy model"), so a folder whose contents are
 # by definition unreviewed needs the guard here, in the build -- .gitignore
 # only keeps such notes out of the repo, not off the site.
 #

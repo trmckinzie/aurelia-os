@@ -57,7 +57,7 @@ def _coerce_publish(value):
     Was `bool(value)`, which is true for *any* non-empty string -- so
     `publish: "false"` published the note, the exact inversion of what the
     author wrote. The publish flag is the whole rendering gate for this site
-    (see CLAUDE.md's privacy model), so it gets an allowlist, not truthiness.
+    (see docs/ARCHITECTURE.md, "Privacy model"), so it gets an allowlist, not truthiness.
     """
     if value is True or value is False:
         return value

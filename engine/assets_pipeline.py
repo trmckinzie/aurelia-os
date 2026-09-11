@@ -39,7 +39,7 @@ _AUDIO_CODEC_ARGS = {
 # `docs` is why this is not hypothetical. assets/docs/ is the second path
 # that held the author's resume in 2026-08, when an unfiltered copytree
 # served it (alongside a transcript, IRB paperwork and coursework) live from
-# the Pages site -- see CLAUDE.md, "Recent history" item 9. The folder still
+# the Pages site -- see docs/DECISIONS.md item 9. The folder still
 # exists, empty. It is gitignored now as well, and both halves are needed:
 # .gitignore does nothing about a file already committed, and this list does
 # nothing about a file already public in the repo.

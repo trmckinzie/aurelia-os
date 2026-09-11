@@ -1,5 +1,5 @@
 """Validates every published vault/10_GARDEN note against the canonical
-per-type frontmatter schema (see CLAUDE.md's "Content model" section and the
+per-type frontmatter schema (see docs/ARCHITECTURE.md, "Content model", and the
 2026 vault-standardization migration).
 
 Run standalone:

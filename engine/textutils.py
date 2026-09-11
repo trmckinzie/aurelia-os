@@ -97,7 +97,7 @@ def escape_attr(value):
     turns into a live event handler on the card.
 
     Vault-derived values reaching HTML attributes unescaped is a known open
-    finding in this codebase (see CLAUDE.md's security notes). This does not
+    finding in this codebase (see docs/SECURITY-AUDIT.md). This does not
     close that finding, but it does mean the attributes added here aren't new
     instances of it.
     """

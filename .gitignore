@@ -49,8 +49,8 @@ dist/
 # --- NEVER COMMIT ASSET DOCUMENTS (CRITICAL) ---
 # This repo is public. assets/docs/ is one of the two paths that held the
 # author's resume in 2026-08, when the build copied the whole assets/ tree
-# into dist/ unfiltered and GitHub Pages served it live (see CLAUDE.md,
-# "Recent history" item 9). The folder is empty and stays that way.
+# into dist/ unfiltered and GitHub Pages served it live (see
+# docs/DECISIONS.md item 9). The folder is empty and stays that way.
 #
 # The build's own allowlist (PUBLISHABLE_ASSET_DIRS in
 # engine/assets_pipeline.py) is the other half of this: that one keeps such
@@ -76,6 +76,9 @@ vault/20_AURELIA/
 # allowlist Claude Code appends to as you approve tools, so it accumulates
 # local paths and command lines nobody meant to publish from a public repo.
 .claude/settings.local.json
+# CLAUDE.local.md is the same idea for guidance: interpreter path, preview
+# port, per-machine quirks. CLAUDE.md stays machine-neutral.
+CLAUDE.local.md
 
 # .env variants. Only bare `.env` was covered, so .env.local and
 # .env.production were committable in a PUBLIC repo. Found by the /repo-check

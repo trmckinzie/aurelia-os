@@ -35,7 +35,7 @@ def generate_config():
     # and the Garden's atmosphere overlay (border-aurelia-dim,
     # bg-aurelia-dark); aurelia-orange/green/purple were the same kind of
     # alias but ended up with zero remaining call sites once the
-    # Project/Protocol pages were deleted (see CLAUDE.md "Recent history")
+    # Project/Protocol pages were deleted (see docs/DECISIONS.md)
     # -- removed rather than kept as unused config.
     color_map = {
         "aurelia-bg": "bg-main",

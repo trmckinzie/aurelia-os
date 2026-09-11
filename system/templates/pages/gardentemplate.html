@@ -2375,7 +2375,7 @@
     // --- READ ALOUD (Web Speech API) ---
     // Free, no API key, no backend -- the only option that can read an
     // arbitrary highlighted selection live, not just a pre-rendered whole
-    // note (see CLAUDE.md's Architecture section: this is a static site with
+    // note (see docs/ARCHITECTURE.md: this is a static site with
     // no server to hide a cloud-TTS API key behind).
     let ttsSupported = 'speechSynthesis' in window;
     let ttsState = 'idle';       // 'idle' | 'speaking' | 'paused'
@@ -3271,7 +3271,7 @@
         }
         // Deep dives: the first <p> whose ONLY child node is an <em> -- the
         // dek/premise line convention documented in TPL_Deep_Dive.md's own
-        // HTML-comment contract (see CLAUDE.md's Content Model section).
+        // HTML-comment contract (see docs/ARCHITECTURE.md, "Content model").
         const paragraphs = modalContent.querySelectorAll('p');
         for (const p of paragraphs) {
             if (p.childNodes.length === 1 && p.firstElementChild && p.firstElementChild.tagName === 'EM') {

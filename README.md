@@ -87,8 +87,10 @@ python tools/validate_vault_schema.py
 python tools/vault_health.py
 ```
 
-See [CLAUDE.md](CLAUDE.md) for the full architecture writeup — build pipeline, the wikilink/backlink
-system, the theming architecture, and the reasoning behind various design decisions.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full architecture writeup — build pipeline,
+the wikilink/backlink system, the theming architecture — and [docs/DECISIONS.md](docs/DECISIONS.md)
+for the reasoning behind design decisions. [CLAUDE.md](CLAUDE.md) is the short entry point for
+Claude Code sessions.
 
 ## Project structure
 
@@ -137,8 +139,8 @@ If you fork this or run it on your own vault, decide up front which of these you
 
 ## Media
 
-**No vault media is committed to this repository.** `vault/assets/` holds empty `audio/`,
-`images/`, and `flashcards/` directories; the only tracked assets are the Tailwind input CSS, three
+**No vault media is committed to this repository.** `vault/assets/` does not exist in the repo
+at all (git tracks no empty directories); the only tracked assets are the Tailwind input CSS, three
 JS files (`utils.js`, `review.js`, `flashcards.js`), five small flashcard CSVs, and two small site
 images under `assets/images/` (the author headshot shown on the home and About pages, and the
 social-preview card it was generated from).
@@ -157,7 +159,7 @@ installed, which is what keeps new media from re-inflating the repo in the meant
 This project is not released or versioned — there are no tags and no published packages, and the
 live site is whatever `main` last built. What follows is the milestone history, dated from the
 commits themselves. For the reasoning behind each change rather than the summary, see the
-"Recent history" section of [CLAUDE.md](CLAUDE.md), which is kept in step with this list.
+decision log in [docs/DECISIONS.md](docs/DECISIONS.md), which is kept in step with this list.
 
 | Date | Milestone |
 |---|---|
