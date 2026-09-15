@@ -1415,8 +1415,13 @@ body {
    div+backdrop pair -- showModal() supplies the focus trap and Escape
    handling for free. Geometry/surface reuse .surface-raised's own tokens
    directly since that class only targets normal-flow elements, not a
-   top-layer <dialog>. */
-.shortcut-sheet {
+   top-layer <dialog>.
+
+   .toolkit-sheet (indextemplate.html's Toolkit detail window, 2026-09-14)
+   shares this surface/border/radius/width/backdrop rather than duplicating
+   it -- see the TOOLKIT DETAIL WINDOW block below for what it adds on top. */
+.shortcut-sheet,
+.toolkit-sheet {
     width: min(34rem, calc(100vw - 2rem));
     max-height: min(32rem, calc(100vh - 4rem));
     margin: auto;
@@ -1427,7 +1432,8 @@ body {
     box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-3);
     color: var(--aurelia-text-main);
 }
-.shortcut-sheet::backdrop {
+.shortcut-sheet::backdrop,
+.toolkit-sheet::backdrop {
     background: var(--aurelia-bg-main);
     opacity: 0.85;
 }
@@ -1472,6 +1478,53 @@ body {
 @media (max-width: 479px) {
     .shortcut-sheet-list { grid-template-columns: 1fr; }
     .shortcut-sheet-list dd { margin-bottom: 0.5rem; }
+}
+
+/* === TOOLKIT DETAIL WINDOW (2026-09-14) =================================
+   indextemplate.html's #toolkit-sheet. Surface/border/radius/width/backdrop
+   come from .shortcut-sheet above; everything here is what makes it its own
+   window rather than a copy of the shortcuts sheet. */
+.toolkit-sheet {
+    /* Padding lives on .toolkit-sheet-inner instead, so a click whose target
+       is the dialog element itself landed on the backdrop or on the dialog's
+       own scrollbar, never on padding around the content -- the
+       click-outside handler in indextemplate.html tells those two apart by
+       position. Never set `display` here -- that would override the UA rule
+       that hides a <dialog> with no `open` attribute. */
+    padding: 0;
+}
+.toolkit-sheet-inner {
+    padding: 1.5rem;
+}
+/* Space between the header and the two What-it-is/How-I-use-it blocks.
+   Targets any direct child after another -- including one currently
+   `hidden` (an entry with only one of the two fields) -- rather than
+   naming the blocks, so a future third block needs no CSS change. */
+.toolkit-sheet-inner > * + * {
+    margin-top: 1.25rem;
+}
+.toolkit-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+/* The heading takes focus programmatically on open (openToolDetail(), in
+   indextemplate.html's carousel script) -- same choice openShortcutSheet()
+   makes for #shortcut-sheet-title, no visible ring needed for a target
+   that isn't reachable by Tab. */
+.toolkit-sheet-header h2:focus-visible,
+.toolkit-sheet-header h2:focus { outline: none; }
+
+@keyframes toolkit-sheet-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.toolkit-sheet[open] {
+    animation: toolkit-sheet-in var(--dur-2) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+    .toolkit-sheet[open] { animation: none; }
 }
 
 /* === GRAPH LIST FALLBACK (Phase 4) ====================================

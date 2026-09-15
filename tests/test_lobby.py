@@ -10,6 +10,8 @@ The render helpers and fixtures live in tests/test_about.py, which stood them
 up first for the About page and the shared chrome. Importing rather than
 duplicating them keeps one definition of "every variable base.html needs".
 """
+import json
+import os
 import re
 
 from tests.test_about import (
@@ -21,6 +23,7 @@ from tests.test_about import (
 from tests.test_garden import make_card
 from tests.voice_fixtures import LEGACY_TOKENS
 
+from engine.config import ROOT_DIR
 from engine.pipeline import _build_search_index
 from engine.textutils import dumps_for_script_tag
 
@@ -263,3 +266,161 @@ def test_search_index_seed_titles_are_plain():
     for entry in seeds.values():
         assert entry["type"] == "SYSTEM"
         assert entry["tags"]
+
+
+# --- Toolkit detail window (added 2026-09-14) --------------------------------
+#
+# Clicking a Toolkit card (or the "More about" button under the readout)
+# opens a native <dialog> with a longer what_it_is/how_i_use_it explanation
+# of that tool. See docs/DECISIONS.md for the full design writeup.
+
+def test_lobby_toolkit_sheet_is_a_real_dialog_labelled_by_a_resolving_heading_id():
+    # showModal() only works on an actual <dialog> element -- a styled <div>
+    # sharing the same class would render identically but do nothing when
+    # openToolDetail() calls showModal() on it. aria-labelledby has to
+    # resolve to a real id too, the same contract
+    # test_about_sections_are_labelled_by_a_real_heading_id pins for About.
+    html = render_index()
+    labelled = re.findall(r'<dialog id="toolkit-sheet" aria-labelledby="([^"]+)"', html)
+    assert labelled, 'expected <dialog id="toolkit-sheet" aria-labelledby="...">'
+    for target in labelled:
+        assert f'id="{target}"' in html, f"aria-labelledby={target} points at nothing"
+
+
+def test_lobby_toolkit_sheet_close_button_has_an_accessible_name():
+    html = render_index()
+    assert 'id="toolkit-sheet-close"' in html
+    idx = html.index('id="toolkit-sheet-close"')
+    assert 'aria-label="Close"' in html[idx:idx + 200]
+
+
+def test_lobby_readout_more_wrapper_starts_hidden():
+    # .btn's own `display: inline-flex` (main.css:476) loads after @tailwind
+    # utilities and beats both the `hidden` attribute and Tailwind's
+    # `.hidden` class if it were put on the button itself -- the wrapper
+    # carries `hidden` instead, the same pattern #lobby-review-teaser uses,
+    # and only the wrapper's class ever gets toggled client-side.
+    html = render_index()
+    assert 'id="readout-more-wrap" class="hidden' in html
+
+
+def test_lobby_toolkit_detail_fields_are_tojson_escaped_not_html_escaped():
+    # These land inside a JS string literal in a <script> -- a raw-text
+    # element the browser does not decode HTML entities in -- so the sink
+    # that matters is tojson's \u-escaping, not HTML-escaping. Checked
+    # against the payload string specifically, since the page legitimately
+    # contains other, real </script> tags closing its own <script> blocks;
+    # a bare "assert '</script>' not in html" would fail for the wrong
+    # reason.
+    payload = "</script><img src=x onerror=alert(1)>&'"
+    config = make_config()
+    config["tech_stack"] = [
+        {"name": "Hostile Tool", "type": "SOFTWARE / TEST", "icon": "X",
+         "desc": "d", "what_it_is": payload, "how_i_use_it": "clean"},
+    ]
+    html = render_index(config=config)
+    assert payload not in html
+    assert "\\u003c/script\\u003e" in html
+    assert "\\u003cimg src=x onerror=alert(1)\\u003e" in html
+    assert "\\u0026" in html
+    assert "\\u0027" in html
+
+
+def test_lobby_toolkit_entry_with_neither_detail_field_renders_without_error():
+    # what_it_is/how_i_use_it are optional -- the factory clone and older
+    # configs ship tech_stack entries with neither. `tech.get(field, '')` in
+    # the template is what keeps `| tojson` from raising on Jinja's
+    # Undefined for a genuinely missing key.
+    config = make_config()
+    config["tech_stack"] = [
+        {"name": "Bare Tool", "type": "SOFTWARE / TEST", "icon": "X", "desc": "d"},
+    ]
+    html = render_index(config=config)
+    assert "Bare Tool" in html
+
+
+def test_lobby_draft_toolkit_entries_are_skipped_entirely():
+    # `draft` is a rendering flag, not access control (the repo is public,
+    # so a draft entry is still visible in source history) -- but its name
+    # and copy must not reach the built page, or staging the Mac mini M6
+    # this way would defeat the point.
+    config = make_config()
+    config["tech_stack"] = [
+        {"name": "Secret Tool", "type": "HARDWARE / TEST", "icon": "X",
+         "desc": "shh", "what_it_is": "hush", "how_i_use_it": "quiet",
+         "draft": True},
+        {"name": "Public Tool", "type": "SOFTWARE / TEST", "icon": "Y",
+         "desc": "loud", "what_it_is": "public info", "how_i_use_it": "openly"},
+    ]
+    html = render_index(config=config)
+    for token in ("Secret Tool", "shh", "hush", "quiet"):
+        assert token not in html, f"{token!r} from the draft entry leaked into the render"
+    assert "Public Tool" in html
+
+
+def test_lobby_readout_seeds_from_the_first_non_draft_entry_when_the_first_is_a_draft():
+    # `toolkit` (the rejectattr('draft')-filtered list) feeds the
+    # server-rendered readout seed, not the raw config.tech_stack -- so a
+    # draft first entry must not become the panel's initial title/desc.
+    config = make_config()
+    config["tech_stack"] = [
+        {"name": "Secret Tool", "type": "HARDWARE / TEST", "icon": "X", "desc": "shh", "draft": True},
+        {"name": "Public Tool", "type": "SOFTWARE / TEST", "icon": "Y", "desc": "the real seed"},
+    ]
+    html = render_index(config=config)
+    assert "Public Tool" in html
+    assert "the real seed" in html
+    assert "Secret Tool" not in html
+
+
+def test_lobby_carousel_reduced_motion_override_and_dialog_open_guard_are_present():
+    # Two independent guards, easy to lose separately: the ring's own 1s
+    # spin transition had no prefers-reduced-motion override before, and
+    # without the base.html keydown guard Ctrl/Cmd+K still opens the command
+    # palette -- inert and invisible -- underneath an open <dialog>.
+    html = render_index()
+    assert ".carousel { transition: none; }" in html
+    assert "if (document.querySelector('dialog[open]')) return;" in html
+
+
+def test_real_user_config_tech_stack_entries_satisfy_the_toolkit_contract():
+    """The 2026-09-14 copy pass hand-edited user_config.json directly rather
+    than through a schema -- load_user_config() only prints a warning and
+    falls back to defaults on invalid JSON, so nothing else in the build
+    would catch a mistake here. This test is the actual gate: every
+    entry, drafts included, must carry real what_it_is/how_i_use_it copy
+    within the detail sheet's rough length budget, contain none of the
+    voice rule's banned tokens, and at least one entry must actually be
+    published (not every entry a draft, or the carousel would render empty).
+    """
+    config_path = os.path.join(ROOT_DIR, "user_config.json")
+    with open(config_path, encoding="utf-8") as f:
+        config = json.load(f)
+
+    stack = config["tech_stack"]
+    assert stack, "user_config.json's tech_stack is empty"
+
+    non_draft_count = 0
+    for entry in stack:
+        name = entry.get("name", "<unnamed>")
+
+        for field in ("name", "type", "icon", "desc", "what_it_is", "how_i_use_it"):
+            value = entry.get(field)
+            assert isinstance(value, str) and value.strip(), (
+                f"{name}: {field} must be a non-empty string"
+            )
+            assert "<" not in value, f"{name}: {field} contains '<'"
+            assert "//" not in value, f"{name}: {field} contains '//'"
+            assert "vault" not in value.lower(), f"{name}: {field} contains 'vault'"
+            for token in LEGACY_TOKENS:
+                assert token not in value, f"{name}: {field} contains legacy token {token!r}"
+
+        assert len(entry["what_it_is"]) <= 600, f"{name}: what_it_is is over 600 characters"
+        assert len(entry["how_i_use_it"]) <= 400, f"{name}: how_i_use_it is over 400 characters"
+
+        if "draft" in entry:
+            assert isinstance(entry["draft"], bool), f"{name}: draft must be a bool"
+        if not entry.get("draft", False):
+            non_draft_count += 1
+
+    assert non_draft_count >= 1, "every tech_stack entry is a draft -- nothing would render"

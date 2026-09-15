@@ -38,10 +38,35 @@ FACTORY_CONFIG = {
     "links": {
         "github": "https://github.com"
     },
+    # what_it_is/how_i_use_it feed the Lobby's Toolkit detail window
+    # (indextemplate.html's #toolkit-sheet, added 2026-09-14); type uses the
+    # plain "SOFTWARE / KNOWLEDGE" style throughout rather than the "//"
+    # separator the voice rule bans everywhere user-facing.
     "tech_stack": [
-        { "name": "Obsidian", "type": "SOFTWARE // VAULT", "desc": "Local-first Markdown vault.", "icon": "💎" },
-        { "name": "Zotero", "type": "RESEARCH // CITATION", "desc": "Citation library and PDF archive.", "icon": "📚" },
-        { "name": "Python", "type": "BACKEND // LOGIC", "desc": "The build engine behind this site.", "icon": "🐍" }
+        {
+            "name": "Obsidian",
+            "type": "SOFTWARE / KNOWLEDGE",
+            "desc": "Local-first Markdown notes.",
+            "icon": "💎",
+            "what_it_is": "A free note-taking app that keeps notes as plain-text Markdown files on your own computer, linked together into a connected web of ideas.",
+            "how_i_use_it": "[INSERT how you use it]"
+        },
+        {
+            "name": "Zotero",
+            "type": "SOFTWARE / REFERENCES",
+            "desc": "Citation library and PDF archive.",
+            "icon": "📚",
+            "what_it_is": "A free, open-source tool that saves sources straight from a web browser, keeps their PDFs organized, and formats citations and bibliographies.",
+            "how_i_use_it": "[INSERT how you use it]"
+        },
+        {
+            "name": "Python",
+            "type": "CODE / LANGUAGE",
+            "desc": "The build engine behind this site.",
+            "icon": "🐍",
+            "what_it_is": "A free, general-purpose programming language, widely used for automation, web backends, and data work.",
+            "how_i_use_it": "[INSERT how you use it]"
+        }
     ]
 }
 
@@ -269,6 +294,11 @@ def create_readme():
    npm install
    ```
 2. **Configure:** Open `user_config.json` and add your Name, Role, and Bio.
+   Each `tech_stack` entry's `what_it_is`/`how_i_use_it` fill the Lobby's
+   Toolkit detail window (click a card, or the "More about" button), so
+   replace their `[INSERT how you use it]` placeholders too. Add
+   `"draft": true` to an entry to keep it off the built page for now (it
+   still ships in your repository).
    Then open `profile.json` and replace every `[INSERT ...]` placeholder --
    this is the About page. Keep the structure: the build validates it and
    refuses to run on an unknown key, a URL that isn't http/https/mailto,

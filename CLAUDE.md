@@ -96,7 +96,7 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer".
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
-- Why something looks odd: `docs/DECISIONS.md` (19 dated decisions plus known gaps).
+- Why something looks odd: `docs/DECISIONS.md` (20 dated decisions plus known gaps).
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 

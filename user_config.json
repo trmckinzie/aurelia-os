@@ -21,23 +21,158 @@
         "github": "https://github.com/trmckinzie"
     },
     "tech_stack": [
-        {"name": "Alienware i7", "type": "HARDWARE / WORKSTATION", "desc": "Primary development machine. Builds and tests this site.", "icon": "🖥️"},
-        {"name": "MacBook Air M1", "type": "HARDWARE / LAPTOP", "desc": "Daily driver for design and writing; runs the scheduled automation.", "icon": "🍏"},
-        {"name": "Mac Mini M1", "type": "HARDWARE / SERVER", "desc": "Always-on home server for scheduled jobs and local services.", "icon": "🔲"},
-        {"name": "ThinkPad T495", "type": "HARDWARE / LAPTOP", "desc": "Secondary laptop for IT and field work.", "icon": "💻"},
-        {"name": "reMarkable 2", "type": "HARDWARE / TABLET", "desc": "E-ink tablet for drafting and reading without distraction.", "icon": "📝"},
-        {"name": "iPhone 14", "type": "HARDWARE / MOBILE", "desc": "Capture on the go; notes sync straight into the vault.", "icon": "📱"},
-        {"name": "Claude Code", "type": "AI / ENGINEERING", "desc": "Agentic coding in the terminal. Most of this site's engine was built with it.", "icon": "🤖"},
-        {"name": "Gemini Notebook", "type": "AI / SYNTHESIS", "desc": "Grounded summaries, audio overviews, and flashcards from source documents.", "icon": "📓"},
-        {"name": "MCP servers", "type": "AI / INTEGRATION", "desc": "Model Context Protocol servers that connect agents to my own tools and data.", "icon": "🔌"},
-        {"name": "Ollama", "type": "AI / LOCAL", "desc": "Runs open models locally when data should not leave the machine.", "icon": "🦙"},
-        {"name": "Obsidian", "type": "SOFTWARE / KNOWLEDGE", "desc": "Local-first Markdown vault. The source of everything in the Garden.", "icon": "💎"},
-        {"name": "Zotero", "type": "SOFTWARE / REFERENCES", "desc": "Citation library and PDF archive for sources.", "icon": "📚"},
-        {"name": "VS Code", "type": "SOFTWARE / EDITOR", "desc": "Primary editor.", "icon": "🛠️"},
-        {"name": "GitHub", "type": "SOFTWARE / VERSION CONTROL", "desc": "Source control, CI, and hosting for this site via GitHub Pages.", "icon": "🐙"},
-        {"name": "GoHighLevel", "type": "SOFTWARE / WEB PLATFORM", "desc": "Client site builds and integrations at Rocky Mountain Automation AI.", "icon": "🌐"},
-        {"name": "Python", "type": "CODE / LANGUAGE", "desc": "The build engine behind this site and most of my automation.", "icon": "🐍"},
-        {"name": "Next.js", "type": "CODE / FRAMEWORK", "desc": "React framework for dashboards and client-facing work.", "icon": "▲"},
-        {"name": "Tailwind CSS", "type": "CODE / STYLING", "desc": "Utility-first CSS, compiled at build time from a single theme config.", "icon": "🎨"}
+        {
+            "name": "Mac mini M6",
+            "type": "HARDWARE / WORKSTATION",
+            "icon": "🔳",
+            "desc": "Primary development machine. Builds and tests this site.",
+            "what_it_is": "Apple's small desktop computer, in its 2026 version with the M6 chip. Its processor and graphics share one pool of fast memory, which lets a compact, quiet machine handle heavy development work and run AI models locally.",
+            "how_i_use_it": "My primary development machine. It builds and tests this site and runs my local AI models.",
+            "draft": true
+        },
+        {
+            "name": "Alienware Aurora R16",
+            "type": "HARDWARE / WORKSTATION",
+            "icon": "🖥️",
+            "desc": "Primary development machine. Builds and tests this site.",
+            "what_it_is": "A tower desktop computer from Dell's Alienware line, designed for gaming. The parts that make it fast for games, an Intel Core i7 processor and an NVIDIA GeForce RTX 4070 graphics card, also make it good at heavy development work and at running AI models on the machine itself rather than in the cloud.",
+            "how_i_use_it": "My primary development machine. It builds and tests this site, and its graphics card runs my local AI models."
+        },
+        {
+            "name": "MacBook Air M1",
+            "type": "HARDWARE / LAPTOP",
+            "icon": "🍏",
+            "desc": "Daily driver for design and writing; runs some scheduled automation.",
+            "what_it_is": "Apple's thin, lightweight laptop. This model uses the M1, the first chip Apple designed for the Mac. It is efficient enough to need no fan at all, so the laptop runs silently and lasts all day on a charge.",
+            "how_i_use_it": "My everyday laptop for design and writing. It also runs some of my scheduled automation."
+        },
+        {
+            "name": "Mac mini M1",
+            "type": "HARDWARE / DESKTOP",
+            "icon": "🔲",
+            "desc": "Spare desktop Mac for lighter tasks.",
+            "what_it_is": "Apple's smallest desktop computer: a compact box that comes without a screen, keyboard, or mouse, so you plug in your own. This model runs on the same M1 chip as the MacBook Air, which keeps it quiet and very light on power.",
+            "how_i_use_it": "A spare desktop Mac I keep on hand for lighter tasks."
+        },
+        {
+            "name": "ThinkPad T495",
+            "type": "HARDWARE / LAPTOP",
+            "icon": "💻",
+            "desc": "Secondary laptop for IT and field work.",
+            "what_it_is": "A 14-inch business laptop from Lenovo's ThinkPad line, which has a long reputation for durable builds and comfortable keyboards. Lenovo puts ThinkPads through military-standard durability tests, and this model runs on an AMD Ryzen processor.",
+            "how_i_use_it": "My secondary laptop for IT work away from my desk, where a dependable, durable machine matters more than a fast one."
+        },
+        {
+            "name": "reMarkable 2",
+            "type": "HARDWARE / TABLET",
+            "icon": "📝",
+            "desc": "E-ink tablet for drafting and reading without distraction.",
+            "what_it_is": "A tablet built for writing and reading instead of apps. Its black-and-white E Ink screen has no backlight and a textured surface that feels like pen on paper, and it deliberately has no web browser, app store, or social media.",
+            "how_i_use_it": "Where I draft ideas by hand and read without a screen full of notifications competing for attention."
+        },
+        {
+            "name": "iPhone 14",
+            "type": "HARDWARE / MOBILE",
+            "icon": "📱",
+            "desc": "Capture on the go; notes sync to my other devices.",
+            "what_it_is": "Apple's smartphone, released in 2022. Beyond calls and messages, a modern phone is a pocket computer with a good camera, and apps can keep its notes and files in step with a laptop or desktop.",
+            "how_i_use_it": "My capture tool on the go. Anything I jot down in Obsidian on the phone syncs to my computers, so the idea is already in my notes when I sit down to work."
+        },
+        {
+            "name": "Claude Code",
+            "type": "AI / ENGINEERING",
+            "icon": "🤖",
+            "desc": "AI coding assistant. Most of this site's engine was built with it.",
+            "what_it_is": "An AI assistant from Anthropic that works directly inside a software project. Rather than only suggesting code, it can read files, run commands, and make edits to finish a task, within the permissions its user sets. It runs in the terminal, in code editors, in a desktop app, and on the web.",
+            "how_i_use_it": "I describe the change I want, review its plan and its work, and verify the result before anything goes live. Most of this site's engine was built this way."
+        },
+        {
+            "name": "Gemini Notebook",
+            "type": "AI / SYNTHESIS",
+            "icon": "📓",
+            "desc": "Grounded summaries, audio overviews, and flashcards from source documents.",
+            "what_it_is": "Google's AI research notebook, called NotebookLM until mid-2026. You give it your own sources, such as PDFs, articles, or notes, and it answers questions and writes summaries using only those sources. It can also turn them into study aids, including podcast-style audio overviews and flashcards.",
+            "how_i_use_it": "I use it to study source material. Its summaries and flashcards feed the Garden's Gemini Notebook notes."
+        },
+        {
+            "name": "MCP servers",
+            "type": "AI / INTEGRATION",
+            "icon": "🔌",
+            "desc": "Model Context Protocol servers that connect agents to my own tools and data.",
+            "what_it_is": "The Model Context Protocol (MCP) is an open standard for connecting AI assistants to outside tools and data, often described as a USB-C port for AI. An MCP server is a small program that gives an assistant access to one specific tool or data source. Anthropic introduced the standard in 2024, and most major AI tools now support it.",
+            "how_i_use_it": "They give my AI assistants controlled access to my own projects and data. I have also built my own, including one that lets coding agents search documentation instead of answering from memory."
+        },
+        {
+            "name": "Ollama",
+            "type": "AI / LOCAL",
+            "icon": "🦙",
+            "desc": "Runs open models locally when data should not leave the machine.",
+            "what_it_is": "A free, open-source app that downloads openly available AI models and runs them on your own computer. When a model runs locally, prompts and documents never have to leave the machine. It works on Mac, Windows, and Linux.",
+            "how_i_use_it": "I run open models such as Llama, Qwen, and DeepSeek on my own hardware, for experiments and automation where sending data to a cloud service isn't appropriate."
+        },
+        {
+            "name": "Obsidian",
+            "type": "SOFTWARE / KNOWLEDGE",
+            "icon": "💎",
+            "desc": "Local-first Markdown notes. The source of everything in the Garden.",
+            "what_it_is": "A free note-taking app that keeps notes as plain text files, in a simple format called Markdown, inside an ordinary folder on your own computer. Notes link to each other, turning a collection of them into a connected web of ideas, and community plugins extend what it can do.",
+            "how_i_use_it": "Everything in the Garden starts as a note in Obsidian. This site's build engine reads those notes and publishes the ones I mark as ready, and the same notes sync across my computers and phone."
+        },
+        {
+            "name": "Zotero",
+            "type": "SOFTWARE / REFERENCES",
+            "icon": "📚",
+            "desc": "Citation library and PDF archive for sources.",
+            "what_it_is": "A free, open-source research assistant made by a nonprofit. It saves books, articles, and web pages with their details straight from a web browser, keeps the PDFs organized, and formats citations and bibliographies in thousands of styles.",
+            "how_i_use_it": "My library of sources and PDFs, which I draw on when writing the Garden's notes on books and articles."
+        },
+        {
+            "name": "VS Code",
+            "type": "SOFTWARE / EDITOR",
+            "icon": "🛠️",
+            "desc": "Primary editor.",
+            "what_it_is": "Visual Studio Code, a free code editor from Microsoft and one of the most widely used tools for writing software. Its core is open source, and thousands of extensions add support for almost any language or workflow.",
+            "how_i_use_it": "My main editor for reading, writing, and reviewing code and configuration files."
+        },
+        {
+            "name": "GitHub",
+            "type": "SOFTWARE / VERSION CONTROL",
+            "icon": "🐙",
+            "desc": "Version history, automated builds, and hosting for this site.",
+            "what_it_is": "A website for storing and collaborating on software projects. It is built on Git, a free tool that records every change to a project's files so any earlier version can be recovered. GitHub adds sharing and review, automation through GitHub Actions, and simple website hosting through GitHub Pages.",
+            "how_i_use_it": "This site's code lives on GitHub. Each update runs through GitHub Actions, which builds the site and publishes it to GitHub Pages, where you are reading it now."
+        },
+        {
+            "name": "GoHighLevel",
+            "type": "SOFTWARE / WEB PLATFORM",
+            "icon": "🌐",
+            "desc": "Web and marketing platform I work with at Rocky Mountain Automation AI.",
+            "what_it_is": "An all-in-one platform for marketing agencies and small businesses. It combines a customer database (a CRM), website and landing-page builders, email and text marketing, appointment booking, and automated follow-ups in one subscription.",
+            "how_i_use_it": "A platform I work with at Rocky Mountain Automation AI."
+        },
+        {
+            "name": "Python",
+            "type": "CODE / LANGUAGE",
+            "icon": "🐍",
+            "desc": "The build engine behind this site and most of my automation.",
+            "what_it_is": "A free, general-purpose programming language known for code that reads almost like plain English. First released in 1991, it is one of the most popular languages in the world, used for everything from small automation scripts to websites, data analysis, and AI.",
+            "how_i_use_it": "It is the build engine behind this site: it turns my notes into these pages. It also runs most of my personal automation."
+        },
+        {
+            "name": "Next.js",
+            "type": "CODE / FRAMEWORK",
+            "icon": "▲",
+            "desc": "React framework for dashboards and client-facing work.",
+            "what_it_is": "A popular open-source framework for building websites and web apps with React, a widely used library for assembling interactive pages from reusable pieces. Next.js adds what React leaves out, such as page routing and pages prepared on the server so they load quickly.",
+            "how_i_use_it": "I use it for interactive web apps, including a dashboard that tracks my AI agents, their goals, and their runs."
+        },
+        {
+            "name": "Tailwind CSS",
+            "type": "CODE / STYLING",
+            "icon": "🎨",
+            "desc": "Utility-first CSS, compiled at build time from a single theme config.",
+            "what_it_is": "A free, open-source toolkit for styling websites. Instead of writing a separate stylesheet, you add small ready-made class names directly to a page's HTML, each doing one visual job such as adding space or setting a color, and a build step keeps only the styles a site actually uses.",
+            "how_i_use_it": "It styles every page of this site. The color themes you can switch between are each defined once in the build settings, and Tailwind's styles pick up whichever theme is active."
+        }
     ]
 }

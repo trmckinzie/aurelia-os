@@ -76,9 +76,24 @@
     }
     @media (prefers-reduced-motion: reduce) {
         .hero-name { animation: none; filter: drop-shadow(0 0 15px color-mix(in srgb, var(--aurelia-primary) calc(var(--aurelia-halo) * 0.8), transparent)); }
+        /* The ring's 1s spin (.carousel's own transition, above) had no
+           reduced-motion override before -- and a card click now triggers it
+           more often, since a click both rotates the ring and opens the
+           detail window. */
+        .carousel { transition: none; }
     }
 </style>
 {% endblock %}
+
+{# The Toolkit carousel skips any entry staged with `draft: true` in
+   user_config.json (see docs/DECISIONS.md item 20). `draft` is a rendering
+   flag, not access control: the repo is public, so a draft entry is still
+   visible in the source history and diff, just not on the built page.
+   `toolkit` feeds both the server-rendered readout seed and the carousel's
+   own JS data loop below, so a draft entry never reaches either. Top-level
+   `{% set %}` in a child template is visible inside its blocks -- see
+   abouttemplate.html's status_styles for the same pattern. #}
+{% set toolkit = (config.tech_stack or []) | rejectattr('draft') | list %}
 
 {% block content %}
    <header class="mb-16 relative" data-reveal>
@@ -370,15 +385,67 @@
                        the panel still says something true instead of sitting
                        on a stub. #}
                     <h3 id="readout-title" class="display-md text-aurelia-text mb-4 relative z-10 text-shadow-cyan">
-                        {% if config.tech_stack %}{{ config.tech_stack[0].name }}{% endif %}
+                        {% if toolkit %}{{ toolkit[0].name }}{% endif %}
                     </h3>
                     <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted leading-relaxed max-w-2xl relative z-10">
-                        {% if config.tech_stack %}{{ config.tech_stack[0].desc }}{% endif %}
+                        {% if toolkit %}{{ toolkit[0].desc }}{% endif %}
                     </p>
+
+                    {# Keyboard/non-hover path into the same detail window a card
+                       click opens (see openToolDetail() below) -- starts hidden.
+                       .btn's own `display: inline-flex` (main.css:476) loads
+                       after @tailwind utilities and beats Tailwind's `.hidden`
+                       class on the button itself, so the wrapper carries
+                       `hidden` instead -- the same pattern #lobby-review-teaser
+                       uses above. updateReadout() reveals it once JS confirms
+                       the front entry actually has detail text. #}
+                    <div id="readout-more-wrap" class="hidden mt-6 relative z-10">
+                        <button type="button" id="readout-more" class="btn btn-ghost">More about <span id="readout-more-name"></span></button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+
+    {# === TOOLKIT DETAIL WINDOW ============================================
+       A native <dialog>, opened by openToolDetail() in the carousel script
+       below -- a card click, or the "More about" button under the readout.
+       Reuses .shortcut-sheet's surface/backdrop (main.css's KEYBOARD-
+       SHORTCUTS SHEET block, extended for `.toolkit-sheet`) rather than a new
+       floating-panel pattern; modeled on gardentemplate.html's own
+       #shortcut-sheet (openShortcutSheet()/closeShortcutSheet()).
+       Rendered server-side, after the Toolkit <section>, so Tailwind's
+       dist/**/*.html scan picks up every class here. Every field starts
+       empty and is filled by textContent, never innerHTML -- see
+       openToolDetail(). Never set `display` on the <dialog> itself: that
+       overrides the browser's own rule hiding a closed dialog. Layout and
+       padding live on .toolkit-sheet-inner instead. #}
+    <dialog id="toolkit-sheet" aria-labelledby="toolkit-sheet-title" class="toolkit-sheet">
+        <div class="toolkit-sheet-inner">
+            <div class="toolkit-sheet-header">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span id="toolkit-sheet-icon" class="text-3xl shrink-0" aria-hidden="true"></span>
+                    <div class="min-w-0">
+                        <div id="toolkit-sheet-type" class="field-label text-aurelia-primary"></div>
+                        <h2 id="toolkit-sheet-title" tabindex="-1" class="display-md text-aurelia-text"></h2>
+                    </div>
+                </div>
+                <button type="button" id="toolkit-sheet-close" class="reader-icon-btn shrink-0" aria-label="Close" title="Close (Esc)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div id="toolkit-sheet-what-block">
+                <h3 class="field-label text-aurelia-muted">What it is</h3>
+                <p id="toolkit-sheet-what" class="mt-1.5"></p>
+            </div>
+
+            <div id="toolkit-sheet-how-block">
+                <h3 class="field-label text-aurelia-muted">How I use it</h3>
+                <p id="toolkit-sheet-how" class="mt-1.5"></p>
+            </div>
+        </div>
+    </dialog>
 {% endblock %}
 
 {% block scripts %}
@@ -526,12 +593,19 @@
         // prose, so today's output is byte-identical -- this is about the
         // first value that isn't.
         const techStack = [
-            {% for tech in config.tech_stack %}
+            {% for tech in toolkit %}
             {
                 name: {{ tech.name | tojson }},
                 type: {{ tech.type | tojson }},
                 desc: {{ tech.desc | tojson }},
-                icon: {{ tech.icon | tojson }}
+                icon: {{ tech.icon | tojson }},
+                // .get(), not a bare attribute: tojson raises on Jinja's
+                // Undefined, and a config with no what_it_is/how_i_use_it
+                // (the factory clone, older test fixtures) would otherwise
+                // fail the whole page rather than just omitting the detail
+                // window for that entry.
+                what_it_is: {{ tech.get('what_it_is', '') | tojson }},
+                how_i_use_it: {{ tech.get('how_i_use_it', '') | tojson }}
             },
             {% endfor %}
         ];
@@ -560,16 +634,33 @@
             updateReadout();
         };
 
-        function updateReadout() {
-            // Calculate valid index even with negative numbers
+        // The normalised index updateReadout() always wants -- currIndex
+        // itself can be any integer (rotateCarousel adds/subtracts freely),
+        // so both the readout and the click handlers below need the same
+        // "which card is at the front right now" answer.
+        function frontIndex() {
             let virtualIndex = currIndex % cardCount;
             if (virtualIndex < 0) virtualIndex += cardCount;
+            return virtualIndex;
+        }
 
-            const activeTech = techStack[virtualIndex];
+        function updateReadout() {
+            const activeTech = techStack[frontIndex()];
 
             const swapText = () => {
                 titleEl.innerText = activeTech.name;
                 descEl.innerText = activeTech.desc;
+
+                // Keyboard/non-hover path into openToolDetail() for whichever
+                // card is currently at the front -- hidden whenever that
+                // entry has neither detail field, same as openToolDetail()
+                // itself would refuse to open for it.
+                readoutMoreName.textContent = activeTech.name;
+                if (activeTech.what_it_is || activeTech.how_i_use_it) {
+                    readoutMoreWrap.classList.remove('hidden');
+                } else {
+                    readoutMoreWrap.classList.add('hidden');
+                }
             };
 
             if (reduceMotion) {
@@ -613,7 +704,7 @@
                         <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                         <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*0.4),transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*1.2),transparent)] transition duration-500">
-                            ${tech.icon}
+                            ${escapeHtml(tech.icon)}
                         </div>
 
                         <h3 class="display-md text-aurelia-text mb-4 group-hover:text-aurelia-primary transition-colors">${escapeHtml(tech.name)}</h3>
@@ -627,10 +718,16 @@
                     </div>
                 `;
 
-                // Interaction
+                // Interaction: turn the ring to this card (unless it's
+                // already at the front) and open its detail window either
+                // way -- a second click on the front card should still
+                // reopen the sheet if the visitor closed it.
                 card.onclick = () => {
-                    const diff = i - (currIndex % cardCount);
-                    window.rotateCarousel(diff);
+                    if (i !== frontIndex()) {
+                        const diff = i - (currIndex % cardCount);
+                        window.rotateCarousel(diff);
+                    }
+                    openToolDetail(i);
                 };
 
                 carousel.appendChild(card);
@@ -641,6 +738,107 @@
 
             updateReadout();
         }
+
+        /* --- TOOLKIT DETAIL WINDOW ---
+           #toolkit-sheet is rendered server-side just after the Toolkit
+           <section> (see indextemplate.html above). Modeled on
+           gardentemplate.html's #shortcut-sheet (openShortcutSheet() /
+           closeShortcutSheet(), ~line 2232): showModal() supplies the focus
+           trap and Escape handling for free, so none of that is reimplemented
+           here. Declared before the LAUNCH call below, not after: initCarousel()
+           calls updateReadout() synchronously, and updateReadout()'s
+           swapText() already reads readoutMoreWrap/readoutMoreName -- were
+           this block to come after LAUNCH, those consts would still be in
+           their temporal dead zone the first time swapText() runs. */
+        const toolkitSheet = document.getElementById('toolkit-sheet');
+        const toolkitSheetIcon = document.getElementById('toolkit-sheet-icon');
+        const toolkitSheetType = document.getElementById('toolkit-sheet-type');
+        const toolkitSheetTitle = document.getElementById('toolkit-sheet-title');
+        const toolkitSheetWhatBlock = document.getElementById('toolkit-sheet-what-block');
+        const toolkitSheetWhat = document.getElementById('toolkit-sheet-what');
+        const toolkitSheetHowBlock = document.getElementById('toolkit-sheet-how-block');
+        const toolkitSheetHow = document.getElementById('toolkit-sheet-how');
+        const toolkitSheetClose = document.getElementById('toolkit-sheet-close');
+        const readoutMoreWrap = document.getElementById('readout-more-wrap');
+        const readoutMoreName = document.getElementById('readout-more-name');
+        const readoutMoreBtn = document.getElementById('readout-more');
+
+        let toolkitSheetReturnFocus = null;
+
+        function openToolDetail(i) {
+            // No <dialog> support (showModal missing entirely) -- fall back
+            // to nothing rather than a dialog that can't open modally.
+            if (!window.HTMLDialogElement || !HTMLDialogElement.prototype.showModal) return;
+
+            const tool = techStack[i];
+            if (!tool || (!tool.what_it_is && !tool.how_i_use_it)) return;
+
+            // textContent throughout, never innerHTML -- these strings are
+            // plain prose from user_config.json, not markup, and the sheet's
+            // own escaping story stops at the boundary already crossed by
+            // tojson above.
+            toolkitSheetIcon.textContent = tool.icon;
+            toolkitSheetType.textContent = tool.type;
+            toolkitSheetTitle.textContent = tool.name;
+
+            toolkitSheetWhat.textContent = tool.what_it_is;
+            if (tool.what_it_is) {
+                toolkitSheetWhatBlock.classList.remove('hidden');
+            } else {
+                toolkitSheetWhatBlock.classList.add('hidden');
+            }
+
+            toolkitSheetHow.textContent = tool.how_i_use_it;
+            if (tool.how_i_use_it) {
+                toolkitSheetHowBlock.classList.remove('hidden');
+            } else {
+                toolkitSheetHowBlock.classList.add('hidden');
+            }
+
+            toolkitSheetReturnFocus = document.activeElement;
+            toolkitSheet.showModal();
+            // The heading, not the Close button -- matches openShortcutSheet()
+            // focusing #shortcut-sheet-title rather than a control inside it.
+            toolkitSheetTitle.focus();
+        }
+
+        // Fires on every close path alike -- Esc, the Close button, or the
+        // backdrop-click handler below -- so focus returns exactly once
+        // regardless of how the sheet was dismissed. Clicked cards are
+        // <div>s (not natively focusable), so the stored element is usually
+        // <body>; body.focus() is a silent no-op, so that case and any
+        // element that's gone missing since open both fall back to
+        // #readout-more. Mirrors gardentemplate.html's shortcutSheet 'close'
+        // listener (~line 2254).
+        toolkitSheet.addEventListener('close', () => {
+            const target = (toolkitSheetReturnFocus
+                && toolkitSheetReturnFocus !== document.body
+                && typeof toolkitSheetReturnFocus.focus === 'function'
+                && document.contains(toolkitSheetReturnFocus))
+                ? toolkitSheetReturnFocus
+                : readoutMoreBtn;
+            if (target && typeof target.focus === 'function') target.focus();
+            toolkitSheetReturnFocus = null;
+        });
+
+        // Click-outside-to-close. A click on the backdrop reports e.target as
+        // the dialog itself (there's no separate backdrop element), and so
+        // does a click on the dialog's own scrollbar when a short screen makes
+        // it scroll -- the position check tells the two apart, so dragging
+        // that scrollbar never closes the sheet.
+        toolkitSheet.addEventListener('click', (e) => {
+            if (e.target !== toolkitSheet) return;
+            const rect = toolkitSheet.getBoundingClientRect();
+            const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                           e.clientY >= rect.top && e.clientY <= rect.bottom;
+            if (!inside) toolkitSheet.close();
+        });
+
+        toolkitSheetClose.addEventListener('click', () => toolkitSheet.close());
+
+        // Keyboard/non-hover entry point -- always opens whatever's
+        // currently at the front of the ring.
+        readoutMoreBtn.addEventListener('click', () => openToolDetail(frontIndex()));
 
         // LAUNCH
         initCarousel();

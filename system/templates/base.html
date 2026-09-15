@@ -498,6 +498,14 @@
 
         // 3. Event Listeners (CMD+K)
         document.addEventListener('keydown', (e) => {
+            // A native <dialog> already owns Escape and focus while it's
+            // open (the Garden's #shortcut-sheet, the Lobby's
+            // #toolkit-sheet) -- without this guard, Ctrl/Cmd+K still opened
+            // the command palette underneath it: inert, invisible, and
+            // leaving body scroll-locked past whatever the dialog's own
+            // close was supposed to restore.
+            if (document.querySelector('dialog[open]')) return;
+
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();
                 toggleCmd();

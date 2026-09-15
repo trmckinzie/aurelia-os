@@ -211,6 +211,11 @@ here), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like p
 and the three nav entries; child templates that need `site` must `{% set %}` it themselves, since
 a parent's top-level `set` is not visible inside a child's blocks.
 
+`indextemplate.html`'s Toolkit carousel reads two more per-entry `tech_stack` fields,
+`what_it_is` and `how_i_use_it`, to fill a native `<dialog>` detail window (`#toolkit-sheet`)
+opened by a card click or the "More about" button, and skips any entry marked `draft: true`;
+see docs/DECISIONS.md item 20.
+
 `base.html`'s inline `<script>` embeds `SYSTEM_INDEX` (the command-palette JSON) via
 `dumps_for_script_tag`, safe against a note title containing a literal `</script`.
 `gardentemplate.html` additionally embeds `BACKLINKS_INDEX`.
@@ -301,6 +306,8 @@ the vault is therefore publicly readable, *including* notes with `publish: false
 `publish:` is a rendering flag read by `_scan_vault()` — it decides what becomes a card in `dist/`.
 It is not an access control and never has been. Neither is the `documents` sync carve-out in
 `assets_pipeline.py`. Both keep content off the *website*; neither keeps it out of the *repository*.
+The same holds for `draft: true` on a `user_config.json` `tech_stack` entry: it keeps the entry
+off the Lobby, not out of the repository.
 
 Two consequences worth holding onto when working here:
 

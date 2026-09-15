@@ -252,6 +252,37 @@ knowing so you don't "fix" something that was a deliberate decision:
     named them, which is what silenced the standing `⚠️ 16 media widget(s) skipped` build warning.
     A Studio output now requires a resolving asset in all nine cases, replacing an "any content
     counts" fallback that promoted a section whose only remaining text was a citation URL.
+20. **Toolkit detail window (2026-09-14).** Clicking a Lobby Toolkit card, or a new "More about
+    {name}" button under the readout, opens a native `<dialog>` (`#toolkit-sheet` in
+    `indextemplate.html`) with a longer "What it is" / "How I use it" explanation of that tool —
+    `what_it_is` and `how_i_use_it`, two new optional fields on every `user_config.json`
+    `tech_stack` entry, alongside the existing `name`/`type`/`icon`/`desc`. The dialog reuses
+    `.shortcut-sheet`'s surface, border, radius, width and backdrop (`main.css`) rather than a new
+    floating-panel pattern, and is modeled directly on `gardentemplate.html`'s own
+    `#shortcut-sheet`: `showModal()` for the focus trap and Escape handling, a stored
+    `document.activeElement` restored on close. It adds one thing that sheet lacks: a
+    click-outside-to-close check (`e.target === sheet` and outside
+    `sheet.getBoundingClientRect()`, so dragging the dialog's own scrollbar on a short screen doesn't
+    close it). It is JS-only, like the ring itself — with no JS the
+    server-rendered readout panel still shows the first non-draft entry's name and `desc`, just
+    with no way to open the fuller explanation.
+
+    A third new field, `draft`, lets an entry be staged without publishing it: `indextemplate.html`
+    filters `config.tech_stack` through `toolkit = ... | rejectattr('draft') | list` once, at the
+    top of the template, and both the server-rendered readout seed and the carousel's own JS data
+    loop read `toolkit` instead of the raw config. `draft` affects rendering only — it is not
+    access control, since the repo is public and a draft entry's copy is still visible in the
+    source diff, just not on the built page. It shipped immediately for a new Mac mini M6 entry,
+    ahead of the machine's expected arrival.
+
+    The copy pass that produced every `what_it_is`/`how_i_use_it` (and renamed "Alienware i7" to
+    "Alienware Aurora R16", "Mac Mini M1" to "Mac mini M1", and dropped "vault" from three
+    descriptions the voice rule already banned it from) followed rules worth keeping for the next
+    entry: no version numbers, prices, "latest" claims, or ownership claims likely to go stale (a
+    tool or framework changing hands doesn't make last month's card wrong); no employer-internal
+    tooling or side jobs (item 15); no client names, pricing, or internal details for Rocky Mountain
+    Automation AI, which one card mentions in passing; and software copy names no specific machine, so
+    a future hardware swap only ever touches the hardware cards.
 
 
 ## Known gaps / deliberately not done
