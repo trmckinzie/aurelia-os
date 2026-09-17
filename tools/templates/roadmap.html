@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{{ roadmap.title }}</title>
+{#
+  Rendered by tools/roadmap.py from docs/roadmap.yaml. Self-contained on
+  purpose: no external stylesheet, font, script or image, so the file opens
+  straight from disk. Colours come from roadmap.PALETTE, where
+  tests/test_roadmap.py checks their contrast.
+#}
+<style>
+:root {
+{% for name, value in palette.light.items() %}
+  --{{ name }}: {{ value }};
+{% endfor %}
+  color-scheme: light;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+{% for name, value in palette.dark.items() %}
+    --{{ name }}: {{ value }};
+{% endfor %}
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.55 var(--sans); }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 2px;
+}
+code { font: .86em/1.4 var(--mono); }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 40px 20px 72px; }
+
+/* Header */
+.top {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 8px 24px; padding-bottom: 20px; border-bottom: 1px solid var(--hairline);
+}
+.eyebrow, .label {
+  margin: 0 0 6px; font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+h1 { margin: 0; font: 600 2.5rem/1.05 var(--serif); letter-spacing: -.005em; }
+h2 { margin: 0 0 14px; font: 600 1.55rem/1.2 var(--serif); }
+.meta { margin: 0; font-size: .85rem; color: var(--ink-2); }
+section { margin-top: 32px; }
+.panel { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; padding: 20px 22px; }
+.section-note { margin: -6px 0 14px; color: var(--ink-2); font-size: .9rem; }
+
+/* Headline figures */
+.kpis { display: grid; grid-template-columns: 1.7fr repeat(3, 1fr); gap: 12px; }
+.hero-value { display: flex; align-items: baseline; gap: 10px; margin: 2px 0 4px; }
+.hero-value .num { font: 600 64px/1 var(--sans); }
+.hero-value .of { font-size: 1.15rem; color: var(--ink-2); }
+.tile-value { margin: 2px 0 4px; font: 600 2.1rem/1.1 var(--sans); }
+.context { margin: 0; font-size: .85rem; color: var(--ink-2); }
+
+/* Segmented meter: one segment per session, in priority order */
+.meter-panel { margin-top: 12px; }
+.meter {
+  display: grid; grid-template-columns: repeat({{ sessions|length }}, minmax(0, 1fr)); gap: 2px;
+  margin: 12px 0 0; padding: 0; list-style: none;
+}
+.seg-item { position: relative; }
+.seg { position: relative; display: block; height: 22px; border-radius: 3px; background: var(--track); }
+.seg .fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 3px; }
+.status-done .fill, .swatch-done, .mini-done { background: var(--done); }
+.status-in_progress .fill, .swatch-in_progress, .mini-in_progress { background: var(--active); }
+.status-blocked .fill, .swatch-blocked, .mini-blocked { background: var(--blocked); }
+.seg-num { display: block; margin-top: 6px; text-align: center; font-size: .72rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tip {
+  display: none; position: absolute; z-index: 3; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: 260px; padding: 8px 10px; border-radius: 4px;
+  background: var(--ink); color: var(--surface); font-size: .8rem; line-height: 1.35; pointer-events: none;
+}
+.seg:hover .tip, .seg:focus-visible .tip { display: block; }
+.seg-item:nth-child(-n+2) .tip { left: 0; transform: none; }
+.seg-item:nth-last-child(-n+2) .tip { left: auto; right: 0; transform: none; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 16px 0 0; padding: 0; list-style: none; font-size: .85rem; }
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.swatch { width: 12px; height: 12px; border-radius: 2px; }
+.swatch-todo { background: var(--track); box-shadow: inset 0 0 0 1px var(--hairline); }
+
+/* Icons and status chips: colour is never the only signal */
+.icon { width: 16px; height: 16px; flex: none; }
+.icon-done, .icon-task-done { color: var(--done); }
+.icon-in_progress { color: var(--active); }
+.icon-blocked { color: var(--blocked); }
+.icon-todo, .icon-task-open, .icon-decision { color: var(--ink-2); }
+.chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: .85rem; }
+
+/* Up next */
+.next { border-left: 3px solid var(--active); }
+.next h2 { margin-bottom: 8px; }
+.sid { font: 600 .78rem/1.2 var(--mono); color: var(--ink-2); letter-spacing: .02em; }
+.next h2 .sid { font-size: .9rem; margin-right: 6px; vertical-align: .15em; }
+.why, .notes { margin: 0 0 12px; white-space: pre-line; max-width: 72ch; }
+.facts-line { margin: 0 0 14px; font-size: .85rem; color: var(--ink-2); }
+.callout {
+  display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; padding: 10px 12px; max-width: 72ch;
+  border: 1px solid var(--hairline); border-radius: 4px; background: var(--page);
+}
+.callout .icon { margin-top: 3px; }
+.callout p { margin: 0; white-space: pre-line; }
+.prompt textarea {
+  display: block; width: 100%; margin: 6px 0 10px; padding: 12px; resize: vertical;
+  border: 1px solid var(--hairline); border-radius: 4px; background: var(--page); color: var(--ink);
+  font: .84rem/1.5 var(--mono);
+}
+.copy {
+  padding: 8px 14px; border: 1px solid var(--ink); border-radius: 4px; background: var(--ink); color: var(--surface);
+  font: 600 .85rem/1 var(--sans); cursor: pointer;
+}
+.copy-status { margin-left: 10px; font-size: .85rem; color: var(--ink-2); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--hairline); }
+th { font-size: .72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, .count { font-variant-numeric: tabular-nums; }
+td .sub { display: block; margin-top: 2px; font-size: .8rem; color: var(--ink-2); }
+tr.is-next td { background: var(--page); }
+.tasks { white-space: nowrap; }
+.mini { display: inline-block; width: 56px; height: 6px; margin-left: 8px; vertical-align: middle; border-radius: 3px; background: var(--track); overflow: hidden; }
+.mini span { display: block; height: 100%; border-radius: 3px; }
+.flag { display: inline-flex; vertical-align: -3px; margin-left: 4px; }
+
+/* Session cards */
+details.card { margin-bottom: 10px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; }
+details.card > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 18px; cursor: pointer; list-style: none;
+}
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary::before {
+  content: ""; flex: none; width: 7px; height: 7px; margin-right: 2px;
+  border-right: 1.5px solid var(--ink-2); border-bottom: 1.5px solid var(--ink-2); transform: rotate(-45deg);
+}
+details.card[open] > summary::before { transform: rotate(45deg); }
+.summary-main { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.card-title { font-weight: 600; }
+details.card.status-done .card-title { color: var(--ink-2); }
+.summary-side { display: inline-flex; align-items: center; gap: 14px; }
+.card-body { padding: 16px 18px 18px 38px; border-top: 1px solid var(--hairline); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px; margin-top: 6px; }
+.checklist { margin: 0; padding: 0; list-style: none; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; }
+.checklist li .icon { margin-top: 3px; }
+.checklist li.done > span { color: var(--ink-2); }
+.criteria { margin: 0; padding-left: 18px; }
+.criteria li { padding: 3px 0; }
+dl.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 18px 0 0; font-size: .85rem; }
+dl.facts dt { font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+dl.facts dd { margin: 2px 0 0; }
+
+.foot { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--hairline); font-size: .9rem; }
+.foot h2 { font-size: 1.2rem; }
+.foot ol { margin: 0 0 14px; padding-left: 20px; }
+.foot li { padding: 2px 0; }
+
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: repeat(3, 1fr); }
+  .kpis .hero { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .kpis { grid-template-columns: 1fr 1fr; }
+  .kpis > :last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  h1 { font-size: 2rem; }
+  .cols { grid-template-columns: 1fr; }
+  .card-body { padding-left: 18px; }
+  .summary-side .count { display: none; }
+  .seg-num { font-size: .65rem; }
+}
+@media print {
+  .prompt { display: none; }
+  details.card { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+{% macro icon(name) -%}
+<svg class="icon icon-{{ name }}" width="16" height="16" aria-hidden="true" focusable="false"><use href="#i-{{ name }}"></use></svg>
+{%- endmacro %}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-done" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" style="fill: currentColor"/><path d="M4.7 8.3l2.2 2.2 4.4-4.7" style="fill: none; stroke: var(--surface); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"/></symbol>
+  <symbol id="i-in_progress" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.2" style="fill: none; stroke: currentColor; stroke-width: 1.6"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" style="fill: currentColor"/></symbol>
+  <symbol id="i-blocked" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" style="fill: currentColor"/><rect x="5.1" y="4.6" width="2" height="6.8" rx=".6" style="fill: var(--surface)"/><rect x="8.9" y="4.6" width="2" height="6.8" rx=".6" style="fill: var(--surface)"/></symbol>
+  <symbol id="i-todo" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.2" style="fill: none; stroke: currentColor; stroke-width: 1.6"/></symbol>
+  <symbol id="i-decision" viewBox="0 0 16 16"><path d="M8 1.6l6.8 12.2H1.2z" style="fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round"/><path d="M8 6.1v3.4" style="stroke: currentColor; stroke-width: 1.6; stroke-linecap: round"/><circle cx="8" cy="11.5" r=".95" style="fill: currentColor"/></symbol>
+  <symbol id="i-task-done" viewBox="0 0 16 16"><rect x="1.5" y="1.5" width="13" height="13" rx="3" style="fill: currentColor"/><path d="M4.6 8.2l2.3 2.3 4.5-4.8" style="fill: none; stroke: var(--surface); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round"/></symbol>
+  <symbol id="i-task-open" viewBox="0 0 16 16"><rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2.6" style="fill: none; stroke: currentColor; stroke-width: 1.4"/></symbol>
+</svg>
+
+<div class="wrap">
+<header class="top">
+  <div>
+    <p class="eyebrow">aurelia-os</p>
+    <h1>{{ roadmap.title }}</h1>
+  </div>
+  <p class="meta">Updated {{ roadmap.updated|shortdate }} · generated {{ generated }}</p>
+</header>
+
+<main>
+<section aria-labelledby="progress-heading">
+  <h2 id="progress-heading" class="visually-hidden">Progress</h2>
+  <div class="kpis">
+    <div class="panel hero">
+      <p class="label">Sessions complete</p>
+      <p class="hero-value"><span class="num">{{ summary.done }}</span><span class="of">of {{ summary.total }}</span></p>
+      <p class="context">{{ summary.percent }}% of the roadmap · {{ summary.tasks_done }} of {{ summary.tasks_total }} tasks ticked</p>
+    </div>
+    <div class="panel">
+      <p class="label">In progress</p>
+      <p class="tile-value">{{ summary.counts.in_progress }}</p>
+      <p class="context">{% if summary.in_progress %}{{ summary.in_progress|map(attribute='id')|join(', ') }}{% else %}Nothing started{% endif %}</p>
+    </div>
+    <div class="panel">
+      <p class="label">Needs your decision</p>
+      <p class="tile-value">{{ summary.needs_decision|length }}</p>
+      <p class="context">{% if summary.needs_decision %}{{ summary.needs_decision|map(attribute='id')|join(', ') }}{% else %}Nothing waiting on you{% endif %}</p>
+    </div>
+    <div class="panel">
+      <p class="label">Backlog</p>
+      <p class="tile-value">{{ summary.backlog_open }}</p>
+      <p class="context">open item{{ '' if summary.backlog_open == 1 else 's' }}</p>
+    </div>
+  </div>
+
+  <div class="panel meter-panel">
+    <p class="label" id="meter-label">Sessions in priority order</p>
+    <ol class="meter" aria-labelledby="meter-label">
+    {% for s in sessions %}
+      <li class="seg-item">
+        <a class="seg status-{{ s.status }}" href="#{{ s.id }}" data-segment="{{ s.id }}"
+           aria-label="{{ s.number }}. {{ s.id }} {{ s.title }}: {{ s.status_label }}, {{ s.tasks_done }} of {{ s.tasks_total }} tasks">
+          <span class="fill" style="width: {{ s.segment_fill }}%"></span>
+          <span class="tip" aria-hidden="true"><strong>{{ s.id }} · {{ s.title }}</strong><br>{{ s.status_label }} · {{ s.tasks_done }} of {{ s.tasks_total }} tasks</span>
+        </a>
+        <span class="seg-num" aria-hidden="true">{{ s.number }}</span>
+      </li>
+    {% endfor %}
+    </ol>
+    <ul class="legend">
+    {% for status, label in status_labels.items() %}
+      <li><span class="swatch swatch-{{ status }}" aria-hidden="true"></span>{{ label }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="next-heading">
+{% if next_view %}
+  <div class="panel next" data-next="{{ next_view.id }}">
+    <p class="eyebrow">{{ 'Continue' if next_view.status == 'in_progress' else 'Up next' }}</p>
+    <h2 id="next-heading"><span class="sid">{{ next_view.id }}</span>{{ next_view.title }}</h2>
+    <p class="why">{{ next_view.why }}</p>
+    {% if next_view.decision %}
+    <div class="callout">{{ icon('decision') }}<p><strong>Decide before starting.</strong> {{ next_view.decision }}</p></div>
+    {% endif %}
+    <p class="facts-line">{{ next_view.area }} · {{ next_view.effort_label }} effort · {{ next_view.model_label }} · {{ next_view.tasks_done }} of {{ next_view.tasks_total }} tasks{% if next_view.depends_on %} · builds on {{ next_view.depends_on|join(', ') }}{% endif %}</p>
+    <div class="prompt">
+      <label class="label" for="kickoff">Kickoff prompt for a new Claude Code session</label>
+      <textarea id="kickoff" rows="10" readonly>{{ prompt }}</textarea>
+      <button type="button" class="copy" data-copy-target="kickoff">Copy prompt</button>
+      <span class="copy-status" role="status" aria-live="polite"></span>
+    </div>
+  </div>
+{% elif summary.done == summary.total %}
+  <div class="panel next">
+    <h2 id="next-heading">Every session is done.</h2>
+    <p class="why">Add the next set of sessions to docs/roadmap.yaml, or promote items from the backlog.</p>
+  </div>
+{% else %}
+  <div class="panel next">
+    <h2 id="next-heading">Nothing is ready to start</h2>
+    <p class="why">Every remaining session is blocked or waiting on another one. The blocked sessions below say what they are waiting for.</p>
+  </div>
+{% endif %}
+</section>
+
+<section aria-labelledby="sessions-heading">
+  <h2 id="sessions-heading">Sessions</h2>
+  <div class="table-wrap">
+    <table>
+      <caption class="visually-hidden">Every roadmap session in priority order, with its status and task progress</caption>
+      <thead>
+        <tr><th scope="col">#</th><th scope="col">Session</th><th scope="col">Area</th><th scope="col">Status</th><th scope="col">Tasks</th><th scope="col">Effort</th><th scope="col">Model</th></tr>
+      </thead>
+      <tbody>
+      {% for s in sessions %}
+        <tr{% if s.is_next %} class="is-next"{% endif %}>
+          <td class="num">{{ s.number }}</td>
+          <td>
+            <a href="#{{ s.id }}"><span class="sid">{{ s.id }}</span> {{ s.title }}</a>
+            {%- if s.decision and s.status != 'done' %}<span class="flag">{{ icon('decision') }}<span class="visually-hidden">Needs your decision</span></span>{% endif %}
+            {% if s.waiting_on %}<span class="sub">Waits on {{ s.waiting_on|join(', ') }}</span>{% endif %}
+          </td>
+          <td>{{ s.area }}</td>
+          <td><span class="chip">{{ icon(s.status) }}{{ s.status_label }}</span></td>
+          <td class="tasks"><span class="count">{{ s.tasks_done }}/{{ s.tasks_total }}</span><span class="mini" aria-hidden="true"><span class="mini-{{ s.status }}" style="width: {{ s.tasks_percent }}%"></span></span></td>
+          <td>{{ s.effort_label }}</td>
+          <td>{{ s.model_label }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="details-heading">
+  <h2 id="details-heading">Session details</h2>
+  {% for s in sessions %}
+  <details class="card status-{{ s.status }}" id="{{ s.id }}"{% if s.is_next or s.status in ('in_progress', 'blocked') %} open{% endif %}>
+    <summary>
+      <span class="summary-main">
+        <span class="sid">#{{ s.number }} · {{ s.id }}</span>
+        <span class="card-title">{{ s.title }}</span>
+      </span>
+      <span class="summary-side">
+        <span class="chip">{{ icon(s.status) }}{{ s.status_label }}</span>
+        <span class="count">{{ s.tasks_done }}/{{ s.tasks_total }}</span>
+      </span>
+    </summary>
+    <div class="card-body">
+      <p class="why">{{ s.why }}</p>
+      {% if s.blocker %}
+      <div class="callout">{{ icon('blocked') }}<p><strong>Blocked.</strong> {{ s.blocker }}</p></div>
+      {% endif %}
+      {% if s.decision %}
+      <div class="callout">{{ icon('decision') }}<p><strong>{{ 'Decided.' if s.status == 'done' else 'Needs your decision.' }}</strong> {{ s.decision }}</p></div>
+      {% endif %}
+      <div class="cols">
+        <div>
+          <p class="label">Tasks</p>
+          <ul class="checklist">
+          {% for task in s.tasks %}
+            <li class="{{ 'done' if task.done else 'open' }}">{{ icon('task-done' if task.done else 'task-open') }}<span>{{ task.text }}<span class="visually-hidden">{{ ' (done)' if task.done else ' (not done)' }}</span></span></li>
+          {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <p class="label">Done when</p>
+          <ul class="criteria">
+          {% for item in s.done_when %}
+            <li>{{ item }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <dl class="facts">
+        <div><dt>Area</dt><dd>{{ s.area }}</dd></div>
+        <div><dt>Effort</dt><dd>{{ s.effort_label }}</dd></div>
+        <div><dt>Model</dt><dd>{{ s.model_label }}</dd></div>
+        <div><dt>Depends on</dt><dd>{% for dep in s.depends_on %}<a href="#{{ dep }}">{{ dep }}</a>{{ ', ' if not loop.last }}{% else %}Nothing{% endfor %}</dd></div>
+        {% if s.started %}<div><dt>Started</dt><dd>{{ s.started|shortdate }}</dd></div>{% endif %}
+        {% if s.completed %}<div><dt>Completed</dt><dd>{{ s.completed|shortdate }}</dd></div>{% endif %}
+        {% if s.commit_links %}
+        <div><dt>Commits</dt><dd>{% for commit in s.commit_links %}{% if commit.url %}<a href="{{ commit.url }}"><code>{{ commit.label }}</code></a>{% else %}<code>{{ commit.label }}</code>{% endif %}{{ ' ' if not loop.last }}{% endfor %}</dd></div>
+        {% endif %}
+      </dl>
+      {% if s.notes %}
+      <p class="notes"><strong>Notes.</strong> {{ s.notes }}</p>
+      {% endif %}
+    </div>
+  </details>
+  {% endfor %}
+</section>
+
+{% if backlog %}
+<section aria-labelledby="backlog-heading">
+  <h2 id="backlog-heading">Backlog</h2>
+  <p class="section-note">Smaller findings and follow-ups that are not scheduled as sessions.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th scope="col">ID</th><th scope="col">Item</th><th scope="col">Area</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+      {% for item in backlog %}
+        <tr>
+          <td><span class="sid">{{ item.id }}</span></td>
+          <td>
+            {{ item.title }}
+            {% if item.detail %}<span class="sub">{{ item.detail }}</span>{% endif %}
+            {% if item.decision %}<span class="sub">Needs your decision: {{ item.decision }}</span>{% endif %}
+          </td>
+          <td>{{ item.area }}</td>
+          <td>{{ item.status_label }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+</main>
+
+<footer class="foot">
+  <h2>Updating this page</h2>
+  <ol>
+    <li>Edit <code>docs/roadmap.yaml</code>: tick finished tasks with <code>done: true</code>, set the session's <code>status</code>, and fill in <code>started</code>, <code>completed</code> and <code>commits</code>. Order in the file is priority order.</li>
+    <li>Check the file with <code>python tools/roadmap.py --check</code> (pytest runs the same check).</li>
+    <li>Regenerate and open this page with <code>python tools/roadmap.py --open</code>, using the project's virtual environment.</li>
+  </ol>
+  <p class="meta">Generated {{ generated }} from docs/roadmap.yaml.</p>
+</footer>
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('[data-copy-target]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var field = document.getElementById(button.getAttribute('data-copy-target'));
+      var status = button.parentNode.querySelector('.copy-status');
+      function report(message) { if (status) { status.textContent = message; } }
+      function selectForManualCopy() { field.focus(); field.select(); report('Selected. Press Ctrl+C (or Cmd+C) to copy.'); }
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(field.value).then(function () { report('Copied.'); }, selectForManualCopy);
+      } else {
+        selectForManualCopy();
+      }
+    });
+  });
+  function openTargetedCard() {
+    var target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    if (target && target.tagName === 'DETAILS') { target.open = true; }
+  }
+  window.addEventListener('hashchange', openTargetedCard);
+  openTargetedCard();
+})();
+</script>
+</body>
+</html>

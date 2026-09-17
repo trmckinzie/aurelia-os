@@ -283,6 +283,29 @@ knowing so you don't "fix" something that was a deliberate decision:
     tooling or side jobs (item 15); no client names, pricing, or internal details for Rocky Mountain
     Automation AI, which one card mentions in passing; and software copy names no specific machine, so
     a future hardware swap only ever touches the hardware cards.
+21. **Engineering roadmap and its progress dashboard (2026-09-15).** A whole-repo audit (tests,
+    CI/CD, engine, frontend, docs, and GitHub's live settings) produced ten priority-ordered work
+    sessions plus a backlog. They live in `docs/roadmap.yaml`. `tools/roadmap.py` validates the
+    file and renders it to `reports/roadmap.html`, and `tests/test_roadmap.py` validates the real
+    file, so a broken hand edit fails pytest. Choices worth keeping:
+
+    - **Not a page of the site.** The dashboard renders to the gitignored `reports/`, never
+      `dist/`, so the published site keeps its three pages and in-flight engineering work never
+      ships to visitors. The YAML is still public like everything else here, so it describes
+      weaknesses no more precisely than the docs already do.
+    - **YAML, validated strictly.** The file is edited by hand and by Claude sessions and needs
+      comments and long prose, so YAML rather than JSON, with a validator that follows
+      `engine/profile.py`'s fail-loud precedent. It rejects unknown keys, a `done` session with
+      unticked tasks, a dependency cycle and a `fable` model, and its loader rejects a repeated
+      key, which plain `yaml.safe_load` silently resolves to the last value.
+    - **Order is priority.** There is no priority field to fall out of step, and ids never change,
+      so a commit or a conversation can cite `S03` and mean one thing.
+    - **The file is the source of truth, not GitHub Projects**, so a session records progress in
+      the same change as the work, offline, and the history travels with the repo to the Mac.
+      Mirroring it to Issues and a Project board is backlog item B13.
+    - **Self-contained page.** No external requests. Its colours live in `roadmap.PALETTE`, where a
+      test holds them to WCAG contrast, and the three status colours were validated together for
+      colour-vision deficiency.
 
 
 ## Known gaps / deliberately not done

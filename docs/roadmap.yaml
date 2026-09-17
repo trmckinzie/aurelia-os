@@ -1,0 +1,485 @@
+# Engineering roadmap for aurelia-os: ten work sessions, in priority order, that
+# make the build and deploy pipeline robust, plus a backlog of smaller findings.
+# Written from the repository audit of 2026-09-15.
+#
+# This file is the source of truth for the progress dashboard:
+#   python tools/roadmap.py --open     render reports/roadmap.html and open it
+#   python tools/roadmap.py --check    validate only (pytest runs this too)
+#   python tools/roadmap.py --next     print a kickoff prompt for the next session
+# Use the project's virtual environment: .venv\Scripts\python.exe on Windows,
+# .venv/bin/python on macOS.
+#
+# A session that finishes roadmap work updates its own entry in the same change:
+#   - tick finished tasks with done: true
+#   - status goes todo -> in_progress (add started) -> done (add completed; every
+#     task ticked). A blocked session needs a blocker line saying what it waits on.
+#   - list commit hashes under commits, in quotes
+# Order in this file is priority order. An id never changes once assigned.
+#
+# effort: S is under an hour, M is one focused session, L is a long session or two.
+# model follows 90_Meta/Model Routing.md in the dev mono-vault: sonnet or opus,
+# never fable. decision is a call only Travis can make before the work starts.
+#
+# The repo is public. Describe weaknesses at the level of detail already public
+# in the docs, and never name an unfixed vulnerability in more detail than that.
+
+schema_version: 1
+title: Engineering roadmap
+updated: 2026-09-15
+repository: https://github.com/trmckinzie/aurelia-os
+
+sessions:
+  - id: S01
+    title: Run the full check suite before every deploy
+    status: todo
+    area: CI/CD
+    effort: M
+    model: sonnet
+    why: >-
+      Nothing checks a change before it goes live. Every push to main deploys,
+      but deploy.yml only builds: the test suite, pyflakes and the vault schema
+      check run only when someone remembers to run them. The dev root's pre-push
+      hook looks for a verify.sh that this repo does not have, and pyflakes is
+      not declared in any requirements file. Every later session relies on this
+      safety net.
+    decision: >-
+      CLAUDE.md records "CI runs no tests" and says deploy.yml runs the build
+      "and nothing else". Having tests gate the deploy reverses that rule, so
+      confirm it first. The --no-sort flag stays either way.
+    tasks:
+      - text: Pin pyflakes in requirements-dev.txt
+        done: false
+      - text: Add a repo-root verify.sh that runs pytest, pyflakes, the vault schema check, tools/roadmap.py --check and build.py --no-sort, stopping at the first failure
+        done: false
+      - text: Add a CI workflow that runs the same checks on every pull request and every push to main, on Python 3.12 and Node 22, with a timeout
+        done: false
+      - text: Make the deploy wait for those checks to pass, keeping build.py --no-sort
+        done: false
+      - text: Confirm on the first ubuntu run that the one Windows-only test skips cleanly and everything else passes
+        done: false
+      - text: Update the CI rules in CLAUDE.md and the commands in README.md
+        done: false
+    done_when:
+      - A deliberately failing test on a branch fails CI, and a failing commit cannot reach the deploy job
+      - bash verify.sh passes locally, and the pre-push hook runs it
+      - CLAUDE.md describes the new gate accurately
+
+  - id: S02
+    title: Harden the workflow and turn on GitHub's security features
+    status: todo
+    area: Security
+    effort: M
+    model: sonnet
+    why: >-
+      Every deploy run carries Node.js 20 deprecation warnings for all five
+      actions it uses, and newer major versions of each are out. The actions are
+      pinned to movable tags rather than commit SHAs, no job has a timeout,
+      Dependabot alerts and security updates are off, nothing scans the code,
+      and private vulnerability reporting is disabled even though SECURITY.md
+      points reporters at that form.
+    decision: >-
+      These are repository settings on GitHub. Approve each one before the
+      session changes it: Dependabot alerts and security updates, private
+      vulnerability reporting, and CodeQL default setup.
+    tasks:
+      - text: Move checkout, setup-python, setup-node, upload-pages-artifact and deploy-pages to their current majors, reading each changelog for breaking changes
+        done: false
+      - text: Pin every action to a full commit SHA with its version in a comment
+        done: false
+      - text: Add timeout-minutes to every job, and set persist-credentials to false on checkout
+        done: false
+      - text: Add .github/dependabot.yml for GitHub Actions, pip and npm, weekly and grouped
+        done: false
+      - text: Turn on Dependabot alerts and security updates
+        done: false
+      - text: Turn on private vulnerability reporting so the link in SECURITY.md works
+        done: false
+      - text: Turn on CodeQL default setup for Python, JavaScript and the workflows
+        done: false
+    done_when:
+      - A deploy run finishes with no Node.js 20 deprecation annotations
+      - GitHub's API reports private vulnerability reporting as enabled
+      - Dependabot and CodeQL have each completed a first run, and their findings are triaged
+
+  - id: S03
+    title: Make the repo ready for the Mac mini
+    status: todo
+    area: Environment
+    effort: M
+    model: sonnet
+    why: >-
+      The Mac mini replaces this Windows machine in early October 2026, and
+      several things here only work on Windows. The preview server in
+      .claude/launch.json starts with the Windows-only py launcher,
+      .vscode/settings.json points at a Windows virtual-environment path, local
+      Python is 3.14 while CI builds with 3.12, and the study layer's design
+      rationale lives only in a plan file on this machine. Python dependencies
+      are not hash-locked either, so a fresh install on the Mac is not
+      guaranteed to match.
+    decision: >-
+      Pick one Python version for local work and CI: keep 3.12, or move CI up to
+      the version the Mac will run.
+    depends_on: [S01]
+    tasks:
+      - text: Make .claude/launch.json and .vscode/settings.json work on macOS and on Windows
+        done: false
+      - text: Record the Python and Node versions in files that both machines and CI read
+        done: false
+      - text: Hash-lock the Python dependencies and install them with --require-hashes in CI
+        done: false
+      - text: Add a macOS runner to CI that runs verify.sh, so Mac problems show up before the Mac does
+        done: false
+      - text: Write macOS setup steps in README.md, covering the virtual environment, npm ci, verify.sh and the preview server
+        done: false
+      - text: Move the load-bearing study-layer rationale from the machine-local plan into docs/DECISIONS.md, and remove the dangling pointers to it
+        done: false
+      - text: List the gitignored local state that git will not carry (vault/20_AURELIA drafts, CLAUDE.local.md, .claude/settings.local.json) and how each one moves
+        done: false
+    done_when:
+      - The macOS CI job passes
+      - No committed file depends on a Windows-only launcher or path
+      - Every item of local-only state has a named destination on the Mac
+
+  - id: S04
+    title: Protect main and move session work onto pull requests
+    status: todo
+    area: CI/CD
+    effort: M
+    model: opus
+    why: >-
+      Anything pushed to main goes straight to the public site, and main has no
+      branch protection or ruleset. Several Claude sessions often work in this
+      repo at once; session branches reviewed in pull requests, with checks green
+      before merge, would also end a class of collisions between sessions sharing
+      one working tree.
+    decision: >-
+      Adopt a pull-request flow (session branch, pull request, green checks,
+      merge, deploy), or keep pushing to main directly and only block force
+      pushes and branch deletion.
+    depends_on: [S01]
+    tasks:
+      - text: Add a ruleset on main that blocks force pushes and deletion and requires the CI checks to pass
+        done: false
+      - text: Decide how vault-only content commits flow, through pull requests or a documented bypass
+        done: false
+      - text: Turn on automatic deletion of merged branches, and add a pull request template with the verify checklist
+        done: false
+      - text: Document the session-branch workflow in CLAUDE.md, using git worktrees for concurrent sessions
+        done: false
+      - text: Take one real change through the whole flow
+        done: false
+    done_when:
+      - GitHub rejects a push to main that skips the required checks
+      - One change has gone from branch to pull request to green checks to merge to a successful deploy
+
+  - id: S05
+    title: Make the build fail instead of deploying a degraded site
+    status: todo
+    area: Build
+    effort: M
+    model: sonnet
+    why: >-
+      Several problems print a warning, or nothing at all, and the build still
+      exits 0, so CI would deploy the result. A JSON typo in user_config.json
+      builds a Lobby titled "Personal site" with a blank name and an empty
+      Toolkit. A missing asset is skipped silently when the cache-busting version
+      is computed. A failed dist/ wipe carries on into the stale folder. Only the
+      first ambiguous alias in a build is ever reported.
+    decision: >-
+      Choose which warnings should fail CI. Malformed frontmatter is a warning by
+      deliberate choice; one option keeps it a warning locally and makes it fatal
+      only under a --strict flag that CI passes.
+    depends_on: [S01]
+    tasks:
+      - text: Validate user_config.json strictly, the way engine/profile.py validates profile.json, and fail the build on any error
+        done: false
+      - text: Collect build warnings in one place, and add a --strict flag that turns any warning into a non-zero exit
+        done: false
+      - text: Build with --strict in CI once the current content passes it
+        done: false
+      - text: Warn when an asset cannot be read for cache busting, report every ambiguous alias, and stop when dist/ cannot be wiped
+        done: false
+      - text: Add a test for each failure path, including the malformed user_config.json branch
+        done: false
+    done_when:
+      - A malformed user_config.json makes build.py exit non-zero with a message naming the problem
+      - CI builds with --strict and passes
+
+  - id: S06
+    title: Check every deploy on the live site and make rollback one step
+    status: todo
+    area: CI/CD
+    effort: M
+    model: sonnet
+    why: >-
+      Once deploy-pages reports success, nothing looks at the live site. Nothing
+      records which commit is live, there are no tags or releases, and there is no
+      written way back to the last good version. Today a broken deploy would be
+      found by a visitor.
+    depends_on: [S01]
+    tasks:
+      - text: Stamp the commit SHA and build time into every page during the CI build
+        done: false
+      - text: Add a post-deploy job that fetches the Lobby, Garden, About and a missing page, checks status codes and key content, and confirms the live SHA matches the commit
+        done: false
+      - text: Tag each successful deploy and publish a GitHub release with generated notes
+        done: false
+      - text: Add a manual workflow that redeploys a chosen tag, and write the rollback runbook
+        done: false
+      - text: Add a weekly scheduled build and live check, so breakage from runner images, CDNs or dependencies shows up without a push
+        done: false
+    done_when:
+      - A deploy run ends with a passing live check that reports the deployed SHA
+      - A rollback to an earlier tag has been rehearsed once and written down
+
+  - id: S07
+    title: Fix the defects the audit found on the public site
+    status: todo
+    area: Frontend
+    effort: L
+    model: sonnet
+    why: >-
+      Verified on the live site or in the source on 2026-09-15. A 404 at a nested
+      path such as /aurelia-os/a/b loads with no styles or scripts, because every
+      asset link is relative. Cache busting hashes the Tailwind input file rather
+      than the compiled CSS and skips theme-vars.css, so a theme change can reach
+      returning visitors late. The note reader fails outright if the marked.js CDN
+      does not load. The footer says "No analytics or tracking." while every page
+      loads Google Fonts, which receives each visitor's IP address. The
+      accessibility batch found in the 2026-09-15 Toolkit session is also still
+      open.
+    decision: >-
+      Self-host the web fonts so the footer line stays true, or change the line.
+    tasks:
+      - text: Make 404.html and the shared links work at any depth, with a base href or root-relative URLs
+        done: false
+      - text: Version the compiled main.css and theme-vars.css by the hash of what is actually served, and correct the docstring that says Pages sends no Cache-Control header
+        done: false
+      - text: Show a readable fallback in the note reader when marked.js is unavailable
+        done: false
+      - text: Carry out the web fonts decision
+        done: false
+      - text: Mark the current page in the nav with aria-current
+        done: false
+      - text: Rebuild the Ctrl+K palette as a native dialog with a real label and focus return
+        done: false
+      - text: Hide the Toolkit ring from screen readers, announce readout changes, and stop the pulsing line under reduced motion
+        done: false
+      - text: Turn the carousel the short way, and fix the About page line that says four themes
+        done: false
+      - text: Remove the dead CSS and JavaScript the audit listed (.carousel-card, .modal-action, .bloom-accent, .text-shadow-white, rovingContainer)
+        done: false
+    done_when:
+      - Each fix is checked in a real browser against a local build, including a 404 two levels deep
+      - pytest covers each template-level change
+
+  - id: S08
+    title: Add browser tests for the pages, the study flow and accessibility
+    status: todo
+    area: Testing
+    effort: L
+    model: opus
+    why: >-
+      Most of the site's behaviour is JavaScript (the Garden page alone carries a
+      2,800-line inline script), and none of it has an automated test; the reader,
+      Study mode and the dialogs have been verified by hand. The nested 404 and
+      CDN failures in S07 are exactly what a browser test catches and a Python
+      test cannot.
+    decision: >-
+      docs/DECISIONS.md lists automated accessibility and browser tests as
+      deliberately not done. This session reverses that by adding Playwright and
+      axe as development-only dependencies.
+    depends_on: [S01, S07]
+    tasks:
+      - text: Add Playwright with a test server that serves dist/ under /aurelia-os/, the way GitHub Pages does
+        done: false
+      - text: Smoke-test the Lobby, Garden, About and a nested 404 for console errors and for loaded styles and scripts
+        done: false
+      - text: Test the reader and study flow, from opening a note through Study mode, reveal, rating and the review queue
+        done: false
+      - text: Test the dialogs and keyboard paths, including Escape and focus return
+        done: false
+      - text: Run axe on each page and on the open reader and dialogs, in both Read and Study mode
+        done: false
+      - text: Block the CDNs in a test and check that the pages degrade gracefully
+        done: false
+      - text: Run the browser suite in CI and keep failure screenshots as workflow artifacts
+        done: false
+    done_when:
+      - The browser suite runs in CI on every push and pull request
+      - An axe violation at WCAG A or AA fails the build
+
+  - id: S09
+    title: Make builds reproducible and test the untested core
+    status: todo
+    area: Build
+    effort: M
+    model: sonnet
+    why: >-
+      The same commit builds to different bytes on Windows and on CI: Windows
+      writes CRLF page output, and the vault walk does not sort folders, which
+      reorders backlinks and graph edges between filesystems. escape_attr() and
+      sanitize_to_text(), which exist for security, have no direct tests, and
+      neither do the theme CSS and Tailwind config generators. make_id() strips
+      every ".md" in a name rather than only the extension,
+      generate_garden_card_html() reports a note's type by mutating its caller's
+      dict, and deploy.py has no test at all (its factory clone ships a dangling
+      social preview image).
+    depends_on: [S01]
+    tasks:
+      - text: Write every generated file with LF line endings, and sort the vault walk
+        done: false
+      - text: Add a test that builds the same content twice and compares the output byte for byte
+        done: false
+      - text: Add adversarial unit tests for escape_attr() and sanitize_to_text()
+        done: false
+      - text: Add tests for the theme CSS and Tailwind config generators
+        done: false
+      - text: Make make_id() strip only a trailing .md, keeping the cross-language make_id test in step
+        done: false
+      - text: Return the resolved note type from generate_garden_card_html() instead of mutating meta
+        done: false
+      - text: Add a smoke test that runs deploy.py into a temporary folder and builds the clone, and fix the clone's social preview image
+        done: false
+    done_when:
+      - Two builds of the same commit are byte-identical, checked by a test
+      - Every function named in the tasks has direct tests
+
+  - id: S10
+    title: Bring the docs back in line with the code, and keep them there
+    status: todo
+    area: Docs
+    effort: M
+    model: sonnet
+    why: >-
+      README.md tells the public that Gemini audio and image widgets render
+      without their sources, when those sections are dropped. Its version history
+      stops at 2026-09-10 and its structure block leaves out docs/ and .github/.
+      CLAUDE.md and docs/ARCHITECTURE.md call build.py a 15-line file (it is 35),
+      and CLAUDE.md's map leaves out engine/assets_pipeline.py and quotes an old
+      test count. The separate deep-search index, assets/js/search-index.js, is
+      not described. A comment in engine/content.py still cites media counts from
+      before the cleanup. Counts typed by hand drift, and one copy lives in a
+      published Artifact that no search of this repo can find.
+    tasks:
+      - text: Correct each stale or wrong statement listed above
+        done: false
+      - text: Replace hand-typed counts of tests, decisions and themes with wording that cannot go stale, or check them in a test
+        done: false
+      - text: Add a test that every repo path named in CLAUDE.md, README.md and docs/ exists
+        done: false
+      - text: Pick one home for release history, docs/DECISIONS.md or the README, and link the other to it
+        done: false
+      - text: Refresh the dev-vault note 10_Projects/Aurelia OS.md and the Cortex Operator's Manual
+        done: false
+      - text: Document anything S01 to S09 changed that their own sessions left undocumented
+        done: false
+    done_when:
+      - The docs path test passes
+      - No doc states a count that the code can contradict
+
+backlog:
+  - id: B01
+    title: Split the Garden's 2,800-line inline script into modules, with linting and unit tests
+    area: Frontend
+    status: open
+    detail: >-
+      Natural modules include the read-aloud panel, topic cloud, graph renderer
+      and review sessions. Best done after S08, so browser tests guard the move.
+  - id: B02
+    title: Replace inline onclick handlers with delegated listeners, then add a Content-Security-Policy
+    area: Security
+    status: open
+    detail: >-
+      Cards and wikilinks are generated with inline handlers, which rules out a
+      strict policy today. Follows B01.
+  - id: B03
+    title: Move card HTML from Python f-strings to Jinja macros
+    area: Build
+    status: open
+    detail: >-
+      Deferred in docs/DECISIONS.md. generate_garden_card_html() is now over 500
+      lines across seven note types.
+  - id: B04
+    title: Decide whether the Garden keeps every note inline or fetches a note when it opens
+    area: Performance
+    status: open
+    decision: >-
+      garden.html is about 3.9 MB because every note body is embedded so notes
+      open instantly. Keep that, or trade it for a smaller page that fetches each
+      note on demand.
+  - id: B05
+    title: Decide whether to move the vault to a private repo that publishes only the built site
+    area: Privacy
+    status: open
+    decision: >-
+      The whole vault is public today, including notes with publish set to false.
+      A private source repo that deploys dist/ to a public one is the only layout
+      in which unpublished notes are actually private.
+  - id: B06
+    title: Decide how vault media is published, since media files have no publish gate
+    area: Privacy
+    status: open
+    detail: Finding 19 of the 2026-09 security audit, still open.
+  - id: B07
+    title: Upgrade Tailwind CSS from the v3 line to v4
+    area: Build
+    status: open
+    detail: >-
+      3.4.19 is the v3 long-term-support release. v4 changes how configuration
+      works, so tailwind_build.py needs a migration.
+  - id: B08
+    title: Stop tracking the Obsidian plugin bundles under vault/.obsidian/plugins
+    area: Repo hygiene
+    status: open
+    detail: >-
+      About 2.5 MB of third-party JavaScript that the build never reads. Needs a
+      one-time vault override.
+  - id: B09
+    title: Remove the Zotero leftovers from published notes and the Gemini Notebook template
+    area: Content
+    status: open
+    decision: Remove them, which needs a one-time vault override, or fill in real Zotero keys.
+  - id: B10
+    title: Apply the About page intake interview
+    area: Content
+    status: open
+    detail: >-
+      Rewrite profile.json, add certifications, and split a short page title from
+      the long headline. Waiting on the interview file.
+  - id: B11
+    title: Confirm the ThinkPad and Next.js descriptions on the Toolkit cards
+    area: Content
+    status: open
+    decision: Is the ThinkPad described accurately, and has Next.js been used for client-facing work?
+  - id: B12
+    title: Read flashcard CSV files with newline='' so quoted multi-line cells parse correctly
+    area: Build
+    status: open
+    detail: No current deck is affected.
+  - id: B13
+    title: Mirror roadmap sessions to GitHub Issues and a Project board
+    area: Dashboard
+    status: open
+    detail: >-
+      One issue per session, with area labels and a milestone, kept in step with
+      this file by a script, so progress also shows on GitHub and on a phone.
+  - id: B14
+    title: Show roadmap progress in the CI job summary on every push
+    area: Dashboard
+    status: open
+  - id: B15
+    title: Link commits to sessions automatically with a commit trailer
+    area: Dashboard
+    status: open
+    detail: >-
+      A "Roadmap: S03" line in a commit message would let the dashboard list a
+      session's commits from git log instead of by hand.
+  - id: B16
+    title: Chart progress over time from this file's git history
+    area: Dashboard
+    status: open
+  - id: B17
+    title: Add a project skill that starts the next roadmap session with its kickoff prompt
+    area: Dashboard
+    status: open

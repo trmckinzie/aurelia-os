@@ -103,3 +103,8 @@ CLAUDE.local.md
 # night. Anchored with a leading slash so only the repo root is affected.
 /garden-*.png
 /*-snapshot.md
+
+# --- IGNORE THE ROADMAP DASHBOARD ---
+# tools/roadmap.py renders docs/roadmap.yaml into reports/roadmap.html on every
+# run. The HTML is generated output; docs/roadmap.yaml is the tracked source.
+/reports/

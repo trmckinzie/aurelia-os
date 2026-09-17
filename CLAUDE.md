@@ -52,6 +52,7 @@ python -m pytest tests/ -q                             # 461 tests as of 2026-09
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
+python tools/roadmap.py --open                         # roadmap dashboard; writes reports/ (gitignored)
 python deploy.py                                       # factory clone -> ./Aurelia_Factory_v1/ (gitignored)
 ```
 
@@ -79,7 +80,10 @@ gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
   from `THEME_CONFIG`. Never hand-edit either output.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
 - `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, `utils.js`.
-- `tools/`: `validate_vault_schema.py`, `vault_health.py`.
+- `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`.
+- `docs/roadmap.yaml`: the priority-ordered engineering roadmap (sessions plus a backlog), rendered
+  by `tools/roadmap.py`. A session doing roadmap work updates its own entry in the same change
+  (tasks, status, dates, commits) and runs `python tools/roadmap.py --check`.
 - `deploy.py`: a separate product, a white-label factory clone. Keep it in sync with `engine/`
   when the site's capabilities change; nothing tests it and it has drifted before.
 
@@ -96,7 +100,7 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer".
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
-- Why something looks odd: `docs/DECISIONS.md` (20 dated decisions plus known gaps).
+- Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 
