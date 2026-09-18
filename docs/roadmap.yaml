@@ -76,8 +76,11 @@ sessions:
 
   - id: S02
     title: Harden the workflow and turn on GitHub's security features
-    status: in_progress
+    status: done
     started: 2026-09-18
+    completed: 2026-09-18
+    commits:
+      - "8a767de"
     area: Security
     effort: M
     model: sonnet
@@ -113,24 +116,19 @@ sessions:
       - GitHub's API reports private vulnerability reporting as enabled
       - Dependabot and CodeQL have each completed a first run, and their findings are triaged
     notes: >-
-      Work finished and pushed 2026-09-18; the commit hash is added when this
-      is marked done, since a commit cannot name itself. Actions moved to
-      checkout v7.0.1, setup-python v7.0.0, setup-node v7.0.0,
-      upload-pages-artifact v5.0.0 and deploy-pages v5.0.1, each pinned to the
-      commit its release tag resolves to. Nothing in the changelogs affected
-      this workflow; upload-pages-artifact v4 drops dotfiles, and the build
-      writes none. The three GitHub settings were switched on through the API
-      and read back: private vulnerability reporting enabled, Dependabot alerts
-      and security updates enabled, CodeQL default setup configured.
-      CodeQL's first run (Python, JavaScript and the workflows) completed. Its
-      one finding was a loose string assertion in a test, not a defect; the
-      test now asserts the exact canonical link, and the alert closes on the
-      next scan after a push. Dependabot alerts show none open.
-      Still open, and why this stays in_progress: the Node.js 20 criterion
-      needs a real deploy run of the new workflow, and Dependabot's version
-      updates only start once dependabot.yml is on main. Check the push's run
-      annotations and that CodeQL shows no open alerts, then mark this done
-      with the commit hash.
+      Pushed 2026-09-18 as 8a767de. Actions are now checkout v7.0.1,
+      setup-python v7.0.0, setup-node v7.0.0, upload-pages-artifact v5.0.0 and
+      deploy-pages v5.0.1, each pinned to its release commit. No changelog
+      affected this workflow; upload-pages-artifact drops dotfiles and the
+      build writes none. The first run on main passed all three jobs with no
+      Node.js 20 annotations. The only new notice is that ubuntu-latest moves
+      to Ubuntu 26 on 2026-10-19; pinning ubuntu-24.04 is an option, left for S03.
+      Private vulnerability reporting, Dependabot alerts and security updates,
+      and CodeQL default setup are on and read back. CodeQL's one finding was a
+      loose string assertion in a test; the test is tightened and the alert is
+      fixed. No Dependabot or code-scanning alerts are open. Dependabot's first
+      run proposed tailwindcss 3 to 4; its check failed at the CSS compile, so
+      the PR was closed and the 4.x line ignored until a deliberate migration.
 
   - id: S03
     title: Make the repo ready for the Mac mini
