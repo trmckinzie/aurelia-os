@@ -85,6 +85,10 @@ python tools/validate_vault_schema.py
 # Advisory vault-health reports: pending-atomization queue, orphaned notes,
 # maturity-promotion candidates (read-only, never edits the vault)
 python tools/vault_health.py
+
+# Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build) --
+# same checks CI runs and gates the deploy on. Run before pushing.
+bash verify.sh
 ```
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full architecture writeup — build pipeline,

@@ -26,11 +26,16 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
   Engine, templates, config, tests, and `profile.json` are fair game.
 - **Don't commit or push unless asked.** Make the change, verify it, leave it in the working
   tree. Push only after confirming no divergence from `origin/main`.
-- **CI must keep `--no-sort`.** `.github/workflows/deploy.yml` runs `python build.py --no-sort`
-  and nothing else. Without the flag `organize_assets()` sweeps `vault/99_DROP_ZONE/` into
-  `vault/assets/` and `sync_vault_assets()` publishes it with no `publish:` gate, reviewed by nobody.
-- **CI runs no tests.** `pytest` and `pyflakes` only run when you run them; a red test or a new
-  lint warning will not block a deploy. Run both before calling work done.
+- **CI must keep `--no-sort`.** Both the `check` and `build` jobs in `.github/workflows/deploy.yml`
+  run `python build.py --no-sort`. Without the flag `organize_assets()` sweeps
+  `vault/99_DROP_ZONE/` into `vault/assets/` and `sync_vault_assets()` publishes it with no
+  `publish:` gate, reviewed by nobody.
+- **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
+  runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, then a
+  `--no-sort` build) in the `check` job; `build` and `deploy` `need: check` and do not run if it
+  fails. Run `bash verify.sh` locally before pushing — it's the same suite, so CI can't fail on
+  something the local run missed. The pre-push hook in `.claude/githooks/pre-push` also runs it,
+  but only as a warning; CI is the real gate.
 - **Voice rule for anything user-facing:** plain, professional English. No `//` separators, no
   `SNAKE_CASE` labels, no "nodes"/"neural"/"matrix"/"vault" jargon. Notes are notes; the
   collection is the Garden. `tests/test_lobby.py` and `tests/test_garden.py` pin the banned tokens.
@@ -48,12 +53,14 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
 ```bash
 pip install -r requirements-dev.txt && npm install    # one-time setup
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
-python -m pytest tests/ -q                             # 461 tests as of 2026-09-10
+python -m pytest tests/ -q                             # 533 tests as of 2026-09-16
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
 python tools/roadmap.py --open                         # roadmap dashboard; writes reports/ (gitignored)
+python tools/roadmap.py --check                        # validate roadmap.yaml; exits 1 on any problem
 python deploy.py                                       # factory clone -> ./Aurelia_Factory_v1/ (gitignored)
+bash verify.sh                                          # everything above, in CI's order; run before pushing
 ```
 
 Machine-specific notes (interpreter path, console encoding, local preview server) live in the

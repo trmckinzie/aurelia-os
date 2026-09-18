@@ -31,7 +31,8 @@ repository: https://github.com/trmckinzie/aurelia-os
 sessions:
   - id: S01
     title: Run the full check suite before every deploy
-    status: todo
+    status: in_progress
+    started: 2026-09-16
     area: CI/CD
     effort: M
     model: sonnet
@@ -46,23 +47,31 @@ sessions:
       CLAUDE.md records "CI runs no tests" and says deploy.yml runs the build
       "and nothing else". Having tests gate the deploy reverses that rule, so
       confirm it first. The --no-sort flag stays either way.
+      Confirmed 2026-09-16: gate the deploy on the full check suite.
     tasks:
       - text: Pin pyflakes in requirements-dev.txt
-        done: false
+        done: true
       - text: Add a repo-root verify.sh that runs pytest, pyflakes, the vault schema check, tools/roadmap.py --check and build.py --no-sort, stopping at the first failure
-        done: false
+        done: true
       - text: Add a CI workflow that runs the same checks on every pull request and every push to main, on Python 3.12 and Node 22, with a timeout
-        done: false
+        done: true
       - text: Make the deploy wait for those checks to pass, keeping build.py --no-sort
-        done: false
+        done: true
       - text: Confirm on the first ubuntu run that the one Windows-only test skips cleanly and everything else passes
         done: false
       - text: Update the CI rules in CLAUDE.md and the commands in README.md
-        done: false
+        done: true
     done_when:
       - A deliberately failing test on a branch fails CI, and a failing commit cannot reach the deploy job
       - bash verify.sh passes locally, and the pre-push hook runs it
       - CLAUDE.md describes the new gate accurately
+    notes: >-
+      verify.sh passes locally (533 tests, pyflakes clean, schema and roadmap
+      checks clean, --no-sort build clean). The CI workflow, the check job, and
+      the needs: check gate on build/deploy are written and YAML-validated, but
+      the actual ubuntu run (task 5, and the done_when about a failing test
+      failing CI) can only be confirmed once this is pushed -- left uncommitted
+      per instructions, waiting for Travis to commit and push.
 
   - id: S02
     title: Harden the workflow and turn on GitHub's security features
