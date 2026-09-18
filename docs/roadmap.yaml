@@ -25,7 +25,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-09-15
+updated: 2026-09-18
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -76,7 +76,8 @@ sessions:
 
   - id: S02
     title: Harden the workflow and turn on GitHub's security features
-    status: todo
+    status: in_progress
+    started: 2026-09-18
     area: Security
     effort: M
     model: sonnet
@@ -91,25 +92,45 @@ sessions:
       These are repository settings on GitHub. Approve each one before the
       session changes it: Dependabot alerts and security updates, private
       vulnerability reporting, and CodeQL default setup.
+      Approved 2026-09-18: all three settings.
     tasks:
       - text: Move checkout, setup-python, setup-node, upload-pages-artifact and deploy-pages to their current majors, reading each changelog for breaking changes
-        done: false
+        done: true
       - text: Pin every action to a full commit SHA with its version in a comment
-        done: false
+        done: true
       - text: Add timeout-minutes to every job, and set persist-credentials to false on checkout
-        done: false
+        done: true
       - text: Add .github/dependabot.yml for GitHub Actions, pip and npm, weekly and grouped
-        done: false
+        done: true
       - text: Turn on Dependabot alerts and security updates
-        done: false
+        done: true
       - text: Turn on private vulnerability reporting so the link in SECURITY.md works
-        done: false
+        done: true
       - text: Turn on CodeQL default setup for Python, JavaScript and the workflows
-        done: false
+        done: true
     done_when:
       - A deploy run finishes with no Node.js 20 deprecation annotations
       - GitHub's API reports private vulnerability reporting as enabled
       - Dependabot and CodeQL have each completed a first run, and their findings are triaged
+    notes: >-
+      Work finished and pushed 2026-09-18; the commit hash is added when this
+      is marked done, since a commit cannot name itself. Actions moved to
+      checkout v7.0.1, setup-python v7.0.0, setup-node v7.0.0,
+      upload-pages-artifact v5.0.0 and deploy-pages v5.0.1, each pinned to the
+      commit its release tag resolves to. Nothing in the changelogs affected
+      this workflow; upload-pages-artifact v4 drops dotfiles, and the build
+      writes none. The three GitHub settings were switched on through the API
+      and read back: private vulnerability reporting enabled, Dependabot alerts
+      and security updates enabled, CodeQL default setup configured.
+      CodeQL's first run (Python, JavaScript and the workflows) completed. Its
+      one finding was a loose string assertion in a test, not a defect; the
+      test now asserts the exact canonical link, and the alert closes on the
+      next scan after a push. Dependabot alerts show none open.
+      Still open, and why this stays in_progress: the Node.js 20 criterion
+      needs a real deploy run of the new workflow, and Dependabot's version
+      updates only start once dependabot.yml is on main. Check the push's run
+      annotations and that CodeQL shows no open alerts, then mark this done
+      with the commit hash.
 
   - id: S03
     title: Make the repo ready for the Mac mini

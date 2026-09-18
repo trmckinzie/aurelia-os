@@ -375,7 +375,7 @@ def test_canonical_only_when_domain_set(page):
 
     with_domain = render("example.com", active)
     assert 'rel="canonical"' in with_domain
-    assert "https://example.com/" in with_domain
+    assert f'href="https://example.com/{active}.html"' in with_domain
 
 
 def test_canonical_for_the_lobby_points_at_the_site_root():
