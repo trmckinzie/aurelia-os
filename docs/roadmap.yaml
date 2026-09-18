@@ -31,8 +31,11 @@ repository: https://github.com/trmckinzie/aurelia-os
 sessions:
   - id: S01
     title: Run the full check suite before every deploy
-    status: in_progress
+    status: done
     started: 2026-09-16
+    completed: 2026-09-18
+    commits:
+      - "6eb82e0"
     area: CI/CD
     effort: M
     model: sonnet
@@ -58,7 +61,7 @@ sessions:
       - text: Make the deploy wait for those checks to pass, keeping build.py --no-sort
         done: true
       - text: Confirm on the first ubuntu run that the one Windows-only test skips cleanly and everything else passes
-        done: false
+        done: true
       - text: Update the CI rules in CLAUDE.md and the commands in README.md
         done: true
     done_when:
@@ -66,12 +69,10 @@ sessions:
       - bash verify.sh passes locally, and the pre-push hook runs it
       - CLAUDE.md describes the new gate accurately
     notes: >-
-      verify.sh passes locally (533 tests, pyflakes clean, schema and roadmap
-      checks clean, --no-sort build clean). The CI workflow, the check job, and
-      the needs: check gate on build/deploy are written and YAML-validated, but
-      the actual ubuntu run (task 5, and the done_when about a failing test
-      failing CI) can only be confirmed once this is pushed -- left uncommitted
-      per instructions, waiting for Travis to commit and push.
+      First CI run (push of 6eb82e0, 2026-09-18): the check job passed with
+      532 passed and 1 skipped on ubuntu, then build and deploy ran in order.
+      The "failing test cannot reach deploy" criterion rests on build needing
+      check; it was not exercised with a live failing run.
 
   - id: S02
     title: Harden the workflow and turn on GitHub's security features
