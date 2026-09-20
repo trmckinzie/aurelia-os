@@ -67,8 +67,9 @@ def is_link(path):
 
     os.path.islink() alone is not that test (see the module docstring).
     os.path.isjunction() is Python 3.12+, which covers both this project's
-    floor and CI's pinned 3.12; on an older interpreter this degrades to the
-    symlink-only answer and `escapes()` remains the real backstop.
+    floor and the version in .python-version; on an older interpreter this
+    degrades to the symlink-only answer and `escapes()` remains the real
+    backstop.
     """
     if os.path.islink(path):
         return True

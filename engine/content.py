@@ -514,7 +514,7 @@ def _note_missing_asset(path):
 def _render_flashcards(path):
     """Emits a semantic, sanitize-safe Q/A list for a flashcard deck.
 
-    Phase 3 of the study-tool plan replaced the old 3D-flip strip (an
+    The 2026-09 study-layer work (docs/DECISIONS.md item 18) replaced the old 3D-flip strip (an
     all-visible horizontal scroll of tap-to-flip cards, no scoring, no
     keyboard) with a plain <ol> that reads as sensible Q/A pairs with no JS
     at all, plus a `data-deck` asset path. assets/js/flashcards.js finds

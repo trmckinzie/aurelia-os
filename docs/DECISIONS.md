@@ -206,8 +206,51 @@ knowing so you don't "fix" something that was a deliberate decision:
     two parenthetical-title concepts the resolver was built for, and two dead flashcard-CSV
     references removed. A literal NUL byte that had sat inside `applySort()`'s memo key since the
     graph landed was replaced with a space and a test now forbids control bytes in the template.
-    The full design rationale is in the plan that drove the work
-    (on the Alienware; not in this repo).
+
+    The design plan that drove the work lived in a machine-local file and is retired; what was
+    load-bearing in it is recorded here. The mechanics (SM-2 constants, the storage schema, the
+    cover, the queue) are in `docs/ARCHITECTURE.md`, "Study layer"; this is the reasoning.
+
+    - **Why a study layer at all.** Reading a note is recognition, the weakest learning signal.
+      The evidence ranks practice testing and distributed practice highest and interleaving,
+      elaborative interrogation and self-explanation as moderate; none of the five existed. The
+      one earlier attempt at spaced review was removed on 2026-09-07 because it counted "opened
+      the note" as "reviewed", which is the recognition trap again. So a rating only happens
+      after an explicit recall attempt, never on open. Do not add a "mark as reviewed" shortcut.
+    - **Two findings reshaped the order of work.** 74% of the wikilinks written in the Garden were
+      dead on the site (668 of 901 distinct targets), so the resolver came first: the graph the
+      study features lean on was far sparser than the vault's real linking. And the flashcard
+      decks, the only retrieval-practice content, were an all-visible strip with no scoring or
+      keyboard, so they were rebuilt rather than decorated.
+    - **Decisions made with Travis.** Read mode is the default for first-time visitors (the
+      public audience is a recruiter, not the author). Four vault notes were edited under a
+      one-time override, mechanical edits only. Phases ran in sequence with a browser-verified
+      checkpoint after each, and nothing was committed until asked.
+    - **Fallbacks that were chosen, not accidents.** No recognisable answer block means no cover:
+      a note must never be blocked from opening. Elaboration candidates of the same type as the
+      current note are sorted to the bottom, not filtered out, so a note with few neighbours
+      still gets a nudge rather than none. A v1 review log migrates lazily and only on the
+      Garden; the Lobby's read-only count skips entries it has not migrated.
+    - **Risks that shaped the code.** `updateGrid` runs per keystroke over every card, so the due
+      markers read the log once per sweep into a `Set`, never per card. `openNote()` only moves
+      focus when the modal was closed, so an auto-advancing review session moves focus to the
+      new note's Reveal button itself, or keyboard users lose it to `<body>`. Every
+      `localStorage` write is in a `try/catch` because Safari private mode throws. Import merges
+      per note by the higher `last`, and says so in the UI.
+    - **Verification recipe.** The JS has no test harness, so behaviour is checked with Playwright
+      against a local server on `dist/` at 1440x900 and 390x844, one `build.py` at a time: first
+      load is Read mode with no cover; in Study mode a concept's definition is hidden, then
+      revealed; a Good rating writes `version: 2`; a seeded v1 blob migrates; a three-note
+      session leaves `history.length` unchanged and focus on Reveal; the reader footer has no
+      overflow at 375 px; the Lobby teaser appears only when something is due.
+    - **Content calls left with Travis (as of 2026-09-10; his to make).** Fill `Contrasts With`
+      on growing and evergreen concepts (the field is built and used in no note; a contrast edge
+      is exactly the pair interleaving should juxtapose); atomize the most-linked dangling
+      targets (`vault_health.py --report pending`); consider `publish: false` on daily logs with
+      an empty summary, which dilute search, the grid and the graph; write each concept's Key
+      Insight as the answer to "why does this matter, how would I explain it to a peer", which
+      is what the recall cover tests against; and host media in object storage so dual-coding
+      material can return.
 19. **Gemini Notebook card repair (2026-09-10).** Both of that card's fields had rendered nothing
     since item 14 landed collapsible sections in `4ecc9d6`: `wrap_gemini_notebook_sections()`
     rewrites a note's `# Header` lines into `<details>`/`<summary>`, `extract_gemini_notebook_data()`

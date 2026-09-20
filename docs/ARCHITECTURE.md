@@ -273,9 +273,11 @@ panel's export/import (JSON, merged per note by the higher `last` timestamp).
 
 There is no JS test harness: `tests/test_garden.py` pins the wiring (scripts loaded with `?v=`,
 elements and options present, no legacy voice tokens), and the behaviour is verified with
-Playwright against a local `http.server` on `dist/` — see the Verification section of the plan
-that landed this work, and note that a browser will happily serve a cached `garden.html` after a
-rebuild unless you add a query string.
+Playwright against a local server on `dist/` (`node tools/preview.mjs`, which is what the
+`dist-preview` entry in `.claude/launch.json` runs) — the checks are listed in `docs/DECISIONS.md`
+item 18, "Verification recipe". `preview.mjs` sends `Cache-Control: no-store`; against any other
+server, a browser will happily serve a cached `garden.html` after a rebuild unless you add a
+query string.
 
 ### CSS
 

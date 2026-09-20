@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "dist-preview",
-      "runtimeExecutable": "py",
-      "runtimeArgs": ["-m", "http.server", "8791", "--directory", "dist"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/preview.mjs", "8791"],
       "port": 8791
     }
   ]

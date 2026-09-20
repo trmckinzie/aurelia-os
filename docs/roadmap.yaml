@@ -132,7 +132,8 @@ sessions:
 
   - id: S03
     title: Make the repo ready for the Mac mini
-    status: todo
+    status: in_progress
+    started: 2026-09-18
     area: Environment
     effort: M
     model: sonnet
@@ -148,26 +149,45 @@ sessions:
     decision: >-
       Pick one Python version for local work and CI: keep 3.12, or move CI up to
       the version the Mac will run.
+      Decided 2026-09-18: Python 3.14 everywhere.
     depends_on: [S01]
     tasks:
       - text: Make .claude/launch.json and .vscode/settings.json work on macOS and on Windows
-        done: false
+        done: true
       - text: Record the Python and Node versions in files that both machines and CI read
-        done: false
+        done: true
       - text: Hash-lock the Python dependencies and install them with --require-hashes in CI
-        done: false
+        done: true
       - text: Add a macOS runner to CI that runs verify.sh, so Mac problems show up before the Mac does
         done: false
       - text: Write macOS setup steps in README.md, covering the virtual environment, npm ci, verify.sh and the preview server
-        done: false
+        done: true
       - text: Move the load-bearing study-layer rationale from the machine-local plan into docs/DECISIONS.md, and remove the dangling pointers to it
-        done: false
+        done: true
       - text: List the gitignored local state that git will not carry (vault/20_AURELIA drafts, CLAUDE.local.md, .claude/settings.local.json) and how each one moves
-        done: false
+        done: true
     done_when:
       - The macOS CI job passes
       - No committed file depends on a Windows-only launcher or path
       - Every item of local-only state has a named destination on the Mac
+    notes: >-
+      Worked on 2026-09-18, not committed. Python 3.14 (.python-version) and
+      Node 24 (.nvmrc) are read by CI and both machines. Node 24 was chosen to
+      match the local install and is the active LTS; it was not asked about.
+      requirements.txt and requirements-dev.txt are now uv-generated from new
+      .in files with sha256 hashes for every platform; a clean install with
+      --require-hashes works on Windows, a tampered hash is rejected, and a
+      dry-run resolves for Linux and macOS arm64. tests/test_requirements_lock.py
+      guards drift. The preview server is now tools/preview.mjs (Node), started
+      by launch.json, and the python.defaultInterpreterPath line is gone because
+      the extension finds .venv itself. The study-layer rationale is DECISIONS
+      item 18 and every pointer to the plan file is repointed. Local-only state
+      is listed in docs/MOVING-MACHINES.md.
+      Still open: the check-macos job in deploy.yml has never run, so its task
+      stays unticked and "The macOS CI job passes" is unmet; nothing has been
+      pushed. It is deliberately not in build's needs, so a Mac-only failure
+      does not block a deploy. ubuntu-latest still moves to Ubuntu 26 on
+      2026-10-19; pinning ubuntu-24.04 was left alone as outside this scope.
 
   - id: S04
     title: Protect main and move session work onto pull requests

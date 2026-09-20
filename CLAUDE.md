@@ -35,7 +35,15 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
   `--no-sort` build) in the `check` job; `build` and `deploy` `need: check` and do not run if it
   fails. Run `bash verify.sh` locally before pushing — it's the same suite, so CI can't fail on
   something the local run missed. The pre-push hook in `.claude/githooks/pre-push` also runs it,
-  but only as a warning; CI is the real gate.
+  but only as a warning; CI is the real gate. A `check-macos` job runs the same suite on macOS
+  but is deliberately not in `build`'s `needs`, so a Mac-only failure is visible without holding
+  up a deploy.
+- **One Python and one Node, read from files.** `.python-version` (3.14) and `.nvmrc` (24) are the
+  single source; CI's `setup-python` and `setup-node` read them, so a bump is one line. Python
+  packages install with `--require-hashes` from `requirements.txt` / `requirements-dev.txt`, which
+  are **generated** from `requirements.in` / `requirements-dev.in`. Edit the `.in` file, then
+  regenerate (commands in README, "Dependency locks"); `tests/test_requirements_lock.py` fails on
+  drift. Never hand-edit a lock file.
 - **Voice rule for anything user-facing:** plain, professional English. No `//` separators, no
   `SNAKE_CASE` labels, no "nodes"/"neural"/"matrix"/"vault" jargon. Notes are notes; the
   collection is the Garden. `tests/test_lobby.py` and `tests/test_garden.py` pin the banned tokens.
@@ -51,9 +59,9 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
 ## Commands
 
 ```bash
-pip install -r requirements-dev.txt && npm install    # one-time setup
+pip install --require-hashes -r requirements-dev.txt && npm ci   # one-time setup, inside .venv
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
-python -m pytest tests/ -q                             # 533 tests as of 2026-09-16
+python -m pytest tests/ -q                             # 536 tests as of 2026-09-18
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
@@ -87,7 +95,8 @@ gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
   from `THEME_CONFIG`. Never hand-edit either output.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
 - `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, `utils.js`.
-- `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`.
+- `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`, and `preview.mjs` (the
+  Node static server behind `.claude/launch.json`'s `dist-preview`; `node tools/preview.mjs`).
 - `docs/roadmap.yaml`: the priority-ordered engineering roadmap (sessions plus a backlog), rendered
   by `tools/roadmap.py`. A session doing roadmap work updates its own entry in the same change
   (tasks, status, dates, commits) and runs `python tools/roadmap.py --check`.
@@ -104,7 +113,9 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 
 - Links, wikilinks, card pills, backlinks: `docs/ARCHITECTURE.md`, "Link system".
 - Themes, colours, contrast: `docs/ARCHITECTURE.md`, "CSS", and `tests/test_theming.py`.
-- Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer".
+- Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer", and the reasoning
+  behind it in `docs/DECISIONS.md` item 18.
+- Setting up a new machine, or what git will not carry to one: `docs/MOVING-MACHINES.md`.
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
@@ -144,8 +155,9 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
   `{% set %}` `site` themselves.
 - **Don't reintroduce `review_seed`.** `dueCount()` counts logged entries only, so the Lobby
   teaser needs no per-note payload.
-- **Verify the built site with a real browser against a local server on `dist/`**, and add a
-  query string, or the browser serves a cached `garden.html` after a rebuild.
+- **Verify the built site with a real browser against a local server on `dist/`**
+  (`node tools/preview.mjs` sends `no-store`; any other server needs a query string), or the
+  browser serves a cached `garden.html` after a rebuild.
 - **Malformed frontmatter warns and exits 0 on purpose.** It is a content problem, not a broken
   build. Decide before turning it into a failure.
 

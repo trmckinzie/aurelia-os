@@ -56,9 +56,11 @@ escaping helper (`assets/js/utils.js`) ship as separately cached files.
 ## Getting started
 
 ```bash
-# One-time setup
-pip install -r requirements-dev.txt   # Python deps + pytest (requirements.txt alone is enough to just build)
-npm install                            # Tailwind CLI
+# One-time setup. Versions live in .python-version and .nvmrc, the files CI reads too.
+# Run from a virtual environment: python3 -m venv .venv (py -3.14 -m venv .venv on Windows).
+pip install --require-hashes -r requirements-dev.txt   # Python deps + pytest + pyflakes, hash-checked
+                                                       # (requirements.txt alone is enough to just build)
+npm ci                                                 # Tailwind CLI, from package-lock.json
 
 # Build the site (writes to dist/, rebuilt from scratch every run)
 python build.py
@@ -89,7 +91,56 @@ python tools/vault_health.py
 # Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build) --
 # same checks CI runs and gates the deploy on. Run before pushing.
 bash verify.sh
+
+# Serve dist/ locally at http://localhost:8791 (Node, so it is the same on every OS)
+node tools/preview.mjs
 ```
+
+### Setting up on macOS
+
+The same steps work on any Mac; nothing in the repo depends on Windows. CI runs `verify.sh` on
+macOS as well as Ubuntu, in the `check-macos` job.
+
+1. Install Python 3.14 and Node 24, the versions in `.python-version` and `.nvmrc`. Homebrew
+   (`brew install python@3.14`) and the python.org and nodejs.org installers all work, as does
+   any version manager that reads those two files (`uv`, `pyenv`, `fnm`, `nvm`).
+2. Clone the repo and create the virtual environment, always inside the repo folder:
+
+   ```bash
+   python3.14 -m venv .venv
+   .venv/bin/pip install --require-hashes -r requirements-dev.txt
+   npm ci
+   ```
+
+3. Run the full suite. `verify.sh` finds `.venv/bin/python` on its own, so there is nothing to
+   activate:
+
+   ```bash
+   bash verify.sh
+   ```
+
+4. Preview the built site with `node tools/preview.mjs`, or start the `dist-preview` entry from
+   `.claude/launch.json` in Claude Code.
+
+VS Code needs no interpreter setting: the Python extension picks up `.venv` at the repo root.
+For everything git does not carry over (local drafts, per-machine Claude Code files, the hook
+wiring), see [docs/MOVING-MACHINES.md](docs/MOVING-MACHINES.md).
+
+### Dependency locks
+
+`requirements.in` and `requirements-dev.in` hold the direct dependencies, pinned exactly; they are
+the files to edit. `requirements.txt` and `requirements-dev.txt` are generated from them with
+sha256 hashes for every package on every platform, and CI installs them with `--require-hashes`, so
+a package that changes upstream fails the install instead of slipping in. After changing a pin,
+regenerate both (needs [uv](https://docs.astral.sh/uv/)):
+
+```bash
+uv pip compile requirements.in --universal --generate-hashes --python-version 3.14 -o requirements.txt
+uv pip compile requirements-dev.in --universal --generate-hashes --python-version 3.14 -o requirements-dev.txt
+```
+
+`tests/test_requirements_lock.py` fails if the `.in` files and the locks disagree, or if a locked
+package has lost its hashes. Node dependencies were already locked, by `package-lock.json`.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full architecture writeup — build pipeline,
 the wikilink/backlink system, the theming architecture — and [docs/DECISIONS.md](docs/DECISIONS.md)

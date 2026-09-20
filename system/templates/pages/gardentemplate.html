@@ -2654,8 +2654,8 @@
             }
 
             // A review session never persists its queue -- reloading with
-            // ?review=1 recomputes it fresh from the log (see the plan's
-            // own "reload recomputes from the log" note), rather than
+            // ?review=1 recomputes it fresh from the log (see "Review queue
+            // and sessions" in docs/ARCHITECTURE.md), rather than
             // trying to restore exact queue order across a reload. Doesn't
             // force-navigate: if the URL also carries a note hash (the
             // normal case mid-session), openNoteFromHash() opens it
@@ -3469,7 +3469,8 @@
     // unioned with its graph neighbours (GRAPH_INDEX.edges), ranked by
     // DIFFERENCE from the current note -- a different type first, then
     // fewest shared topic/* tags -- so the nudge surfaces genuinely
-    // different material to connect to (the plan's Interleaving principle),
+    // different material to connect to (the interleaving principle in
+    // docs/DECISIONS.md item 18),
     // not more of the same.
     function noteTopicTags(id) {
         const node = NODE_BY_ID[id];
@@ -3535,7 +3536,8 @@
             // source > deep-dive > concept (NUDGE_TYPE_PREFERENCE); among
             // further ties, fewer shared topic tags first (more genuinely
             // different material). Same-type concepts are never filtered
-            // out, just sorted to the bottom -- the plan's fallback rule:
+            // out, just sorted to the bottom -- the fallback rule in
+            // docs/DECISIONS.md item 18:
             // show them as a last resort rather than render nothing.
             .sort((a, b) => b.differentType - a.differentType
                 || a.typeRank - b.typeRank

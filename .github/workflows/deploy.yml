@@ -28,16 +28,18 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '3.12'
+          python-version-file: '.python-version'
           cache: 'pip'
 
       - name: Install Python Dependencies
-        run: pip install -r requirements-dev.txt
+        # --require-hashes: every package, including transitive ones, must match
+        # a sha256 in the lock file or the install fails.
+        run: pip install --require-hashes -r requirements-dev.txt
 
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install Node Dependencies
@@ -47,6 +49,43 @@ jobs:
         # pytest, pyflakes, the vault schema check, the roadmap check, then a
         # --no-sort build -- see verify.sh. Same suite Travis runs locally
         # before pushing, so CI can't pass on something the local run missed.
+        run: bash verify.sh
+
+  # The same suite on the platform the Mac mini will run, so a macOS-only
+  # problem shows up in CI before it shows up on the machine. Deliberately NOT
+  # in build's `needs`: the site is built and published from the ubuntu jobs, so
+  # a macOS failure (or a runner outage) should be seen and fixed without
+  # holding up a deploy. If this job is ever made required, add it to `needs`.
+  check-macos:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install --require-hashes -r requirements-dev.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Run full check suite
         run: bash verify.sh
 
   build:
@@ -68,16 +107,16 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '3.12'
+          python-version-file: '.python-version'
           cache: 'pip'
 
       - name: Install Python Dependencies
-        run: pip install -r requirements.txt
+        run: pip install --require-hashes -r requirements.txt
 
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install Node Dependencies
