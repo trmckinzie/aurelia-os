@@ -132,8 +132,11 @@ sessions:
 
   - id: S03
     title: Make the repo ready for the Mac mini
-    status: in_progress
+    status: done
     started: 2026-09-18
+    completed: 2026-09-19
+    commits:
+      - "303546f"
     area: Environment
     effort: M
     model: sonnet
@@ -159,7 +162,7 @@ sessions:
       - text: Hash-lock the Python dependencies and install them with --require-hashes in CI
         done: true
       - text: Add a macOS runner to CI that runs verify.sh, so Mac problems show up before the Mac does
-        done: false
+        done: true
       - text: Write macOS setup steps in README.md, covering the virtual environment, npm ci, verify.sh and the preview server
         done: true
       - text: Move the load-bearing study-layer rationale from the machine-local plan into docs/DECISIONS.md, and remove the dangling pointers to it
@@ -171,8 +174,7 @@ sessions:
       - No committed file depends on a Windows-only launcher or path
       - Every item of local-only state has a named destination on the Mac
     notes: >-
-      Worked on 2026-09-18, not committed. Python 3.14 (.python-version) and
-      Node 24 (.nvmrc) are read by CI and both machines. Node 24 was chosen to
+      Python 3.14 (.python-version) and Node 24 (.nvmrc) are read by CI and both machines. Node 24 was chosen to
       match the local install and is the active LTS; it was not asked about.
       requirements.txt and requirements-dev.txt are now uv-generated from new
       .in files with sha256 hashes for every platform; a clean install with
@@ -183,11 +185,12 @@ sessions:
       the extension finds .venv itself. The study-layer rationale is DECISIONS
       item 18 and every pointer to the plan file is repointed. Local-only state
       is listed in docs/MOVING-MACHINES.md.
-      Still open: the check-macos job in deploy.yml has never run, so its task
-      stays unticked and "The macOS CI job passes" is unmet; nothing has been
-      pushed. It is deliberately not in build's needs, so a Mac-only failure
-      does not block a deploy. ubuntu-latest still moves to Ubuntu 26 on
-      2026-10-19; pinning ubuntu-24.04 was left alone as outside this scope.
+      First run on main: check, check-macos, build and deploy all passed,
+      so the locked install and Node 24 work on ubuntu and macOS. The
+      check-macos job is deliberately not in build's needs, so a Mac-only
+      failure does not block a deploy. Not done: ubuntu-latest still moves to
+      Ubuntu 26 on 2026-10-19; pinning ubuntu-24.04 was left alone as outside
+      this scope.
 
   - id: S04
     title: Protect main and move session work onto pull requests
