@@ -79,6 +79,10 @@ vault/20_AURELIA/
 # CLAUDE.local.md is the same idea for guidance: interpreter path, preview
 # port, per-machine quirks. CLAUDE.md stays machine-neutral.
 CLAUDE.local.md
+# Concurrent sessions each work in a git worktree that Claude Code creates here
+# (CLAUDE.md, "Branches and pull requests"). Each is a full checkout of another
+# branch, which a stray `git add -A` would try to commit as an embedded repo.
+.claude/worktrees/
 
 # .env variants. Only bare `.env` was covered, so .env.local and
 # .env.production were committable in a PUBLIC repo. Found by the /repo-check

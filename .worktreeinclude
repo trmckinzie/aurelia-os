@@ -1,0 +1,7 @@
+# Gitignored files Claude Code copies into each worktree it creates under
+# .claude/worktrees/ (CLAUDE.md, "Branches and pull requests"). A file is copied
+# only if it matches here and is gitignored. .venv and node_modules are left out
+# on purpose: verify.sh borrows the main checkout's .venv, and a new worktree
+# runs its own `npm ci`.
+CLAUDE.local.md
+.claude/settings.local.json

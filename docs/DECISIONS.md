@@ -349,6 +349,29 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **Self-contained page.** No external requests. Its colours live in `roadmap.PALETTE`, where a
       test holds them to WCAG contrast, and the three status colours were validated together for
       colour-vision deficiency.
+22. **Pull requests into a protected `main` (2026-09-23, roadmap S04).** Every change, notes
+    included, now reaches `main` through a pull request, and merging deploys. Choices worth keeping:
+
+    - **One ruleset, no bypass.** "Protect main" requires a pull request and the `check` job,
+      pinned to the GitHub Actions app so nothing else can post a passing status, and blocks force
+      pushes and deletion. Sessions push with Travis's account, so an admin bypass would let any
+      session skip the checks. The escape hatch is disabling the ruleset in the repo settings,
+      which is deliberate and visible.
+    - **Only `check` is required.** `check-macos` stays optional for the reason in `deploy.yml`.
+      Branches need not be up to date before merging: two green pull requests that break each
+      other turn `main`'s own run red, and the deploy still waits for that run.
+    - **Note-only commits go through pull requests too**, merged automatically once `check`
+      passes. The schema check and the build are what validate a note, so a bypass for notes would
+      skip exactly the checks that matter for them.
+    - **Squash merges and automatic branch deletion** keep `main` at one commit per change, as it
+      was before.
+    - **Worktrees stay under `.claude/worktrees/`, with the hooks wired in.** The dev root's hooks
+      use a relative `core.hooksPath` so they survive moving the dev root, and git resolves it from
+      each worktree's own top level, so a nested worktree silently ran none of them (tested
+      2026-09-23). A conditional include in `.git/config` gives linked worktrees a path that fits
+      their depth and leaves the main checkout's value alone, so the dev root's `install.sh
+      --check` still reads it as wired. Folders beside the repo were rejected: the dev vault's
+      Obsidian index ignores anything under `.claude/` but would pick up a second copy of `vault/`.
 
 
 ## Known gaps / deliberately not done

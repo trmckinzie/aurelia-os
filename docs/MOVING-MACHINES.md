@@ -42,6 +42,7 @@ rebuilt in a minute from the lock files.
 | State | Why it is not in the repo | Destination on the Mac |
 |---|---|---|
 | `core.hooksPath` in `.git/config` | Git neither clones nor tracks `.git/config`. An unwired clone looks normal and checks nothing on commit. | If the clone sits under the dev root (`~/dev/projects/aurelia-os`), run `bash ~/dev/.claude/githooks/install.sh` and confirm with `install.sh --check`. The relative path it sets works unchanged on both machines. |
+| The worktree include in `.git/config` | Same reason. Git resolves the relative `core.hooksPath` from each worktree's own top level, so without it a session worktree under `.claude/worktrees/` runs none of the dev root's hooks, silently. | After `install.sh`, from the repo root: `git config --file .git/config 'includeIf.gitdir/i:./worktrees/.path' worktree-hooks.inc`, then `git config --file .git/worktree-hooks.inc core.hooksPath ../../../../../.claude/githooks`. The main checkout keeps its own value, so `install.sh --check` still reports it wired. |
 | Claude Code auto-memory, `~/.claude/projects/<path-slug>/memory/` | Per OS user, and the folder name is derived from the checkout path, so it differs on the Mac | Copy the `.md` files across to the matching folder on the Mac once a session has created it, or start fresh. Check each note before trusting it: they are point-in-time. |
 | `~/.claude/plans/floofy-mapping-dahl.md` | Machine-local plan for the study layer | Nothing to move. Its load-bearing content is now `docs/DECISIONS.md` item 18. |
 | Git identity, GitHub login, Playwright MCP server | Per machine and per login | Set up fresh: `git config user.name` / `user.email`, `gh auth login`, and re-add the Playwright MCP server at project or local scope. |
@@ -52,7 +53,12 @@ rebuilt in a minute from the lock files.
 bash verify.sh                    # the same suite CI runs
 node tools/preview.mjs            # http://localhost:8791 serves dist/
 git config --get core.hooksPath   # should print ../../.claude/githooks
+
+# The hooks resolve from a session worktree too: silent with exit 0, not "cannot find a hook"
+git worktree add --detach .claude/worktrees/hook-check
+git -C .claude/worktrees/hook-check hook run pre-commit
+git worktree remove .claude/worktrees/hook-check
 ```
 
 A green `check-macos` job in CI before the machine arrives is the best early warning that the
-first two will pass. It cannot see the last one, or anything in the tables above.
+first two will pass. It cannot see the hook checks, or anything in the tables above.

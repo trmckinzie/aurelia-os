@@ -25,7 +25,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-09-18
+updated: 2026-09-23
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -194,7 +194,8 @@ sessions:
 
   - id: S04
     title: Protect main and move session work onto pull requests
-    status: todo
+    status: in_progress
+    started: 2026-09-23
     area: CI/CD
     effort: M
     model: opus
@@ -208,21 +209,38 @@ sessions:
       Adopt a pull-request flow (session branch, pull request, green checks,
       merge, deploy), or keep pushing to main directly and only block force
       pushes and branch deletion.
+      Decided 2026-09-23: pull requests. Note-only commits go through pull
+      requests too, merging automatically once the checks pass.
     depends_on: [S01]
     tasks:
       - text: Add a ruleset on main that blocks force pushes and deletion and requires the CI checks to pass
-        done: false
+        done: true
       - text: Decide how vault-only content commits flow, through pull requests or a documented bypass
-        done: false
+        done: true
       - text: Turn on automatic deletion of merged branches, and add a pull request template with the verify checklist
-        done: false
+        done: true
       - text: Document the session-branch workflow in CLAUDE.md, using git worktrees for concurrent sessions
-        done: false
+        done: true
       - text: Take one real change through the whole flow
         done: false
     done_when:
       - GitHub rejects a push to main that skips the required checks
       - One change has gone from branch to pull request to green checks to merge to a successful deploy
+    notes: >-
+      The "Protect main" ruleset has no bypass. It requires a pull request and
+      the check job from GitHub Actions, and blocks force pushes and deletion.
+      Branches need not be up to date, and check-macos stays optional.
+      Auto-merge and deletion of merged branches are on. On 2026-09-23 a direct
+      push of an empty commit to main was rejected with GH013: changes must go
+      through a pull request, and the check status is required. Worktrees: git
+      resolves the dev root's relative core.hooksPath from each worktree's own
+      top level, so a worktree under .claude/worktrees/ ran no hooks. A
+      per-machine include in .git/config (docs/MOVING-MACHINES.md) fixes that
+      and leaves the main checkout's value alone. In a real worktree, git found
+      both hooks, and verify.sh passed after npm ci, borrowing the main
+      checkout's .venv. verify.sh now warns when hooks do not resolve.
+      .claude/worktrees/ is gitignored, and .worktreeinclude copies
+      CLAUDE.local.md into new worktrees.
 
   - id: S05
     title: Make the build fail instead of deploying a degraded site
