@@ -194,8 +194,11 @@ sessions:
 
   - id: S04
     title: Protect main and move session work onto pull requests
-    status: in_progress
+    status: done
     started: 2026-09-23
+    completed: 2026-09-23
+    commits:
+      - "2f3690f"
     area: CI/CD
     effort: M
     model: opus
@@ -222,7 +225,7 @@ sessions:
       - text: Document the session-branch workflow in CLAUDE.md, using git worktrees for concurrent sessions
         done: true
       - text: Take one real change through the whole flow
-        done: false
+        done: true
     done_when:
       - GitHub rejects a push to main that skips the required checks
       - One change has gone from branch to pull request to green checks to merge to a successful deploy
@@ -230,17 +233,18 @@ sessions:
       The "Protect main" ruleset has no bypass. It requires a pull request and
       the check job from GitHub Actions, and blocks force pushes and deletion.
       Branches need not be up to date, and check-macos stays optional.
-      Auto-merge and deletion of merged branches are on. On 2026-09-23 a direct
-      push of an empty commit to main was rejected with GH013: changes must go
-      through a pull request, and the check status is required. Worktrees: git
-      resolves the dev root's relative core.hooksPath from each worktree's own
-      top level, so a worktree under .claude/worktrees/ ran no hooks. A
-      per-machine include in .git/config (docs/MOVING-MACHINES.md) fixes that
-      and leaves the main checkout's value alone. In a real worktree, git found
-      both hooks, and verify.sh passed after npm ci, borrowing the main
-      checkout's .venv. verify.sh now warns when hooks do not resolve.
-      .claude/worktrees/ is gitignored, and .worktreeinclude copies
-      CLAUDE.local.md into new worktrees.
+      Auto-merge and deletion of merged branches are on. A direct push of an
+      empty commit to main was rejected with GH013. PR #2 then took this work
+      through the flow: checks passed, it squash-merged as 2f3690f, GitHub
+      deleted the branch, and the deploy passed with the live pages answering.
+      PR #3, which marks S04 done, merged itself with auto-merge. Worktrees:
+      git resolves the dev root's relative core.hooksPath from each worktree's
+      own top level, so a worktree under .claude/worktrees/ ran no hooks. A
+      per-machine include in .git/config (docs/MOVING-MACHINES.md) fixes that.
+      In a real worktree git found both hooks, and verify.sh passed after npm
+      ci, borrowing the main checkout's .venv. verify.sh warns when hooks do
+      not resolve, .claude/worktrees/ is gitignored, and .worktreeinclude
+      copies CLAUDE.local.md into new worktrees.
 
   - id: S05
     title: Make the build fail instead of deploying a degraded site
