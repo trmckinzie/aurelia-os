@@ -24,8 +24,9 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
 - **`vault/` is off-limits to modify.** No session edits, deletes, or adds vault content (notes,
   folders, frontmatter) without an explicit one-time override from Travis. Reading is fine.
   Engine, templates, config, tests, and `profile.json` are fair game.
-- **Don't commit or push unless asked.** Make the change, verify it, leave it in the working
-  tree. Push only after confirming no divergence from `origin/main`.
+- **Don't commit or push unless asked, and never push to `main`.** Make the change, verify it,
+  leave it in the working tree. Shipping goes through a pull request ("Branches and pull
+  requests" below); a ruleset on `main` rejects direct pushes.
 - **CI must keep `--no-sort`.** Both the `check` and `build` jobs in `.github/workflows/deploy.yml`
   run `python build.py --no-sort`. Without the flag `organize_assets()` sweeps
   `vault/99_DROP_ZONE/` into `vault/assets/` and `sync_vault_assets()` publishes it with no
@@ -33,11 +34,12 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
   runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, then a
   `--no-sort` build) in the `check` job; `build` and `deploy` `need: check` and do not run if it
-  fails. Run `bash verify.sh` locally before pushing — it's the same suite, so CI can't fail on
-  something the local run missed. The pre-push hook in `.claude/githooks/pre-push` also runs it,
-  but only as a warning; CI is the real gate. A `check-macos` job runs the same suite on macOS
-  but is deliberately not in `build`'s `needs`, so a Mac-only failure is visible without holding
-  up a deploy.
+  fails, and a pull request cannot merge until `check` passes. Run `bash verify.sh` locally
+  before pushing — it's the same suite, so CI can't fail on something the local run missed. The
+  pre-push hook in `.claude/githooks/pre-push` also runs it, but only as a warning; CI is the
+  real gate. A `check-macos` job runs the same suite on macOS but is deliberately neither in
+  `build`'s `needs` nor required to merge, so a Mac-only failure is visible without holding up
+  a deploy.
 - **One Python and one Node, read from files.** `.python-version` (3.14) and `.nvmrc` (24) are the
   single source; CI's `setup-python` and `setup-node` read them, so a bump is one line. Python
   packages install with `--require-hashes` from `requirements.txt` / `requirements-dev.txt`, which
@@ -73,6 +75,36 @@ bash verify.sh                                          # everything above, in C
 
 Machine-specific notes (interpreter path, console encoding, local preview server) live in the
 gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
+
+## Branches and pull requests
+
+Every change reaches `main` through a pull request, note-only commits included, and merging one
+deploys the site. The "Protect main" ruleset requires the `check` job, blocks force pushes and
+deletion, and has no bypass, because sessions push as Travis. Reasons: `docs/DECISIONS.md` item 22.
+
+```bash
+git switch main && git pull --ff-only     # start from the current main
+git switch -c s05-strict-build            # a branch named after the work
+bash verify.sh                            # before every push
+git push -u origin s05-strict-build
+gh pr create --fill                       # the template carries the checklist
+gh pr merge --squash --auto               # GitHub merges it once `check` passes
+git switch main && git pull --ff-only && git branch -D s05-strict-build   # after the merge
+```
+
+- **Squash merges, one commit per pull request.** GitHub deletes the merged branch; the local one
+  needs `-D` because a squash leaves it looking unmerged. The squash commit exists only after
+  the merge, so a roadmap session records it in the follow-up change that marks the session done.
+- **Note-only commits take the same path.** The Obsidian Git plugin in `vault/` is disabled; if it
+  is ever turned back on, its pushes to `main` will be rejected.
+- **Concurrent sessions each get a worktree** under `.claude/worktrees/`, where Claude Code puts
+  them (gitignored; `.worktreeinclude` copies `CLAUDE.local.md` in). Run `npm ci` in a new
+  worktree before `verify.sh`, which borrows the main checkout's `.venv`. The dev root's git hooks
+  reach these worktrees only through a per-machine include in `.git/config`
+  (`docs/MOVING-MACHINES.md`), and `verify.sh` warns when they do not. Don't commit from a
+  worktree that shows the warning: a pushed branch is public before it merges.
+- **Look into another worktree with `git -C <path>`, not `cd`.** The session follows a `cd`, and
+  Windows will not delete a folder a shell is still in.
 
 ## Map
 

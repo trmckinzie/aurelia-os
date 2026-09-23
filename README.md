@@ -89,7 +89,8 @@ python tools/validate_vault_schema.py
 python tools/vault_health.py
 
 # Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build) --
-# same checks CI runs and gates the deploy on. Run before pushing.
+# the checks CI runs. A pull request cannot merge, and the site cannot deploy,
+# until they pass. Run before pushing.
 bash verify.sh
 
 # Serve dist/ locally at http://localhost:8791 (Node, so it is the same on every OS)
