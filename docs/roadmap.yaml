@@ -263,6 +263,9 @@ sessions:
       Choose which warnings should fail CI. Malformed frontmatter is a warning by
       deliberate choice; one option keeps it a warning locally and makes it fatal
       only under a --strict flag that CI passes.
+      Decided 2026-09-23: all warnings, on GitHub only. Local builds stay
+      forgiving, CI builds with --strict, and a note with broken frontmatter
+      blocks the deploy until it is fixed.
     depends_on: [S01]
     tasks:
       - text: Validate user_config.json strictly, the way engine/profile.py validates profile.json, and fail the build on any error
