@@ -112,3 +112,17 @@ CLAUDE.local.md
 # tools/roadmap.py renders docs/roadmap.yaml into reports/roadmap.html on every
 # run. The HTML is generated output; docs/roadmap.yaml is the tracked source.
 /reports/
+
+# --- IGNORE THE BRAND EXPORT ---
+# brand/ is a TRM / Pine design system export from the design tool (97 files):
+# tokens, components, UI kits, guidelines, slides and brand directions.
+#
+# Deliberately untracked, and the reason is this repo's visibility: aurelia-os is
+# PUBLIC, and git history cannot be un-published. Committing the design system
+# here would put the brand — directions, unreleased kits and all — on the open
+# internet permanently, which is not what a static-site generator repo is for.
+#
+# It is not lost by being untracked. It travels in the encrypted migration
+# archive, and it can be re-exported from the design tool. If it ever needs
+# version control, it belongs in its own private repo, not this one.
+brand/
