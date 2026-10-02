@@ -305,8 +305,11 @@ sessions:
 
   - id: S06
     title: Check every deploy on the live site and make rollback one step
-    status: in_progress
+    status: done
     started: 2026-10-02
+    completed: 2026-10-02
+    commits:
+      - "43247b1"
     area: CI/CD
     effort: M
     model: sonnet
@@ -331,21 +334,18 @@ sessions:
       - A deploy run ends with a passing live check that reports the deployed SHA
       - A rollback to an earlier tag has been rehearsed once and written down
     notes: >-
-      Every task is implemented and locally verified: _build_commit_stamp() in
-      engine/pipeline.py stamps AURELIA_BUILD_COMMIT(_TIME) only when CI sets them,
-      local dist/ unchanged otherwise; .github/actions/live-check is the shared
-      post-deploy check used by deploy.yml, redeploy.yml and the new
-      weekly-check.yml; deploy.yml's release job tags and publishes only after
-      live-check passes and is the only job anywhere with contents: write;
-      redeploy.yml validates its tag input against a strict pattern and runs from
-      main, not the tag, since the github-pages environment's branch policy allows
-      only branches (gh api, recorded in DECISIONS item 25); the runbook is
-      docs/ROLLBACK.md. tests/test_workflow_hardening.py checks all four workflow
-      files against S02's rules so the policy can't quietly drift. Not done: the
-      first done_when needs a real push to observe; the second -- rehearsing a
-      rollback -- needs two deploy tags, replaces the live site, and runs only on
-      Travis's go-ahead, after this PR merges, recorded in the follow-up that marks
-      S06 done.
+      Both done_when items confirmed on real runs, not simulated. (1) PR #13's
+      merge run (43247b1): live-check's own log shows all four pages fetched and
+      "live site reports commit 43247b162b92...", matching the deployed SHA. (2)
+      Rollback rehearsed 2026-10-02: backlog B12's fix (PR #14, 6163768) was
+      merged to produce a genuine second deploy tag. redeploy.yml ran against the
+      earlier tag (deploy-20261002-153906-43247b1, run 37045981916); its
+      live-check reported commit 43247b1, independently confirmed with curl
+      against the live build-commit meta tag. redeploy.yml then ran again against
+      the newer tag (deploy-20261002-180940-6163768, run 37046142852) to restore
+      the current version, confirmed the same way. Both runs' build/deploy/
+      live-check jobs all passed; the live site is correctly back on 6163768.
+      docs/ROLLBACK.md has the mechanism.
 
   - id: S07
     title: Fix the defects the audit found on the public site
