@@ -340,16 +340,60 @@ def test_kickoff_prompt_carries_scope_decision_and_the_update_step():
         _session("S01", title="Gate the deploy", decision="Should tests block a deploy?", model="opus")))
     prompt = kickoff_prompt(roadmap["sessions"][0])
     assert prompt.startswith("Roadmap session S01: Gate the deploy")
-    assert "Should tests block a deploy?" in prompt
+    assert "ask me to decide this: Should tests block a deploy?" in prompt
     assert "Opus" in prompt
     assert "tools/roadmap.py --check" in prompt
+    assert "bash verify.sh" in prompt
     assert "Do not commit or push unless I ask" in prompt
+    assert "pull request" in prompt
+
+
+def test_needs_decision_ignores_decided_sessions():
+    roadmap = validate_roadmap(_roadmap(
+        _session("S01", decision="Self-host the fonts? Decided: yes.", decided=datetime.date(2026, 10, 1)),
+        _session("S02", decision="Should tests gate the deploy?"),
+    ))
+    assert [s["id"] for s in summarize(roadmap)["needs_decision"]] == ["S02"]
+
+
+def test_decided_needs_a_decision_and_a_date():
+    assert "sessions[0].decided: is set but there is no decision" in _error(
+        _roadmap(_session(decided=datetime.date(2026, 10, 1))))
+    assert "sessions[0].decided: must be a date like 2026-09-15" in _error(
+        _roadmap(_session(decision="Which warnings fail CI?", decided="soon")))
+    item = {"id": "B01", "title": "Tidy up", "area": "Docs", "status": "open", "decided": "2026-10-01"}
+    assert "backlog[0].decided: is set but there is no decision" in _error(_roadmap(backlog=[item]))
+
+
+def test_kickoff_prompt_acts_on_a_recorded_decision_instead_of_asking_again():
+    roadmap = validate_roadmap(_roadmap(
+        _session("S01", decision="Which warnings fail CI? Decided: all of them.", decided="2026-09-23")))
+    prompt = kickoff_prompt(roadmap["sessions"][0])
+    assert "Its decision was made on 2026-09-23" in prompt
+    assert "Decided: all of them." in prompt
+    assert "ask me to decide" not in prompt
 
 
 # --- the dashboard -----------------------------------------------------------------
 
 def _html(*sessions, **overrides):
     return render_html(validate_roadmap(_roadmap(*sessions, **overrides)), generated_at=_GENERATED)
+
+
+def test_dashboard_stops_asking_once_a_decision_is_recorded():
+    open_html = _html(_session("S01", decision="Self-host the fonts?"))
+    assert "Decide before starting." in open_html
+    assert "Needs your decision.</strong>" in open_html
+
+    item = {"id": "B01", "title": "Tidy up", "area": "Docs", "status": "open",
+            "decision": "Keep every note inline?", "decided": "2026-10-01"}
+    decided_html = _html(_session("S01", decision="Self-host the fonts?", decided="2026-10-01"), backlog=[item])
+    assert "Decide before starting." not in decided_html
+    assert "Needs your decision.</strong>" not in decided_html
+    assert 'visually-hidden">Needs your decision<' not in decided_html
+    assert "Nothing waiting on you" in decided_html
+    assert "Decision: Keep every note inline?" in decided_html
+    assert "Needs your decision: " not in decided_html
 
 
 def test_dashboard_has_one_meter_segment_and_one_card_per_session():
