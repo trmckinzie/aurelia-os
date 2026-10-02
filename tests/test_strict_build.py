@@ -13,6 +13,7 @@ import pytest
 
 import build
 from engine import assets_pipeline, buildlog, content, pipeline
+from engine.cachebust import stamp_asset_versions
 from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.pipeline import StrictBuildError
 from engine.user_config import UserConfigError
@@ -67,17 +68,19 @@ def test_every_ambiguous_alias_is_reported():
     assert "note-a, note-b" in collisions[0]
 
 
-def test_unreadable_asset_warns_during_cache_busting(tmp_path, monkeypatch):
-    # tmp_path holds none of the four files, so every read fails.
-    monkeypatch.setattr(pipeline, "ROOT_DIR", str(tmp_path))
-    pipeline._asset_version()
+def test_unreadable_asset_warns_during_cache_busting(tmp_path):
+    (tmp_path / "index.html").write_text('<script src="assets/js/gone.js?v=@@asset:assets/js/gone.js@@">', encoding="utf-8")
+    stamp_asset_versions(tmp_path)
     warnings = get_warnings()
-    assert len(warnings) == 4
-    assert all("cache busting" in w for w in warnings)
+    assert len(warnings) == 1
+    assert "cache busting" in warnings[0] and "gone.js" in warnings[0]
 
 
-def test_asset_version_is_silent_when_every_file_exists():
-    pipeline._asset_version()
+def test_cache_busting_is_silent_when_every_file_exists(tmp_path):
+    (tmp_path / "assets" / "js").mkdir(parents=True)
+    (tmp_path / "assets" / "js" / "a.js").write_text("x", encoding="utf-8")
+    (tmp_path / "index.html").write_text('<script src="assets/js/a.js?v=@@asset:assets/js/a.js@@">', encoding="utf-8")
+    stamp_asset_versions(tmp_path)
     assert get_warnings() == []
 
 

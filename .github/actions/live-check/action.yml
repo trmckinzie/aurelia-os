@@ -61,6 +61,22 @@ runs:
         # live and GitHub Pages serves it with a real 404 status, not a
         # soft 200 (roadmap S06).
         check_page "aurelia-live-check-missing-page/" 404 '>404<' >/dev/null
+        # Two levels down, 404.html is served at a URL whose relative links
+        # would resolve inside the missing folders. It must link by absolute
+        # path, and that stylesheet must really load (roadmap S07).
+        deep_body="$(check_page "aurelia-live-check/missing/page/" 404 '>404<')"
+        css_href="$(grep -oE 'href="/[^"]*assets/css/main\.css[^"]*"' "$deep_body" | head -1 | sed -E 's/^href="(.*)"$/\1/' || true)"
+        if [ -z "$css_href" ]; then
+          echo "FAIL: the 404 page two levels deep does not link its stylesheet by absolute path" >&2
+          exit 1
+        fi
+        origin="$(printf '%s' "$SITE_URL" | sed -E 's#^(https?://[^/]+).*#\1#')"
+        css_status="$(curl -sS --max-time 15 -o /dev/null -w '%{http_code}' "${origin}${css_href}")"
+        if [ "$css_status" != "200" ]; then
+          echo "FAIL: ${origin}${css_href} (linked from the deep 404) returned $css_status, expected 200" >&2
+          exit 1
+        fi
+        echo "OK: the 404 two levels deep loads ${origin}${css_href}" >&2
 
         if [ -n "$EXPECTED_COMMIT" ]; then
           live_commit="$(grep -o 'name="build-commit" content="[^"]*"' "$index_body" | head -1 | sed -E 's/.*content="([^"]*)"/\1/')"

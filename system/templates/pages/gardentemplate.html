@@ -13,27 +13,22 @@
      the HTML so it caches across visits rather than being re-downloaded and
      re-parsed every load; see pipeline._write_deep_search_index.
 
-     ?v= is the index's OWN content hash, not the site-wide asset hash: this
-     file changes whenever the vault does, while main.css/utils.js do not, so
-     sharing their hash would serve a stale index after a note was edited.
+     ?v= is the hash of the file as built (engine/cachebust.py), so it changes
+     whenever the vault does and a stale index is never served after an edit.
 
      Not `defer`: the inline script below reads window.DEEP_SEARCH_INDEX at
      parse time, so this has to have executed first. It is a plain assignment,
      so there is no execution cost beyond the parse. -->
-<script src="assets/js/search-index.js?v={{ search_index_version }}"></script>
+<script src="{{ asset_url('assets/js/search-index.js') }}"></script>
 <!-- Review engine (SM-2 scheduler + the aurelia_review_log localStorage
      log): window.Review, loaded early like utils.js above. ?v= is the
-     site-wide asset hash (engine/pipeline.py._asset_version), NOT its own
-     content hash the way search-index.js's ?v= is -- review.js is small
-     and static per build, so it shares utils.js/main.css's cache-busting
-     version rather than needing one of its own. -->
-<script src="assets/js/review.js?v={{ asset_version }}"></script>
+     hash of the file as served (engine/cachebust.py). -->
+<script src="{{ asset_url('assets/js/review.js') }}"></script>
 <!-- Flashcard deck widget (window.upgradeFlashcardDecks): finds every
      `.deck` a note body renders (engine/content.py's _render_flashcards)
      and upgrades it into an interactive study widget on top of window.Review
-     above. Same ?v= as review.js/utils.js/main.css -- see
-     engine/pipeline.py._asset_version, which now hashes this file too. -->
-<script src="assets/js/flashcards.js?v={{ asset_version }}"></script>
+     above. Versioned like every other script (engine/cachebust.py). -->
+<script src="{{ asset_url('assets/js/flashcards.js') }}"></script>
 <style>
     /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
@@ -356,8 +351,8 @@
         tie and painted over the top ~83px of the nav's theme dropdown (and the
         mobile nav drawer) -- the first two theme options were unclickable on
         this page only. A page-level sub-nav belongs under the global nav; it's
-        still above all in-flow content, and the note modal (z-[60]) and command
-        palette (z-[100]) still sit above both. -->
+        still above all in-flow content, and the note modal (z-[60]) and the
+        search palette (a native dialog, in the top layer) still sit above both. -->
     {# py-3 below md: at 390px the bar was 203px tall under a 64px nav, so
        267px of an 844px viewport was permanently chrome before a single note
        showed. md and up keeps the original py-4. #}
@@ -978,10 +973,8 @@
          showModal() also supplies Escape handling for free; the global
          keydown handler in the scripts block below explicitly steps aside
          while this is open rather than fighting it (see the guard at the
-         top of that handler). z-[100] matches the command palette
-         (#cmd-backdrop in base.html) by convention, though the top layer
-         already stacks this above it regardless. -->
-    <dialog id="shortcut-sheet" aria-labelledby="shortcut-sheet-title" class="shortcut-sheet z-[100]">
+         top of that handler). -->
+    <dialog id="shortcut-sheet" aria-labelledby="shortcut-sheet-title" class="shortcut-sheet">
         <div class="shortcut-sheet-header">
             <h2 id="shortcut-sheet-title" tabindex="-1" class="font-display font-bold text-base text-aurelia-text">Keyboard shortcuts</h2>
             <button type="button" id="btn-shortcut-sheet-close" onclick="closeShortcutSheet()" class="reader-icon-btn" aria-label="Close" title="Close (Esc)">
@@ -1467,12 +1460,6 @@
        The reader's [ and ] keys use that same helper, which is why
        arrowing and next/previous cannot drift apart. */
     let rovingIndex = 0;
-
-    function rovingContainer() {
-        return currentView === 'tree'
-            ? document.getElementById('treeView')
-            : document.getElementById('cardGrid');
-    }
 
     function rovingItems() {
         const sel = currentView === 'tree' ? '.searchable-tree-item' : '#cardGrid .searchable-item';
@@ -2263,13 +2250,13 @@
     });
 
     document.addEventListener('keydown', (e) => {
-        // While the shortcut sheet is open, it and the browser's native
-        // Escape/focus-trap handling own all keyboard input (see
-        // openShortcutSheet() below) -- nothing here should also react,
-        // e.g. '[' navigating a note reader that happens to be open
-        // underneath the sheet, or this handler's own Escape branch below
+        // While any dialog is open (the shortcut sheet, the search palette),
+        // it and the browser's native Escape/focus-trap handling own all
+        // keyboard input (see openShortcutSheet() below) -- nothing here
+        // should also react, e.g. '[' navigating a note reader that happens
+        // to be open underneath, or this handler's own Escape branch below
         // fighting the dialog's native close.
-        if (shortcutSheet.open) return;
+        if (document.querySelector('dialog[open]')) return;
 
         // '?' and '/' work anywhere on the page, not gated on the note
         // reader being open -- they're entry points into "how do I use

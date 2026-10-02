@@ -349,7 +349,9 @@ sessions:
 
   - id: S07
     title: Fix the defects the audit found on the public site
-    status: todo
+    status: done
+    started: 2026-10-02
+    completed: 2026-10-02
     area: Frontend
     effort: L
     model: sonnet
@@ -372,21 +374,21 @@ sessions:
     decided: 2026-10-01
     tasks:
       - text: Make 404.html and the shared links work at any depth, with a base href or root-relative URLs
-        done: false
+        done: true
       - text: Version the compiled main.css and theme-vars.css by the hash of what is actually served, and correct the docstring that says Pages sends no Cache-Control header
-        done: false
+        done: true
       - text: Serve the web fonts, marked.js and Motion from the site as decided above, checking who maintains each package first, shipping the fonts' licence files, and covering the new files in the cache busting
-        done: false
+        done: true
       - text: Mark the current page in the nav with aria-current
-        done: false
+        done: true
       - text: Rebuild the Ctrl+K palette as a native dialog with a real label and focus return
-        done: false
+        done: true
       - text: Hide the Toolkit ring from screen readers, announce readout changes, and stop the pulsing line under reduced motion
-        done: false
+        done: true
       - text: Turn the carousel the short way, and fix the About page line that says four themes
-        done: false
+        done: true
       - text: Remove the dead CSS and JavaScript the audit listed (.carousel-card, .modal-action, .bloom-accent, .text-shadow-white, rovingContainer)
-        done: false
+        done: true
     done_when:
       - Each fix is checked in a real browser against a local build, including a 404 two levels deep
       - pytest covers each template-level change

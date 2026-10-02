@@ -225,7 +225,7 @@ def test_lobby_has_review_teaser_and_loads_review_js():
     # "hidden" by default -- shown only client-side by the teaser script
     # once Review.dueCount() says there's actually something due.
     assert 'id="lobby-review-teaser" class="hidden' in html
-    assert 'src="assets/js/review.js?v=test"' in html
+    assert 'src="assets/js/review.js?v=@@asset:assets/js/review.js@@"' in html
 
 
 def test_lobby_has_no_embedded_per_note_review_payload():
@@ -390,11 +390,11 @@ def test_lobby_readout_seeds_from_the_first_non_draft_entry_when_the_first_is_a_
 def test_lobby_carousel_reduced_motion_override_and_dialog_open_guard_are_present():
     # Two independent guards, easy to lose separately: the ring's own 1s
     # spin transition had no prefers-reduced-motion override before, and
-    # without the base.html keydown guard Ctrl/Cmd+K still opens the command
-    # palette -- inert and invisible -- underneath an open <dialog>.
+    # without the base.html keydown guard Ctrl/Cmd+K still toggles the
+    # palette underneath another open <dialog>.
     html = render_index()
     assert ".carousel { transition: none; }" in html
-    assert "if (document.querySelector('dialog[open]')) return;" in html
+    assert "document.querySelector('dialog[open]:not(#cmd-dialog)')" in html
 
 
 def test_real_user_config_tech_stack_entries_satisfy_the_toolkit_contract():

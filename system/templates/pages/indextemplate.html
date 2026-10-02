@@ -19,11 +19,9 @@
 
 {% block head_extra %}
 <!-- Review engine (window.Review), for the spaced-review teaser below.
-     Same file and cache-busting pattern as the Garden's own load -- see
-     gardentemplate.html's head_extra comment for why ?v= is the site-wide
-     asset hash rather than a content hash of its own. Not loaded in
-     base.html: About and 404 have no use for it. -->
-<script src="assets/js/review.js?v={{ asset_version }}"></script>
+     Same file and cache-busting pattern as the Garden's own load. Not
+     loaded in base.html: About and 404 have no use for it. -->
+<script src="{{ asset_url('assets/js/review.js') }}"></script>
 <style>
     /* === 3D CAROUSEL SCENE === */
     .carousel-scene {
@@ -334,7 +332,10 @@
             </div>
         </div>
 
-        <div class="carousel-scene mb-16 h-[500px]">
+        {# The ring is decoration: its cards are not focusable and the readout
+             below it, with the Previous/Next buttons and "More about", carries
+             the same entries for everyone. #}
+        <div class="carousel-scene mb-16 h-[500px]" aria-hidden="true">
             <div class="carousel" id="tech-carousel"></div>
         </div>
 
@@ -352,7 +353,7 @@
 
                 <div class="flex flex-col items-center gap-2">
                     <div class="w-24 h-px bg-aurelia-border relative">
-                        <div class="absolute inset-0 bg-aurelia-primary w-full animate-pulse shadow-[0_0_8px_var(--aurelia-primary)]"></div>
+                        <div class="absolute inset-0 bg-aurelia-primary w-full motion-safe:animate-pulse shadow-[0_0_8px_var(--aurelia-primary)]"></div>
                     </div>
                 </div>
 
@@ -384,12 +385,14 @@
                        so with JS this is what appears anyway -- and without JS
                        the panel still says something true instead of sitting
                        on a stub. #}
-                    <h3 id="readout-title" class="display-md text-aurelia-text mb-4 relative z-10 text-shadow-cyan">
-                        {% if toolkit %}{{ toolkit[0].name }}{% endif %}
-                    </h3>
-                    <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted leading-relaxed max-w-2xl relative z-10">
-                        {% if toolkit %}{{ toolkit[0].desc }}{% endif %}
-                    </p>
+                    <div aria-live="polite" aria-atomic="true" class="relative z-10 flex flex-col items-center">
+                        <h3 id="readout-title" class="display-md text-aurelia-text mb-4 relative z-10 text-shadow-cyan">
+                            {% if toolkit %}{{ toolkit[0].name }}{% endif %}
+                        </h3>
+                        <p id="readout-desc" class="text-sm md:text-base text-aurelia-muted leading-relaxed max-w-2xl relative z-10">
+                            {% if toolkit %}{{ toolkit[0].desc }}{% endif %}
+                        </p>
+                    </div>
 
                     {# Keyboard/non-hover path into the same detail window a card
                        click opens (see openToolDetail() below) -- starts hidden.
@@ -648,8 +651,10 @@
             const activeTech = techStack[frontIndex()];
 
             const swapText = () => {
-                titleEl.innerText = activeTech.name;
-                descEl.innerText = activeTech.desc;
+                // Skipped when unchanged, so the live region around them
+                // announces a change of entry and not the page load.
+                if (titleEl.textContent.trim() !== activeTech.name) titleEl.textContent = activeTech.name;
+                if (descEl.textContent.trim() !== activeTech.desc) descEl.textContent = activeTech.desc;
 
                 // Keyboard/non-hover path into openToolDetail() for whichever
                 // card is currently at the front -- hidden whenever that
@@ -723,10 +728,12 @@
                 // way -- a second click on the front card should still
                 // reopen the sheet if the visitor closed it.
                 card.onclick = () => {
-                    if (i !== frontIndex()) {
-                        const diff = i - (currIndex % cardCount);
-                        window.rotateCarousel(diff);
-                    }
+                    // The shorter way round the ring: from the front card,
+                    // a card more than half the ring ahead is closer behind.
+                    let diff = i - frontIndex();
+                    if (diff > cardCount / 2) diff -= cardCount;
+                    else if (diff < -cardCount / 2) diff += cardCount;
+                    if (diff !== 0) window.rotateCarousel(diff);
                     openToolDetail(i);
                 };
 

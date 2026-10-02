@@ -55,7 +55,7 @@ def make_card(note_id="note-a", title="A", note_type="CONCEPT", tags=None,
 def render_garden(**overrides):
     """Renders gardentemplate.html with a small, complete fixture context.
 
-    cards/backlinks_index/graph_index/search_index_version/page_title are
+    cards/backlinks_index/graph_index/page_title are
     what engine/pipeline.py's _render_pages() hands the template beyond the
     shared base_context() chrome (see its `pages` list, ~L474-477).
     backlinks_index/graph_index go through dumps_for_script_tag the same way
@@ -72,7 +72,6 @@ def render_garden(**overrides):
         ],
         backlinks_index=dumps_for_script_tag({}),
         graph_index=dumps_for_script_tag({"nodes": [], "edges": []}),
-        search_index_version="test",
         page_title="The Garden",
     )
     context.update(overrides)
@@ -129,27 +128,23 @@ def test_garden_has_a11y_status_live_region():
 # --- Phase 2: recall-first reader, elaboration, spaced review --------------
 
 def test_garden_loads_review_js_with_cache_busting_version():
-    # Same asset_version-based cache-busting utils.js already uses (see
-    # base.html) -- NOT search-index.js's own content hash, since review.js
-    # is small and static per build (see engine/pipeline.py._asset_version,
-    # which now hashes it alongside main.css/utils.js).
+    # Rendered as a token; engine/cachebust.stamp_asset_versions() swaps in
+    # the hash of the served file after the build.
     html = render_garden()
-    assert 'src="assets/js/review.js?v=test"' in html
+    assert 'src="assets/js/review.js?v=@@asset:assets/js/review.js@@"' in html
 
 
 # --- Phase 3: flashcards ------------------------------------------------
 
 def test_garden_loads_flashcards_js_with_cache_busting_version():
-    # Same wiring as review.js above -- engine/pipeline.py._asset_version
-    # now hashes assets/js/flashcards.js too, so a deploy can't leave a
-    # visitor on a stale copy that predates a new window.Review deck API
-    # it calls.
+    # Same wiring as review.js above, so a deploy can't leave a visitor on a
+    # stale copy that predates a new window.Review deck API it calls.
     html = render_garden()
-    assert 'src="assets/js/flashcards.js?v=test"' in html
+    assert 'src="assets/js/flashcards.js?v=@@asset:assets/js/flashcards.js@@"' in html
     # Loaded after review.js, since it calls into window.Review at
     # interaction time (not at parse time, so load order only matters in
     # spirit -- but this pins it anyway as the documented contract).
-    assert html.index('review.js?v=test') < html.index('flashcards.js?v=test')
+    assert html.index('assets/js/review.js?v=') < html.index('assets/js/flashcards.js?v=')
 
 
 def test_garden_has_modal_reviewed_and_modal_elaborate_elements():
