@@ -531,11 +531,13 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 # not clear it as small text in two themes -- 3.97-4.43:1 in
                 # CYBER_PRIME and 4.25:1 in GRIZZ on their card surfaces (only
                 # TIMBERLINE's info is checked by tests/test_theming.py, where
-                # it passes at 6.51+, which is what makes the dark-theme gap
-                # easy to miss). text_main is 9.75:1 or better on every
-                # surface of all five. The identity colour stays on the border
-                # and the hover tint -- the same split _maturity_badge() uses:
-                # borrow the type colour for the frame, keep the text legible.
+                # it passes at 5.48+ -- steel, since the 2026-10 TRM / Pine
+                # repaint, docs/DECISIONS.md item 24 -- which is what makes
+                # the dark-theme gap easy to miss). text_main is 9.75:1 or
+                # better on every surface of all five. The identity colour
+                # stays on the border and the hover tint -- the same split
+                # _maturity_badge() uses: borrow the type colour for the
+                # frame, keep the text legible.
                 f'<button type="button" data-tag="{escape_attr(t)}" '
                 f'class="card-topic font-mono text-[0.8125rem] px-2 py-0.5 rounded-theme border '
                 f'border-aurelia-info/40 text-aurelia-text hover:bg-aurelia-info/10 '

@@ -101,13 +101,13 @@ env.filters["longdate"] = _longdate
 #     hairline-and-paper register instead of a glowing one (TIMBERLINE)
 #     sets this to "0%" to turn the halo off rather than just dimming it.
 THEME_CONFIG = {
-    # 1. TIMBERLINE (Light / Editorial). The default (2026-09 rebrand).
-    # Palette derived from Rocky Mountain Automation AI's live brand tokens
-    # (measured off rockymountainautomationai.com's own CSS): black
-    # #000000, signal orange #f04800, sand #f2c898, deep indigo #24214c,
-    # rust #7a2a0a, slate ink #1a2a33. The palette is unchanged from the
-    # theme's first pass; what changed in this pass is the *type register*
-    # sitting on top of it.
+    # 1. TIMBERLINE (Light / Editorial). The default (2026-09 rebrand;
+    # repainted 2026-10 to the TRM / Pine personal brand -- see
+    # brand/readme.md and docs/DECISIONS.md item 24). Palette: pine-black
+    # ink #1c2622, pine #2f6b4f (the signature color), pine-deep #1f4a37,
+    # steel #2b5f80, brick #9a2b2b, ochre #8a5a12, ivory paper #f5f2eb. What
+    # changed in the 2026-09 pass was the *type register* sitting on top of
+    # the palette; what changed in the 2026-10 pass is the palette itself.
     #
     # The brief: "Helvetica + Times New Roman" -- a book-jacket or quality-
     # broadsheet register, not a HUD, and not the same "clean grotesque
@@ -138,30 +138,23 @@ THEME_CONFIG = {
     # light. glow_primary is kept (a theme with a `primary` role still needs
     # one, since it's referenced unconditionally elsewhere), but it's
     # retuned to a soft sand-tint bloom rather than a saturated color, since
-    # the brief calls the brand's sand tint "the light source" and reserves
-    # true orange for emphasis text only.
+    # the brief calls the brand's sand tint "the light source" and leaves
+    # pine as the one saturated accent color used everywhere else.
     #
     # Professional first, brand-inspired second -- unchanged from the first
-    # pass. The true brand orange (#f04800) is a striking accent but fails
-    # AA as *text* on any of this theme's light backgrounds -- 3.39:1
-    # against bg_main, nowhere near the 4.5:1 floor, because it was
-    # designed to pop on black (RMAAI's own site), not to sit on paper.
-    # Rather than eyeball a lighter background or quietly drop the brand
-    # color, the trap is handled the same way GRIZZ handles its own
-    # print-dark brand green (#00452A, ~1.8:1 on black): the true hex is
-    # kept as a purely decorative anchor -- glow_primary's radial bloom is
-    # the one place rgba(240, 72, 0, ...) appears -- while every role that
-    # doubles as text/link color is a hand-darkened on-light tint of the
-    # same hue family (secondary #b93700, tertiary #7a2a0a -- rust is
-    # itself a true, unmodified brand hex and clears AA on its own at
-    # 8.83:1). The backgrounds were re-tuned this pass toward a warmer,
-    # more ivory paper (bg_main #f5f2eb, bg_layer_2 #eae5da -- a visibly
-    # deeper sand hairline than the first pass's cooler off-white) to read
-    # less like app chrome and more like stock; every text-bearing role was
+    # pass. Pine #2f6b4f is now the theme's only saturated accent, carrying
+    # secondary, accent, and border_focus alike -- which means links,
+    # Author/Discipline cards, and focus rings all read as the same color
+    # (the accepted trade-off: Deep Dive is pulled to pine-deep #1f4a37
+    # instead, to stay visually distinct; see docs/DECISIONS.md item 24).
+    # The backgrounds are unchanged from the 2026-09 ivory-paper pass
+    # (bg_main #f5f2eb, bg_layer_2 #eae5da -- a visibly deeper sand hairline
+    # than the first pass's cooler off-white). Every text-bearing role was
     # re-verified against all three backgrounds (bg_main, bg_layer_1,
-    # bg_layer_2) after that change: the tightest pairing is secondary on
-    # bg_layer_2 at 4.63:1, everything else clears with more room, and body
-    # text (text_main) runs comfortably past that on every surface.
+    # bg_layer_2) after the repaint: the tightest pairing is highlight on
+    # bg_layer_2 at 4.71:1, with pine on bg_layer_2 close behind at 5.01:1;
+    # everything else clears with more room, and body text (text_main) runs
+    # comfortably past that on every surface.
     #
     # This is also why it's first in the dict (switcher order) and why
     # CURRENT_THEME points here: the "Aurelia"/terminal-neon framing is
@@ -182,20 +175,20 @@ THEME_CONFIG = {
             "bg_layer_1": "#fdfcf9",    # cards -- barely lifted off the page
             "bg_layer_2": "#eae5da",    # hovers / modals -- sand hairline territory
 
-            "text_main": "#1a2a33",     # RMAAI's own body ink (slate)
-            "text_muted": "#4d5a63",
+            "text_main": "#1c2622",     # pine-black ink
+            "text_muted": "#4f5a54",
             "text_inverted": "#ffffff",
 
             "border_main": "#d6ccba",   # sand hairline
-            "border_focus": "#b93700",  # darkened brand orange (focus ring)
+            "border_focus": "#2f6b4f",  # pine focus ring (the signature color)
 
-            "primary": "#24214c",       # RMAAI deep indigo (headings, key data)
-            "secondary": "#b93700",     # brand orange, darkened for AA text (emphasis, CTAs)
-            "tertiary": "#7a2a0a",      # RMAAI rust (true brand hex; clears AA on its own)
-            "accent": "#2b5f80",        # steel blue (links/success role)
+            "primary": "#1c2622",       # pine-black ink (headings, key data)
+            "secondary": "#2f6b4f",     # pine (emphasis, CTAs, links)
+            "tertiary": "#9a2b2b",      # brick (status role)
+            "accent": "#2f6b4f",        # pine (links/success role)
             "highlight": "#8a5a12",     # ochre, sand family darkened (Source card identity)
-            "info": "#3f4a8c",          # indigo-slate (Gemini Notebook card identity)
-            "insight": "#2f6b4f",       # pine green (Deep Dive card identity)
+            "info": "#2b5f80",          # steel (Gemini Notebook card identity)
+            "insight": "#1f4a37",       # pine-deep (Deep Dive card identity)
         },
         # Serif display + grotesque everything-else -- see the comment
         # above. font_mono doubles as font_body (both read Helvetica Neue),
@@ -234,13 +227,14 @@ THEME_CONFIG = {
         # (if soft) shadow ladder at the deeper levels -- a book jacket
         # doesn't float, but a raised modal still needs to read as raised.
         "elevation_1": "0 0 0 1px rgba(214, 204, 186, 0.55)",
-        "elevation_2": "0 12px 32px -20px rgba(26, 42, 51, 0.25)",
-        "elevation_3": "0 24px 56px -28px rgba(26, 42, 51, 0.30)",
+        "elevation_2": "0 12px 32px -20px rgba(28, 38, 34, 0.25)",
+        "elevation_3": "0 24px 56px -28px rgba(28, 38, 34, 0.30)",
         "rim_light": "inset 0 0 0 0 transparent",  # no top-edge catch-light -- flat paper, not glass
-        # The brand's sand tint is the light source here; true orange is
-        # reserved for emphasis text, not ambient glow (see comment above).
+        # The brand's sand tint is the light source here (glow_primary,
+        # unchanged); glow_accent follows pine instead of steel, since pine
+        # is the signature color.
         "glow_primary": "radial-gradient(circle, rgba(242, 200, 152, 0.28) 0%, transparent 70%)",
-        "glow_accent": "radial-gradient(circle, rgba(43, 95, 128, 0.12) 0%, transparent 70%)",
+        "glow_accent": "radial-gradient(circle, rgba(47, 107, 79, 0.10) 0%, transparent 70%)",
         "grid_overlay": "none",
         "cursor_default": "auto",
         "cursor_interactive": "pointer",

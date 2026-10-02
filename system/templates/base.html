@@ -56,10 +56,11 @@
     <link rel="canonical" href="https://{{ site.get('domain') }}/{% if active_page != 'index' %}{{ active_page }}.html{% endif %}">
     {% endif %}
 
-    <!-- Theme-independent monogram favicon: a rounded #24214c square with a
-         bold white "T" -- deliberately not tied to any THEME_CONFIG color,
-         since the tab icon should stay stable across theme switches. -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2218%22 fill=%22%2324214c%22/><text x=%2250%22 y=%2250%22 font-family=%22system-ui,sans-serif%22 font-size=%2264%22 font-weight=%22700%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>T</text></svg>">
+    <!-- Theme-independent monogram favicon: a square #2f6b4f (TRM / Pine)
+         tile with a bold white "T" -- deliberately not tied to any
+         THEME_CONFIG color, since the tab icon should stay stable across
+         theme switches. Square corners match the brand's 0px radius. -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%232f6b4f%22/><text x=%2250%22 y=%2250%22 font-family=%22system-ui,sans-serif%22 font-size=%2264%22 font-weight=%22700%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>T</text></svg>">
     
     <!-- Every family a theme can select at runtime has to be loaded up front,
          because the theme switcher is a pure CSS swap with no rebuild: the

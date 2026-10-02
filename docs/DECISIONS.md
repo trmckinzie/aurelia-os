@@ -389,6 +389,45 @@ knowing so you don't "fix" something that was a deliberate decision:
       back to a stub and build a blank Lobby) and a `dist/` that cannot be wiped (it used to
       build on top of the leftovers). Neither has a forgiving reading.
 
+24. **TIMBERLINE repainted to the TRM / Pine personal brand (2026-10-01).** The personal brand now
+    stands apart from Rocky Mountain Automation AI (item 16's palette); Pine and the "TRM /" mark
+    were chosen in a design-tool exploration (`brand/Brand Directions.dc.html`). Choices:
+
+    - **The mapping, in brief.** Ink moves from slate `#1a2a33` to pine-black `#1c2622`; `primary`
+      moves from RMAAI indigo `#24214c` to the same ink; `secondary`, `accent`, and `border_focus`
+      all move to pine `#2f6b4f` (previously brand orange `#b93700` and steel `#2b5f80`
+      respectively); `tertiary` moves from RMAAI rust `#7a2a0a` to brick `#9a2b2b`; `info` moves
+      from indigo-slate `#3f4a8c` to steel `#2b5f80`; `insight` moves from pine `#2f6b4f` to
+      pine-deep `#1f4a37`, since pine is now the signature color elsewhere. `highlight` (ochre
+      `#8a5a12`) is unchanged. `elevation_2`/`elevation_3`'s shadow tint and `glow_accent`'s bloom
+      follow ink and pine instead of slate and steel; `glow_primary`'s sand bloom is unchanged.
+      Full before/after is in `engine/config.py`'s `THEME_CONFIG["TIMBERLINE"]` comment.
+    - **The favicon follows.** The monogram tile moves from RMAAI indigo to pine `#2f6b4f` and
+      drops its rounded corner, matching the brand's 0px radius everywhere else.
+    - **The contrast floor moves, not the standard.** AA's 4.5:1 text floor is unchanged; the
+      tightest pairing is now `highlight` on `bg_layer_2` at 4.71:1 (was `secondary` at 4.63:1),
+      with pine on `bg_layer_2` close behind at 5.01:1. `tests/test_theming.py`'s assertions were
+      left as-is and still pass; only its comment, which named the old brand-orange trap, changed.
+    - **Accepted trade-off: card-type identity gets thinner.** Author and Discipline cards and
+      every link/button now share pine, and Deep Dive is pulled to pine-deep to stay distinct --
+      across the card grid, filter chips, and graph alike. The theme menu's Timberline swatch
+      shows two identical dots as a visible symptom. Card type names still label every card, so
+      nothing becomes ambiguous, but it's a real loss of at-a-glance color coding compared to the
+      five distinct roles the old palette gave each card type. Tracked as backlog item B18: give
+      card types their own color, separate from the link/button accent.
+    - **`brand/` stays local, on purpose.** It's a design-tool export, gitignored whole since PR #6
+      (`c1c3082`) because the repo is public; `brand/readme.md`'s own index lists a design
+      exploration canvas that likewise never leaves this machine. `tests/test_brand.py` is the new
+      drift guard between `brand/tokens/*.css` and `THEME_CONFIG["TIMBERLINE"]` -- it
+      `pytest.skip`s at module level when `brand/` is absent, which is every CI run and every fresh
+      clone, so it never gates a merge the way `tests/test_theming.py`'s checks do.
+    - **`THE_PATRIOT` stays, site-only.** It was never part of the brand system and isn't removed;
+      it just isn't one of the brand's themes.
+    - **The site wins where it differs from the brand today.** `brand/readme.md` documents motion
+      timings, a system monospace code font, and numbered section labels that the site doesn't
+      currently use (TIMBERLINE sets code in Helvetica Neue, for one). None of that changed in this
+      pass -- the site stays as it is until Travis decides otherwise.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

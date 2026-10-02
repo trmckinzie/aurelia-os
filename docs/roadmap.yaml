@@ -632,3 +632,14 @@ backlog:
     title: Add a project skill that starts the next roadmap session with its kickoff prompt
     area: Dashboard
     status: open
+  - id: B18
+    title: Give Garden card types their own colors, separate from link and button colors
+    area: Frontend
+    status: open
+    detail: >-
+      The TRM / Pine repaint (docs/DECISIONS.md item 24) leaves pine as TIMBERLINE's
+      one signature color, so Author and Discipline cards now share it with every
+      link and button, and Deep Dive is only distinguished by the darker pine-deep.
+      The theme menu's Timberline swatch shows two identical dots as a result. Give
+      card-type identity its own palette slot, separate from the link/button accent,
+      across the card grid, filter chips, and graph.

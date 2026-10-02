@@ -76,8 +76,8 @@ PALETTE = {
     "light": {
         "page": "#f5f2eb",
         "surface": "#fdfcf9",
-        "ink": "#1a2a33",
-        "ink-2": "#4d5a63",
+        "ink": "#1c2622",
+        "ink-2": "#4f5a54",
         "hairline": "#e2dbcd",
         "track": "#e9e3d7",
         "done": "#1f8a5b",
