@@ -36,6 +36,7 @@ rebuilt in a minute from the lock files.
 | `vault/.smart-env/` | Smart Connections plugin index | Rebuilt by the plugin on first open. |
 | `vault/.obsidian/workspace*.json` | Obsidian's scroll position and open panes | Per device by design. Recreated. |
 | `vault/.obsidian/plugins/obsidian-git/git_credentials_input*` | Credential-prompt scratch files | Never move. The plugin recreates them if it needs them. |
+| `vault/.obsidian/plugins/*/` code (`main.js`, `manifest.json`, `styles.css`) | The Calendar, Dataview and Templater community plugins. Untracked since roadmap B08 (2026-10-01): Obsidian installs and updates plugin code itself. Each plugin's settings file, `data.json`, is still tracked. The turned-off Obsidian Git plugin is untracked whole. | On a fresh clone, open the vault and reinstall the three from Settings → Community plugins; the tracked settings are already in place. A clone that existed before B08 loses the plugin code when it pulls that change, because git removes files it stops tracking. Restore them from a commit that still had them: `git restore --source=f558fb2 --worktree -- vault/.obsidian/plugins`. |
 
 ## Wiring outside the repo
 

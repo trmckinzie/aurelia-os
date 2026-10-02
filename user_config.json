@@ -55,14 +55,6 @@
             "how_i_use_it": "A spare desktop Mac I keep on hand for lighter tasks."
         },
         {
-            "name": "ThinkPad T495",
-            "type": "HARDWARE / LAPTOP",
-            "icon": "💻",
-            "desc": "Secondary laptop for IT and field work.",
-            "what_it_is": "A 14-inch business laptop from Lenovo's ThinkPad line, which has a long reputation for durable builds and comfortable keyboards. Lenovo puts ThinkPads through military-standard durability tests, and this model runs on an AMD Ryzen processor.",
-            "how_i_use_it": "My secondary laptop for IT work away from my desk, where a dependable, durable machine matters more than a fast one."
-        },
-        {
             "name": "reMarkable 2",
             "type": "HARDWARE / TABLET",
             "icon": "📝",
@@ -162,7 +154,7 @@
             "name": "Next.js",
             "type": "CODE / FRAMEWORK",
             "icon": "▲",
-            "desc": "React framework for dashboards and client-facing work.",
+            "desc": "React framework for dashboards and web apps.",
             "what_it_is": "A popular open-source framework for building websites and web apps with React, a widely used library for assembling interactive pages from reusable pieces. Next.js adds what React leaves out, such as page routing and pages prepared on the server so they load quickly.",
             "how_i_use_it": "I use it for interactive web apps, including a dashboard that tracks my AI agents, their goals, and their runs."
         },

@@ -1,5 +1,6 @@
 # --- IGNORE OBSIDIAN CONFIGS (Crucial for Sync) ---
-# We ignore the workspace (scroll position) but KEEP plugins/settings.
+# We ignore the workspace (scroll position) and community plugin code, but
+# KEEP Obsidian's settings and each plugin's settings.
 # NOTE: these need the `**/` prefix. A pattern containing a slash is anchored
 # to the directory holding the .gitignore, so a bare `.obsidian/workspace.json`
 # only ever matched <repo-root>/.obsidian/ -- never vault/.obsidian/, which is
@@ -9,6 +10,17 @@
 **/.obsidian/workspace.json
 **/.obsidian/workspace-mobile.json
 **/.obsidian/workspaces.json
+
+# Community plugin code (roadmap B08, 2026-10-01). Obsidian installs and updates
+# each plugin's main.js, manifest.json and styles.css itself, so a committed
+# copy only went stale, and every plugin update showed up as a vault edit no
+# session may commit. A plugin's data.json holds its settings and stays tracked,
+# so they are already in place when the plugin is reinstalled on a fresh clone.
+# The turned-off Obsidian Git plugin is ignored whole, settings included: main
+# accepts pull requests only, so it could never push again.
+vault/.obsidian/plugins/*/*
+!vault/.obsidian/plugins/*/data.json
+vault/.obsidian/plugins/obsidian-git/
 
 # A repo-root .obsidian/ (as opposed to vault/.obsidian/) means this repo
 # folder itself got opened directly as an Obsidian vault at some point -- not

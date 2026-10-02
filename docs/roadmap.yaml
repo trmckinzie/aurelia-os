@@ -560,10 +560,18 @@ backlog:
   - id: B08
     title: Stop tracking the Obsidian plugin bundles under vault/.obsidian/plugins
     area: Repo hygiene
-    status: open
+    status: done
     detail: >-
       About 2.5 MB of third-party JavaScript that the build never reads. Needs a
       one-time vault override.
+    decision: >-
+      Which plugin files should git keep? Decided 2026-10-01, with Travis's
+      one-time vault override: stop tracking each plugin's code, which Obsidian
+      installs and updates itself, and keep the settings (data.json) of
+      Calendar, Dataview and Templater so they carry to a fresh clone. The
+      turned-off Obsidian Git plugin is untracked whole, since main accepts pull
+      requests only. docs/MOVING-MACHINES.md says how to reinstall and restore.
+    decided: 2026-10-01
   - id: B09
     title: Remove the Zotero leftovers from published notes and the Gemini Notebook template
     area: Content
@@ -579,8 +587,13 @@ backlog:
   - id: B11
     title: Confirm the ThinkPad and Next.js descriptions on the Toolkit cards
     area: Content
-    status: open
-    decision: Is the ThinkPad described accurately, and has Next.js been used for client-facing work?
+    status: done
+    decision: >-
+      Is the ThinkPad described accurately, and has Next.js been used for
+      client-facing work? Decided 2026-10-01: the ThinkPad is no longer in use,
+      so its card is removed, and Next.js has been used for personal projects
+      only, so its card now reads "React framework for dashboards and web apps."
+    decided: 2026-10-01
   - id: B12
     title: Read flashcard CSV files with newline='' so quoted multi-line cells parse correctly
     area: Build
