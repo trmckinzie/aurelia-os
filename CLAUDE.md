@@ -19,6 +19,16 @@ classes and `--aurelia-*` custom properties, JS identifiers such as `aureliaReve
 folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.domain` in
 `user_config.json` stays empty until it is (a value makes the build write `dist/CNAME`).
 
+TIMBERLINE is the TRM / Pine personal brand, documented in `brand/readme.md`. `brand/` is an
+export from a design tool: nobody edits files in it directly, since changes are made in the tool
+and re-exported. It is gitignored and stays local by decision, because the repo is public, so a
+fresh clone (CI included) does not have it, and `tests/test_brand.py` skips without it. The
+site's colors live in `THEME_CONFIG` (`engine/config.py`); `tests/test_brand.py` holds them to
+`brand/tokens/` when `brand/` is present. Where the site and `brand/readme.md` differ today
+(motion timings, the code font, the numbered section labels), the site stays as it is until
+Travis decides otherwise. `CYBER_PRIME`, `THE_PATRIOT`, `THE_STOA`, and `GRIZZ` are optional
+themes, not part of the brand.
+
 ## Hard rules
 
 - **`vault/` is off-limits to modify.** No session edits, deletes, or adds vault content (notes,
@@ -148,7 +158,8 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 ## Read before touching
 
 - Links, wikilinks, card pills, backlinks: `docs/ARCHITECTURE.md`, "Link system".
-- Themes, colours, contrast: `docs/ARCHITECTURE.md`, "CSS", and `tests/test_theming.py`.
+- Themes, colours, contrast: `docs/ARCHITECTURE.md`, "CSS", `tests/test_theming.py`, and
+  `brand/readme.md` for TIMBERLINE's TRM / Pine brand.
 - Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer", and the reasoning
   behind it in `docs/DECISIONS.md` item 18.
 - Setting up a new machine, or what git will not carry to one: `docs/MOVING-MACHINES.md`.

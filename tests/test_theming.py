@@ -88,9 +88,10 @@ def _contrast_ratio(hex_a, hex_b):
 def test_timberline_text_roles_meet_aa_contrast_on_every_background():
     # Every text-bearing role must clear WCAG AA's 4.5:1 floor against all
     # three of TIMBERLINE's surfaces (bg_main, bg_layer_1, bg_layer_2) --
-    # this is the check that catches the "true brand orange fails as text"
-    # trap the theme's own config.py comment documents (secondary/tertiary
-    # are hand-darkened precisely so this test passes).
+    # this is the regression guard for the TRM / Pine repaint (see
+    # docs/DECISIONS.md item 24): pine, pine-deep, steel, and brick must each
+    # clear AA as text on every surface, same as the palette they replaced.
+    # The tightest pairing is highlight on bg_layer_2 at 4.71:1.
     from engine.config import THEME_CONFIG
 
     colors = THEME_CONFIG["TIMBERLINE"]["colors"]

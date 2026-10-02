@@ -33,10 +33,9 @@ the link graph itself made visible and navigable.
   missing fields all fail the build), and every value is escaped on output; it carries no HTML.
 - Five runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
   single CSS-variable source of truth), each with its own palette, typography, and material
-  language: `TIMBERLINE` (light/professional, the default, palette derived from Rocky Mountain
-  Automation AI's brand colors), `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic,
-  USWDS-grounded), `THE_STOA` (Stoic Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State
-  University green/black/white).
+  language: `TIMBERLINE` (light/professional, the default, the TRM / Pine personal brand palette),
+  `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA` (Stoic
+  Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State University green/black/white).
 - Gemini Notebook export support: audio/video overviews, flashcard decks, mind maps and other
   synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,
   with each top-level section collapsible in the note reader. **Note:** the media files themselves
