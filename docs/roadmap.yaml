@@ -352,6 +352,8 @@ sessions:
     status: done
     started: 2026-10-02
     completed: 2026-10-02
+    commits:
+      - "c814d00"
     area: Frontend
     effort: L
     model: sonnet
