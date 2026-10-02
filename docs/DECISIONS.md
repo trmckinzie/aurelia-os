@@ -428,6 +428,71 @@ knowing so you don't "fix" something that was a deliberate decision:
       currently use (TIMBERLINE sets code in Helvetica Neue, for one). None of that changed in this
       pass -- the site stays as it is until Travis decides otherwise.
 
+25. **Post-deploy live check, deploy tags and releases, and a redeploy-a-tag rollback (roadmap
+    S06, 2026-10-02).** Until this session, nothing looked at the site after `deploy-pages`
+    reported success, there was no record of which commit was live, and there was no written way
+    back to an earlier version.
+
+    - **The commit stamp is CI-only and reproducibility-safe.** `engine/pipeline.py`'s
+      `_build_commit_stamp()` reads `AURELIA_BUILD_COMMIT`/`AURELIA_BUILD_COMMIT_TIME` from the
+      environment and renders them into every page as a `<meta name="build-commit">` /
+      `<meta name="build-commit-time">` pair -- a `<meta>` tag rather than visible chrome, so
+      there's no user-facing wording to run past the voice rule. Both env vars are set by CI from
+      the commit's own identity (`git rev-parse HEAD`) and its own committer timestamp
+      (`git show -s --format=%cI`), never wall-clock build time, so two CI runs of the same commit
+      stamp identical bytes -- compatible with S09's byte-identical-build goal once that session
+      exists. A local `python build.py` sets neither variable, so local output is byte-for-byte
+      unchanged from before this existed.
+    - **The live check is a composite action, not duplicated script.** `.github/actions/live-check`
+      fetches the Lobby, Garden, About and a deliberately missing page, checks status codes and a
+      stable content marker (`id="lobby-total-notes"` and similar -- not page text, which is
+      vault-driven and changes on its own), and -- when given an `expected-commit` -- confirms the
+      live Lobby's `build-commit` meta matches it. Three callers share it: `deploy.yml`'s
+      `live-check` job (expects the commit `build` just built), `redeploy.yml`'s `live-check` job
+      (expects the redeployed tag's commit), and `weekly-check.yml` (passes no expected commit --
+      see below).
+    - **Tag and release only after the live check passes, not after `deploy-pages` succeeds.**
+      `deploy.yml`'s `release` job `needs: [build, live-check]`, because a successful artifact
+      upload proves nothing about whether the site that comes back actually works. The tag name is
+      deterministic from the commit alone (`deploy-<commit's own UTC timestamp>-<first 7 hex chars
+      of its SHA>`), not wall-clock time, so a retry of the same commit reaches the same tag name;
+      `gh release view` before `gh release create` turns that collision into a skip instead of an
+      error. It is the only job in any of these workflows with `contents: write` -- every other
+      job, including `live-check`, has either `contents: read` or `permissions: {}`.
+    - **The redeploy workflow runs from `main`, not from the tag.** Checked 2026-10-02 via
+      `gh api repos/trmckinzie/aurelia-os/environments/github-pages/deployment-branch-policies`:
+      the `github-pages` environment's deployment branch policy only names branches (`None`,
+      `gh-pages`, `main`), never a tag pattern, so a workflow run whose own ref is a tag would be
+      refused at `deploy` regardless of what the workflow did. `redeploy.yml` is therefore
+      dispatched from `main` (the only option a workflow with no `on: push: tags:` trigger offers),
+      and only its `build` job's checkout switches to the requested tag, with a follow-up step that
+      fails loudly if the checkout didn't actually land on that tag (`actions/checkout` silently
+      falls back to the default branch on a `ref:` that doesn't resolve). The tag name arrives as a
+      `workflow_dispatch` string input, so it's validated against a strict pattern
+      (`^deploy-[0-9]{8}-[0-9]{6}-[0-9a-f]{7}$`) before it reaches `actions/checkout`'s `ref:`, and
+      passed through `env:` rather than interpolated into any `run:` script. The rollback runbook
+      is `docs/ROLLBACK.md`.
+    - **The weekly scheduled run builds and live-checks; it does not deploy.** Decided 2026-10-02:
+      a scheduled run exists to catch breakage with no push behind it -- a runner image update, a
+      CDN outage, a dependency that only breaks once actually reinstalled despite the hash locks --
+      and neither of those needs a fresh deploy to detect. `weekly-check.yml`'s `build` job proves
+      `main` still builds clean (`--no-sort --strict`, nothing stamped or deployed); its
+      `live-check` job proves the already-deployed site still answers, with no `expected-commit`
+      since nothing fresh was built to compare against. The two jobs don't depend on each other, so
+      breakage in one is reported without waiting on the other. Reconsider deploying from this
+      workflow if a real incident is ever caught by the weekly run but not by the per-push one --
+      no such case has happened yet.
+    - **A rollback has not yet been rehearsed.** `docs/ROLLBACK.md` says so explicitly: rehearsing
+      one replaces the live site, needs at least two deploy tags to exist (this pull request's own
+      merge produces the first), and only runs with Travis's explicit go-ahead. The rehearsal and
+      its outcome belong in the follow-up change that marks roadmap S06 done, not in this item.
+    - **Workflow hardening now has a test, not just a convention.** `tests/test_workflow_hardening.py`
+      checks every `.github/workflows/*.yml` and `.github/actions/*/action.yml` against roadmap
+      S02's rules -- every external action pinned to a full commit SHA with a version comment,
+      `permissions: {}` at the top level with every job declaring its own, every job timed out, and
+      no `workflow_dispatch` input interpolated directly into a `run:` script -- so a new workflow
+      file drifting from the policy fails CI instead of waiting for the next audit to notice.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

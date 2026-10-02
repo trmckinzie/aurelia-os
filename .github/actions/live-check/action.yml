@@ -1,0 +1,78 @@
+name: Live site check
+description: >-
+  Fetches the Lobby, Garden, About and a deliberately missing page from a
+  deployed aurelia-os site, checks status codes and a stable content marker
+  on each, and -- when expected-commit is given -- confirms the live
+  build-commit meta tag (engine/pipeline.py's _build_commit_stamp) matches
+  it. Shared by the deploy workflow's post-deploy check, the manual
+  redeploy-a-tag workflow, and the weekly scheduled check (which passes no
+  expected-commit, since it deploys nothing to compare against).
+
+inputs:
+  site-url:
+    description: Base URL of the deployed site, with or without a trailing slash.
+    required: true
+  expected-commit:
+    description: >-
+      Full commit SHA the live site should report. Leave empty to skip that
+      one check and only verify the pages themselves answer correctly.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check the live site
+      shell: bash
+      env:
+        SITE_URL: ${{ inputs.site-url }}
+        EXPECTED_COMMIT: ${{ inputs.expected-commit }}
+      run: |
+        set -euo pipefail
+
+        # Fetches one page, fails loudly on the wrong status code or a
+        # missing content marker, and -- on success -- prints the body's
+        # path on stdout (and only that, so callers can capture it with
+        # command substitution without also capturing the log lines below,
+        # which go to stderr on purpose).
+        check_page() {
+          local path="$1" want_status="$2" marker="$3"
+          local url="${SITE_URL%/}/${path}"
+          local body status
+          body="$(mktemp)"
+          status="$(curl -sS --max-time 15 -o "$body" -w '%{http_code}' "$url")"
+          if [ "$status" != "$want_status" ]; then
+            echo "FAIL: $url returned $status, expected $want_status" >&2
+            sed -n '1,20p' "$body" >&2
+            exit 1
+          fi
+          if [ -n "$marker" ] && ! grep -qF -- "$marker" "$body"; then
+            echo "FAIL: $url (status $status) is missing expected content: $marker" >&2
+            exit 1
+          fi
+          echo "OK: $url -> $status" >&2
+          printf '%s' "$body"
+        }
+
+        index_body="$(check_page "" 200 'id="lobby-total-notes"')"
+        check_page "garden.html" 200 'id="filter-controls"' >/dev/null
+        check_page "about.html" 200 'id="about-summary-heading"' >/dev/null
+        # No real page is ever at this path -- proves 404.html itself is
+        # live and GitHub Pages serves it with a real 404 status, not a
+        # soft 200 (roadmap S06).
+        check_page "aurelia-live-check-missing-page/" 404 '>404<' >/dev/null
+
+        if [ -n "$EXPECTED_COMMIT" ]; then
+          live_commit="$(grep -o 'name="build-commit" content="[^"]*"' "$index_body" | head -1 | sed -E 's/.*content="([^"]*)"/\1/')"
+          if [ -z "$live_commit" ]; then
+            echo "FAIL: live Lobby page has no build-commit meta tag" >&2
+            exit 1
+          fi
+          if [ "$live_commit" != "$EXPECTED_COMMIT" ]; then
+            echo "FAIL: live site reports commit $live_commit, expected $EXPECTED_COMMIT" >&2
+            exit 1
+          fi
+          echo "OK: live site reports commit $live_commit" >&2
+        else
+          echo "No expected commit given -- skipping the SHA check." >&2
+        fi

@@ -98,11 +98,26 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: read
+    outputs:
+      commit: ${{ steps.commit-stamp.outputs.commit }}
+      commit_time: ${{ steps.commit-stamp.outputs.commit_time }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      - name: Determine commit stamp
+        # The commit actually being built, and ITS OWN timestamp -- not the
+        # wall-clock time this step happens to run at. A retry or a re-run
+        # of the same commit then stamps identical values, which is what
+        # keeps this compatible with S09's byte-identical-build goal. A
+        # shallow checkout (actions/checkout's default) still has this one
+        # commit's own metadata, so neither command needs full history.
+        id: commit-stamp
+        run: |
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "commit_time=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -138,6 +153,15 @@ jobs:
         # --strict: any build warning (malformed frontmatter, a missing
         # asset, an ambiguous alias) exits non-zero, so a degraded site never
         # reaches upload. verify.sh in the check job builds the same way.
+        #
+        # AURELIA_BUILD_COMMIT(_TIME): stamped into every page's <meta> by
+        # engine/pipeline.py's _build_commit_stamp (roadmap S06), read back
+        # by the live-check job below and by the rollback runbook
+        # (docs/ROLLBACK.md). Passed via env:, not interpolated into this
+        # script, even though both values come from git rather than a user.
+        env:
+          AURELIA_BUILD_COMMIT: ${{ steps.commit-stamp.outputs.commit }}
+          AURELIA_BUILD_COMMIT_TIME: ${{ steps.commit-stamp.outputs.commit_time }}
         run: python build.py --no-sort --strict
 
       - name: Upload Artifact
@@ -160,7 +184,82 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  # Nothing looked at the live site after deploy-pages reported success
+  # (roadmap S06's "why"). This job does: it fetches the Lobby, Garden,
+  # About and a deliberately missing page and confirms the live Lobby
+  # reports exactly the commit `build` just built. Read-only against
+  # everything, so it needs no write permission at all.
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build, deploy]
+    if: github.event_name != 'pull_request'
+    permissions: {}
+    steps:
+      - name: Checkout
+        # Only to pull in .github/actions/live-check -- this job reads
+        # nothing else from the checkout and writes nothing anywhere.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the live site
+        uses: ./.github/actions/live-check
+        with:
+          site-url: ${{ needs.deploy.outputs.page_url }}
+          expected-commit: ${{ needs.build.outputs.commit }}
+
+  # Tags and releases the deploy once the live check has proven it good --
+  # not merely once deploy-pages reported success, since that only means
+  # the upload succeeded, not that the site answers correctly. The only job
+  # in this workflow with contents: write; every other job is read-only or
+  # has no permissions at all.
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build, live-check]
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: write
+    steps:
+      - name: Tag and publish a release
+        # No checkout needed: gh release create can tag a commit by SHA
+        # directly via the API, so this never touches local git credentials
+        # (every checkout above runs persist-credentials: false on purpose).
+        #
+        # The tag name is deterministic from the commit alone (its own
+        # timestamp + the first 7 hex characters of its SHA), not from when
+        # this job happens to run -- so a re-run of the same commit (a retry,
+        # or this job re-running after a transient failure) reaches the same
+        # tag name instead of minting a duplicate. gh release view catches
+        # that case and skips rather than erroring.
+        #
+        # redeploy.yml's strict tag-name validation
+        # (^deploy-[0-9]{8}-[0-9]{6}-[0-9a-f]{7}$) must keep matching
+        # whatever this step produces.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMIT: ${{ needs.build.outputs.commit }}
+          COMMIT_TIME: ${{ needs.build.outputs.commit_time }}
+        run: |
+          set -euo pipefail
+          short="${COMMIT:0:7}"
+          stamp="$(date -u -d "$COMMIT_TIME" +%Y%m%d-%H%M%S)"
+          tag="deploy-${stamp}-${short}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $tag already exists (retry of a previous run) -- skipping."
+            exit 0
+          fi
+          gh release create "$tag" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$COMMIT" \
+            --title "Deploy $stamp ($short)" \
+            --generate-notes
+          echo "Published release $tag for $COMMIT"

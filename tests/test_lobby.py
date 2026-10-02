@@ -65,6 +65,20 @@ def test_lobby_has_no_legacy_terminal_copy():
         assert token not in not_found, f"{token} still on the 404 page"
 
 
+def test_build_commit_meta_absent_without_a_build_commit():
+    # base.html's shared chrome, proven on 404 the same way the nav test
+    # above does -- a plain local build passes neither context var (Jinja's
+    # Undefined is falsy), so the page carries no build-commit meta and
+    # looks exactly as it did before CI started stamping commits.
+    assert "build-commit" not in render_404()
+
+
+def test_build_commit_meta_reports_what_ci_stamped():
+    chrome = render_404(build_commit="2739b5f" * 5 + "0", build_commit_time="2026-10-02T08:59:00-06:00")
+    assert '<meta name="build-commit" content="2739b5f2739b5f2739b5f2739b5f2739b5f0">' in chrome
+    assert '<meta name="build-commit-time" content="2026-10-02T08:59:00-06:00">' in chrome
+
+
 def test_lobby_has_no_modal_leftovers():
     # The manifesto and operator-bio modals were deleted outright; about.html
     # replaces both. A leftover onclick with no function behind it throws in

@@ -23,7 +23,20 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
+    {# Set only by a CI build (engine/pipeline.py's _build_commit_stamp),
+       never a local one, so a plain `python build.py` emits neither tag and
+       dist/ is unchanged from before this existed. The post-deploy live
+       check (.github/actions/live-check) reads build-commit back off the
+       live page to confirm the site that answers is the commit that was
+       just built; the rollback runbook (docs/ROLLBACK.md) uses it to tell
+       which deploy is currently live. A <meta> tag rather than visible
+       chrome, so there's no user-facing wording to run past the voice rule. #}
+    {% if build_commit %}
+    <meta name="build-commit" content="{{ build_commit }}">
+    <meta name="build-commit-time" content="{{ build_commit_time }}">
+    {% endif %}
+
     {# Home and Garden used to share this literal fallback verbatim, so a
        browser tab/history entry couldn't tell them apart. `page_title` is an
        opt-in context variable (see engine/pipeline.py's _render_pages --
