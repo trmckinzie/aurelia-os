@@ -250,7 +250,9 @@ sessions:
 
   - id: S05
     title: Make the build fail instead of deploying a degraded site
-    status: todo
+    status: done
+    started: 2026-10-01
+    completed: 2026-10-01
     area: Build
     effort: M
     model: sonnet
@@ -272,18 +274,32 @@ sessions:
     depends_on: [S01]
     tasks:
       - text: Validate user_config.json strictly, the way engine/profile.py validates profile.json, and fail the build on any error
-        done: false
+        done: true
       - text: Collect build warnings in one place, and add a --strict flag that turns any warning into a non-zero exit
-        done: false
+        done: true
       - text: Build with --strict in CI once the current content passes it
-        done: false
+        done: true
       - text: Warn when an asset cannot be read for cache busting, report every ambiguous alias, and stop when dist/ cannot be wiped
-        done: false
+        done: true
       - text: Add a test for each failure path, including the malformed user_config.json branch
-        done: false
+        done: true
     done_when:
       - A malformed user_config.json makes build.py exit non-zero with a message naming the problem
       - CI builds with --strict and passes
+    notes: >-
+      Warnings go through engine/buildlog.warn(); build.py --strict raises
+      StrictBuildError at the end of a build that recorded any, naming them
+      all. The deploy job passes --strict and verify.sh adds it when
+      GITHUB_ACTIONS is true, so the check job blocks the merge too; local
+      builds stay forgiving. engine/user_config.py validates user_config.json
+      and fails every build on an error, as profile.py does. A dist/ that
+      cannot be wiped now stops the build. Malformed-frontmatter and publish
+      warnings name the note. Verified locally 2026-10-01: the current content
+      builds clean under --strict; a scratch site with one broken note exits
+      1 under --strict and 0 without; a truncated user_config.json exits 1
+      naming the JSON error. The first --strict run on GitHub happens on this
+      change's pull request, and the squash commit is recorded in the
+      follow-up change, as for S04.
 
   - id: S06
     title: Check every deploy on the live site and make rollback one step

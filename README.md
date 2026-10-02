@@ -88,8 +88,13 @@ python tools/validate_vault_schema.py
 # maturity-promotion candidates (read-only, never edits the vault)
 python tools/vault_health.py
 
+# What CI builds: any warning (malformed frontmatter, a missing asset, an
+# ambiguous alias) exits 1 instead of shipping a degraded site. A plain local
+# build prints the same warnings and carries on.
+python build.py --no-sort --strict
+
 # Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build) --
-# the checks CI runs. A pull request cannot merge, and the site cannot deploy,
+# the checks CI runs, where the build also gets --strict. A pull request cannot merge, and the site cannot deploy,
 # until they pass. Run before pushing.
 bash verify.sh
 

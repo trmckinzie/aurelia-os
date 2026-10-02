@@ -28,12 +28,12 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
   leave it in the working tree. Shipping goes through a pull request ("Branches and pull
   requests" below); a ruleset on `main` rejects direct pushes.
 - **CI must keep `--no-sort`.** Both the `check` and `build` jobs in `.github/workflows/deploy.yml`
-  run `python build.py --no-sort`. Without the flag `organize_assets()` sweeps
+  run `python build.py --no-sort` (with `--strict`, below). Without the flag `organize_assets()` sweeps
   `vault/99_DROP_ZONE/` into `vault/assets/` and `sync_vault_assets()` publishes it with no
   `publish:` gate, reviewed by nobody.
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
   runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, then a
-  `--no-sort` build) in the `check` job; `build` and `deploy` `need: check` and do not run if it
+  `--no-sort` build) in the `check` job, and on GitHub only that build adds `--strict`; `build` and `deploy` `need: check` and do not run if it
   fails, and a pull request cannot merge until `check` passes. Run `bash verify.sh` locally
   before pushing — it's the same suite, so CI can't fail on something the local run missed. The
   pre-push hook in `.claude/githooks/pre-push` also runs it, but only as a warning; CI is the
@@ -63,7 +63,8 @@ folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.dom
 ```bash
 pip install --require-hashes -r requirements-dev.txt && npm ci   # one-time setup, inside .venv
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
-python -m pytest tests/ -q                             # 536 tests as of 2026-09-18
+python build.py --no-sort --strict                     # what CI runs: any build warning exits 1
+python -m pytest tests/ -q                             # 579 tests as of 2026-10-01
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
@@ -110,7 +111,10 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 
 - `build.py` is a 15-line entrypoint; all logic is in `engine/`.
 - `engine/config.py`: paths, the Jinja env (`autoescape=True`, unconditional), `THEME_CONFIG`
-  (five themes, `TIMBERLINE` default), `load_user_config()`. Adding a theme is one dict entry.
+  (five themes, `TIMBERLINE` default). Adding a theme is one dict entry.
+- `engine/user_config.py`: `user_config.json` loader and strict validator (site identity, the
+  Lobby Toolkit). Like `profile.py`, any error is fatal.
+- `engine/buildlog.py`: `warn()`, the one path for build warnings, which `--strict` counts.
 - `engine/pipeline.py`: `build_all()`. `_scan_vault()` is two-pass (ids and link resolver first,
   then wikilinks, media, cards). `_build_link_graph()` computes backlinks and graph edges in one
   pass. `UNPUBLISHED_DIRS` hard-excludes `20_AURELIA` from publishing.
@@ -190,8 +194,10 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 - **Verify the built site with a real browser against a local server on `dist/`**
   (`node tools/preview.mjs` sends `no-store`; any other server needs a query string), or the
   browser serves a cached `garden.html` after a rebuild.
-- **Malformed frontmatter warns and exits 0 on purpose.** It is a content problem, not a broken
-  build. Decide before turning it into a failure.
+- **A build warning exits 0 locally and fails CI.** Malformed frontmatter, a missing asset or an
+  ambiguous alias go through `engine/buildlog.warn()`; `--strict`, which only CI passes, turns any
+  of them into exit 1. A new warning must use `warn()`, not `print()`, or CI never sees it. A bad
+  `user_config.json` or `profile.json` fails every build, strict or not. `docs/DECISIONS.md` item 23.
 
 ## Deliberately not done
 

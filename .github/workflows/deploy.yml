@@ -47,7 +47,7 @@ jobs:
 
       - name: Run full check suite
         # pytest, pyflakes, the vault schema check, the roadmap check, then a
-        # --no-sort build -- see verify.sh. Same suite Travis runs locally
+        # --no-sort --strict build (verify.sh adds --strict on GitHub only). Same suite Travis runs locally
         # before pushing, so CI can't pass on something the local run missed.
         run: bash verify.sh
 
@@ -134,7 +134,11 @@ jobs:
         # engine/pipeline.py's build_all() docstring names CI as exactly the
         # place this must not happen. The runner's checkout is a throwaway,
         # so the vault mutation itself is invisible -- only its output ships.
-        run: python build.py --no-sort
+        #
+        # --strict: any build warning (malformed frontmatter, a missing
+        # asset, an ambiguous alias) exits non-zero, so a degraded site never
+        # reaches upload. verify.sh in the check job builds the same way.
+        run: python build.py --no-sort --strict
 
       - name: Upload Artifact
         # v4 and later leave dotfiles out of the artifact. The build writes

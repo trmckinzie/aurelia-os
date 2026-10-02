@@ -4,6 +4,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from engine.buildlog import warn
 from engine.config import OUTPUT_DIR, ROOT_DIR, VAULT_PATH
 from engine.paths import escapes, is_link
 
@@ -114,7 +115,7 @@ def organize_assets():
 
         target_folder = next((folder for folder, exts in destinations.items() if ext in exts), None)
         if not target_folder:
-            print(f"   ! [SKIPPED] Unknown type: {f}")
+            warn(f"Drop Zone file left unsorted, unknown type: {f}")
             continue
 
         src_path = os.path.join(drop_zone, f)
@@ -163,7 +164,7 @@ def _copy_contained_tree(src, dst, base_resolved):
         target = os.path.join(dst, entry)
 
         if is_link(source) or escapes(source, base_resolved):
-            print(f"   ⚠️  Not published (link, or resolves outside assets/): {source}")
+            warn(f"Not published (link, or resolves outside assets/): {source}")
             continue
 
         if os.path.isdir(source):
@@ -187,7 +188,14 @@ def prepare_dist():
         try:
             shutil.rmtree(OUTPUT_DIR)
         except OSError as e:
-            print(f"   ⚠️  Warning: Could not fully wipe dist folder (File in use?): {e}")
+            # Stop. This used to warn and build on top of whatever survived,
+            # so a file left over from an earlier build (a page since removed,
+            # an asset since withheld) could ship next to the new ones, and
+            # nothing in the output would say which was which.
+            raise RuntimeError(
+                f"Could not wipe {OUTPUT_DIR} before building (is a file in it open in another "
+                f"program?): {e}"
+            ) from e
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -241,7 +249,7 @@ def sync_vault_assets():
             for f in sorted(os.listdir(src)):
                 s_file = os.path.join(src, f)
                 if is_link(s_file) or escapes(s_file, assets_root):
-                    print(f"   ⚠️  Not published (link, or resolves outside vault/assets/): {s_file}")
+                    warn(f"Not published (link, or resolves outside vault/assets/): {s_file}")
                     continue
                 if os.path.isfile(s_file):
                     shutil.copy2(s_file, os.path.join(dst, f))

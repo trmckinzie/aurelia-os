@@ -12,7 +12,7 @@ real logic lives in `engine/`:
 - **`config.py`** — paths (`VAULT_PATH`, `TEMPLATE_DIR`, `OUTPUT_DIR`), the Jinja2 `env`, the theme
   system (`THEME_CONFIG`, five presets in switcher order: **`TIMBERLINE` light/professional, the
   default since 2026-09**, then `CYBER_PRIME` dark/neon, `THE_PATRIOT` light/civic, `THE_STOA`
-  Stoic/Helvetic, `GRIZZ` dark/collegiate), and `load_user_config()` (reads `user_config.json`).
+  Stoic/Helvetic, `GRIZZ` dark/collegiate). `user_config.json` is read by `user_config.py`, below.
   `CURRENT_THEME` selects the *default* only — every theme is shipped and switchable at runtime
   (see `theming.py`). Adding a theme means adding a dict entry here and nothing else: the CSS
   generator, the Tailwind config, and the switcher UI all derive from these keys. Only `colors` is
@@ -151,6 +151,19 @@ real logic lives in `engine/`:
   `404.html` and nothing else. `build_all()` loads `profile.json` (below) *before* scanning the
   vault, so a malformed profile aborts the build before any vault work; it also writes
   `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).
+  `build_all(strict=True)` (`build.py --strict`, CI only) raises `StrictBuildError` at the end of
+  a build that recorded any warning.
+- **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
+  the end. Every skip a human should fix goes through it (malformed frontmatter and an
+  unrecognized `publish:` value, naming the note; ambiguous aliases, each one; a missing media
+  asset; an asset `_asset_version()` cannot read; a link refused for leaving the tree). Progress
+  lines and deliberate omissions such as dangling wikilinks stay plain prints.
+- **`user_config.py`** — `load_user_config()` reads and validates `user_config.json` the way
+  `profile.py` does `profile.json`: unknown keys, missing required keys (`system_name`,
+  `status_message`, `author.name`/`role`/`bio_short`, `tech_stack`, and each tool's
+  `name`/`type`/`icon`/`desc`), wrong types and bad URLs or emails raise `UserConfigError` with a
+  path-qualified message. It used to fall back to a stub config with a warning, which built a
+  blank Lobby and exited 0. Toolkit copy is still checked by `tests/test_lobby.py`.
 - **`profile.py`** — the About page's data layer. `load_profile()` reads the repo-root
   `profile.json` and `validate_profile()` checks it against a hand-written schema (no `jsonschema`
   dependency, same precedent as `tools/validate_vault_schema.py`): unknown keys at any depth, a
