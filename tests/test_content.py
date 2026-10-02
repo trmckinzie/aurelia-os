@@ -549,6 +549,37 @@ def test_render_flashcards_rows_with_fewer_than_two_columns_are_skipped(tmp_path
     assert "Real answer" in out
 
 
+def test_render_flashcards_reads_a_quoted_cell_s_embedded_crlf_intact(tmp_path, monkeypatch):
+    """Regression test for roadmap backlog B12.
+
+    Opening the CSV without newline='' lets Python's universal-newline
+    translation silently collapse a quoted cell's embedded \\r\\n into \\n
+    before csv.reader ever sees it -- a data-fidelity bug in the parsed
+    row, not a row-count one. sanitize_to_text() happens to normalize
+    \\r\\n -> \\n of its own accord right afterwards, which is exactly why
+    no current deck shows a visible symptom (the backlog entry's own
+    words) -- so sanitize_to_text is stubbed out here to observe the CSV
+    read itself, the thing this fix actually changes, rather than relying
+    on a rendered-HTML difference that doesn't exist.
+
+    The file is written as raw bytes, not via csv.writer, to control the
+    embedded newline inside the quoted cell precisely -- this is what a
+    Windows-authored CSV, or one pasted from an editor that uses CRLF,
+    looks like on disk.
+    """
+    monkeypatch.setattr(content_module, "sanitize_to_text", lambda s: s)
+    deck = tmp_path / "assets" / "flashcards"
+    deck.mkdir(parents=True)
+    (deck / "deck.csv").write_bytes(b'Q1,"Line one\r\nLine two"\r\nQ2,A2\r\n')
+
+    monkeypatch.setattr(content_module, "VAULT_PATH", str(tmp_path))
+    monkeypatch.setattr(content_module, "ROOT_DIR", str(tmp_path))
+    out = content_module._render_flashcards("assets/flashcards/deck.csv")
+
+    assert "Line one\r\nLine two" in out
+    assert out.count('<li class="deck-card">') == 2
+
+
 def test_render_flashcards_missing_file_message_is_plain_english(tmp_path, monkeypatch):
     monkeypatch.setattr(content_module, "VAULT_PATH", str(tmp_path))
     monkeypatch.setattr(content_module, "ROOT_DIR", str(tmp_path))

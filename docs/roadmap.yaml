@@ -621,8 +621,17 @@ backlog:
   - id: B12
     title: Read flashcard CSV files with newline='' so quoted multi-line cells parse correctly
     area: Build
-    status: open
-    detail: No current deck is affected.
+    status: done
+    detail: >-
+      engine/content.py's _render_flashcards() now opens the CSV with newline='',
+      the csv module's own documented requirement. Without it, Python's
+      universal-newline translation silently collapsed a quoted cell's embedded
+      \r\n into \n before csv.reader ever saw it -- a data-fidelity bug, not a
+      row-count one; sanitize_to_text() happens to normalize \r\n -> \n right
+      afterwards regardless, which is exactly why no deck showed a visible
+      symptom. tests/test_content.py has a regression test that stubs out that
+      normalization to observe the CSV read itself, confirmed to fail against
+      the old code and pass against the fix.
   - id: B13
     title: Mirror roadmap sessions to GitHub Issues and a Project board
     area: Dashboard
