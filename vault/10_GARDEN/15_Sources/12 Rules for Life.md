@@ -17,7 +17,7 @@ publish: true
 # 📖 12 Rules for Life
 
 **👤 Author:** [[Jordan Peterson]]
-**🔑 Zotero Key:** **📍 Full Notes:** Printed 12 Rules on Paper!
+**📍 Full Notes:** Printed 12 Rules on Paper!
 
 ---
 

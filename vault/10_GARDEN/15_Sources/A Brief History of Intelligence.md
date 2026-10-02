@@ -15,7 +15,7 @@ publish: true
 # 📖 A Brief History of Intelligence
 
 **👤 Author:** [[Max Bennett]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
+**📍 Full Notes:** On reMarkable
 
 ---
 

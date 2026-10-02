@@ -138,6 +138,3 @@ The functional specialization of brain regions is often revealed through **lesi
 • **Prosopagnosia (Face Blindness):** A specific inability to recognize familiar faces, often resulting from damage to the **fusiform face area** in the inferior temporal lobe.
 
 • **Akinetopsia:** The inability to perceive motion, often due to damage in the dorsal "where" pathway of the parietal lobe.
-
-# 📚 Sources
-> [Zotero Data Placeholder]

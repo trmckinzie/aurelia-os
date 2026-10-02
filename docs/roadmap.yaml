@@ -575,8 +575,15 @@ backlog:
   - id: B09
     title: Remove the Zotero leftovers from published notes and the Gemini Notebook template
     area: Content
-    status: open
-    decision: Remove them, which needs a one-time vault override, or fill in real Zotero keys.
+    status: done
+    decision: >-
+      Remove them, which needs a one-time vault override, or fill in real Zotero
+      keys. Decided 2026-10-01, with Travis's one-time override for these files:
+      remove them. The empty Zotero Key label is gone from 11 Source notes, with
+      every Full Notes line kept; the placeholder-only Sources section is gone
+      from 7 Gemini Notebook notes; and TPL_Gemini_Notebook.md keeps its Sources
+      heading without the placeholder. Every Garden card builds unchanged.
+    decided: 2026-10-01
   - id: B10
     title: Apply the About page intake interview
     area: Content

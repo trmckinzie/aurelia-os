@@ -21,7 +21,7 @@ publish: true
 # 📖 The Blank Slate
 
 **👤 Author:** [[Steven Pinker]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
+**📍 Full Notes:** On reMarkable
 
 ---
 

@@ -55,4 +55,3 @@ assets/images/[filename].png
 assets/flashcards/[filename].csv
 
 # 📚 Sources
-> [Zotero Data Placeholder]

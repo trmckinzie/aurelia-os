@@ -1334,6 +1334,3 @@ Cognitive psychology is the study of limits and the remarkable workarounds the b
 
 # 🃏 Flashcards
 assets/flashcards/flashcards-cog-psyc-overview-1.csv
-
-# 📚 Sources
-> [Zotero Data Placeholder]

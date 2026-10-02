@@ -15,7 +15,7 @@ publish: true
 # 📖 The Moral Landscape
 
 **👤 Author:** [[Sam Harris]]
-**🔑 Zotero Key:** **📍 Full Notes:** 
+**📍 Full Notes:** 
 
 ---
 
