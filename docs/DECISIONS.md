@@ -493,6 +493,33 @@ knowing so you don't "fix" something that was a deliberate decision:
       no `workflow_dispatch` input interpolated directly into a `run:` script -- so a new workflow
       file drifting from the policy fails CI instead of waiting for the next audit to notice.
 
+26. **Public-site defects from the audit, and self-hosting (roadmap S07, 2026-10-02).**
+
+    - **Fonts, marked.js and Motion are served from the site (decided in the roadmap as Decision
+      7).** The footer says "No analytics or tracking.", and a request to Google Fonts or jsDelivr
+      is a third party seeing every visit. The same five families and weights base.html asked
+      Google for are shipped (Inter 400-800, Cormorant Garamond 500/600/700 and 500 italic,
+      JetBrains Mono 400-800, Oswald 400/500/700, Courier Prime 400/700), as woff2 with every
+      fontsource subset and its `unicode-range`, so a browser still downloads only the subsets a
+      page's text needs. `marked` 18.0.9 and `motion` 13.1.1 are the versions the page loaded from
+      the CDN; the npm files were checked byte-identical to the CDN ones. Maintainers checked
+      before installing: the `@fontsource` packages are the Fontsource project's (fonts under SIL
+      OFL), `marked` is markedjs, `motion` is the Motion team's. Their licences ship in
+      `dist/assets/fonts/licenses/` and `dist/assets/vendor/`. This replaces the SRI hash on
+      `marked.js`; the lockfile's integrity hashes now do that job at install time.
+    - **Cache busting hashes what is served.** The old `asset_version` hashed source files, but
+      `main.css` is compiled from the rendered HTML, so its served bytes were never what was
+      hashed. See ARCHITECTURE.md, "Self-hosted assets and cache busting". The old docstring said
+      Pages sends no Cache-Control header; it sends `max-age=600`.
+    - **The 404 page uses absolute links; no other page does.** A relative link on a 404 served
+      at `/aurelia-os/a/b/` resolves under `/aurelia-os/a/b/`. Absolute paths on every page would
+      break `file://` use and previews at any other prefix, so only 404 pays that cost.
+    - **The Ctrl+K palette is a native `<dialog>`**, like the shortcut and Toolkit sheets, so
+      focus is trapped, Escape closes it, and focus returns to what opened it.
+    - **The About page no longer states a theme count**, so adding a theme cannot make it wrong.
+    - **Deliberately left:** the nav's brand dot and the Garden's status dot still use
+      `animate-pulse` without `motion-safe:`. The audit named the Toolkit line only.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

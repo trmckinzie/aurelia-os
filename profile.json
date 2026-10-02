@@ -69,7 +69,7 @@
     "projects": [
         {
             "name": "This site — a personal knowledge base as a website",
-            "description": "A Python static-site generator that turns an Obsidian vault into a public digital garden: typed note cards, backlinks and a knowledge graph, four switchable themes, keyboard navigation, and a build that fails loudly on unsafe input. You are looking at the output.",
+            "description": "A Python static-site generator that turns an Obsidian vault into a public digital garden: typed note cards, backlinks and a knowledge graph, switchable themes, keyboard navigation, and a build that fails loudly on unsafe input. You are looking at the output.",
             "url": "https://github.com/trmckinzie/aurelia-os",
             "tags": ["Python", "Jinja2", "Tailwind", "GitHub Pages", "Accessibility"],
             "status": "active"

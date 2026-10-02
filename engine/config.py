@@ -5,6 +5,8 @@ import os
 
 from jinja2 import Environment, FileSystemLoader
 
+from engine.cachebust import asset_url
+
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VAULT_PATH = os.path.join(ROOT_DIR, "vault")
 TEMPLATE_DIR = os.path.join(ROOT_DIR, "system", "templates")
@@ -48,6 +50,7 @@ def _longdate(value):
 
 
 env.filters["longdate"] = _longdate
+env.globals["asset_url"] = asset_url
 
 # --- THEME ENGINE V3: RUNTIME-SWITCHABLE (see engine/theming.py) ---
 # Every value here becomes a CSS custom property (--aurelia-*), generated

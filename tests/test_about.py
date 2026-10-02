@@ -130,7 +130,6 @@ def base_context(**overrides):
         "theme_key": default_theme_slug(),
         "available_themes_json": dumps_for_script_tag(available_themes()),
         "search_index": Markup("[]"),
-        "asset_version": "test",
         "build_year": 2026,
         "active_page": "about",
         "profile": make_profile(),
@@ -269,7 +268,7 @@ def test_about_sections_are_labelled_by_a_real_heading_id():
 
 def test_about_uses_no_raw_tailwind_palette_colors():
     # The whole palette is semantic (aurelia-*); a raw Tailwind color would
-    # be theme-blind and go unreadable on at least one of the four themes.
+    # be theme-blind and go unreadable on at least one theme.
     html = main_of(render_about())
     banned = re.compile(
         r"\b(?:text|bg|border|decoration|from|to|via|ring|fill|stroke)-"

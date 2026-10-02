@@ -156,7 +156,7 @@ real logic lives in `engine/`:
 - **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
   the end. Every skip a human should fix goes through it (malformed frontmatter and an
   unrecognized `publish:` value, naming the note; ambiguous aliases, each one; a missing media
-  asset; an asset `_asset_version()` cannot read; a link refused for leaving the tree). Progress
+  asset; an asset `stamp_asset_versions()` cannot read; a link refused for leaving the tree). Progress
   lines and deliberate omissions such as dangling wikilinks stay plain prints.
 - **`user_config.py`** — `load_user_config()` reads and validates `user_config.json` the way
   `profile.py` does `profile.json`: unknown keys, missing required keys (`system_name`,
@@ -214,8 +214,8 @@ Three things to know before editing links in bulk (all learned in item 17's clea
 ### Templates (`system/templates/`)
 
 Only five template files exist: `base.html` (nav, footer, command palette, theme CSS block, loads
-`marked.js` via CDN pinned with an SRI hash, loads `assets/js/utils.js` for the shared
-`escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
+the self-hosted fonts, `marked.js` and Motion from `assets/fonts/` and `assets/vendor/`, loads
+`assets/js/utils.js` for the shared `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
 (Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live
 here), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like page: one `<h1>`,
 `aria-labelledby` sections, no terminal-flavored copy, no `data-reveal`, a `@media print` block in
@@ -291,6 +291,24 @@ Playwright against a local server on `dist/` (`node tools/preview.mjs`, which is
 item 18, "Verification recipe". `preview.mjs` sends `Cache-Control: no-store`; against any other
 server, a browser will happily serve a cached `garden.html` after a rebuild unless you add a
 query string.
+
+### Self-hosted assets and cache busting
+
+No page asks another server for a script, stylesheet or font. `engine/vendor.py` copies the web
+fonts (`@fontsource/*`), `marked` and `motion` from `node_modules/` into `dist/assets/fonts/` and
+`dist/assets/vendor/`, with each package's licence beside it. They are pinned in `package.json` /
+`package-lock.json`, so Dependabot's npm group keeps them current. `tests/test_audit_defects.py`
+fails if any rendered page loads a script, stylesheet or font from another origin.
+
+GitHub Pages sends `Cache-Control: max-age=600`, so a returning visitor can run ten-minute-old JS
+against new HTML. Templates write `{{ asset_url('assets/js/utils.js') }}`, which emits a
+`?v=@@asset:<path>@@` token; `engine/cachebust.py` swaps each token for the first ten hex
+characters of the SHA-256 of that file as it sits in `dist/`, after the Tailwind compile has
+written the final `main.css`. Fonts carry their own hash inside `fonts.css`.
+
+The 404 page is the one page served from any depth (a missing URL two folders down still gets
+`404.html`), so it alone links by absolute path, using `site_root` (`/aurelia-os/` in CI, `/`
+locally or on a custom domain). Every other page keeps relative links.
 
 ### CSS
 

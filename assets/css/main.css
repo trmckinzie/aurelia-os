@@ -125,7 +125,7 @@ body {
 
 /* 2. INTERACTIVE STATE: target reticle */
 /* Targets links, buttons, cards, and glass elements */
-a, button, .carousel-card, .searchable-item, .glass, input {
+a, button, .searchable-item, .glass, input {
     cursor: var(--aurelia-cursor-interactive) !important;
 }
 
@@ -139,7 +139,6 @@ a, button, .carousel-card, .searchable-item, .glass, input {
    var() substitutes a value, not text, so that concatenation trick no
    longer works once the color itself is a variable. */
 .text-shadow-cyan { text-shadow: 0 0 10px color-mix(in srgb, var(--aurelia-primary) var(--aurelia-halo), transparent); }
-.text-shadow-white { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 
 body {
     background-color: var(--aurelia-bg-main);
@@ -431,7 +430,6 @@ body {
     opacity: 0.5;
     transition: opacity var(--dur-3) ease;
 }
-.bloom-accent::after { background: var(--aurelia-glow-accent); }
 .bloom:hover::after { opacity: 0.9; }
 /* Bloom sits at z-0, so real content needs to be lifted above it. */
 .bloom > * { position: relative; z-index: 1; }
@@ -586,29 +584,6 @@ body {
     .modal-panel-anim.is-closing { transition: none; transform: none; }
 }
 
-/* Modal footer actions -- underline grows from the left on hover instead of
-   the label just changing color, which is hard to notice at 10px. */
-.modal-action {
-    position: relative;
-    transition: color var(--dur-2) ease;
-    white-space: nowrap;
-}
-.modal-action:hover { color: var(--aurelia-primary); }
-.modal-action::after {
-    content: "";
-    position: absolute;
-    left: 0; bottom: -3px;
-    width: 0; height: 1px;
-    background: currentColor;
-    transition: width var(--dur-2) ease;
-}
-.modal-action:hover::after { width: 100%; }
-
-@media (prefers-reduced-motion: reduce) {
-    .modal-action, .modal-action::after { transition: none; }
-    .modal-action:hover::after { width: 0; }
-}
-
 /* === KEYBOARD NAVIGATION ============================================
    The Garden's 245 cards and 245 tree rows were <article onclick> and
    <div onclick>: no role, no tabindex, no key handler. The page had 25
@@ -722,7 +697,6 @@ body {
    had none, which made keyboard use effectively guesswork. :focus-visible
    so a mouse click doesn't leave a ring behind. */
 .reader-icon-btn:focus-visible,
-.modal-action:focus-visible,
 #modal-panel [role="button"]:focus-visible,
 #modal-panel button:focus-visible {
     outline: 2px solid var(--note-accent);
@@ -916,7 +890,7 @@ body {
     #mobile-menu,
     #theme-menu,
     #mobile-theme-menu,
-    #cmd-backdrop,
+    #cmd-dialog,
     .scanline,
     .site-footer {
         display: none !important;
@@ -1408,6 +1382,34 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
     .modal-outline-link { transition: none; }
+}
+
+/* === COMMAND PALETTE ===================================================
+   A native <dialog> (base.html's #cmd-dialog), so showModal() supplies the
+   focus trap and Escape. Anchored near the top like a palette rather than
+   centred like the sheets below. The dialog has no padding of its own, so a
+   click whose target is the dialog is always a click on the backdrop. */
+.cmd-dialog {
+    width: min(42rem, calc(100vw - 2rem));
+    margin: 5rem auto auto;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--aurelia-border-main);
+    border-radius: var(--aurelia-radius);
+    background: var(--aurelia-surface-2);
+    box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-3);
+    color: var(--aurelia-text-main);
+}
+.cmd-dialog::backdrop {
+    background: var(--aurelia-bg-main);
+    opacity: 0.8;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .cmd-dialog[open] { animation: cmd-open 0.2s ease-out; }
+    @keyframes cmd-open {
+        from { opacity: 0; transform: scale(0.97); }
+        to { opacity: 1; transform: scale(1); }
+    }
 }
 
 /* === KEYBOARD-SHORTCUTS SHEET (Phase 4) ================================

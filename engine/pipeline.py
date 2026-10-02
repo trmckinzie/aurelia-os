@@ -7,7 +7,6 @@ transmission notes are recognized by type but intentionally skipped --
 there's no page left for them to link to.
 """
 import datetime
-import hashlib
 import os
 import re
 from collections import Counter
@@ -18,7 +17,8 @@ from markupsafe import Markup
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
 from engine.buildlog import get_warnings, reset_warnings, warn
-from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env
+from engine.cachebust import stamp_asset_versions
+from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
 from engine.content import (
     build_link_resolver,
     dim_dangling_links,
@@ -42,6 +42,7 @@ from engine.paths import escapes
 from engine.profile import load_profile, person_jsonld
 from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
+from engine.vendor import copy_vendor_assets
 from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_themes, default_theme_slug, generate_theme_css
 from engine.user_config import load_user_config
@@ -467,38 +468,22 @@ def _build_commit_stamp():
     return commit, commit_time
 
 
-def _asset_version():
-    """A short content hash of the CSS/JS the pages link to, appended to
-    those URLs as ?v= so a deploy can't leave a visitor on stale assets.
+def _site_root(user_config, environ=None):
+    """The path the site is served from, for the 404 page's absolute links.
 
-    This is not a nicety. The pages and their assets are cached
-    independently, and neither GitHub Pages nor a plain static server sends
-    Cache-Control for them -- so a browser applies *heuristic* freshness and
-    may serve a cached utils.js without revalidating at all. A visitor who
-    returns after a deploy then gets new HTML calling functions that only
-    exist in the new JS, against the old file. Hit exactly that during
-    development: new markup calling aureliaReveal() against a cached
-    utils.js from before that function existed, which failed silently and
-    made an entrance animation look like it worked when it had never run.
-
-    Hashing content rather than using a timestamp means the URL only
-    changes when the file actually changes, so unrelated rebuilds don't
-    needlessly bust every visitor's cache.
+    "/" on a custom domain and on a user/organisation site (<name>.github.io);
+    "/<repo>/" on a project site, which is where this one lives. CI knows the
+    repository through GITHUB_REPOSITORY; a local build has none and previews
+    at "/".
     """
-    digest = hashlib.sha256()
-    for rel in ("assets/css/main.css", "assets/js/utils.js", "assets/js/review.js",
-                "assets/js/flashcards.js"):
-        path = os.path.join(ROOT_DIR, rel)
-        try:
-            with open(path, "rb") as f:
-                digest.update(f.read())
-        except OSError as e:
-            # Fold the path in so the version still changes if the file
-            # reappears, and say so: the pages link to every one of these,
-            # so a missing one is a broken page, not a cache detail.
-            warn(f"Could not read {rel} for cache busting: {e}")
-            digest.update(rel.encode("utf-8"))
-    return digest.hexdigest()[:10]
+    environ = os.environ if environ is None else environ
+    site = user_config.get("site") if isinstance(user_config, dict) else None
+    if isinstance(site, dict) and site.get("domain"):
+        return "/"
+    repo = environ.get("GITHUB_REPOSITORY", "").strip().split("/", 1)
+    if len(repo) == 2 and repo[1] and not repo[1].lower().endswith(".github.io"):
+        return f"/{repo[1]}/"
+    return "/"
 
 
 def _write_deep_search_index(deep_search_json):
@@ -507,14 +492,11 @@ def _write_deep_search_index(deep_search_json):
     At ~0.95 MB it is the single largest thing on the Garden page after the
     note bodies. Inline, it is re-downloaded and re-parsed on every visit and
     inflates the HTML the browser must parse before rendering anything. As a
-    separate file it is cached across visits (and versioned by the ?v= hash,
-    so a rebuild still invalidates it -- see _asset_version).
+    separate file it is cached across visits (and versioned by the ?v= hash
+    of its own content, see engine/cachebust.py, so a rebuild that changes a
+    note still invalidates it).
 
-    Returns (bytes_written, content_hash). The hash is its OWN, not
-    _asset_version(): that one covers main.css/utils.js, which do not change
-    when the vault does. Versioning this file by that hash would let a
-    visitor keep a cached index from before a note was added or edited --
-    the same stale-asset failure ?v= exists to prevent, just moved.
+    Returns the number of bytes written.
     """
     js_dir = os.path.join(OUTPUT_DIR, "assets", "js")
     os.makedirs(js_dir, exist_ok=True)
@@ -523,12 +505,12 @@ def _write_deep_search_index(deep_search_json):
     encoded = payload.encode("utf-8")
     with open(path, "w", encoding="utf-8") as f:
         f.write(payload)
-    return len(encoded), hashlib.sha256(encoded).hexdigest()[:10]
+    return len(encoded)
 
 
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
                    build_commit=None, build_commit_time=None):
-    index_bytes, search_index_version = _write_deep_search_index(deep_search_json)
+    index_bytes = _write_deep_search_index(deep_search_json)
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
     pages = [
@@ -547,16 +529,18 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         }),
         ("pages/gardentemplate.html", "garden.html", {
             "cards": garden_cards, "backlinks_index": backlinks_json, "graph_index": graph_json,
-            "search_index_version": search_index_version, "page_title": "The Garden",
+            "page_title": "The Garden",
         }),
         ("pages/abouttemplate.html", "about.html", {
             "profile": profile, "person_jsonld": dumps_for_script_tag(person_jsonld(profile)),
             "page_title": None,
         }),
-        ("404.html", "404.html", {"page_title": None}),
+        # The only page a visitor can load from any depth (a missing URL two
+        # folders down still gets this file), so it alone links by absolute
+        # path -- see _site_root().
+        ("404.html", "404.html", {"page_title": None, "site_root": _site_root(user_config)}),
     ]
 
-    asset_version = _asset_version()
     # The build's own run date, not each page's render timestamp -- a footer
     # copyright year that could differ page-to-page on the same deploy would
     # look like a bug, not a feature.
@@ -569,7 +553,7 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["available_themes_json"] = dumps_for_script_tag(available_themes())
             context["search_index"] = json_index
             context["config"] = user_config
-            context["asset_version"] = asset_version
+            context.setdefault("site_root", "")
             context["build_year"] = build_year
             context["build_commit"] = build_commit
             context["build_commit_time"] = build_commit_time
@@ -716,6 +700,7 @@ def build_all(sort_dropzone=None, strict=False):
     print(f"   + Profile Loaded: {profile['identity']['name']}")
 
     prepare_dist()
+    copy_vendor_assets()
     _write_cname(user_config)
     if sort_dropzone:
         organize_assets()
@@ -785,6 +770,10 @@ def build_all(sort_dropzone=None, strict=False):
     # including ones cards.py assembled dynamically (now literal text in the
     # output), and compiles the final CSS over the passthrough copy.
     compile_css()
+
+    # After the compile: main.css is only final now, and its hash (with every
+    # other asset's) goes into the URLs the pages already carry as tokens.
+    stamp_asset_versions(OUTPUT_DIR)
 
     warnings = get_warnings()
     if warnings:
