@@ -108,14 +108,14 @@ _TOP_REQUIRED = {"schema_version", "title", "updated", "sessions"}
 
 _SESSION_ALLOWED = {
     "id", "title", "status", "area", "effort", "model", "why", "decision",
-    "blocker", "depends_on", "tasks", "done_when", "started", "completed",
-    "commits", "notes",
+    "decided", "blocker", "depends_on", "tasks", "done_when", "started",
+    "completed", "commits", "notes",
 }
 _SESSION_REQUIRED = {"id", "title", "status", "area", "effort", "model", "why", "tasks", "done_when"}
 
 _TASK_KEYS = {"text", "done"}
 
-_BACKLOG_ALLOWED = {"id", "title", "area", "status", "detail", "decision"}
+_BACKLOG_ALLOWED = {"id", "title", "area", "status", "detail", "decision", "decided"}
 _BACKLOG_REQUIRED = {"id", "title", "area", "status"}
 
 
@@ -232,6 +232,16 @@ def _optional_text(raw, key, path, max_len):
     return _check_str(raw[key], _join(path, key), max_len, multiline=True)
 
 
+def _check_decided(raw, path, decision):
+    """The date a decision was made, or None while it is still open. Without
+    this, an answer recorded in the decision text still read as waiting on
+    Travis, and --next told the session to ask him again."""
+    decided = _check_date(raw.get("decided"), _join(path, "decided"))
+    if decided is not None and decision is None:
+        _fail(_join(path, "decided"), "is set but there is no decision")
+    return decided
+
+
 def _duplicates(ids):
     return sorted({i for i in ids if ids.count(i) > 1})
 
@@ -290,6 +300,7 @@ def _validate_session(raw, path):
         "blocker": _optional_text(raw, "blocker", path, 400),
         "notes": _optional_text(raw, "notes", path, 1200),
     }
+    session["decided"] = _check_decided(raw, path, session["decision"])
 
     _check_list(raw["tasks"], _join(path, "tasks"), max_len=30, min_len=1)
     session["tasks"] = []
@@ -357,13 +368,15 @@ def _validate_backlog_item(raw, path):
     _check_mapping(raw, path, _BACKLOG_ALLOWED, _BACKLOG_REQUIRED)
     if not isinstance(raw["id"], str) or not _BACKLOG_ID_RE.match(raw["id"]):
         _fail(_join(path, "id"), "must look like B01")
+    decision = _optional_text(raw, "decision", path, 600)
     return {
         "id": raw["id"],
         "title": _check_str(raw["title"], _join(path, "title"), 160),
         "area": _check_str(raw["area"], _join(path, "area"), 40),
         "status": _check_enum(raw["status"], BACKLOG_STATUS_LABELS, _join(path, "status")),
         "detail": _optional_text(raw, "detail", path, 800),
-        "decision": _optional_text(raw, "decision", path, 600),
+        "decision": decision,
+        "decided": _check_decided(raw, path, decision),
     }
 
 
@@ -442,6 +455,11 @@ def _percent(part, whole):
     return int(100 * part / whole + 0.5) if whole else 0
 
 
+def _needs_decision(session):
+    """True while a session's decision is unanswered and its work is not done."""
+    return bool(session["decision"]) and session["decided"] is None and session["status"] != "done"
+
+
 def _waiting_on(session, by_id):
     """Dependencies of `session` that are not done yet."""
     return [dep for dep in session["depends_on"] if by_id[dep]["status"] != "done"]
@@ -477,7 +495,7 @@ def summarize(roadmap):
         "tasks_percent": _percent(tasks_done, tasks_total),
         "in_progress": in_progress,
         "blocked": [s for s in sessions if s["status"] == "blocked"],
-        "needs_decision": [s for s in sessions if s["decision"] and s["status"] != "done"],
+        "needs_decision": [s for s in sessions if _needs_decision(s)],
         "next_up": next_up,
         "backlog_open": sum(1 for item in roadmap["backlog"] if item["status"] == "open"),
     }
@@ -495,7 +513,10 @@ def kickoff_prompt(session):
     ]
     if session["depends_on"]:
         lines += ["", f"It builds on {', '.join(session['depends_on'])}; check those entries first."]
-    if session["decision"]:
+    if session["decided"]:
+        lines += ["", f"Its decision was made on {session['decided'].isoformat()}, so act on it rather than "
+                      f"asking me again: {session['decision']}"]
+    elif session["decision"]:
         lines += ["", f"Before changing anything, ask me to decide this: {session['decision']}"]
     lines += [
         "",
@@ -503,7 +524,9 @@ def kickoff_prompt(session):
         "",
         f"When you finish, update the {sid} entry in docs/roadmap.yaml in the same change: tick the tasks "
         "you completed, and set status, the started and completed dates, and the commit hashes. Then run "
-        "`python tools/roadmap.py --check`. Do not commit or push unless I ask.",
+        "`tools/roadmap.py --check` and `bash verify.sh`, with the project's virtual environment Python "
+        "(bare `python` is not it on every machine). Do not commit or push unless I ask; when I do, the "
+        "change reaches main through a pull request (CLAUDE.md, \"Branches and pull requests\").",
     ]
     return "\n".join(lines)
 
@@ -571,6 +594,7 @@ def _session_view(session, index, by_id, repository, next_up):
         "tasks_percent": tasks_percent,
         "segment_fill": _segment_fill(session["status"], tasks_percent),
         "waiting_on": [] if session["status"] == "done" else _waiting_on(session, by_id),
+        "needs_decision": _needs_decision(session),
         "is_next": next_up is not None and next_up["id"] == session["id"],
         "commit_links": [
             {"label": sha[:7], "url": f"{repository}/commit/{sha}" if repository else None}

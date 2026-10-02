@@ -19,13 +19,15 @@
 # effort: S is under an hour, M is one focused session, L is a long session or two.
 # model follows 90_Meta/Model Routing.md in the dev mono-vault: sonnet or opus,
 # never fable. decision is a call only Travis can make before the work starts.
+# Once he makes it, record the answer in the decision text and add decided: with
+# the date; until then the dashboard lists it as needing his decision.
 #
 # The repo is public. Describe weaknesses at the level of detail already public
 # in the docs, and never name an unfixed vulnerability in more detail than that.
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-09-23
+updated: 2026-10-01
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -266,6 +268,7 @@ sessions:
       Decided 2026-09-23: all warnings, on GitHub only. Local builds stay
       forgiving, CI builds with --strict, and a note with broken frontmatter
       blocks the deploy until it is fixed.
+    decided: 2026-09-23
     depends_on: [S01]
     tasks:
       - text: Validate user_config.json strictly, the way engine/profile.py validates profile.json, and fail the build on any error
@@ -327,14 +330,17 @@ sessions:
       open.
     decision: >-
       Self-host the web fonts so the footer line stays true, or change the line.
+      Decided 2026-10-01: serve everything from the site itself. The web fonts,
+      marked.js and Motion come from npm packages pinned in package-lock.json and
+      are copied into dist/ at build time, so no page requests a file from another
+      server and the footer line stays true.
+    decided: 2026-10-01
     tasks:
       - text: Make 404.html and the shared links work at any depth, with a base href or root-relative URLs
         done: false
       - text: Version the compiled main.css and theme-vars.css by the hash of what is actually served, and correct the docstring that says Pages sends no Cache-Control header
         done: false
-      - text: Show a readable fallback in the note reader when marked.js is unavailable
-        done: false
-      - text: Carry out the web fonts decision
+      - text: Serve the web fonts, marked.js and Motion from the site as decided above, checking who maintains each package first, shipping the fonts' licence files, and covering the new files in the cache busting
         done: false
       - text: Mark the current page in the nav with aria-current
         done: false
@@ -366,6 +372,10 @@ sessions:
       docs/DECISIONS.md lists automated accessibility and browser tests as
       deliberately not done. This session reverses that by adding Playwright and
       axe as development-only dependencies.
+      Decided 2026-10-01: go ahead, and make it blocking. A browser or axe
+      failure blocks merging, and verify.sh runs the browser suite too, so a
+      local run still matches CI.
+    decided: 2026-10-01
     depends_on: [S01, S07]
     tasks:
       - text: Add Playwright with a test server that serves dist/ under /aurelia-os/, the way GitHub Pages does
@@ -378,12 +388,14 @@ sessions:
         done: false
       - text: Run axe on each page and on the open reader and dialogs, in both Read and Study mode
         done: false
-      - text: Block the CDNs in a test and check that the pages degrade gracefully
+      - text: Fail the suite when any page requests a file from another server, which keeps the promise S07 makes
         done: false
-      - text: Run the browser suite in CI and keep failure screenshots as workflow artifacts
+      - text: Run the browser suite in verify.sh and in CI, with animations off, and keep failure screenshots as workflow artifacts
+        done: false
+      - text: Take browser and accessibility tests off the deliberately-not-done lists in docs/DECISIONS.md and CLAUDE.md
         done: false
     done_when:
-      - The browser suite runs in CI on every push and pull request
+      - The browser suite runs in verify.sh, and in CI on every push and pull request
       - An axe violation at WCAG A or AA fails the build
 
   - id: S09
@@ -478,26 +490,48 @@ backlog:
       Deferred in docs/DECISIONS.md. generate_garden_card_html() is now over 500
       lines across seven note types.
   - id: B04
-    title: Decide whether the Garden keeps every note inline or fetches a note when it opens
+    title: Keep every Garden note in the page, and watch its size against a 1 MB threshold
     area: Performance
     status: open
+    detail: >-
+      Remaining work: record the threshold in docs/DECISIONS.md, replace the
+      "tradeoff not yet discussed" wording in CLAUDE.md, and have the build print
+      garden.html's compressed size next to the search index's. If it passes
+      1 MB, the first step is to move the note bodies into one separately cached
+      file, the way the search index already works.
     decision: >-
-      garden.html is about 3.9 MB because every note body is embedded so notes
-      open instantly. Keep that, or trade it for a smaller page that fetches each
-      note on demand.
+      garden.html embeds every note body so notes open instantly. Keep that, or
+      trade it for a smaller page that fetches each note on demand.
+      Decided 2026-10-01: keep every note in the page, and revisit when the
+      compressed garden.html passes 1 MB. It was about 580 KB at 259 notes, of
+      which the note bodies were about 375 KB.
+    decided: 2026-10-01
   - id: B05
     title: Decide whether to move the vault to a private repo that publishes only the built site
     area: Privacy
-    status: open
+    status: done
     decision: >-
       The whole vault is public today, including notes with publish set to false.
       A private source repo that deploys dist/ to a public one is the only layout
       in which unpublished notes are actually private.
+      Decided 2026-10-01: stay public. publish: stays a rendering switch, not
+      access control, and anything that must stay private is kept out of the
+      repo. Going private would not recall anything already pushed, and on
+      GitHub's free plan it would give up Pages, the ruleset on main, CodeQL
+      and secret scanning.
+    decided: 2026-10-01
   - id: B06
-    title: Decide how vault media is published, since media files have no publish gate
+    title: Publish a media file only when a published note references it
     area: Privacy
     status: open
     detail: Finding 19 of the 2026-09 security audit, still open.
+    decision: >-
+      Decide how vault media is published, since media files have no publish
+      gate. Decided 2026-10-01: publish a media file only when a published note
+      references it, for vault/assets/ and the repo's own assets/ media folders
+      alike, and have the build list what it skipped. The site's own CSS,
+      scripts and images are unaffected.
+    decided: 2026-10-01
   - id: B07
     title: Upgrade Tailwind CSS from the v3 line to v4
     area: Build

@@ -271,7 +271,7 @@ dl.facts dd { margin: 2px 0 0; }
     <h2 id="next-heading"><span class="sid">{{ next_view.id }}</span>{{ next_view.title }}</h2>
     <p class="why">{{ next_view.why }}</p>
     {% if next_view.decision %}
-    <div class="callout">{{ icon('decision') }}<p><strong>Decide before starting.</strong> {{ next_view.decision }}</p></div>
+    <div class="callout">{{ icon('decision') }}<p><strong>{{ 'Decide before starting.' if next_view.needs_decision else 'Decided.' }}</strong> {{ next_view.decision }}</p></div>
     {% endif %}
     <p class="facts-line">{{ next_view.area }} · {{ next_view.effort_label }} effort · {{ next_view.model_label }} · {{ next_view.tasks_done }} of {{ next_view.tasks_total }} tasks{% if next_view.depends_on %} · builds on {{ next_view.depends_on|join(', ') }}{% endif %}</p>
     <div class="prompt">
@@ -308,7 +308,7 @@ dl.facts dd { margin: 2px 0 0; }
           <td class="num">{{ s.number }}</td>
           <td>
             <a href="#{{ s.id }}"><span class="sid">{{ s.id }}</span> {{ s.title }}</a>
-            {%- if s.decision and s.status != 'done' %}<span class="flag">{{ icon('decision') }}<span class="visually-hidden">Needs your decision</span></span>{% endif %}
+            {%- if s.needs_decision %}<span class="flag">{{ icon('decision') }}<span class="visually-hidden">Needs your decision</span></span>{% endif %}
             {% if s.waiting_on %}<span class="sub">Waits on {{ s.waiting_on|join(', ') }}</span>{% endif %}
           </td>
           <td>{{ s.area }}</td>
@@ -343,7 +343,7 @@ dl.facts dd { margin: 2px 0 0; }
       <div class="callout">{{ icon('blocked') }}<p><strong>Blocked.</strong> {{ s.blocker }}</p></div>
       {% endif %}
       {% if s.decision %}
-      <div class="callout">{{ icon('decision') }}<p><strong>{{ 'Decided.' if s.status == 'done' else 'Needs your decision.' }}</strong> {{ s.decision }}</p></div>
+      <div class="callout">{{ icon('decision') }}<p><strong>{{ 'Needs your decision.' if s.needs_decision else 'Decided.' }}</strong> {{ s.decision }}</p></div>
       {% endif %}
       <div class="cols">
         <div>
@@ -398,7 +398,7 @@ dl.facts dd { margin: 2px 0 0; }
           <td>
             {{ item.title }}
             {% if item.detail %}<span class="sub">{{ item.detail }}</span>{% endif %}
-            {% if item.decision %}<span class="sub">Needs your decision: {{ item.decision }}</span>{% endif %}
+            {% if item.decision %}<span class="sub">{{ 'Decision: ' if item.decided else 'Needs your decision: ' }}{{ item.decision }}</span>{% endif %}
           </td>
           <td>{{ item.area }}</td>
           <td>{{ item.status_label }}</td>
