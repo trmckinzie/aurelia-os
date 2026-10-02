@@ -17,7 +17,7 @@ publish: true
 # 📖 The Righteous Mind
 
 **👤 Author:** [[Jonathan Haidt]]
-**🔑 Zotero Key:** **📍 Full Notes:** Paper Copy + Notes on Zotero 
+**📍 Full Notes:** Paper Copy + Notes on Zotero 
 
 ---
 

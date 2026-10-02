@@ -17,7 +17,6 @@ publish: true
 # 📖 Darwin's Dangerous Idea
 
 **👤 Author:** [[Daniel Dennett]]
-**🔑 Zotero Key:** 
 **📍 Full Notes:** On reMarkable
 
 ---

@@ -561,5 +561,3 @@ Wall Street uses these ratios to evaluate how effectively a firm manages its ass
 • **Inventory Turnover:** CostofGoodsSold/AverageInventoryValue.
 
 • **Asset Turnover:** Revenue(orSales)/TotalAssets.
-# 📚 Sources
-> [Zotero Data Placeholder]

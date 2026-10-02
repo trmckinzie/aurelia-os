@@ -15,7 +15,7 @@ publish: true
 # 📖 Waking Up
 
 **👤 Author:** [[Sam Harris]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
+**📍 Full Notes:** On reMarkable
 
 ---
 

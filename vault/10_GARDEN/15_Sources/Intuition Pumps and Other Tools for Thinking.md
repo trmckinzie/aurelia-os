@@ -16,7 +16,6 @@ publish: true
 # 📖 [[Intuition Pumps and Other Tools for Thinking]]
 
 **👤 Author:** [[Daniel Dennett]]
-**🔑 Zotero Key:** 
 **📍 Full Notes:** On reMarkable
 
 ---

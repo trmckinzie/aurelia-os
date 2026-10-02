@@ -131,6 +131,3 @@ This section details how the mathematical concepts above are implemented in biol
 • **Gaze Entropy:** The spatial distribution of eye fixations (heatmap entropy) serves as a physiological marker of cognitive load.
 
 • **Correlations:** Higher gaze entropy (more dispersed scanning) generally correlates with **higher cognitive load**, longer response times, and lower task performance in complex scenarios. However, specific task demands (e.g., temporal vs. mental demand) can alter this; high mental demand may sometimes lead to grouped (lower entropy) fixations as the user focuses intensely on specific areas.
-
-# 📚 Sources
-> [Zotero Data Placeholder]

@@ -15,6 +15,3 @@ publish: true
 
 # 📚 Lit Review Overview
 > [Paste the Executive Summary or Core Thesis here.]
-
-# 📚 Sources
-> [Zotero Data Placeholder]

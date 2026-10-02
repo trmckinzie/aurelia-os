@@ -16,7 +16,7 @@ publish: true
 # 📖 Meditations
 
 **👤 Author:** [[Marcus Aurelius]]
-**🔑 Zotero Key:** **📍 Full Notes:** With Physical Copy
+**📍 Full Notes:** With Physical Copy
 
 ---
 

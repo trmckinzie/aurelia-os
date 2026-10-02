@@ -22,7 +22,7 @@ publish: true
 # 📖 Behave
 
 **👤 Author:** [[Robert Sapolsky]]
-**🔑 Zotero Key:** **📍 Full Notes:** On reMarkable
+**📍 Full Notes:** On reMarkable
 
 ---
 
