@@ -1,0 +1,77 @@
+name: Weekly build and live check
+
+# Catches breakage with no push behind it: a runner image update, a CDN
+# outage, or (despite the hash locks) a dependency that only breaks once
+# actually reinstalled. Two independent checks, deliberately not chained:
+# `build` proves main still builds clean against today's runner image and
+# today's locked dependencies; `live-check` proves the already-deployed
+# site still answers correctly. Neither needs the other's result, and
+# running them in parallel means breakage in one doesn't delay noticing
+# breakage in the other.
+#
+# Deliberately builds only -- does not deploy. Decided 2026-10-02, roadmap
+# S06: see docs/DECISIONS.md item 25 for why.
+on:
+  schedule:
+    # Monday 08:00 UTC: after Dependabot's own weekly run (also Monday, no
+    # pinned time -- see .github/dependabot.yml), so a dependency bump that
+    # broke something is more likely to be caught the same day its PR lands.
+    - cron: '0 8 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install --require-hashes -r requirements.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Run Build Script
+        # No AURELIA_BUILD_COMMIT(_TIME) here: this build is never deployed,
+        # so there is nothing to stamp and nothing a live check would need
+        # to compare it against.
+        run: python build.py --no-sort --strict
+
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions: {}
+    steps:
+      - name: Checkout
+        # Only to pull in .github/actions/live-check.
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the live site
+        uses: ./.github/actions/live-check
+        with:
+          site-url: https://trmckinzie.github.io/aurelia-os/
+          # No expected-commit: this run deploys nothing, so there is no
+          # freshly built SHA to compare the live site against -- it only
+          # proves the site that's already up still answers correctly.

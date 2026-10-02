@@ -446,6 +446,27 @@ def _build_deep_search_index(garden_cards):
     return {c['id']: c['desc'] for c in garden_cards}
 
 
+def _build_commit_stamp():
+    """(commit, commit_time) from the environment, or (None, None).
+
+    Set by CI (.github/workflows/deploy.yml and redeploy.yml) from the
+    commit actually being built -- AURELIA_BUILD_COMMIT is its full SHA,
+    AURELIA_BUILD_COMMIT_TIME is that commit's own committer timestamp
+    (`git show -s --format=%cI` -- the committer date, not the author date,
+    which is what CI actually sets this from), never the wall-clock time the
+    runner happened to build at. Two CI runs of the same commit therefore
+    stamp identical values, which is what keeps this compatible with S09's
+    byte-identical-build goal. A local `python build.py` sets neither, so
+    dist/ is unchanged from before this existed -- see docs/DECISIONS.md
+    item 25.
+    """
+    commit = os.environ.get("AURELIA_BUILD_COMMIT", "").strip()
+    commit_time = os.environ.get("AURELIA_BUILD_COMMIT_TIME", "").strip()
+    if not commit or not commit_time:
+        return None, None
+    return commit, commit_time
+
+
 def _asset_version():
     """A short content hash of the CSS/JS the pages link to, appended to
     those URLs as ?v= so a deploy can't leave a visitor on stale assets.
@@ -505,7 +526,8 @@ def _write_deep_search_index(deep_search_json):
     return len(encoded), hashlib.sha256(encoded).hexdigest()[:10]
 
 
-def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile):
+def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
+                   build_commit=None, build_commit_time=None):
     index_bytes, search_index_version = _write_deep_search_index(deep_search_json)
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
@@ -549,6 +571,8 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["config"] = user_config
             context["asset_version"] = asset_version
             context["build_year"] = build_year
+            context["build_commit"] = build_commit
+            context["build_commit_time"] = build_commit_time
 
             template = env.get_template(template_name)
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
@@ -748,7 +772,9 @@ def build_all(sort_dropzone=None, strict=False):
 
     lobby_stats = _build_lobby_context(garden_cards, graph_index)
 
-    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile)
+    build_commit, build_commit_time = _build_commit_stamp()
+    _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
+                  build_commit=build_commit, build_commit_time=build_commit_time)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.

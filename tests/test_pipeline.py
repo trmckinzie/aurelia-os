@@ -1,3 +1,4 @@
+import glob
 import os
 
 import pytest
@@ -6,6 +7,7 @@ import build
 from engine import pipeline
 from engine.content import dim_dangling_links
 from engine.pipeline import (
+    _build_commit_stamp,
     _build_graph_index,
     _build_link_graph,
     _build_lobby_context,
@@ -485,24 +487,61 @@ def test_render_failure_stops_before_writing_the_remaining_pages(tmp_path, monke
     assert not (tmp_path / "404.html").exists()
 
 
-def test_ci_workflow_builds_with_the_vault_guard_on():
-    """CI must pass --no-sort.
+# --- roadmap S06: the CI commit stamp -------------------------------------
 
-    Without it the deploy job runs organize_assets() in the runner, moving
+def test_build_commit_stamp_absent_by_default(monkeypatch):
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT", raising=False)
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT_TIME", raising=False)
+    assert _build_commit_stamp() == (None, None)
+
+
+def test_build_commit_stamp_needs_both_values(monkeypatch):
+    # Half a stamp is worse than none: a commit with no time (or the
+    # reverse) means a CI step set one env var and not the other, not a
+    # deliberate choice to omit it -- so neither is trusted.
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT", "abc123")
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT_TIME", raising=False)
+    assert _build_commit_stamp() == (None, None)
+
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT", raising=False)
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT_TIME", "2026-10-02T08:59:00-06:00")
+    assert _build_commit_stamp() == (None, None)
+
+
+def test_build_commit_stamp_reads_both_values(monkeypatch):
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT", "abc123")
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT_TIME", "2026-10-02T08:59:00-06:00")
+    assert _build_commit_stamp() == ("abc123", "2026-10-02T08:59:00-06:00")
+
+
+def test_ci_workflow_builds_with_the_vault_guard_on():
+    """Every workflow that invokes build.py must pass --no-sort.
+
+    Without it, the step runs organize_assets() in the runner, moving
     vault/99_DROP_ZONE/ into vault/assets/<kind>/ -- which sync_vault_assets()
     then copies into the published dist/ with no `publish:` gate. The guard
     exists (this module's build_all docstring names CI as the reason); it
     just was not being used, and nothing but this test notices.
+
+    Checks every file under .github/workflows/, not just deploy.yml --
+    redeploy.yml and weekly-check.yml (roadmap S06) also invoke build.py,
+    and a guard pinned to one filename stops protecting a build the moment
+    a second one is added beside it.
     """
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    workflow = os.path.join(root, ".github", "workflows", "deploy.yml")
-    with open(workflow, encoding="utf-8") as f:
-        body = f.read()
+    workflow_dir = os.path.join(root, ".github", "workflows")
+    workflows = sorted(glob.glob(os.path.join(workflow_dir, "*.yml")))
+    assert workflows, "no workflow files found"
 
-    build_lines = [ln.strip() for ln in body.splitlines() if "build.py" in ln and "#" not in ln]
-    assert build_lines, "no build.py invocation found in the deploy workflow"
-    for line in build_lines:
-        assert "--no-sort" in line, f"CI build must pass --no-sort: {line}"
+    checked_any = False
+    for workflow in workflows:
+        with open(workflow, encoding="utf-8") as f:
+            body = f.read()
+        build_lines = [ln.strip() for ln in body.splitlines() if "build.py" in ln and "#" not in ln]
+        for line in build_lines:
+            checked_any = True
+            assert "--no-sort" in line, f"{workflow}: CI build must pass --no-sort: {line}"
+    assert checked_any, "no build.py invocation found in any workflow"
 
 
 def test_build_cli_maps_no_sort_to_sort_dropzone_false():

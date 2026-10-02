@@ -305,7 +305,8 @@ sessions:
 
   - id: S06
     title: Check every deploy on the live site and make rollback one step
-    status: todo
+    status: in_progress
+    started: 2026-10-02
     area: CI/CD
     effort: M
     model: sonnet
@@ -317,18 +318,34 @@ sessions:
     depends_on: [S01]
     tasks:
       - text: Stamp the commit SHA and build time into every page during the CI build
-        done: false
+        done: true
       - text: Add a post-deploy job that fetches the Lobby, Garden, About and a missing page, checks status codes and key content, and confirms the live SHA matches the commit
-        done: false
+        done: true
       - text: Tag each successful deploy and publish a GitHub release with generated notes
-        done: false
+        done: true
       - text: Add a manual workflow that redeploys a chosen tag, and write the rollback runbook
-        done: false
+        done: true
       - text: Add a weekly scheduled build and live check, so breakage from runner images, CDNs or dependencies shows up without a push
-        done: false
+        done: true
     done_when:
       - A deploy run ends with a passing live check that reports the deployed SHA
       - A rollback to an earlier tag has been rehearsed once and written down
+    notes: >-
+      Every task is implemented and locally verified: _build_commit_stamp() in
+      engine/pipeline.py stamps AURELIA_BUILD_COMMIT(_TIME) only when CI sets them,
+      local dist/ unchanged otherwise; .github/actions/live-check is the shared
+      post-deploy check used by deploy.yml, redeploy.yml and the new
+      weekly-check.yml; deploy.yml's release job tags and publishes only after
+      live-check passes and is the only job anywhere with contents: write;
+      redeploy.yml validates its tag input against a strict pattern and runs from
+      main, not the tag, since the github-pages environment's branch policy allows
+      only branches (gh api, recorded in DECISIONS item 25); the runbook is
+      docs/ROLLBACK.md. tests/test_workflow_hardening.py checks all four workflow
+      files against S02's rules so the policy can't quietly drift. Not done: the
+      first done_when needs a real push to observe; the second -- rehearsing a
+      rollback -- needs two deploy tags, replaces the live site, and runs only on
+      Travis's go-ahead, after this PR merges, recorded in the follow-up that marks
+      S06 done.
 
   - id: S07
     title: Fix the defects the audit found on the public site

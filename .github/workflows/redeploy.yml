@@ -1,0 +1,153 @@
+name: Redeploy a tag
+
+# Rebuilds and republishes the content of an earlier deploy tag (see
+# release.yml's job of the same name in deploy.yml, and the rollback
+# runbook, docs/ROLLBACK.md).
+#
+# Deliberately NOT triggered from the tag itself (`on: push: tags:`). The
+# github-pages environment's deployment branch policy
+# (Settings -> Environments -> github-pages) only names branches --
+# `None`, `gh-pages`, `main` -- never a tag pattern, so a run whose own ref
+# is a tag would be refused at the `deploy` job regardless of what this
+# workflow does. This workflow is dispatched manually FROM main instead
+# (gh workflow run's default, and the only option the Actions UI offers for
+# a workflow with no tag trigger); `build`'s checkout then switches to the
+# requested tag only for the content it builds. See docs/DECISIONS.md
+# item 25.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: >-
+          Existing deploy tag to redeploy, e.g. deploy-20261002-143501-2739b5f
+          (see docs/ROLLBACK.md for the list and how to choose one).
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      commit: ${{ steps.commit-stamp.outputs.commit }}
+      commit_time: ${{ steps.commit-stamp.outputs.commit_time }}
+    steps:
+      - name: Validate the tag name
+        # The input reaches this workflow as free text typed into the
+        # Actions UI (or passed to `gh workflow run`), so it is validated
+        # here before it touches anything -- including actions/checkout's
+        # `ref:` below -- and passed via env:, never interpolated directly
+        # into a run: script. The pattern matches exactly what deploy.yml's
+        # release job generates: deploy-YYYYMMDD-HHMMSS-<7 hex chars>.
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$TAG" =~ ^deploy-[0-9]{8}-[0-9]{6}-[0-9a-f]{7}$ ]]; then
+            echo "::error::'$TAG' is not a valid deploy tag (expected deploy-YYYYMMDD-HHMMSS-<7 hex chars>, e.g. deploy-20261002-143501-2739b5f)"
+            exit 1
+          fi
+
+      - name: Checkout the requested tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag }}
+          persist-credentials: false
+
+      - name: Confirm the checkout landed on that tag
+        # actions/checkout silently falls back to the default branch if a
+        # `ref:` doesn't resolve, which would redeploy main under the
+        # banner of rolling back to an old tag -- the one failure mode this
+        # workflow exists to avoid. Belt and suspenders with the regex
+        # validation above, which only proves the string is well-formed,
+        # not that the tag exists.
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "$(git rev-parse HEAD)" != "$(git rev-parse "refs/tags/$TAG")" ]; then
+            echo "::error::Checked-out commit does not match tag $TAG -- refusing to redeploy main instead"
+            exit 1
+          fi
+
+      - name: Determine commit stamp
+        # Same as deploy.yml's build job: the tagged commit's own identity
+        # and its own timestamp, not wall-clock time, so the republished
+        # pages carry the same stamp the original deploy did.
+        id: commit-stamp
+        run: |
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "commit_time=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: pip install --require-hashes -r requirements.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Run Build Script
+        # --no-sort --strict, exactly as deploy.yml requires -- this tag was
+        # already strict-built once to be published in the first place, but
+        # the vault-write guard applies to every CI build regardless.
+        env:
+          AURELIA_BUILD_COMMIT: ${{ steps.commit-stamp.outputs.commit }}
+          AURELIA_BUILD_COMMIT_TIME: ${{ steps.commit-stamp.outputs.commit_time }}
+        run: python build.py --no-sort --strict
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: build
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build, deploy]
+    permissions: {}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the live site
+        uses: ./.github/actions/live-check
+        with:
+          site-url: ${{ needs.deploy.outputs.page_url }}
+          expected-commit: ${{ needs.build.outputs.commit }}

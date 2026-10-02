@@ -163,6 +163,7 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer", and the reasoning
   behind it in `docs/DECISIONS.md` item 18.
 - Setting up a new machine, or what git will not carry to one: `docs/MOVING-MACHINES.md`.
+- Rolling back a bad deploy, or what the post-deploy live check verifies: `docs/ROLLBACK.md`.
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).

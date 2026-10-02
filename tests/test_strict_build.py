@@ -4,6 +4,7 @@ Roadmap S05, Decision 6: every warning fails CI, on GitHub only. Local builds
 stay forgiving; CI passes --strict. These tests cover the collector, each
 failure path S05 added, and the CI wiring.
 """
+import glob
 import os
 import subprocess
 import sys
@@ -139,6 +140,37 @@ def test_warnings_from_an_earlier_build_do_not_carry_over(monkeypatch):
     pipeline.build_all(sort_dropzone=False, strict=True)
 
 
+# --- roadmap S06: the CI commit stamp -------------------------------------
+
+def test_build_all_forwards_the_commit_stamp_from_the_environment(monkeypatch):
+    """build_all() reads AURELIA_BUILD_COMMIT(_TIME) and hands both straight
+    to _render_pages -- see engine/pipeline.py's _build_commit_stamp."""
+    captured = {}
+    _stub_build(monkeypatch)
+    monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: captured.update(k))
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT", "abc123")
+    monkeypatch.setenv("AURELIA_BUILD_COMMIT_TIME", "2026-10-02T08:59:00-06:00")
+
+    pipeline.build_all(sort_dropzone=False)
+
+    assert captured["build_commit"] == "abc123"
+    assert captured["build_commit_time"] == "2026-10-02T08:59:00-06:00"
+
+
+def test_build_all_stamps_nothing_without_the_environment(monkeypatch):
+    """A local build matches dist/ output from before the stamp existed."""
+    captured = {}
+    _stub_build(monkeypatch)
+    monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: captured.update(k))
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT", raising=False)
+    monkeypatch.delenv("AURELIA_BUILD_COMMIT_TIME", raising=False)
+
+    pipeline.build_all(sort_dropzone=False)
+
+    assert captured["build_commit"] is None
+    assert captured["build_commit_time"] is None
+
+
 # --- the command line ----------------------------------------------------
 
 def test_cli_strict_flag():
@@ -169,11 +201,21 @@ def test_cli_passes_strict_through(monkeypatch):
 # --- CI wiring -----------------------------------------------------------
 
 def test_ci_deploy_build_is_strict():
-    with open(os.path.join(ROOT, ".github", "workflows", "deploy.yml"), encoding="utf-8") as f:
-        lines = [ln.strip() for ln in f if "build.py" in ln and "#" not in ln]
-    assert lines, "no build.py invocation found in the deploy workflow"
-    for line in lines:
-        assert "--strict" in line, f"CI build must pass --strict: {line}"
+    # Every workflow that invokes build.py, not just deploy.yml --
+    # redeploy.yml and weekly-check.yml (roadmap S06) build too, and a
+    # guard pinned to one filename stops protecting a build the moment a
+    # second one is added beside it.
+    workflows = sorted(glob.glob(os.path.join(ROOT, ".github", "workflows", "*.yml")))
+    assert workflows, "no workflow files found"
+
+    checked_any = False
+    for workflow in workflows:
+        with open(workflow, encoding="utf-8") as f:
+            lines = [ln.strip() for ln in f if "build.py" in ln and "#" not in ln]
+        for line in lines:
+            checked_any = True
+            assert "--strict" in line, f"{workflow}: CI build must pass --strict: {line}"
+    assert checked_any, "no build.py invocation found in any workflow"
 
 
 def _verify_build_flags(env_value):
