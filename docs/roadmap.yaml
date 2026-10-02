@@ -253,6 +253,8 @@ sessions:
     status: done
     started: 2026-10-01
     completed: 2026-10-01
+    commits:
+      - "f558fb2"
     area: Build
     effort: M
     model: sonnet
@@ -297,9 +299,9 @@ sessions:
       warnings name the note. Verified locally 2026-10-01: the current content
       builds clean under --strict; a scratch site with one broken note exits
       1 under --strict and 0 without; a truncated user_config.json exits 1
-      naming the JSON error. The first --strict run on GitHub happens on this
-      change's pull request, and the squash commit is recorded in the
-      follow-up change, as for S04.
+      naming the JSON error. PR #8 squash-merged as f558fb2 on 2026-10-01:
+      its check job built with --no-sort --strict and passed, then the deploy
+      run on main built with --strict, deployed, and the live site answered.
 
   - id: S06
     title: Check every deploy on the live site and make rollback one step
