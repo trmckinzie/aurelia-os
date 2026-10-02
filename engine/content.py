@@ -539,7 +539,14 @@ def _render_flashcards(path):
 
     cards_html = ""
     try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
+        # newline='': the csv module's own recommendation (docs.python.org/3/library/csv.html),
+        # not a style choice. Without it, Python's universal-newline translation
+        # rewrites the file's line endings before csv.reader ever sees them, which
+        # can misparse a quoted cell that embeds its own newline -- a multi-line
+        # answer, for instance -- as extra rows instead of one cell (roadmap
+        # backlog B12). No current deck hits this, which is exactly why it had
+        # gone unnoticed.
+        with open(csv_path, 'r', encoding='utf-8', newline='') as f:
             rows = list(csv.reader(f))
         for row in rows:
             if len(row) < 2:
