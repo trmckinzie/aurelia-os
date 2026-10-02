@@ -63,7 +63,14 @@ echo "== vault schema =="
 echo "== roadmap =="
 "$PYTHON" tools/roadmap.py --check
 
-echo "== build (--no-sort) =="
-"$PYTHON" build.py --no-sort
+# --strict only on GitHub Actions (roadmap S05, Decision 6): there any build
+# warning fails the check job and so blocks the merge and the deploy. A local
+# run stays forgiving, so a half-finished note never stops a preview.
+BUILD_FLAGS=(--no-sort)
+if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
+  BUILD_FLAGS+=(--strict)
+fi
+echo "== build (${BUILD_FLAGS[*]}) =="
+"$PYTHON" build.py "${BUILD_FLAGS[@]}"
 
 echo "verify.sh: all checks passed"

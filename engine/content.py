@@ -6,6 +6,7 @@ from collections import defaultdict
 
 import yaml
 
+from engine.buildlog import warn
 from engine.config import VAULT_PATH, ROOT_DIR
 from engine.sanitize import sanitize_to_text
 
@@ -51,7 +52,7 @@ _PUBLISH_TRUE = {"true", "yes", "1"}
 _PUBLISH_FALSE = {"false", "no", "0", "none", "null", ""}
 
 
-def _coerce_publish(value):
+def _coerce_publish(value, source=None):
     """Decides whether a frontmatter `publish:` value means publish.
 
     Was `bool(value)`, which is true for *any* non-empty string -- so
@@ -70,15 +71,18 @@ def _coerce_publish(value):
     if token in _PUBLISH_FALSE:
         return False
 
-    print(f"   ⚠️  Unrecognized publish value {value!r} -- treating as unpublished")
+    where = f" in {source}" if source else ""
+    warn(f"Unrecognized publish value {value!r}{where} -- treating as unpublished")
     return False
 
 
-def parse_frontmatter(content):
+def parse_frontmatter(content, source=None):
     """Parses the YAML frontmatter block of a note into a metadata dict.
 
     Always returns publish (bool), tags (list[str]), type, and status, defaulting
     the latter two to "unknown" so downstream routing never has to null-check them.
+    `source`, if given, names the note in warnings, so a --strict failure in CI
+    says which file to fix.
     """
     meta = {"publish": False, "tags": [], "type": "unknown", "status": "unknown"}
     content = content.lstrip()
@@ -96,14 +100,15 @@ def parse_frontmatter(content):
         # that isn't valid YAML; treat them as unpublished rather than crashing.
         global _malformed_count
         _malformed_count += 1
-        print(f"   ⚠️  Skipping malformed frontmatter: {str(e).splitlines()[0]}")
+        where = f" in {source}" if source else ""
+        warn(f"Skipping malformed frontmatter{where}: {str(e).splitlines()[0]}")
         return meta
 
     if not isinstance(parsed, dict):
         return meta
 
     meta.update(parsed)
-    meta["publish"] = _coerce_publish(meta.get("publish", False))
+    meta["publish"] = _coerce_publish(meta.get("publish", False), source)
 
     tags = meta.get("tags") or []
     if isinstance(tags, str):
@@ -257,7 +262,7 @@ def build_link_resolver(notes):
          directly in resolve() against known_ids -- needs no lookup table.
       2. Alias: a note's frontmatter `aliases:` list (coerced str -> [str],
          same as `tags` in parse_frontmatter). An alias slug claimed by more
-         than one note is ambiguous and dropped, with a single warning.
+         than one note is ambiguous and dropped, with one warning per alias.
       3. Unique title-suffix base: for titles shaped "Base (...)" or
          "Base: ...", make_id(Base) resolves to that note only when exactly
          one published note shares that base.
@@ -283,7 +288,6 @@ def build_link_resolver(notes):
             alias_candidates[make_id(str(alias))].add(n["note_id"])
 
     alias_map = {}
-    warned_alias_collision = False
     for alias_id, note_ids in alias_candidates.items():
         if alias_id in known_ids:
             # A real note's own title always wins -- resolve() checks
@@ -292,9 +296,10 @@ def build_link_resolver(notes):
             # map itself an honest record of what it actually decides.
             continue
         if len(note_ids) > 1:
-            if not warned_alias_collision:
-                print(f"   ⚠️  Alias '{alias_id}' is claimed by multiple notes -- dropping it")
-                warned_alias_collision = True
+            # Every collision, not just the first: each is a separate fix,
+            # and --strict should name all of them in one CI run.
+            warn(f"Alias '{alias_id}' is claimed by multiple notes "
+                 f"({', '.join(sorted(note_ids))}) -- dropping it")
             continue
         alias_map[alias_id] = next(iter(note_ids))
 
@@ -497,7 +502,7 @@ def resolve_asset(path):
             # or an absolute path os.path.join() happily adopts. Refuse before
             # touching the filesystem, so this can't be used as an existence
             # oracle either. Audit finding #20.
-            print(f"   ⚠️  Refusing out-of-tree asset reference: {path}")
+            warn(f"Refusing out-of-tree asset reference: {path}")
             continue
         if os.path.isfile(candidate):
             return candidate

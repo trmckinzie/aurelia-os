@@ -384,10 +384,9 @@ def test_lobby_carousel_reduced_motion_override_and_dialog_open_guard_are_presen
 
 
 def test_real_user_config_tech_stack_entries_satisfy_the_toolkit_contract():
-    """The 2026-09-14 copy pass hand-edited user_config.json directly rather
-    than through a schema -- load_user_config() only prints a warning and
-    falls back to defaults on invalid JSON, so nothing else in the build
-    would catch a mistake here. This test is the actual gate: every
+    """The 2026-09-14 copy pass hand-edited user_config.json directly. Since
+    S05, engine/user_config.py rejects a malformed file or a missing field,
+    but it does not check copy, so this test stays the gate for it: every
     entry, drafts included, must carry real what_it_is/how_i_use_it copy
     within the detail sheet's rough length budget, contain none of the
     voice rule's banned tokens, and at least one entry must actually be

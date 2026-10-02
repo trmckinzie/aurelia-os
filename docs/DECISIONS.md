@@ -373,6 +373,21 @@ knowing so you don't "fix" something that was a deliberate decision:
       --check` still reads it as wired. Folders beside the repo were rejected: the dev vault's
       Obsidian index ignores anything under `.claude/` but would pick up a second copy of `vault/`.
 
+23. **The build fails instead of deploying a degraded site (2026-10-01, roadmap S05).** Several
+    problems used to print a warning, or nothing, and exit 0, so CI deployed the result. Choices:
+
+    - **Warnings fail CI only** (Decision 6, made 2026-09-23). `build.py --strict` turns any
+      warning into exit 1; the deploy job passes it, and `verify.sh` adds it when `GITHUB_ACTIONS`
+      is `true`, so the `check` job blocks the merge as well. A local build stays forgiving: a
+      half-finished note should not stop a preview of the rest of the site. A note with broken
+      frontmatter therefore blocks the deploy until it is fixed.
+    - **All warnings, through one function.** `engine/buildlog.warn()` both prints and records,
+      so strict mode needs no list of which warnings count. The cost is a rule: a new warning
+      written as a bare `print()` is invisible to CI.
+    - **Strict fails at the end, not at the first warning**, so one CI run names every problem.
+    - **Some things fail every build.** A missing or invalid `user_config.json` (it used to fall
+      back to a stub and build a blank Lobby) and a `dist/` that cannot be wiped (it used to
+      build on top of the leftovers). Neither has a forgiving reading.
 
 ## Known gaps / deliberately not done
 

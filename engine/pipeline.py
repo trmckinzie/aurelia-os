@@ -17,7 +17,8 @@ from markupsafe import Markup
 
 from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
-from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env, load_user_config
+from engine.buildlog import get_warnings, reset_warnings, warn
+from engine.config import CURRENT_THEME, OUTPUT_DIR, ROOT_DIR, VAULT_PATH, env
 from engine.content import (
     build_link_resolver,
     dim_dangling_links,
@@ -43,6 +44,7 @@ from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
 from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_themes, default_theme_slug, generate_theme_css
+from engine.user_config import load_user_config
 
 
 # Vault directories the build never publishes from, whatever a note's
@@ -110,13 +112,13 @@ def _scan_vault():
                 # A file-level link that points out of the tree. The pruning
                 # above cannot catch this one: os.walk lists it as a plain
                 # file of the directory it sits in.
-                print(f"   ⚠️  Refusing note that resolves outside the vault: {filepath}")
+                warn(f"Refusing note that resolves outside the vault: {filepath}")
                 continue
 
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read()
 
-            meta = parse_frontmatter(content)
+            meta = parse_frontmatter(content, source=os.path.relpath(filepath, VAULT_PATH))
             if not meta.get("publish"):
                 continue
 
@@ -469,10 +471,11 @@ def _asset_version():
         try:
             with open(path, "rb") as f:
                 digest.update(f.read())
-        except OSError:
-            # A missing source file is the asset pipeline's problem to
-            # report, not this function's -- fold the path in so the
-            # version still changes if it reappears.
+        except OSError as e:
+            # Fold the path in so the version still changes if the file
+            # reappears, and say so: the pages link to every one of these,
+            # so a missing one is a broken page, not a cache detail.
+            warn(f"Could not read {rel} for cache busting: {e}")
             digest.update(rel.encode("utf-8"))
     return digest.hexdigest()[:10]
 
@@ -635,6 +638,10 @@ def _write_cname(user_config):
     print(f"   + Custom domain: {domain} -> dist/CNAME")
 
 
+class StrictBuildError(RuntimeError):
+    """The build finished but printed warnings, and strict mode was on."""
+
+
 # Values of AURELIA_SKIP_DROPZONE that mean "no, actually do sort". Anything
 # else non-empty means skip -- `AURELIA_SKIP_DROPZONE=1` is the common form.
 _ENV_FALSE = {"", "0", "false", "no", "off"}
@@ -645,7 +652,7 @@ def skip_dropzone_env():
     return os.environ.get("AURELIA_SKIP_DROPZONE", "").strip().lower() not in _ENV_FALSE
 
 
-def build_all(sort_dropzone=None):
+def build_all(sort_dropzone=None, strict=False):
     """Builds the site into dist/.
 
     organize_assets() is the one step in this pipeline that WRITES to vault/:
@@ -659,15 +666,23 @@ def build_all(sort_dropzone=None):
     it. Everything else in the pipeline only reads the vault, so the rendered
     site is identical apart from assets still sitting in the drop zone.
     Leaving it None defers to the environment variable.
+
+    strict=True (build.py --strict, which CI passes) raises StrictBuildError
+    after the build if anything called buildlog.warn(), so a degraded site
+    cannot deploy. Off by default so a local build stays forgiving. Hard
+    failures (a bad user_config.json or profile.json, a render error, a dist/
+    that cannot be wiped) raise whatever strict says.
     """
     if sort_dropzone is None:
         sort_dropzone = not skip_dropzone_env()
+    reset_warnings()
 
     print("------------------------------------------------")
     print("SITE BUILD ENGINE")
     print("------------------------------------------------")
 
     user_config = load_user_config()
+    print(f"   + Identity Loaded: {user_config['author']['name']}")
 
     # Fatal by design (see engine/profile.py's module docstring): About is
     # one of only three published pages, so a missing/invalid profile.json
@@ -705,7 +720,7 @@ def build_all(sort_dropzone=None):
         # skipping them silently would just replace a visible broken control
         # with an invisible absence, so the count is surfaced here.
         unique = get_missing_assets()
-        print(f"   ⚠️  {missing_assets} media widget(s) skipped -- {len(unique)} asset file(s) missing")
+        warn(f"{missing_assets} media widget(s) skipped -- {len(unique)} asset file(s) missing")
         for path in unique[:3]:
             print(f"        - {path}")
         if len(unique) > 3:
@@ -744,5 +759,16 @@ def build_all(sort_dropzone=None):
     # including ones cards.py assembled dynamically (now literal text in the
     # output), and compiles the final CSS over the passthrough copy.
     compile_css()
+
+    warnings = get_warnings()
+    if warnings:
+        print(f"\n⚠️  {len(warnings)} build warning(s):")
+        for message in warnings:
+            print(f"   - {message}")
+        if strict:
+            raise StrictBuildError(
+                f"{len(warnings)} build warning(s) under --strict; fix them before deploying "
+                f"(first: {warnings[0]})"
+            )
 
     print("\n✅ SYSTEM SYNC COMPLETE.")

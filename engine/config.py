@@ -1,6 +1,6 @@
-"""Paths, theme presets, and user_config.json loading."""
+"""Paths, the Jinja environment, and theme presets. user_config.json is loaded
+and validated by engine/user_config.py."""
 import datetime
-import json
 import os
 
 from jinja2 import Environment, FileSystemLoader
@@ -592,14 +592,3 @@ THEME_CONFIG = {
 # switchable -- this only changes the default.
 CURRENT_THEME = THEME_CONFIG["TIMBERLINE"]
 
-
-def load_user_config():
-    config_path = os.path.join(ROOT_DIR, "user_config.json")
-    try:
-        with open(config_path, "r", encoding="utf-8") as f:
-            config = json.load(f)
-        print(f"   + Identity Loaded: {config['author']['name']}")
-        return config
-    except Exception as e:
-        print(f"   ⚠️  WARNING: Could not load user_config.json. Using defaults. ({e})")
-        return {"author": {"name": "Unknown User"}}
