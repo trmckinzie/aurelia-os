@@ -284,13 +284,16 @@ panel's export/import (JSON, merged per note by the higher `last` timestamp).
   under 768 px the graph view renders `#graph-list`, the 30 most connected notes, instead of the
   canvas. `#a11y-status` is the live region every view switch and note open announces through.
 
-There is no JS test harness: `tests/test_garden.py` pins the wiring (scripts loaded with `?v=`,
-elements and options present, no legacy voice tokens), and the behaviour is verified with
-Playwright against a local server on `dist/` (`node tools/preview.mjs`, which is what the
-`dist-preview` entry in `.claude/launch.json` runs) — the checks are listed in `docs/DECISIONS.md`
-item 18, "Verification recipe". `preview.mjs` sends `Cache-Control: no-store`; against any other
-server, a browser will happily serve a cached `garden.html` after a rebuild unless you add a
-query string.
+`tests/test_garden.py` pins the wiring (scripts loaded with `?v=`, elements and options present,
+no legacy voice tokens). The behaviour is tested in a real browser by the Playwright suite in
+`tests/browser/` (`study.spec.mjs`: reveal, rating, Change rating, a full review session against
+a seeded log; `dialogs.spec.mjs`: the shortcut sheet and the reader's keys; `accessibility.spec.mjs`:
+axe on the reader covered, revealed and rated), which `verify.sh` and CI run against `dist/`
+served under `/aurelia-os/` by `node tools/preview.mjs 8792 /aurelia-os/` (`docs/DECISIONS.md`
+item 27). There is still no unit-test harness for `assets/js/`. For a manual look,
+`node tools/preview.mjs` serves `dist/` at the root (the `dist-preview` entry in
+`.claude/launch.json`). `preview.mjs` sends `Cache-Control: no-store`; against any other server,
+a browser will happily serve a cached `garden.html` after a rebuild unless you add a query string.
 
 ### Self-hosted assets and cache busting
 
@@ -298,7 +301,9 @@ No page asks another server for a script, stylesheet or font. `engine/vendor.py`
 fonts (`@fontsource/*`), `marked` and `motion` from `node_modules/` into `dist/assets/fonts/` and
 `dist/assets/vendor/`, with each package's licence beside it. They are pinned in `package.json` /
 `package-lock.json`, so Dependabot's npm group keeps them current. `tests/test_audit_defects.py`
-fails if any rendered page loads a script, stylesheet or font from another origin.
+fails if any rendered page loads a script, stylesheet or font from another origin, and every
+browser test (`tests/browser/fixtures.mjs`) fails on any request a running page makes to another
+origin.
 
 GitHub Pages sends `Cache-Control: max-age=600`, so a returning visitor can run ten-minute-old JS
 against new HTML. Templates write `{{ asset_url('assets/js/utils.js') }}`, which emits a

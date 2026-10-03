@@ -18,6 +18,8 @@ rebuilt in a minute from the lock files.
 |---|---|---|
 | `.venv/` | Not portable between operating systems | `python3 -m venv .venv`, then `.venv/bin/pip install --require-hashes -r requirements-dev.txt` |
 | `node_modules/` | Build environment, restored from `package-lock.json` | `npm ci` |
+| Playwright's Chromium | Lives in the user's cache (`~/Library/Caches/ms-playwright` on macOS), not the repo | `verify.sh` runs `npx playwright install chromium` itself |
+| `test-results/`, `playwright-report/` | Browser-suite failure output | Appear when a browser test fails |
 | `tailwind.config.js` | Generated from `THEME_CONFIG` on every build | Appears on the first `python build.py` |
 | `dist/` | Build output | `python build.py` |
 | `reports/` | Generated roadmap dashboard | `python tools/roadmap.py --open` |

@@ -42,8 +42,9 @@ themes, not part of the brand.
   `vault/99_DROP_ZONE/` into `vault/assets/` and `sync_vault_assets()` publishes it with no
   `publish:` gate, reviewed by nobody.
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
-  runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, then a
-  `--no-sort` build) in the `check` job, and on GitHub only that build adds `--strict`; `build` and `deploy` `need: check` and do not run if it
+  runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, a
+  `--no-sort` build, then the Playwright browser suite with axe at WCAG A/AA on that build) in
+  the `check` job, and on GitHub only that build adds `--strict`; `build` and `deploy` `need: check` and do not run if it
   fails, and a pull request cannot merge until `check` passes. Run `bash verify.sh` locally
   before pushing — it's the same suite, so CI can't fail on something the local run missed. The
   pre-push hook in `.claude/githooks/pre-push` also runs it, but only as a warning; CI is the
@@ -74,15 +75,26 @@ themes, not part of the brand.
 pip install --require-hashes -r requirements-dev.txt && npm ci   # one-time setup, inside .venv
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
 python build.py --no-sort --strict                     # what CI runs: any build warning exits 1
-python -m pytest tests/ -q                             # 579 tests as of 2026-10-01
+python -m pytest tests/ -q                             # 662 tests as of 2026-10-02 (skips tests/browser/)
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
 python tools/roadmap.py --open                         # roadmap dashboard; writes reports/ (gitignored)
 python tools/roadmap.py --check                        # validate roadmap.yaml; exits 1 on any problem
 python deploy.py                                       # factory clone -> ./Aurelia_Factory_v1/ (gitignored)
+npx playwright install chromium                        # one-time: the browser the suite drives
+GITHUB_REPOSITORY=trmckinzie/aurelia-os python build.py --no-sort   # dist/ as Pages serves it
+npx playwright test                                    # browser + axe suite (36 tests) on that dist/
+npx playwright test tests/browser/study.spec.mjs --headed   # one file, watching; or -g "<title>", --ui
+npx playwright show-trace test-results/<test>/trace.zip     # step through a failure
 bash verify.sh                                          # everything above, in CI's order; run before pushing
 ```
+
+The browser suite (`tests/browser/`, `playwright.config.mjs`) tests `dist/` and never builds it,
+so it cannot race a build; it serves `dist/` under `/aurelia-os/` via `tools/preview.mjs` on port
+8792. An axe finding is fixed, or added to `AXE_EXCEPTIONS` in `tests/browser/fixtures.mjs` as
+one rule on one selector with an open backlog id; never disable a rule. CI keeps failure
+screenshots and traces as the `browser-suite-failures-<os>` artifact. `docs/DECISIONS.md` item 27.
 
 Machine-specific notes (interpreter path, console encoding, local preview server) live in the
 gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
@@ -215,5 +227,6 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 
 Card HTML as Jinja macros (deferred), a fetch-on-click Garden to shrink the 3.6 MB `garden.html`
 (tradeoff not yet discussed), any server or synced store for study progress (the site promises
-no tracking), automated accessibility, Lighthouse, or visual-regression tests, and a JS test
-harness. The full list with reasons is in `docs/DECISIONS.md`.
+no tracking), Lighthouse or visual-regression tests, and a unit-test harness for `assets/js/`.
+Browser and accessibility tests do exist now and block the merge (`docs/DECISIONS.md` item 27).
+The full list with reasons is in `docs/DECISIONS.md`.

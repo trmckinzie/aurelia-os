@@ -120,6 +120,15 @@ CLAUDE.local.md
 /garden-*.png
 /*-snapshot.md
 
+# --- IGNORE BROWSER-SUITE OUTPUT ---
+# The Playwright suite (tests/browser/, roadmap S08) writes failure
+# screenshots and traces to test-results/ and, on CI, an HTML report to
+# playwright-report/. CI uploads both as workflow artifacts; locally they are
+# scratch. A trace holds a full page snapshot, so never commit one.
+/test-results/
+/playwright-report/
+/blob-report/
+
 # --- IGNORE THE ROADMAP DASHBOARD ---
 # tools/roadmap.py renders docs/roadmap.yaml into reports/roadmap.html on every
 # run. The HTML is generated output; docs/roadmap.yaml is the tracked source.

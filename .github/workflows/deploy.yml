@@ -16,7 +16,8 @@ permissions: {}
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # 20, up from 15, for the browser suite (about two minutes locally).
+    timeout-minutes: 20
     permissions:
       contents: read
     steps:
@@ -45,11 +46,38 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
+      - name: Install Playwright's Chromium
+        # The browser suite in verify.sh needs it (roadmap S08). --with-deps
+        # adds the system libraries Chromium needs on ubuntu, which needs
+        # sudo, so it runs here rather than in verify.sh, whose own install
+        # is then a no-op. Not cached: Playwright's docs advise against it,
+        # since restoring takes about as long as downloading and the system
+        # libraries cannot be cached anyway. The version is the one pinned in
+        # package-lock.json, so a Dependabot bump brings its browser with it.
+        run: npx --no-install playwright install --with-deps chromium
+
       - name: Run full check suite
-        # pytest, pyflakes, the vault schema check, the roadmap check, then a
-        # --no-sort --strict build (verify.sh adds --strict on GitHub only). Same suite Travis runs locally
-        # before pushing, so CI can't pass on something the local run missed.
+        # pytest, pyflakes, the vault schema check, the roadmap check, a
+        # --no-sort --strict build (verify.sh adds --strict on GitHub only),
+        # then the browser suite with axe on that build. Same suite Travis
+        # runs locally before pushing, so CI can't pass on something the
+        # local run missed.
         run: bash verify.sh
+
+      - name: Keep browser-suite failure screenshots and traces
+        # Only when something failed. Download the artifact from the run's
+        # summary page and open a trace with `npx playwright show-trace
+        # <trace.zip>`, or open playwright-report/index.html (docs/DECISIONS.md
+        # item 27).
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-suite-failures-ubuntu
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
 
   # The same suite on the platform the Mac mini will run, so a macOS-only
   # problem shows up in CI before it shows up on the machine. Deliberately NOT
@@ -58,7 +86,7 @@ jobs:
   # holding up a deploy. If this job is ever made required, add it to `needs`.
   check-macos:
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     permissions:
       contents: read
     steps:
@@ -85,8 +113,25 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
+      - name: Install Playwright's Chromium
+        # Same as the check job. Runs the browser suite here too, for parity;
+        # this job stays out of build's `needs`, so a failure here is seen
+        # without blocking a merge or a deploy.
+        run: npx --no-install playwright install --with-deps chromium
+
       - name: Run full check suite
         run: bash verify.sh
+
+      - name: Keep browser-suite failure screenshots and traces
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-suite-failures-macos
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
 
   build:
     runs-on: ubuntu-latest

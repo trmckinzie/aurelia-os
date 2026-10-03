@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-01
+updated: 2026-10-02
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -397,7 +397,9 @@ sessions:
 
   - id: S08
     title: Add browser tests for the pages, the study flow and accessibility
-    status: todo
+    status: done
+    started: 2026-10-02
+    completed: 2026-10-02
     area: Testing
     effort: L
     model: opus
@@ -418,24 +420,34 @@ sessions:
     depends_on: [S01, S07]
     tasks:
       - text: Add Playwright with a test server that serves dist/ under /aurelia-os/, the way GitHub Pages does
-        done: false
+        done: true
       - text: Smoke-test the Lobby, Garden, About and a nested 404 for console errors and for loaded styles and scripts
-        done: false
+        done: true
       - text: Test the reader and study flow, from opening a note through Study mode, reveal, rating and the review queue
-        done: false
+        done: true
       - text: Test the dialogs and keyboard paths, including Escape and focus return
-        done: false
+        done: true
       - text: Run axe on each page and on the open reader and dialogs, in both Read and Study mode
-        done: false
+        done: true
       - text: Fail the suite when any page requests a file from another server, which keeps the promise S07 makes
-        done: false
+        done: true
       - text: Run the browser suite in verify.sh and in CI, with animations off, and keep failure screenshots as workflow artifacts
-        done: false
+        done: true
       - text: Take browser and accessibility tests off the deliberately-not-done lists in docs/DECISIONS.md and CLAUDE.md
-        done: false
+        done: true
     done_when:
       - The browser suite runs in verify.sh, and in CI on every push and pull request
       - An axe violation at WCAG A or AA fails the build
+    notes: >-
+      Playwright 1.63.0 and @axe-core/playwright 4.13.0, dev-only and exact-pinned.
+      36 tests in tests/browser/, about 90 seconds locally. Both gates were shown
+      to fail: an unnamed button injected into dist/about.html failed axe, and an
+      image from another origin failed the origin check. The suite found three
+      real defects. The Lobby's Search key hint failed AA contrast (fixed in
+      main.css). On a plain visit no Garden card had tabindex 0, so Tab skipped
+      the whole grid (fixed in gardentemplate.html). Garden cards are buttons
+      that contain buttons (axe nested-interactive); that one is a scoped
+      exception, tracked as B19. See docs/DECISIONS.md item 27.
 
   - id: S09
     title: Make builds reproducible and test the untested core
@@ -673,3 +685,16 @@ backlog:
       The theme menu's Timberline swatch shows two identical dots as a result. Give
       card-type identity its own palette slot, separate from the link/button accent,
       across the card grid, filter chips, and graph.
+  - id: B19
+    title: Stop nesting buttons inside Garden cards so screen readers reach the pills
+    area: Frontend
+    status: open
+    detail: >-
+      Found by the S08 browser suite (axe rule nested-interactive). Each card is an
+      article with role=button that contains the link and topic pills, which are
+      buttons too. A button's children are presentational, so a screen reader cannot
+      reach the pills from the card. The usual fix is a card that is not itself a
+      button, with the title as the one control that opens the note, which changes
+      engine/cards.py and the grid's roving focus. Until then the suite carries one
+      exception for this rule on the card element only (AXE_EXCEPTIONS in
+      tests/browser/fixtures.mjs); remove it in the same change as the fix.
