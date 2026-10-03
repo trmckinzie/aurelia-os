@@ -48,10 +48,13 @@ ALLOWED_GENERATED = {
 KNOWN_ABSENT = {
     ".claude/settings.local.json",
     ".claude/githooks/pre-push",
+    ".claude/worktrees",
+    "CLAUDE.local.md",
     "vault/99_DROP_ZONE",
     "vault/assets",
     "vault/assets/documents",
     "vault/.smart-env",
+    "vault/20_AURELIA",
     "tools/migrate_notebooklm_placeholders.py",
 }
 
