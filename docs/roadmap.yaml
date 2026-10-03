@@ -400,6 +400,8 @@ sessions:
     status: done
     started: 2026-10-02
     completed: 2026-10-02
+    commits:
+      - "da6128a"
     area: Testing
     effort: L
     model: opus
