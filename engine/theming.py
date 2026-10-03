@@ -306,7 +306,9 @@ def generate_theme_css():
     css_dir = os.path.join(OUTPUT_DIR, "assets", "css")
     os.makedirs(css_dir, exist_ok=True)
     output_path = os.path.join(css_dir, "theme-vars.css")
-    with open(output_path, "w", encoding="utf-8") as f:
+    # newline="\n": otherwise text mode writes CRLF on Windows, so the same
+    # commit would build to different bytes there than on CI (roadmap S09).
+    with open(output_path, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n\n".join(blocks) + "\n")
     return output_path
 

@@ -183,13 +183,13 @@ def copy_engine():
     print_step("requirements.txt + package.json installed.")
 
     # 3. Config (The Soul)
-    with open(os.path.join(TARGET_DIR, "user_config.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "user_config.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(FACTORY_CONFIG, f, indent=4)
     print_step("Clean user_config.json generated.")
 
     # 4. Profile (the About page). Written as JSON, not copied from the
     # source repo -- the source profile.json is the real owner's CV.
-    with open(os.path.join(TARGET_DIR, "profile.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "profile.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump(FACTORY_PROFILE, f, indent=4)
     print_step("Placeholder profile.json generated.")
 
@@ -238,13 +238,13 @@ Change `type:` in the frontmatter to switch note types: `concept`, `source`,
 `author`, `discipline`, `gemini-notebook` (see the Gemini Notebook demo below), or
 `deep-dive` all render as different card layouts on the Garden page automatically.
 """
-    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "00_Demo_Concept.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "00_Demo_Concept.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write(concept_md)
 
     # --- B. DEMO GEMINI NOTEBOOK (With Flashcards & References) ---
     # First, create the CSV
     csv_data = "Question,Answer\nWhat is Gemini Notebook?,An AI research assistant by Google.\nHow does the engine handle it?,It renders a dedicated dashboard with audio and flashcards.\nWhere do references go?,Paste Zotero APA citations in the Sources section."
-    with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "assets", "flashcards", "demo_deck.csv"), "w", encoding="utf-8", newline="\n") as f:
         f.write(csv_data)
 
     notebook_md = """---
@@ -272,7 +272,7 @@ assets/flashcards/demo_deck.csv
 > - Example Press. (2026). *The Architecture of Digital Memory*.
 > - Google Research. (2024). *Gemini Notebook Technical Report*.
 """
-    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "Gemini_Notebook_Demo.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "vault", "10_GARDEN", "Gemini_Notebook_Demo.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write(notebook_md)
 
     print_step("Blueprint Notes created.")
@@ -337,7 +337,7 @@ in a note's frontmatter to choose its card layout:
 
 A note only appears on the site once its frontmatter has `publish: true`.
 """
-    with open(os.path.join(TARGET_DIR, "README.md"), "w", encoding="utf-8") as f:
+    with open(os.path.join(TARGET_DIR, "README.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write(readme_text)
 
 def main():

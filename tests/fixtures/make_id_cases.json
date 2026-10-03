@@ -9,7 +9,7 @@
   },
   "cases": [
     { "name": "basic filename", "input": "My Cool Note.md", "expected": "note-my-cool-note" },
-    { "name": "strips only literal '.md' occurrences, before lowercasing", "input": "Report.md.backup.md", "expected": "note-report-backup" },
+    { "name": "strips only a trailing '.md' extension, not every occurrence", "input": "Report.md.backup.md", "expected": "note-report-md-backup" },
     { "name": "collapses runs of punctuation/whitespace into single dashes", "input": "Weird!!  Name -- Here.md", "expected": "note-weird-name-here" },
     { "name": "strips leading/trailing dashes", "input": "-Leading And Trailing-.md", "expected": "note-leading-and-trailing" },
     { "name": "a bare wikilink target with no .md extension", "input": "2025-12-21", "expected": "note-2025-12-21" },

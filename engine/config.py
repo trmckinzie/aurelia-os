@@ -24,7 +24,8 @@ OUTPUT_DIR = os.path.join(ROOT_DIR, "dist")
 #
 # The two things that legitimately must stay raw now say so at the point they
 # are produced, which is the honest place for it:
-#   - engine/cards.py's generate_garden_card_html() returns Markup
+#   - engine/cards.py's generate_garden_card_html() returns Markup (as the
+#     first element of its (Markup, resolved_note_type) pair)
 #   - engine/textutils.py's dumps_for_script_tag() returns Markup
 # Note-derived HTML (a note's rendered body) is neither: it is sanitized
 # through engine/sanitize.py before it is marked safe.

@@ -105,7 +105,9 @@ module.exports = {{
 }}
 """
     config_path = os.path.join(ROOT_DIR, "tailwind.config.js")
-    with open(config_path, "w", encoding="utf-8") as f:
+    # newline="\n": same reproducibility concern as engine/theming.py --
+    # text mode would otherwise write CRLF on Windows (roadmap S09).
+    with open(config_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(config_js)
     return config_path
 

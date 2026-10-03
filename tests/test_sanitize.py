@@ -9,7 +9,7 @@ parses at page load. The real vault/ is never read or written.
 import pytest
 
 from engine import pipeline
-from engine.sanitize import sanitize_note_html
+from engine.sanitize import sanitize_note_html, sanitize_to_text
 
 
 # --- Unit: what the sanitizer removes ---------------------------------
@@ -97,6 +97,45 @@ def test_external_link_keeps_its_href():
 
 def test_empty_body_is_returned_as_is():
     assert sanitize_note_html("") == ""
+
+
+# --- Unit: sanitize_to_text() (engine/content.py's _render_flashcards) --
+# Same strip-based cleaner as sanitize_note_html(), but with NO tags
+# allowed at all (tags=set()) -- a flashcard's question/answer cell is
+# plain text by contract, with no markdown or formatting to preserve.
+
+@pytest.mark.parametrize("payload", [
+    "<script>alert(1)</script>",
+    "&lt;script&gt;alert(1)&lt;/script&gt;",  # see sanitize_note_html's docstring on why
+    "<img src=x onerror=alert(1)>",
+    "<a href=\"javascript:alert(1)\">click</a>",
+    "<svg onload=alert(1)>",
+    "<b>bold</b> and <i>italic</i>",          # formatting tags too: no tags survive at all
+])
+def test_sanitize_to_text_strips_every_tag(payload):
+    out = sanitize_to_text(payload)
+    assert "<" not in out and ">" not in out
+
+
+def test_sanitize_to_text_strips_script_contents_not_just_the_tag():
+    assert "alert(1)" not in sanitize_to_text("<script>alert(1)</script>")
+
+
+def test_sanitize_to_text_keeps_plain_text_unchanged():
+    assert sanitize_to_text("What is the capital of France?") == \
+        "What is the capital of France?"
+
+
+def test_sanitize_to_text_keeps_a_bare_ampersand_and_lt_unescaped():
+    # Strip-based, not an encoder (see the module docstring's unescape/clean/
+    # unescape argument) -- "a < b" and "Newell & Simon" must come back
+    # exactly as written, not re-escaped to "&amp;"/"&lt;".
+    assert sanitize_to_text("Newell & Simon, and a < b") == "Newell & Simon, and a < b"
+
+
+def test_sanitize_to_text_handles_empty_and_none():
+    assert sanitize_to_text("") == ""
+    assert sanitize_to_text(None) is None
 
 
 # --- End to end: through the real scan, into the real sink ------------

@@ -98,11 +98,21 @@ def _scan_vault():
         # per-file, and it covers nested subfolders for free. Directories
         # that resolve outside the vault are pruned for the same reason, and
         # here rather than per-file so the walk never enters them at all.
-        dirs[:] = [
+        #
+        # Sorted, not just filtered: os.walk's own directory order is
+        # whatever the filesystem happens to hand back, which differs
+        # between machines (and isn't even guaranteed stable on one). This
+        # walk's order feeds `pending` below, which in turn decides alias/
+        # title-suffix ambiguity (content.build_link_resolver -- the first
+        # colliding note wins) and the referencing order of backlinks, so an
+        # unsorted walk made the same vault build to different output on
+        # Windows vs. CI. See tests/test_pipeline.py's byte-identical-build
+        # guard (roadmap S09).
+        dirs[:] = sorted(
             d for d in dirs
             if d.casefold() not in _UNPUBLISHED_DIRS_FOLDED
             and not escapes(os.path.join(root, d), vault_root)
-        ]
+        )
 
         for filename in sorted(files):
             if not filename.endswith(".md"):
@@ -231,7 +241,7 @@ def _scan_vault():
 
     garden_cards = []
     for p in pending:
-        card_html = cards.generate_garden_card_html(
+        card_html, resolved_type = cards.generate_garden_card_html(
             p["meta"], p["filename"], p["note_id"], p["card_body"], known_ids,
             connections=degree.get(p["note_id"], 0),
             created=str(p["meta"].get("created", "")),
@@ -249,7 +259,12 @@ def _scan_vault():
             "id": p["note_id"],
             "title": p["title"],
             "link": f"garden.html#{p['note_id']}",
-            "type": str(p["meta"].get("type", "NOTE")).upper(),
+            # resolved_type, not p["meta"]["type"]: generate_garden_card_html()
+            # returns it rather than mutating meta (S09) -- it's the type
+            # this card actually rendered as, including the daily-bridge
+            # filename-shape and type/* tag fallbacks, which meta's own
+            # `type:` key alone does not capture.
+            "type": resolved_type.upper(),
             "tags": p["meta"].get("tags", []),
             "maturity": cards._maturity_slug(p["meta"]),
             "desc": p["full_search_text"],
@@ -503,13 +518,16 @@ def _write_deep_search_index(deep_search_json):
     path = os.path.join(js_dir, "search-index.js")
     payload = f"window.DEEP_SEARCH_INDEX = {deep_search_json};\n"
     encoded = payload.encode("utf-8")
-    with open(path, "w", encoding="utf-8") as f:
+    # newline="\n": text mode otherwise translates '\n' to the platform
+    # line ending, which is CRLF on Windows -- the same commit would then
+    # build to different bytes there than on CI's Linux runner (roadmap S09).
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write(payload)
     return len(encoded)
 
 
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
-                   build_commit=None, build_commit_time=None):
+                   build_commit=None, build_commit_time=None, has_social_preview=True):
     index_bytes = _write_deep_search_index(deep_search_json)
     print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
 
@@ -557,11 +575,15 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["build_year"] = build_year
             context["build_commit"] = build_commit
             context["build_commit_time"] = build_commit_time
+            context["has_social_preview"] = has_social_preview
 
             template = env.get_template(template_name)
             rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
 
-            with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8") as f:
+            # newline="\n": same reproducibility concern as
+            # _write_deep_search_index -- text mode would otherwise write
+            # CRLF on Windows and LF on CI for an identical commit.
+            with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8", newline="\n") as f:
                 f.write(rendered_html)
             print(f"   ✅ Deployed: {output_name}")
         except Exception as e:
@@ -700,6 +722,16 @@ def build_all(sort_dropzone=None, strict=False):
     print(f"   + Profile Loaded: {profile['identity']['name']}")
 
     prepare_dist()
+    # Checked right after prepare_dist(), which is what actually decides
+    # whether assets/images/ (and anything in it) made it into dist/ -- see
+    # that function's PUBLISHABLE_ASSET_DIRS allowlist. deploy.py's factory
+    # clone deliberately does not copy repo-root images into its own
+    # assets/images/ (privacy: the real site's is the owner's own banner),
+    # so a fresh clone has no file here and base.html's unconditional
+    # <meta property="og:image"> named one anyway -- a link that always
+    # 404s. has_social_preview gates that tag instead (roadmap S09).
+    has_social_preview = os.path.isfile(
+        os.path.join(OUTPUT_DIR, "assets", "images", "social-preview.jpg"))
     copy_vendor_assets()
     _write_cname(user_config)
     if sort_dropzone:
@@ -759,7 +791,8 @@ def build_all(sort_dropzone=None, strict=False):
 
     build_commit, build_commit_time = _build_commit_stamp()
     _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
-                  build_commit=build_commit, build_commit_time=build_commit_time)
+                  build_commit=build_commit, build_commit_time=build_commit_time,
+                  has_social_preview=has_social_preview)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.
