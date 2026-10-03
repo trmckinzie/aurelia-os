@@ -453,7 +453,10 @@ sessions:
 
   - id: S09
     title: Make builds reproducible and test the untested core
-    status: todo
+    status: done
+    started: 2026-10-03
+    completed: 2026-10-03
+    commits: []
     area: Build
     effort: M
     model: sonnet
@@ -467,22 +470,37 @@ sessions:
       generate_garden_card_html() reports a note's type by mutating its caller's
       dict, and deploy.py has no test at all (its factory clone ships a dangling
       social preview image).
+    decision: >-
+      The dangling social preview image is fixed architecturally rather than
+      by shipping a placeholder image: engine/pipeline.py now checks whether
+      dist/assets/images/social-preview.jpg actually exists (it does on the
+      real site, never in a fresh deploy.py clone, which deliberately never
+      copies repo-root images -- privacy) and gates base.html's <meta
+      og:image> tags on that, instead of unconditionally naming a file that
+      may not be there. No new runtime dependency (e.g. Pillow) to generate a
+      placeholder, and the real site's own output is unchanged since the file
+      exists there.
     depends_on: [S01]
     tasks:
       - text: Write every generated file with LF line endings, and sort the vault walk
-        done: false
+        done: true
       - text: Add a test that builds the same content twice and compares the output byte for byte
-        done: false
+        done: true
       - text: Add adversarial unit tests for escape_attr() and sanitize_to_text()
-        done: false
+        done: true
       - text: Add tests for the theme CSS and Tailwind config generators
-        done: false
+        done: true
       - text: Make make_id() strip only a trailing .md, keeping the cross-language make_id test in step
-        done: false
+        done: true
       - text: Return the resolved note type from generate_garden_card_html() instead of mutating meta
-        done: false
+        done: true
       - text: Add a smoke test that runs deploy.py into a temporary folder and builds the clone, and fix the clone's social preview image
-        done: false
+        done: true
+    notes: >-
+      commits is empty pending the actual commit/merge -- the roadmap
+      session convention (CLAUDE.md's "Map" section) is to record the real
+      squash-merge SHA in a small follow-up change once one exists, the same
+      way S07/S08 did, rather than guess one here.
     done_when:
       - Two builds of the same commit are byte-identical, checked by a test
       - Every function named in the tasks has direct tests

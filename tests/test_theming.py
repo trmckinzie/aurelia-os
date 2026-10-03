@@ -1,8 +1,12 @@
+import os
+
+from engine import theming
 from engine.theming import (
     _hex_to_rgba,
     _variables_for,
     available_themes,
     default_theme_slug,
+    generate_theme_css,
     theme_slug,
 )
 
@@ -180,3 +184,43 @@ def test_card_text_roles_meet_aa_contrast_in_every_theme():
                     f"{theme} {role} ({colors[role]}) on {bg} ({colors[bg]}) "
                     f"is only {ratio:.2f}:1, below WCAG AA's 4.5:1 floor"
                 )
+
+
+# --- generate_theme_css() -----------------------------------------------
+
+def test_generate_theme_css_writes_a_bare_root_and_one_block_per_theme(tmp_path, monkeypatch):
+    from engine.config import THEME_CONFIG
+
+    monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path))
+    output_path = generate_theme_css()
+
+    assert output_path == os.path.join(str(tmp_path), "assets", "css", "theme-vars.css")
+    css = open(output_path, encoding="utf-8").read()
+
+    assert ":root {" in css
+    for key in THEME_CONFIG:
+        assert f':root[data-theme="{theme_slug(key)}"] {{' in css
+    # Every theme's own primary color lands somewhere in its own block --
+    # a cheap proxy for "the per-theme variables actually made it in", not
+    # just the selector.
+    for key, theme in THEME_CONFIG.items():
+        assert theme["colors"]["primary"] in css
+
+
+def test_generate_theme_css_writes_lf_line_endings(tmp_path, monkeypatch):
+    # Reproducibility (roadmap S09): text mode would otherwise translate
+    # '\n' to the platform line ending, so the same commit would build to
+    # CRLF on Windows and LF on CI.
+    monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path))
+    output_path = generate_theme_css()
+
+    raw = open(output_path, "rb").read()
+    assert b"\r\n" not in raw
+
+
+def test_generate_theme_css_is_byte_identical_across_runs(tmp_path, monkeypatch):
+    monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path / "a"))
+    first = open(generate_theme_css(), "rb").read()
+    monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path / "b"))
+    second = open(generate_theme_css(), "rb").read()
+    assert first == second

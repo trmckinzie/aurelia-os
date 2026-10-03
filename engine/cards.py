@@ -166,6 +166,17 @@ def _connection_badge(count, color):
 
 def generate_garden_card_html(meta, filename, note_id, body_content,
                               known_ids=frozenset(), connections=0, created=""):
+    """Returns (Markup(card_html), resolved_note_type).
+
+    resolved_note_type is meta's own `type:` (or its `type/*` tag fallback,
+    or "daily-bridge" for a date-shaped filename -- see below) -- the same
+    resolution a caller would otherwise have to duplicate to know what type
+    this card actually ended up as. This used to be reported back by writing
+    meta["type"] = note_type, mutating the caller's dict as a side effect;
+    engine/pipeline.py's _scan_vault() is the caller, and it reused the vault
+    note's own meta dict across the whole second pass, so that write leaked
+    the resolved type into frontmatter nothing else expected to change.
+    """
     # str() guards against frontmatter values YAML infers as non-strings
     # (e.g. an unquoted "type: 2026" would parse as an int, not text).
     note_type = str(meta.get("type", "unknown")).lower()
@@ -177,7 +188,6 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 break
     if re.match(r'\d{4}-\d{2}-\d{2}', filename):
         note_type = "daily-bridge"
-    meta["type"] = note_type
     raw_title = filename.replace(".md", "").replace("_", " ")
     # Escaped for the <h3> below. escape_attr() already covered data-title,
     # but the visible heading was raw.
@@ -693,4 +703,4 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
         {card_content}
     </article>
     """
-    return Markup(html_card)
+    return Markup(html_card), note_type

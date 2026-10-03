@@ -131,6 +131,7 @@ def base_context(**overrides):
         "available_themes_json": dumps_for_script_tag(available_themes()),
         "search_index": Markup("[]"),
         "build_year": 2026,
+        "has_social_preview": True,
         "active_page": "about",
         "profile": make_profile(),
         "person_jsonld": dumps_for_script_tag({
@@ -522,6 +523,19 @@ def test_og_image_is_relative_with_no_domain_and_absolute_with_one():
     config = make_config(site={"name": "Ada Lovelace", "nav_label": "AL", "tagline": "t", "domain": "example.com"})
     html = render_about(config=config)
     assert '<meta property="og:image" content="https://example.com/assets/images/social-preview.jpg">' in html
+
+
+def test_og_image_tag_is_omitted_without_a_social_preview_file():
+    # engine/pipeline.py sets has_social_preview=False when dist/assets/
+    # images/social-preview.jpg doesn't exist -- a fresh deploy.py factory
+    # clone, which never gets a copy of this repo's own banner (privacy).
+    # Emitting the tag anyway would be a link that 404s on every share.
+    html = render_about(has_social_preview=False)
+    assert "social-preview.jpg" not in html
+    assert "og:image" not in html
+    # The rest of the social chrome -- unrelated to whether a preview image
+    # exists -- is unaffected.
+    assert '<meta name="twitter:card" content="summary_large_image">' in html
 
 
 def test_theme_switcher_button_has_accessible_name():

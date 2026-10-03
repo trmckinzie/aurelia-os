@@ -1,6 +1,7 @@
 from engine.textutils import (
     clean_text,
     dumps_for_script_tag,
+    escape_attr,
     extract_links,
     first_blockquote_after,
     section_after_header,
@@ -83,3 +84,41 @@ def test_dumps_for_script_tag_escapes_script_close_tag():
     dumped = dumps_for_script_tag(payload)
     assert "</script>" not in dumped
     assert "<\\/script>" in dumped
+
+
+# --- escape_attr() (engine/cards.py's double-quoted HTML attributes) ---
+
+def test_escape_attr_escapes_a_double_quote_that_would_close_the_attribute():
+    # The exact audit #22 proof-of-concept: an unescaped quote in a
+    # vault-derived value closes the attribute early, and everything after
+    # it on the <article> is parsed as live markup.
+    out = escape_attr('concept" onmouseover="alert(1)')
+    assert out == 'concept&quot; onmouseover=&quot;alert(1)'
+    assert '"' not in out
+
+
+def test_escape_attr_escapes_angle_brackets():
+    out = escape_attr("a<b>c")
+    assert out == "a&lt;b&gt;c"
+    assert "<" not in out and ">" not in out
+
+
+def test_escape_attr_escapes_ampersand():
+    assert escape_attr("Newell & Simon") == "Newell &amp; Simon"
+
+
+def test_escape_attr_escapes_ampersand_before_the_other_entities():
+    # & has to go first: escaping the others first and & last would
+    # double-escape their own entities (&quot; -> &amp;quot;).
+    assert escape_attr('<"&">') == "&lt;&quot;&amp;&quot;&gt;"
+
+
+def test_escape_attr_is_idempotent_on_plain_text():
+    assert escape_attr("topic/neuroscience") == "topic/neuroscience"
+
+
+def test_escape_attr_coerces_non_string_values():
+    # Frontmatter values YAML infers as non-strings (an int connection
+    # count, a bare `created:` date) reach this the same way a string does.
+    assert escape_attr(32) == "32"
+    assert escape_attr(None) == "None"

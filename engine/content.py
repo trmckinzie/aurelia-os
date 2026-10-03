@@ -11,9 +11,19 @@ from engine.config import VAULT_PATH, ROOT_DIR
 from engine.sanitize import sanitize_to_text
 
 
+_TRAILING_MD_RE = re.compile(r'\.md$', re.IGNORECASE)
+
+
 def make_id(text):
-    """Turns 'My Cool Note.md' into 'note-my-cool-note'."""
-    text = text.replace(".md", "").lower()
+    """Turns 'My Cool Note.md' into 'note-my-cool-note'.
+
+    Strips only a trailing '.md' -- a plain .replace(".md", "") used to
+    strip every occurrence, so 'Report.md.backup.md' lost the ".md" in the
+    middle of its own name too. See tests/fixtures/make_id_cases.json (also
+    kept byte-identical in aurelia-mcp-server) for the cross-language
+    contract this has to keep matching.
+    """
+    text = _TRAILING_MD_RE.sub('', text).lower()
     slug = re.sub(r'[^a-z0-9]+', '-', text).strip('-')
     return f"note-{slug}"
 

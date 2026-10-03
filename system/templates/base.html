@@ -55,10 +55,19 @@
        fine on the site itself, broken (or ambiguous) for a crawler that has
        no page context, which is most of them. Absolute once a real domain
        is configured; relative fallback keeps this working with no domain
-       set (site.domain empty -- see engine/pipeline.py's _write_cname). #}
+       set (site.domain empty -- see engine/pipeline.py's _write_cname).
+
+       has_social_preview (engine/pipeline.py's build_all) is false when
+       dist/assets/images/social-preview.jpg doesn't actually exist -- the
+       case for a fresh deploy.py factory clone, which deliberately never
+       gets a copy of this repo's own banner image (privacy). Omitting the
+       tag there instead of always emitting it is what stops that clone
+       shipping a social-preview link that 404s on every share. #}
+    {% if has_social_preview %}
     <meta property="og:image" content="{% if site.get('domain') %}https://{{ site.get('domain') }}/assets/images/social-preview.jpg{% else %}{{ site_root }}assets/images/social-preview.jpg{% endif %}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    {% endif %}
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:type" content="website">
 
