@@ -456,7 +456,7 @@ sessions:
     status: done
     started: 2026-10-03
     completed: 2026-10-03
-    commits: []
+    commits: ["7752275"]
     area: Build
     effort: M
     model: sonnet
@@ -496,11 +496,6 @@ sessions:
         done: true
       - text: Add a smoke test that runs deploy.py into a temporary folder and builds the clone, and fix the clone's social preview image
         done: true
-    notes: >-
-      commits is empty pending the actual commit/merge -- the roadmap
-      session convention (CLAUDE.md's "Map" section) is to record the real
-      squash-merge SHA in a small follow-up change once one exists, the same
-      way S07/S08 did, rather than guess one here.
     done_when:
       - Two builds of the same commit are byte-identical, checked by a test
       - Every function named in the tasks has direct tests
