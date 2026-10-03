@@ -349,7 +349,39 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **Self-contained page.** No external requests. Its colours live in `roadmap.PALETTE`, where a
       test holds them to WCAG contrast, and the three status colours were validated together for
       colour-vision deficiency.
-22. **Pull requests into a protected `main` (2026-09-23, roadmap S04).** Every change, notes
+22. **The full check suite gates every deploy (2026-09-18, roadmap S01).** Until this session,
+    `deploy.yml` built the site and nothing else: the test suite, pyflakes and the vault schema
+    check ran only when someone remembered to run them by hand, and the dev root's own pre-push
+    hook looked for a `verify.sh` this repo didn't have. This reverses CLAUDE.md's old "CI runs no
+    tests" line. `verify.sh` runs pytest, pyflakes, the schema check, `tools/roadmap.py --check`
+    and `build.py --no-sort` in order, stopping at the first failure; a CI workflow runs the same
+    checks on every push and pull request, and `deploy` waits on it. First run (`6eb82e0`,
+    2026-09-18) passed with 532 tests and 1 skip on Ubuntu, then build and deploy ran in order.
+23. **Workflow hardening and GitHub's security features turned on (2026-09-18, roadmap S02).**
+    Every deploy run carried Node.js 20 deprecation warnings, the five actions it used were pinned
+    to movable tags rather than commit SHAs, no job had a timeout, and Dependabot alerts, security
+    updates, private vulnerability reporting and code scanning were all off even though
+    `SECURITY.md` pointed reporters at a private-reporting form that didn't exist yet. Approved
+    2026-09-18: all three GitHub settings. Every action moved to its current major, pinned to a
+    full commit SHA with the version in a comment; every job got `timeout-minutes` and
+    `persist-credentials: false` on checkout; `.github/dependabot.yml` was added for Actions, pip
+    and npm. Dependabot's first run proposed Tailwind 3 to 4; its check failed at the CSS compile,
+    so that PR was closed and the upgrade left for a deliberate migration (backlog B07). CodeQL's
+    one finding was a loose string assertion in a test, tightened the same session.
+24. **Readied for the Mac mini (2026-09-19, roadmap S03).** The Mac mini replaced the Windows
+    machine this repo was developed on in early October 2026, and several things only worked on
+    Windows: the preview server started with the Windows-only `py` launcher, `.vscode/settings.json`
+    pointed at a Windows virtual-environment path, local Python (3.14) and CI's Python (3.12)
+    disagreed, and Python dependencies weren't hash-locked. Decided 2026-09-18: Python 3.14
+    everywhere, recorded in `.python-version` (and Node 24, the active LTS, in `.nvmrc`), both read
+    by CI and by every machine. `requirements.txt`/`requirements-dev.txt` became uv-generated from
+    new `.in` files with sha256 hashes per platform, installed with `--require-hashes`;
+    `tests/test_requirements_lock.py` guards drift. The preview server moved to `tools/preview.mjs`
+    (Node, so it behaves the same on every OS). A `check-macos` CI job runs the full suite on macOS
+    but is deliberately left out of `build`'s `needs`, so a Mac-only failure is visible without
+    blocking a deploy. The load-bearing study-layer rationale, previously sitting only in a
+    machine-local plan file, became item 18 below.
+25. **Pull requests into a protected `main` (2026-09-23, roadmap S04).** Every change, notes
     included, now reaches `main` through a pull request, and merging deploys. Choices worth keeping:
 
     - **One ruleset, no bypass.** "Protect main" requires a pull request and the `check` job,
@@ -373,7 +405,7 @@ knowing so you don't "fix" something that was a deliberate decision:
       --check` still reads it as wired. Folders beside the repo were rejected: the dev vault's
       Obsidian index ignores anything under `.claude/` but would pick up a second copy of `vault/`.
 
-23. **The build fails instead of deploying a degraded site (2026-10-01, roadmap S05).** Several
+26. **The build fails instead of deploying a degraded site (2026-10-01, roadmap S05).** Several
     problems used to print a warning, or nothing, and exit 0, so CI deployed the result. Choices:
 
     - **Warnings fail CI only** (Decision 6, made 2026-09-23). `build.py --strict` turns any
@@ -389,7 +421,7 @@ knowing so you don't "fix" something that was a deliberate decision:
       back to a stub and build a blank Lobby) and a `dist/` that cannot be wiped (it used to
       build on top of the leftovers). Neither has a forgiving reading.
 
-24. **TIMBERLINE repainted to the TRM / Pine personal brand (2026-10-01).** The personal brand now
+27. **TIMBERLINE repainted to the TRM / Pine personal brand (2026-10-01).** The personal brand now
     stands apart from Rocky Mountain Automation AI (item 16's palette); Pine and the "TRM /" mark
     were chosen in a design-tool exploration (`brand/Brand Directions.dc.html`). Choices:
 
@@ -428,7 +460,7 @@ knowing so you don't "fix" something that was a deliberate decision:
       currently use (TIMBERLINE sets code in Helvetica Neue, for one). None of that changed in this
       pass -- the site stays as it is until Travis decides otherwise.
 
-25. **Post-deploy live check, deploy tags and releases, and a redeploy-a-tag rollback (roadmap
+28. **Post-deploy live check, deploy tags and releases, and a redeploy-a-tag rollback (roadmap
     S06, 2026-10-02).** Until this session, nothing looked at the site after `deploy-pages`
     reported success, there was no record of which commit was live, and there was no written way
     back to an earlier version.
@@ -493,7 +525,7 @@ knowing so you don't "fix" something that was a deliberate decision:
       no `workflow_dispatch` input interpolated directly into a `run:` script -- so a new workflow
       file drifting from the policy fails CI instead of waiting for the next audit to notice.
 
-26. **Public-site defects from the audit, and self-hosting (roadmap S07, 2026-10-02).**
+29. **Public-site defects from the audit, and self-hosting (roadmap S07, 2026-10-02).**
 
     - **Fonts, marked.js and Motion are served from the site (decided in the roadmap as Decision
       7).** The footer says "No analytics or tracking.", and a request to Google Fonts or jsDelivr
@@ -520,7 +552,7 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **Deliberately left:** the nav's brand dot and the Garden's status dot still use
       `animate-pulse` without `motion-safe:`. The audit named the Toolkit line only.
 
-27. **Browser and accessibility tests, and they block the merge (roadmap S08, 2026-10-02).**
+30. **Browser and accessibility tests, and they block the merge (roadmap S08, 2026-10-02).**
     This reverses the "no automated accessibility or browser tests" entry under Known gaps.
     Most of the site's behaviour is JavaScript that only a browser runs, and the S07 defects
     (the nested 404, a failing CDN) were the kind a Python test cannot see. Choices:
@@ -552,7 +584,7 @@ knowing so you don't "fix" something that was a deliberate decision:
       the reader open and focus returning; axe at `wcag2a`, `wcag2aa`, `wcag21a` and `wcag21aa`
       on every page, every dialog, and the reader covered, revealed and rated in both modes, plus
       the colour-contrast rule in every optional theme. Every test also fails on any request to
-      another origin, which keeps item 26's promise; `tests/browser/origin.spec.mjs` walks every
+      another origin, which keeps item 29's promise; `tests/browser/origin.spec.mjs` walks every
       state that loads something. Both gates were shown to fail against a deliberately broken
       `dist/` before this was merged.
     - **Exceptions are one rule on one selector, with a backlog id.** `AXE_EXCEPTIONS` in
@@ -578,6 +610,33 @@ knowing so you don't "fix" something that was a deliberate decision:
       `playwright-report/index.html` from it, or a trace as above. CI installs Chromium with
       `--with-deps` and does not cache it, as Playwright's docs advise.
 
+31. **Reproducible builds, and tests for the engine's untested core (roadmap S09, 2026-10-03).**
+    Two builds of the same commit were never checked to produce the same bytes, and several
+    small, easy-to-break functions (escaping, the theme/Tailwind generators) had no unit coverage
+    of their own, only indirect coverage through the pages that happen to call them.
+
+    - **Sort the vault walk, and write every generated file with explicit LF line endings.**
+      Directory iteration order and Python's text-mode newline translation are the two ways the
+      same commit built on Windows and on CI could disagree byte for byte. `engine/pipeline.py`
+      now sorts the vault walk, and rendered pages, the deep-search index, `theme-vars.css`,
+      `tailwind.config.js`, and `deploy.py`'s cloned files all write with `newline="\n"`.
+      `tests/test_pipeline.py` builds the real vault twice and diffs the output byte for byte.
+    - **Two latent bugs, found while adding coverage.** `make_id()` stripped every occurrence of
+      `.md` in a title, not just a trailing one; it now strips only the suffix.
+      `generate_garden_card_html()` mutated the caller's `meta` dict to report the note's resolved
+      type, which a second call over the same meta could see; it now returns the type instead.
+    - **Adversarial unit tests** for `sanitize.escape_attr()` and `sanitize.sanitize_to_text()`,
+      and for the theme CSS and Tailwind config generators (`theming.py`, `tailwind_build.py`),
+      exercise them directly rather than only through a page that happens to call them.
+    - **A smoke test for `deploy.py`'s factory clone**, built end to end, caught a dangling
+      `og:image` tag: the clone shipped a social-preview reference to an image it never bundled.
+      `engine/pipeline.py` now checks the file actually exists in `dist/` before emitting the tag,
+      so a clone without a social-preview image simply omits it, rather than `deploy.py` bundling
+      a placeholder.
+    - **A project-scoped `roadmap-session` skill** (`.claude/skills/roadmap-session/`) documents
+      this workflow — read the entry and its dependencies, implement, prove `done_when` with real
+      tests, update the roadmap entry, run the full gate — for future sessions to follow.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
@@ -587,12 +646,6 @@ knowing so you don't "fix" something that was a deliberate decision:
 - **Card body vocabulary was unified in the 2026-09 voice pass** (`Definition:`, `Author:`,
   `Scope:`, `Bio:`, `Summary:` and so on, all rendered through `.field-label`). The *markup* is
   still per-type f-strings — see the bullet above.
-- **`vault/90_SYSTEM/92_Templates/TPL_Synthesis_Note.md`** is a richer note-taking template (a
-  "Crane not Skyhook" mechanistic Input/Processing/Logic/Output framework) with no YAML frontmatter
-  at all, so notes written from it never publish and there's no card type that could render its
-  structure even if they did. The one real note that used it
-  (`vault/10_GARDEN/17_Gemini_Synthesis/Lit Review Pipeline.md`) was later deleted from the vault;
-  no note currently uses this template.
 - **A raw-Tailwind-class → semantic `aurelia-*` migration is incomplete.** A one-off script
   (`refactor.py`) describing this exact mapping (`text-white` → `text-aurelia-text`, `bg-black` →
   `bg-aurelia-bg`, etc.) was found and deleted as dead code (it was never runnable and unreferenced
@@ -605,7 +658,7 @@ knowing so you don't "fix" something that was a deliberate decision:
   ship as separately cached files.
 - No performance (Lighthouse) or visual-regression testing, and no unit-test harness for
   `assets/js/` (`review.js`'s SM-2 maths is exercised end to end by the browser suite, not unit
-  by unit). Browser and accessibility tests now exist and block the merge: item 27.
+  by unit). Browser and accessibility tests now exist and block the merge: item 30.
 - **Study progress is per-browser.** The scheduler state is localStorage only; the Progress panel's
   export/import is the whole sync story. A backend or a synced store was deliberately not added —
   the site has no server and promises no tracking.

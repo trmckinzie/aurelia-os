@@ -6,8 +6,8 @@ is the lean entry point; this file is the engine walkthrough.
 
 ### Build pipeline (`build.py` → `engine/`)
 
-`build.py` at the repo root is a ~15-line entrypoint (`from engine.pipeline import build_all`). All
-real logic lives in `engine/`:
+`build.py` at the repo root is a short entrypoint (argument parsing and top-level error reporting
+around `from engine.pipeline import build_all`). All real logic lives in `engine/`:
 
 - **`config.py`** — paths (`VAULT_PATH`, `TEMPLATE_DIR`, `OUTPUT_DIR`), the Jinja2 `env`, the theme
   system (`THEME_CONFIG`, five presets in switcher order: **`TIMBERLINE` light/professional, the
@@ -147,7 +147,12 @@ real logic lives in `engine/`:
   notes these were originally two separate functions, each doing its own scan over the same data,
   consolidated into one pass. `_build_search_index()` builds the command-palette JSON (title/type/
   tags/short-snippet only, **not** full note bodies — this was a deliberate size fix, see
-  docs/DECISIONS.md item 5). `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
+  docs/DECISIONS.md item 5). A separate, larger index for the Garden's own deep-search field is
+  built by `_build_deep_search_index()` (longer snippets, mirroring `_build_search_index()`'s size
+  discipline) and written by `_write_deep_search_index()` to `assets/js/search-index.js` — a file
+  generated at build time, gitignored, and loaded by `gardentemplate.html` as a separately cached
+  script rather than inlined, so re-opening the Garden doesn't re-parse it from the page's own
+  JSON every load. `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
   `404.html` and nothing else. `build_all()` loads `profile.json` (below) *before* scanning the
   vault, so a malformed profile aborts the build before any vault work; it also writes
   `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).
@@ -290,7 +295,7 @@ no legacy voice tokens). The behaviour is tested in a real browser by the Playwr
 a seeded log; `dialogs.spec.mjs`: the shortcut sheet and the reader's keys; `accessibility.spec.mjs`:
 axe on the reader covered, revealed and rated), which `verify.sh` and CI run against `dist/`
 served under `/aurelia-os/` by `node tools/preview.mjs 8792 /aurelia-os/` (`docs/DECISIONS.md`
-item 27). There is still no unit-test harness for `assets/js/`. For a manual look,
+item 30). There is still no unit-test harness for `assets/js/`. For a manual look,
 `node tools/preview.mjs` serves `dist/` at the root (the `dist-preview` entry in
 `.claude/launch.json`). `preview.mjs` sends `Cache-Control: no-store`; against any other server,
 a browser will happily serve a cached `garden.html` after a rebuild unless you add a query string.

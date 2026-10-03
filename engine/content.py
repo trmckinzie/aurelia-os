@@ -610,11 +610,10 @@ def process_gemini_notebook_media(text):
 
             # Don't render a player/image for a file that isn't there. The
             # 2026 history purge removed the Gemini Notebook audio and
-            # mind-map assets from the repo, but the notes still name them --
-            # 34 of 38 references currently resolve to nothing, so 15 notes
-            # render empty audio controls and broken images. Dropping the
-            # bare path leaves the header and surrounding prose intact and
-            # the note simply reads as text.
+            # mind-map assets from the repo, but some notes still name them.
+            # Dropping the bare path leaves the header and surrounding prose
+            # intact and the note simply reads as text, rather than rendering
+            # empty audio controls or a broken image.
             #
             # Flashcards included: that renderer's own "CSV NOT FOUND" box is
             # a build diagnostic that was being rendered to readers. The count

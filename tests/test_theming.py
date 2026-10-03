@@ -93,7 +93,7 @@ def test_timberline_text_roles_meet_aa_contrast_on_every_background():
     # Every text-bearing role must clear WCAG AA's 4.5:1 floor against all
     # three of TIMBERLINE's surfaces (bg_main, bg_layer_1, bg_layer_2) --
     # this is the regression guard for the TRM / Pine repaint (see
-    # docs/DECISIONS.md item 24): pine, pine-deep, steel, and brick must each
+    # docs/DECISIONS.md item 27): pine, pine-deep, steel, and brick must each
     # clear AA as text on every surface, same as the palette they replaced.
     # The tightest pairing is highlight on bg_layer_2 at 4.71:1.
     from engine.config import THEME_CONFIG
