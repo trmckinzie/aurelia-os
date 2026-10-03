@@ -88,6 +88,13 @@ test("the Garden page has no WCAG A/AA violations in Study mode", async ({ page 
 // THEME_CONFIG), so a new theme is covered without editing this file.
 for (const { name, path, marker } of PAGES) {
   test(`${name} page meets WCAG AA colour contrast in every optional theme`, async ({ page }) => {
+    // Several reload + axe-scan round trips on one page (the Garden's card
+    // grid makes this the heaviest test in the suite); the default 30s
+    // timeout is tight enough that a slower CI runner can exceed it even
+    // though nothing is actually wrong (seen in practice: 24.6s on the
+    // developer's Mac, 34.9s on a GitHub-hosted runner). test.slow() triples
+    // it rather than loosening the budget for the whole suite.
+    test.slow();
     await page.goto(path);
     const themes = await page.evaluate(() => AVAILABLE_THEMES.map((t) => t.key));
     const fallback = await page.evaluate(() => document.documentElement.dataset.theme);
