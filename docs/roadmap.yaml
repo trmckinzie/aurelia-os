@@ -505,7 +505,8 @@ sessions:
     status: done
     started: 2026-10-03
     completed: 2026-10-03
-    commits: []
+    commits:
+      - "6243aef"
     area: Docs
     effort: M
     model: sonnet
