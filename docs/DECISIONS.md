@@ -520,6 +520,64 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **Deliberately left:** the nav's brand dot and the Garden's status dot still use
       `animate-pulse` without `motion-safe:`. The audit named the Toolkit line only.
 
+27. **Browser and accessibility tests, and they block the merge (roadmap S08, 2026-10-02).**
+    This reverses the "no automated accessibility or browser tests" entry under Known gaps.
+    Most of the site's behaviour is JavaScript that only a browser runs, and the S07 defects
+    (the nested 404, a failing CDN) were the kind a Python test cannot see. Choices:
+
+    - **Playwright and axe, dev-only (decided 2026-10-01).** `@playwright/test` 1.63.0 and
+      `@axe-core/playwright` 4.13.0 (which brings `axe-core` 4.13.0), exact-pinned in
+      `devDependencies`. Maintainers checked before installing on 2026-10-02: Playwright is
+      Microsoft's (`microsoft/playwright`, npm publishers include Microsoft's release accounts),
+      `@axe-core/playwright` is Deque's (`dequelabs/axe-core-npm`); neither repository is
+      archived, and both versions were the current `latest` releases. Nothing from either reaches
+      `dist/`: `engine/vendor.py` copies only fonts, marked and Motion, and
+      `tests/test_browser_suite.py` pins that. Playwright downloads its own Chromium; only
+      Chromium is tested.
+    - **Blocking, everywhere (decided 2026-10-01).** `verify.sh` runs the suite after the
+      build, so the `check` job runs it on every push and pull request, and a failure blocks the
+      merge and the deploy. `check-macos` runs it too and stays out of `build`'s `needs`.
+    - **The suite tests `dist/` and never builds it.** Two `build.py` runs at once wipe each
+      other's `dist/`, so `verify.sh` builds and then runs Playwright, and
+      `tests/browser/global-setup.mjs` refuses to start on a missing or wrongly built `dist/`.
+      `verify.sh` now sets `GITHUB_REPOSITORY` to this repository when it is unset, so a local
+      build links the 404 page under `/aurelia-os/` exactly as CI does.
+    - **Served the way GitHub Pages serves it.** `tools/preview.mjs` takes an optional base path;
+      the suite mounts `dist/` under `/aurelia-os/` on port 8792, with real 404 statuses,
+      `404.html` for any missing path, the trailing-slash redirect, and `no-store`.
+    - **What it covers.** Smoke (each page and a 404 two folders deep: styles, scripts and fonts
+      loaded, no console error, no failed request); the reader and Study mode through reveal,
+      rating, Change rating and a full review session against a seeded log; the palette, the
+      shortcut and Toolkit sheets and the reader's keys, including Escape in the palette leaving
+      the reader open and focus returning; axe at `wcag2a`, `wcag2aa`, `wcag21a` and `wcag21aa`
+      on every page, every dialog, and the reader covered, revealed and rated in both modes, plus
+      the colour-contrast rule in every optional theme. Every test also fails on any request to
+      another origin, which keeps item 26's promise; `tests/browser/origin.spec.mjs` walks every
+      state that loads something. Both gates were shown to fail against a deliberately broken
+      `dist/` before this was merged.
+    - **Exceptions are one rule on one selector, with a backlog id.** `AXE_EXCEPTIONS` in
+      `tests/browser/fixtures.mjs`; no rule is disabled and no region excluded, and
+      `tests/test_browser_suite.py` fails if an exception's backlog entry is missing or closed.
+      There is one: Garden cards are `role="button"` and contain the pill buttons
+      (`nested-interactive`, B19). The suite's first run also found two defects that are now
+      fixed: the Lobby's Search key hint at 3.62:1 contrast (`.kbd` lost its 0.75 opacity), and
+      no Garden card holding `tabindex="0"` on a plain visit, so Tab skipped the grid.
+    - **A known limit.** axe reports contrast it cannot compute (text over a gradient or beside a
+      pseudo-element, which includes every Garden card) as incomplete, and only violations fail.
+      For that text, `tests/test_theming.py`'s token sweep is the check that counts.
+    - **Animations off, no sleeps, no retries.** `reducedMotion: 'reduce'`, which the site
+      honours everywhere it animates; web-first assertions only; one worker; `retries: 0`.
+    - **Running and debugging it.** `bash verify.sh` runs everything. After a build with
+      `GITHUB_REPOSITORY=trmckinzie/aurelia-os .venv/bin/python build.py --no-sort`, run
+      `npx playwright test` (all), `npx playwright test tests/browser/study.spec.mjs` (one file),
+      `-g "palette"` (by title), `--headed` or `--ui` to watch, and
+      `npx playwright show-trace test-results/<test>/trace.zip` to step through a failure.
+      Failures write a screenshot and a trace to `test-results/` (gitignored). On CI, a failed
+      `check` or `check-macos` uploads `test-results/` and `playwright-report/` as the
+      `browser-suite-failures-<os>` artifact on the run's summary page, kept 14 days; open
+      `playwright-report/index.html` from it, or a trace as above. CI installs Chromium with
+      `--with-deps` and does not cache it, as Playwright's docs advise.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
@@ -545,9 +603,9 @@ knowing so you don't "fix" something that was a deliberate decision:
   means trading instant-open for a fetch-on-click UX, which wasn't chosen without discussing the
   tradeoff first. The study layer added no per-note markup to it; `review.js` and `flashcards.js`
   ship as separately cached files.
-- No automated accessibility, performance (Lighthouse), or visual-regression testing, and no JS
-  test harness — the study layer's behaviour is verified by hand with Playwright (see
-  docs/ARCHITECTURE.md, "Study layer").
+- No performance (Lighthouse) or visual-regression testing, and no unit-test harness for
+  `assets/js/` (`review.js`'s SM-2 maths is exercised end to end by the browser suite, not unit
+  by unit). Browser and accessibility tests now exist and block the merge: item 27.
 - **Study progress is per-browser.** The scheduler state is localStorage only; the Progress panel's
   export/import is the whole sync story. A backend or a synced store was deliberately not added —
   the site has no server and promises no tracking.

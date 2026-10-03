@@ -92,7 +92,8 @@ python tools/vault_health.py
 # build prints the same warnings and carries on.
 python build.py --no-sort --strict
 
-# Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build) --
+# Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build, then the
+# Playwright browser suite with axe accessibility checks on that build) --
 # the checks CI runs, where the build also gets --strict. A pull request cannot merge, and the site cannot deploy,
 # until they pass. Run before pushing.
 bash verify.sh

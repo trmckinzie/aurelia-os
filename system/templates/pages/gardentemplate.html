@@ -3791,6 +3791,11 @@
     applySort();
     syncSortControl();
     updateSortControlVisibility();
+    // The grid's one tab stop. updateGrid() sets it, but on a plain visit
+    // (no URL state) nothing calls updateGrid() before the first keystroke,
+    // so every card stayed at tabindex -1 and Tab skipped the whole grid.
+    // Found by the browser suite (roadmap S08).
+    syncRoving(false);
     openNoteFromHash();
     // Populates the due count/"Start review" state and grid markers on
     // first paint -- restoreViewFromUrl() only calls updateGrid() (which
