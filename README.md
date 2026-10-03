@@ -39,9 +39,11 @@ the link graph itself made visible and navigable.
 - Gemini Notebook export support: audio/video overviews, flashcard decks, mind maps and other
   synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,
   with each top-level section collapsible in the note reader. **Note:** the media files themselves
-  are no longer committed to this repo (see [Media](#media)), so the audio and image widgets
-  currently render without their sources. Flashcard decks still work — those are small CSVs, and
-  each renders as a one-card study widget (Show answer, rate 1–4, shuffle, "due cards only").
+  are no longer committed to this repo (see [Media](#media)); a note that still names an audio,
+  video, or image file the build can't resolve has that reference dropped rather than rendered as
+  a broken widget — the header and surrounding prose stay, the note just reads as text there.
+  Flashcard decks still work — those are small CSVs, and each renders as a one-card study widget
+  (Show answer, rate 1–4, shuffle, "due cards only").
 
 ## Stack
 
@@ -162,9 +164,11 @@ profile.json            The About page's content: structured data validated at b
 system/templates/       Jinja2 templates (base + Lobby + Garden + About + 404)
 assets/                 Tailwind input CSS; client JS (utils, study layer, flashcards); site images
 vault/                  The Obsidian vault itself -- source content, not source code (see License)
-tests/                  pytest suite
-tools/                  Standalone scripts (e.g. vault frontmatter schema validator)
+tests/                  pytest suite (unit) and tests/browser/ (Playwright + axe, against a built dist/)
+tools/                  Standalone scripts (vault schema validator, vault-health reports, roadmap dashboard, preview server)
+docs/                   Architecture writeup, decision log, and machine-migration/rollback notes
 deploy.py               Generates a white-labeled clone of the tooling for someone else to reuse
+.github/workflows/      CI: check/build/deploy, a tag-based redeploy for rollback, and a weekly build + live-site check
 ```
 
 ## Privacy model
@@ -218,24 +222,12 @@ installed, which is what keeps new media from re-inflating the repo in the meant
 ## Version history
 
 This project is not released or versioned — there are no tags and no published packages, and the
-live site is whatever `main` last built. What follows is the milestone history, dated from the
-commits themselves. For the reasoning behind each change rather than the summary, see the
-decision log in [docs/DECISIONS.md](docs/DECISIONS.md), which is kept in step with this list.
-
-| Date | Milestone |
-|---|---|
-| **2026-09-10** | **Garden as a study tool.** Study mode with a recall-first cover and four-step self-rating feeding an SM-2 scheduler; a review queue interleaved across note types; flashcard decks as one-card widgets; an "On this page" outline, a `?` shortcut sheet, and a phone graph list. A wikilink resolver (`content.build_link_resolver`) added `aliases:` and unique parenthetical-suffix tiers, so `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename. |
-| **2026-09-09** | **Vault wikilink cleanup.** 92 short-form links rewritten to `[[Full Title\|display text]]`, seven self-evidently-missing notes added, four linked-but-unpublished notes published, and dead media embeds removed. Dangling link occurrences fell 983 → 853. |
-| **2026-09-07** | Author headshot added to the home and About pages, with a generated social-preview card. |
-| **2026-09-05** | **`TIMBERLINE` becomes the default theme** — a light editorial register — and the "Aurelia" product branding is retired from every user-facing surface. The About page ships, rendered from a validated repo-root `profile.json`, and the Lobby, shared chrome and 404 page are rewritten from terminal voice into plain English. |
-| **2026-09-03 → 09-04** | **Security audit remediation.** Jinja2 autoescape turned on globally, an nh3 allowlist sanitizer added for note-authored HTML, `publish:` made an allowlist instead of a truthiness check, asset resolution containment-checked, the frontmatter fence anchored to whole lines, and `build.py --no-sort` added so a build need not mutate the vault. |
-| **2026-08-29** | NotebookLM renamed to **Gemini Notebook** throughout — type slug, vault folder, identifiers and labels — and its long notes made section-collapsible in the reader. |
-| **2026-08-23** | The **`deep-dive`** note type — a 7th garden type for long-form pieces pasted in whole rather than filled in field by field. |
-| **2026-08-17** | README, code-only MIT [LICENSE](LICENSE), and [SECURITY.md](SECURITY.md) added. |
-| **2026-08-16** | **Themes become runtime-switchable** rather than baked in at build time, and `THE_PATRIOT`, `THE_STOA` and `GRIZZ` join `CYBER_PRIME`. The force-directed knowledge-graph view, real backlinks, maturity badges, the random-note button, topic browsing and command-palette keyboard navigation all land. |
-| **2026-08-15** | **The refactor that made the rest possible.** A single 1,409-line `build.py` split into the `engine/` package; regex frontmatter parsing replaced with real YAML; the Tailwind Play CDN replaced with a compiled build; the Protocols/Portfolio/Transmissions/Services pages scrapped down to Lobby + Garden; the per-page search-index payload trimmed; and the first test suite added, against zero prior coverage. |
-| **2026-08** | **Privacy audit and history purge.** Committed media was removed from the repository *and its history* — see [Media](#media). The repo went from 1.09 GiB to ~25 MiB and `dist/` from ~882 MB to ~5.7 MB, retiring a looming GitHub Pages size ceiling. |
-| **2025-12-26** | First commit. |
+live site is whatever `main` last built. The milestone-by-milestone history, and the reasoning
+behind each change, lives in one place: the decision log in
+[docs/DECISIONS.md](docs/DECISIONS.md#recent-history-why-the-code-looks-like-this). Keeping it in
+one file is deliberate — two dated chronologies of the same project drift apart the moment one of
+them stops getting updated, which is exactly what happened to the table this section used to
+carry.
 
 ## License
 

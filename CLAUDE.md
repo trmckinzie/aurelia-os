@@ -75,7 +75,7 @@ themes, not part of the brand.
 pip install --require-hashes -r requirements-dev.txt && npm ci   # one-time setup, inside .venv
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
 python build.py --no-sort --strict                     # what CI runs: any build warning exits 1
-python -m pytest tests/ -q                             # 662 tests as of 2026-10-02 (skips tests/browser/)
+python -m pytest tests/ -q                             # the unit/integration suite (skips tests/browser/)
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
 python tools/vault_health.py                           # advisory reports; never writes to the vault
@@ -84,7 +84,7 @@ python tools/roadmap.py --check                        # validate roadmap.yaml; 
 python deploy.py                                       # factory clone -> ./Aurelia_Factory_v1/ (gitignored)
 npx playwright install chromium                        # one-time: the browser the suite drives
 GITHUB_REPOSITORY=trmckinzie/aurelia-os python build.py --no-sort   # dist/ as Pages serves it
-npx playwright test                                    # browser + axe suite (36 tests) on that dist/
+npx playwright test                                    # browser + axe suite (see tests/browser/) on that dist/
 npx playwright test tests/browser/study.spec.mjs --headed   # one file, watching; or -g "<title>", --ui
 npx playwright show-trace test-results/<test>/trace.zip     # step through a failure
 bash verify.sh                                          # everything above, in CI's order; run before pushing
@@ -94,7 +94,7 @@ The browser suite (`tests/browser/`, `playwright.config.mjs`) tests `dist/` and 
 so it cannot race a build; it serves `dist/` under `/aurelia-os/` via `tools/preview.mjs` on port
 8792. An axe finding is fixed, or added to `AXE_EXCEPTIONS` in `tests/browser/fixtures.mjs` as
 one rule on one selector with an open backlog id; never disable a rule. CI keeps failure
-screenshots and traces as the `browser-suite-failures-<os>` artifact. `docs/DECISIONS.md` item 27.
+screenshots and traces as the `browser-suite-failures-<os>` artifact. `docs/DECISIONS.md` item 30.
 
 Machine-specific notes (interpreter path, console encoding, local preview server) live in the
 gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
@@ -103,7 +103,7 @@ gitignored `CLAUDE.local.md`, which Claude Code loads alongside this file.
 
 Every change reaches `main` through a pull request, note-only commits included, and merging one
 deploys the site. The "Protect main" ruleset requires the `check` job, blocks force pushes and
-deletion, and has no bypass, because sessions push as Travis. Reasons: `docs/DECISIONS.md` item 22.
+deletion, and has no bypass, because sessions push as Travis. Reasons: `docs/DECISIONS.md` item 25.
 
 ```bash
 git switch main && git pull --ff-only     # start from the current main
@@ -131,7 +131,8 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 
 ## Map
 
-- `build.py` is a 15-line entrypoint; all logic is in `engine/`.
+- `build.py` is a short entrypoint (arg parsing and error reporting only); all real logic is in
+  `engine/`.
 - `engine/config.py`: paths, the Jinja env (`autoescape=True`, unconditional), `THEME_CONFIG`
   (five themes, `TIMBERLINE` default). Adding a theme is one dict entry.
 - `engine/user_config.py`: `user_config.json` loader and strict validator (site identity, the
@@ -151,8 +152,16 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   file is fatal by design so the nav never differs build to build.
 - `engine/theming.py` and `tailwind_build.py`: generate `theme-vars.css` and `tailwind.config.js`
   from `THEME_CONFIG`. Never hand-edit either output.
+- `engine/assets_pipeline.py`: the Drop Zone sort, syncing vault/system assets into `dist/`, and
+  ffmpeg compression for oversized drop-zone audio.
+- `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
+  deploy's new files aren't masked by GitHub Pages' ten-minute cache.
+- `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`
+  into `dist/`, so the site serves everything itself.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
 - `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, `utils.js`.
+  `search-index.js` is generated into this folder at build time (gitignored) — see
+  `pipeline._write_deep_search_index`.
 - `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`, and `preview.mjs` (the
   Node static server behind `.claude/launch.json`'s `dist-preview`; `node tools/preview.mjs`).
 - `docs/roadmap.yaml`: the priority-ordered engineering roadmap (sessions plus a backlog), rendered
@@ -221,12 +230,12 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 - **A build warning exits 0 locally and fails CI.** Malformed frontmatter, a missing asset or an
   ambiguous alias go through `engine/buildlog.warn()`; `--strict`, which only CI passes, turns any
   of them into exit 1. A new warning must use `warn()`, not `print()`, or CI never sees it. A bad
-  `user_config.json` or `profile.json` fails every build, strict or not. `docs/DECISIONS.md` item 23.
+  `user_config.json` or `profile.json` fails every build, strict or not. `docs/DECISIONS.md` item 26.
 
 ## Deliberately not done
 
 Card HTML as Jinja macros (deferred), a fetch-on-click Garden to shrink the 3.6 MB `garden.html`
 (tradeoff not yet discussed), any server or synced store for study progress (the site promises
 no tracking), Lighthouse or visual-regression tests, and a unit-test harness for `assets/js/`.
-Browser and accessibility tests do exist now and block the merge (`docs/DECISIONS.md` item 27).
+Browser and accessibility tests do exist now and block the merge (`docs/DECISIONS.md` item 30).
 The full list with reasons is in `docs/DECISIONS.md`.

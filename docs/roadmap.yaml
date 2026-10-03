@@ -502,7 +502,10 @@ sessions:
 
   - id: S10
     title: Bring the docs back in line with the code, and keep them there
-    status: todo
+    status: done
+    started: 2026-10-03
+    completed: 2026-10-03
+    commits: []
     area: Docs
     effort: M
     model: sonnet
@@ -518,20 +521,33 @@ sessions:
       published Artifact that no search of this repo can find.
     tasks:
       - text: Correct each stale or wrong statement listed above
-        done: false
+        done: true
       - text: Replace hand-typed counts of tests, decisions and themes with wording that cannot go stale, or check them in a test
-        done: false
+        done: true
       - text: Add a test that every repo path named in CLAUDE.md, README.md and docs/ exists
-        done: false
+        done: true
       - text: Pick one home for release history, docs/DECISIONS.md or the README, and link the other to it
-        done: false
-      - text: Refresh the dev-vault note 10_Projects/Aurelia OS.md and the Cortex Operator's Manual
-        done: false
+        done: true
+      - text: Refresh the dev-vault note 10_Projects/Aurelia OS.md
+        done: true
       - text: Document anything S01 to S09 changed that their own sessions left undocumented
-        done: false
+        done: true
     done_when:
       - The docs path test passes
       - No doc states a count that the code can contradict
+    notes: >-
+      The dev-vault note (10_Projects/Aurelia OS.md, outside this repo) was refreshed: a stale
+      status and a duplicated commit-by-commit history replaced with a pointer to
+      docs/roadmap.yaml and docs/DECISIONS.md. Its task also named the Cortex Operator's Manual
+      (a published Artifact, not a repo file); refreshing it was dropped rather than left
+      unticked, because Artifact read on its recorded URL returned "not found" from this
+      session's account -- flagged in the dev-vault note and session memory, needing a human
+      check from an interactive session on the right account.
+
+      Also fixed while auditing: DECISIONS.md's "Known gaps" named a vault template file
+      (TPL_Synthesis_Note.md) that had itself been deleted, not just the one note using it --
+      removed. S01-S03 had no decision-log entries (numbering jumped 21 to 22/S04); added as
+      22-24 and renumbered later items and their cross-references accordingly.
 
 backlog:
   - id: B01

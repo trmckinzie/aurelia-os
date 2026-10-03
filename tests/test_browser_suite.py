@@ -71,7 +71,7 @@ def test_only_the_ubuntu_check_gates_the_deploy():
     workflow = yaml.safe_load(_read(".github", "workflows", "deploy.yml"))
     needs = workflow["jobs"]["build"]["needs"]
     needs = [needs] if isinstance(needs, str) else needs
-    assert needs == ["check"], "check-macos stays non-blocking (docs/DECISIONS.md item 22)"
+    assert needs == ["check"], "check-macos stays non-blocking (docs/DECISIONS.md item 25)"
 
 
 # --- dependencies and output ------------------------------------------------
