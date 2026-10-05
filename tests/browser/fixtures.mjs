@@ -9,7 +9,7 @@
 //     status a test declared it expects (the 404 page's own document)
 //   - a request to any origin other than the test server's. data: and blob:
 //     URLs are local, so they are allowed. This keeps the promise in
-//     docs/DECISIONS.md item 26: no page asks another server for anything.
+//     docs/DECISIONS.md item 29: no page asks another server for anything.
 import { test as base, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 

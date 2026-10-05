@@ -1,7 +1,7 @@
 # Rolling back a deploy
 
 What a deploy tag is, how to find one, and how to redeploy it. Written for roadmap S06
-(`docs/roadmap.yaml`); the mechanism behind this is in `docs/DECISIONS.md` item 25.
+(`docs/roadmap.yaml`); the mechanism behind this is in `docs/DECISIONS.md` item 28.
 
 ## What exists after a normal deploy
 

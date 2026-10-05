@@ -1,4 +1,4 @@
-// No page asks another server for anything (docs/DECISIONS.md item 26: the
+// No page asks another server for anything (docs/DECISIONS.md item 29: the
 // footer says "No analytics or tracking.", and a font or script fetched from
 // a CDN is a third party seeing the visit). The `guard` fixture already fails
 // any test that makes such a request; this test walks every page and every

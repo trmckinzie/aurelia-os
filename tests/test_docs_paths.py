@@ -2,6 +2,7 @@
 should actually exist, so a rename or deletion can't leave a dangling reference
 behind (roadmap S10)."""
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -61,6 +62,20 @@ KNOWN_ABSENT = {
 PATH_RE = re.compile(r"^[A-Za-z0-9_./-]+$")
 
 
+def _on_disk(candidate):
+    """Where a documented path lives. `.git/...` is git's own directory, which
+    is ROOT/.git in the main checkout but not from a linked worktree, where
+    ROOT/.git is a one-line file pointing elsewhere. Ask git for its common
+    directory instead, or every concurrent session's verify.sh fails here."""
+    if candidate != ".git" and not candidate.startswith(".git/"):
+        return ROOT / candidate
+    result = subprocess.run(
+        ["git", "rev-parse", "--git-common-dir"], cwd=ROOT, capture_output=True, text=True
+    )
+    common = ROOT / result.stdout.strip() if result.returncode == 0 else ROOT / ".git"
+    return common / candidate[len(".git/"):] if candidate.startswith(".git/") else common
+
+
 def _is_generated(candidate):
     parts = Path(candidate).parts
     return any(candidate == g or parts[0] == g.split("/")[0] for g in ALLOWED_GENERATED)
@@ -96,6 +111,6 @@ def test_documented_path_exists(doc, candidate):
         pytest.skip(f"{candidate} is a generated/gitignored artifact")
     if candidate in KNOWN_ABSENT:
         pytest.skip(f"{candidate} is documented as deliberately absent")
-    assert (ROOT / candidate).exists(), (
+    assert _on_disk(candidate).exists(), (
         f"{doc.relative_to(ROOT)} names `{candidate}`, which does not exist in the repo"
     )

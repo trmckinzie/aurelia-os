@@ -13,7 +13,7 @@ name: Redeploy a tag
 # (gh workflow run's default, and the only option the Actions UI offers for
 # a workflow with no tag trigger); `build`'s checkout then switches to the
 # requested tag only for the content it builds. See docs/DECISIONS.md
-# item 25.
+# item 28.
 on:
   workflow_dispatch:
     inputs:

@@ -107,7 +107,7 @@ env.globals["asset_url"] = asset_url
 THEME_CONFIG = {
     # 1. TIMBERLINE (Light / Editorial). The default (2026-09 rebrand;
     # repainted 2026-10 to the TRM / Pine personal brand -- see
-    # brand/readme.md and docs/DECISIONS.md item 24). Palette: pine-black
+    # brand/readme.md and docs/DECISIONS.md item 27). Palette: pine-black
     # ink #1c2622, pine #2f6b4f (the signature color), pine-deep #1f4a37,
     # steel #2b5f80, brick #9a2b2b, ochre #8a5a12, ivory paper #f5f2eb. What
     # changed in the 2026-09 pass was the *type register* sitting on top of
@@ -150,7 +150,7 @@ THEME_CONFIG = {
     # secondary, accent, and border_focus alike -- which means links,
     # Author/Discipline cards, and focus rings all read as the same color
     # (the accepted trade-off: Deep Dive is pulled to pine-deep #1f4a37
-    # instead, to stay visually distinct; see docs/DECISIONS.md item 24).
+    # instead, to stay visually distinct; see docs/DECISIONS.md item 27).
     # The backgrounds are unchanged from the 2026-09 ivory-paper pass
     # (bg_main #f5f2eb, bg_layer_2 #eae5da -- a visibly deeper sand hairline
     # than the first pass's cooler off-white). Every text-bearing role was

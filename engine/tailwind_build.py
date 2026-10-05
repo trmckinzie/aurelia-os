@@ -30,13 +30,10 @@ def generate_config():
     # Tailwind's /opacity modifier syntax to work at all: bg-aurelia-primary
     # /10 needs a color Tailwind can decompose into channels + an alpha
     # value, and a bare hex-string var() isn't decomposable -- Tailwind
-    # would just silently skip generating that class. aurelia-cyan/dim/dark
-    # are pre-"semantic theme" aliases still used by the nav dot, footer,
-    # and the Garden's atmosphere overlay (border-aurelia-dim,
-    # bg-aurelia-dark); aurelia-orange/green/purple were the same kind of
-    # alias but ended up with zero remaining call sites once the
-    # Project/Protocol pages were deleted (see docs/DECISIONS.md)
-    # -- removed rather than kept as unused config.
+    # would just silently skip generating that class. The pre-"semantic
+    # theme" aliases are gone: aurelia-orange/green/purple lost their last
+    # call sites when the Project/Protocol pages were deleted (see
+    # docs/DECISIONS.md), and aurelia-cyan/dim/dark are covered below.
     color_map = {
         "aurelia-bg": "bg-main",
         "aurelia-card": "bg-layer-1",

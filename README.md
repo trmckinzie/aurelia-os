@@ -221,8 +221,11 @@ installed, which is what keeps new media from re-inflating the repo in the meant
 
 ## Version history
 
-This project is not released or versioned — there are no tags and no published packages, and the
-live site is whatever `main` last built. The milestone-by-milestone history, and the reasoning
+This project has no version numbers and no published packages, and the live site is whatever
+`main` last built. Every deploy that passes its post-deploy live check is tagged
+(`deploy-<time>-<commit>`) and published as a GitHub release with generated notes: a record of
+what went live, for rolling back, not a version line (see [docs/ROLLBACK.md](docs/ROLLBACK.md)).
+The milestone-by-milestone history, and the reasoning
 behind each change, lives in one place: the decision log in
 [docs/DECISIONS.md](docs/DECISIONS.md#recent-history-why-the-code-looks-like-this). Keeping it in
 one file is deliberate — two dated chronologies of the same project drift apart the moment one of

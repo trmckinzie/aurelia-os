@@ -1,6 +1,6 @@
 """Copies the web fonts, marked.js and Motion from node_modules/ into dist/.
 
-The site serves everything itself (docs/DECISIONS.md item 26): no page asks
+The site serves everything itself (docs/DECISIONS.md item 29): no page asks
 another server for a script, stylesheet or font, which is what keeps the
 footer's "No analytics or tracking." true. The packages are pinned in
 package.json / package-lock.json, so Dependabot's npm group keeps them

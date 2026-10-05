@@ -67,7 +67,7 @@ test("a missing page two folders deep serves the 404 page, styled, with working 
   await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
   await expectAssetsLoaded(page);
 
-  // Absolute links (docs/DECISIONS.md item 26): from /aurelia-os/a/b/ a
+  // Absolute links (docs/DECISIONS.md item 29): from /aurelia-os/a/b/ a
   // relative "index.html" would point at /aurelia-os/a/b/index.html.
   await page.getByRole("link", { name: "Back to home" }).click();
   await expect(page).toHaveURL(`${BASE_PATH}index.html`);

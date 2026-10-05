@@ -29,13 +29,15 @@ gated by CLAUDE.md's "Install/change, verify, then stop" rule.
 If Travis named one (`S09`, "the reproducibility one"), use it. Otherwise:
 
 ```
-.venv/bin/python tools/roadmap.py --open
+.venv/bin/python tools/roadmap.py --next
 ```
 
-reports the next unstarted session with no unmet `depends_on`. Read that entry directly out of
-`docs/roadmap.yaml` rather than trusting a summary — `title`, `why`, `decision` (if present and
-not yet `decided`, stop and ask Travis before writing code: CLAUDE.md's decision-pending rule),
-`depends_on`, `tasks`, and `done_when`.
+prints a kickoff prompt for the next unstarted session with no unmet `depends_on`, or says that
+nothing is ready. When every session is done (true of S01 to S10 since 2026-10-03), the next
+unit of work is a `backlog` entry or a new session that Travis adds; agree on it with him rather
+than picking one. Read the chosen entry directly out of `docs/roadmap.yaml` rather than trusting
+a summary — `title`, `why`, `decision` (if present and not yet `decided`, stop and ask Travis
+before writing code: CLAUDE.md's decision-pending rule), `depends_on`, `tasks`, and `done_when`.
 
 **Read every `depends_on` entry too**, not just this one. S09 built on S01; skipping that context
 is how a session reinvents something an earlier one already decided.
