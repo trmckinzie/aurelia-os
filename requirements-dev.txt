@@ -136,9 +136,9 @@ pluggy==1.6.0 \
     --hash=sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3 \
     --hash=sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746
     # via pytest
-pyflakes==4.0.0 \
-    --hash=sha256:0f7b7a78e8fcffd78b205200f045a70911f4179be1b42eac82c3323e0bf5c8aa \
-    --hash=sha256:492b27735181e3d4a6acfc08738948b666bf3e696781854ea6e0d8540d566d52
+pyflakes==4.0.1 \
+    --hash=sha256:1559b701962c803eadeb9c215dbac279585367b73ac12e1f0c42868785e6caad \
+    --hash=sha256:cb4e721195b96e1792f3dfaefa02fb36a4f6253e899bbe0793f8aef6ed0065ef
     # via -r requirements-dev.in
 pygments==2.21.0 \
     --hash=sha256:2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9 \
