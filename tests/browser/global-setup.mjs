@@ -19,7 +19,7 @@ export default async function globalSetup() {
     throw new Error(`dist/404.html not found, so dist/ has not been built.\n${BUILD_HINT}`);
   }
   // The 404 page is the one page with absolute links (docs/DECISIONS.md
-  // item 26). Built without GITHUB_REPOSITORY it links from "/", which the
+  // item 29). Built without GITHUB_REPOSITORY it links from "/", which the
   // test server, serving under /aurelia-os/ like GitHub Pages, cannot satisfy.
   const root = /const SITE_ROOT = "([^"]*)";/.exec(html)?.[1];
   if (root !== BASE_PATH) {

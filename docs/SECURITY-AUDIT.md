@@ -48,9 +48,9 @@ layer.
   every render exception per page, print `❌`, and return normally — so `python build.py` exited 0
   and CI deployed a `dist/` silently missing a page. It now re-raises as a `RuntimeError` naming the
   page, aborting before the remaining pages are written, since a half-rendered `dist/` is the thing
-  being prevented. **Still true for the malformed-frontmatter counter**: it warns, then exits 0
-  while those notes vanish from the site. That one is a content problem rather than a broken build,
-  so it was left as a warning deliberately — decide before changing it.
+  being prevented. Malformed frontmatter was decided separately (2026-09-23, roadmap S05,
+  `docs/DECISIONS.md` item 26): it stays a warning in a local build, and CI builds with `--strict`,
+  where that warning, like every build warning, fails the build and blocks the deploy.
 - **~~Client-side: topic-cloud `onclick` interpolated a raw tag, `highlightText()` built
   `new RegExp()` from unescaped search input~~ — FIXED.** `highlightText()` now uses
   `escapeRegExp()` (defined in `assets/js/utils.js`) wrapped in a try/catch (commit da3a4d4,

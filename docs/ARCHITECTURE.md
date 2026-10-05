@@ -143,9 +143,9 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   `tools/vault_health.py --report pending` by construction — both go through the same resolver.
   `_build_link_graph()` scans every note's rendered body for `openNote('id')` occurrences once
   and returns both the backlinks index (note_id → list of notes that link to it, powering the
-  modal's "Referenced By" section) and the knowledge-graph edges/degree counts — its own docstring
-  notes these were originally two separate functions, each doing its own scan over the same data,
-  consolidated into one pass. `_build_search_index()` builds the command-palette JSON (title/type/
+  modal's "Referenced By" section) and the knowledge-graph edges; `_degree_from_edges()` then
+  derives the degree counts from those edges. Its own docstring notes these were originally two
+  separate functions, each doing its own scan over the same data, consolidated into one pass. `_build_search_index()` builds the command-palette JSON (title/type/
   tags/short-snippet only, **not** full note bodies — this was a deliberate size fix, see
   docs/DECISIONS.md item 5). A separate, larger index for the Garden's own deep-search field is
   built by `_build_deep_search_index()` (longer snippets, mirroring `_build_search_index()`'s size
@@ -212,9 +212,9 @@ Three things to know before editing links in bulk (all learned in item 17's clea
   tiers exist so a short mention still lands, but the piped full title is unambiguous, survives a
   note gaining a second parenthetical sibling (which makes the suffix tier resolve to *neither*),
   and reads identically to the reader. The vault was normalized to this form in item 17.
-- **A dangling link is usually deliberate.** Most of the ~850 unresolved targets are placeholders
-  for notes not yet written — that is how a zettelkasten accumulates. Don't "fix" them by
-  unlinking; `tools/vault_health.py --report pending` is the queue, not an error list.
+- **A dangling link is usually deliberate.** Most unresolved targets are placeholders for notes
+  not yet written — that is how a zettelkasten accumulates. Don't "fix" them by unlinking;
+  `tools/vault_health.py --report pending` is the live queue, not an error list.
 
 ### Templates (`system/templates/`)
 
@@ -441,5 +441,6 @@ template meant to be handed to someone else as a starting point for their own in
 generic `user_config.json`, and generates two demo notes (a Concept and a Gemini Notebook example)
 plus a README. Keep it in sync with `engine/`'s actual capabilities when you change what the site can do —
 its `FACTORY_CONFIG` and generated README have drifted out of sync with reality before (see
-docs/DECISIONS.md item 4) and it's easy for that to happen again silently, since nothing tests it
-automatically.
+docs/DECISIONS.md item 4) and it can happen again: `tests/test_deploy.py` (roadmap S09) only
+checks that the clone builds and ships what its README promises, not that it keeps up with every
+capability.

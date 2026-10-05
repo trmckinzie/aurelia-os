@@ -10,7 +10,7 @@ name: Weekly build and live check
 # breakage in the other.
 #
 # Deliberately builds only -- does not deploy. Decided 2026-10-02, roadmap
-# S06: see docs/DECISIONS.md item 25 for why.
+# S06: see docs/DECISIONS.md item 28 for why.
 on:
   schedule:
     # Monday 08:00 UTC: after Dependabot's own weekly run (also Monday, no

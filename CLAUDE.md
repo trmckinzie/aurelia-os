@@ -44,11 +44,12 @@ themes, not part of the brand.
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
   runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, a
   `--no-sort` build, then the Playwright browser suite with axe at WCAG A/AA on that build) in
-  the `check` job, and on GitHub only that build adds `--strict`; `build` and `deploy` `need: check` and do not run if it
-  fails, and a pull request cannot merge until `check` passes. Run `bash verify.sh` locally
-  before pushing — it's the same suite, so CI can't fail on something the local run missed. The
-  pre-push hook in `.claude/githooks/pre-push` also runs it, but only as a warning; CI is the
-  real gate. A `check-macos` job runs the same suite on macOS but is deliberately neither in
+  the `check` job, and on GitHub only that build adds `--strict`; `build` needs `check` and
+  `deploy` needs `build`, so neither runs if `check` fails, and a pull request cannot merge until
+  `check` passes. Run `bash verify.sh` locally before pushing — it's the same suite, so CI can't
+  fail on something the local run missed. The dev root's pre-push hook
+  (`~/dev/.claude/githooks/pre-push`, wired in through `core.hooksPath`, see
+  `docs/MOVING-MACHINES.md`) also runs it, but only as a warning; CI is the real gate. A `check-macos` job runs the same suite on macOS but is deliberately neither in
   `build`'s `needs` nor required to merge, so a Mac-only failure is visible without holding up
   a deploy.
 - **One Python and one Node, read from files.** `.python-version` (3.14) and `.nvmrc` (24) are the
@@ -168,7 +169,8 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   by `tools/roadmap.py`. A session doing roadmap work updates its own entry in the same change
   (tasks, status, dates, commits) and runs `python tools/roadmap.py --check`.
 - `deploy.py`: a separate product, a white-label factory clone. Keep it in sync with `engine/`
-  when the site's capabilities change; nothing tests it and it has drifted before.
+  when the site's capabilities change. `tests/test_deploy.py` is only a smoke test (the clone
+  builds and ships what its README promises, roadmap S09), so it has drifted before and can again.
 
 Content model in brief: a note publishes only with `publish: true`; `type:` is one of `concept`,
 `source/book`, `author`, `discipline`, `gemini-notebook`, `deep-dive`, or a daily log; canonical
@@ -234,8 +236,9 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 
 ## Deliberately not done
 
-Card HTML as Jinja macros (deferred), a fetch-on-click Garden to shrink the 3.6 MB `garden.html`
-(tradeoff not yet discussed), any server or synced store for study progress (the site promises
-no tracking), Lighthouse or visual-regression tests, and a unit-test harness for `assets/js/`.
-Browser and accessibility tests do exist now and block the merge (`docs/DECISIONS.md` item 30).
-The full list with reasons is in `docs/DECISIONS.md`.
+Card HTML as Jinja macros (deferred), any server or synced store for study progress (the site
+promises no tracking), Lighthouse or visual-regression tests, and a unit-test harness for
+`assets/js/`. Browser and accessibility tests do exist now and block the merge
+(`docs/DECISIONS.md` item 30). `garden.html` keeps every note's body inline rather than fetching
+a note when it opens: decided 2026-10-01, to revisit once the compressed page passes 1 MB
+(`docs/roadmap.yaml`, backlog B04). The full list with reasons is in `docs/DECISIONS.md`.

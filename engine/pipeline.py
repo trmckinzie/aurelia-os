@@ -474,7 +474,7 @@ def _build_commit_stamp():
     stamp identical values, which is what keeps this compatible with S09's
     byte-identical-build goal. A local `python build.py` sets neither, so
     dist/ is unchanged from before this existed -- see docs/DECISIONS.md
-    item 25.
+    item 28.
     """
     commit = os.environ.get("AURELIA_BUILD_COMMIT", "").strip()
     commit_time = os.environ.get("AURELIA_BUILD_COMMIT_TIME", "").strip()

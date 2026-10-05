@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-02
+updated: 2026-10-05
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -449,7 +449,7 @@ sessions:
       main.css). On a plain visit no Garden card had tabindex 0, so Tab skipped
       the whole grid (fixed in gardentemplate.html). Garden cards are buttons
       that contain buttons (axe nested-interactive); that one is a scoped
-      exception, tracked as B19. See docs/DECISIONS.md item 27.
+      exception, tracked as B19. See docs/DECISIONS.md item 30.
 
   - id: S09
     title: Make builds reproducible and test the untested core
@@ -499,6 +499,16 @@ sessions:
     done_when:
       - Two builds of the same commit are byte-identical, checked by a test
       - Every function named in the tasks has direct tests
+    notes: >-
+      tests/test_reproducible_build.py builds the real vault twice and diffs dist/ byte for
+      byte; the vault walk is sorted and every generated file is written with LF endings.
+      tests/test_sanitize.py adds adversarial cases for escape_attr() and sanitize_to_text(),
+      and tests/test_theming.py and tests/test_tailwind_build.py cover the two generators
+      directly. make_id() now strips only a trailing .md (tests/test_make_id_cross_lang.py),
+      and generate_garden_card_html() returns the resolved type instead of mutating meta.
+      tests/test_deploy.py builds the factory clone end to end; it found a dangling og:image
+      tag, now emitted only when the image exists. Recorded on 2026-10-05, after the fact,
+      by the documentation pass in docs/DECISIONS.md item 34. See item 31.
 
   - id: S10
     title: Bring the docs back in line with the code, and keep them there
@@ -577,11 +587,11 @@ backlog:
     area: Performance
     status: open
     detail: >-
-      Remaining work: record the threshold in docs/DECISIONS.md, replace the
-      "tradeoff not yet discussed" wording in CLAUDE.md, and have the build print
-      garden.html's compressed size next to the search index's. If it passes
-      1 MB, the first step is to move the note bodies into one separately cached
-      file, the way the search index already works.
+      Remaining work: have the build print garden.html's compressed size next to
+      the search index's. The threshold is recorded (docs/DECISIONS.md item 32)
+      and CLAUDE.md's wording was corrected on 2026-10-05. If it passes 1 MB, the
+      first step is to move the note bodies into one separately cached file, the
+      way the search index already works.
     decision: >-
       garden.html embeds every note body so notes open instantly. Keep that, or
       trade it for a smaller page that fetches each note on demand.
@@ -706,12 +716,16 @@ backlog:
     title: Add a project skill that starts the next roadmap session with its kickoff prompt
     area: Dashboard
     status: open
+    detail: >-
+      Largely covered already: S09 added .claude/skills/roadmap-session, which picks
+      the next session with tools/roadmap.py --next (since 2026-10-05) and works it
+      end to end. Decide whether that closes this item or what is still missing.
   - id: B18
     title: Give Garden card types their own colors, separate from link and button colors
     area: Frontend
     status: open
     detail: >-
-      The TRM / Pine repaint (docs/DECISIONS.md item 24) leaves pine as TIMBERLINE's
+      The TRM / Pine repaint (docs/DECISIONS.md item 27) leaves pine as TIMBERLINE's
       one signature color, so Author and Discipline cards now share it with every
       link and button, and Deep Dive is only distinguished by the darker pine-deep.
       The theme menu's Timberline swatch shows two identical dots as a result. Give

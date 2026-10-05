@@ -380,7 +380,7 @@ knowing so you don't "fix" something that was a deliberate decision:
     (Node, so it behaves the same on every OS). A `check-macos` CI job runs the full suite on macOS
     but is deliberately left out of `build`'s `needs`, so a Mac-only failure is visible without
     blocking a deploy. The load-bearing study-layer rationale, previously sitting only in a
-    machine-local plan file, became item 18 below.
+    machine-local plan file, is item 18.
 25. **Pull requests into a protected `main` (2026-09-23, roadmap S04).** Every change, notes
     included, now reaches `main` through a pull request, and merging deploys. Choices worth keeping:
 
@@ -620,7 +620,8 @@ knowing so you don't "fix" something that was a deliberate decision:
       same commit built on Windows and on CI could disagree byte for byte. `engine/pipeline.py`
       now sorts the vault walk, and rendered pages, the deep-search index, `theme-vars.css`,
       `tailwind.config.js`, and `deploy.py`'s cloned files all write with `newline="\n"`.
-      `tests/test_pipeline.py` builds the real vault twice and diffs the output byte for byte.
+      `tests/test_reproducible_build.py` builds the real vault twice and diffs the output byte
+      for byte.
     - **Two latent bugs, found while adding coverage.** `make_id()` stripped every occurrence of
       `.md` in a title, not just a trailing one; it now strips only the suffix.
       `generate_garden_card_html()` mutated the caller's `meta` dict to report the note's resolved
@@ -637,6 +638,69 @@ knowing so you don't "fix" something that was a deliberate decision:
       this workflow — read the entry and its dependencies, implement, prove `done_when` with real
       tests, update the roadmap entry, run the full gate — for future sessions to follow.
 
+32. **Six backlog questions decided (2026-10-01).** Travis answered six open backlog questions in
+    one sitting. They are recorded here rather than in date order among items 27–31, because
+    renumbering items is what left stale citations behind once already (item 34). Each also
+    carries a `decided:` date in `docs/roadmap.yaml`, which `tools/roadmap.py` gained in the same
+    pass (pull request #7) so a made decision stops showing as waiting on him.
+
+    - **B04: keep every Garden note in `garden.html`.** Notes keep opening instantly; revisit when
+      the compressed page passes 1 MB. It was about 580 KB at 259 notes, of which the note bodies
+      were about 375 KB. Printing that size on every build is the decision's open follow-up.
+    - **B05: the repo stays public.** `publish:` remains a rendering switch, not access control,
+      and anything that must stay private is kept out of the repo. Going private would recall
+      nothing already pushed, and on GitHub's free plan it would give up Pages, the ruleset on
+      `main`, CodeQL and secret scanning.
+    - **B06: a media file publishes only when a published note references it**, for
+      `vault/assets/` and the repo's own `assets/` media folders alike, with the build listing what
+      it skipped. Decided, not yet built: `engine/assets_pipeline.py` still copies every file in a
+      publishable folder. Nothing is exposed by that today, because `vault/assets/` holds no files.
+    - **B08: git stops tracking Obsidian plugin code** (pull request #10, under a one-time vault
+      override). Obsidian installs and updates each plugin's `main.js`, `manifest.json` and
+      `styles.css` itself; Calendar's and Templater's `data.json` stay tracked so their settings
+      reach a fresh clone, and the turned-off Obsidian Git plugin is untracked whole.
+      `docs/MOVING-MACHINES.md` covers reinstalling and restoring.
+    - **B09: the Zotero leftovers are removed** (pull request #11, under a one-time vault
+      override, with the diff approved first): the empty "Zotero Key" label from 11 Source notes,
+      the placeholder-only Sources section from 7 Gemini Notebook notes, and the placeholder line
+      from the Gemini Notebook template, whose Sources heading stays. Every Garden card built
+      byte-identical afterwards.
+    - **B11: two Toolkit cards corrected** (pull request #10). The ThinkPad T495 is no longer in
+      use, so its card is gone; Next.js has been used for personal projects only, so its card reads
+      "React framework for dashboards and web apps."
+
+33. **Docs brought back in line with the code (roadmap S10, 2026-10-03).** The README described
+    Gemini widgets that are actually dropped, left `docs/` and `.github/` out of its structure
+    block, and kept a version history that stopped at 2026-09-10; CLAUDE.md and
+    `docs/ARCHITECTURE.md` called `build.py` 15 lines long and left several engine modules out of
+    the map.
+
+    - **Counts that go stale were replaced with wording that cannot**, rather than re-typed.
+    - **`tests/test_docs_paths.py`** asserts that every repo path CLAUDE.md, README.md and
+      `docs/*.md` name in backticks exists, so a rename fails CI instead of waiting for an audit.
+    - **One home for history.** This file is it; the README links here instead of keeping a table.
+    - **Items 22–24 (S01–S03) and 31 (S09) were added**, since those sessions had shipped without
+      an entry, and every later item was renumbered.
+    - **The Cortex Operator's Manual refresh was dropped.** That published Artifact returned "not
+      found" from the session's account, so it was flagged for Travis rather than guessed at.
+
+34. **A documentation pass after the roadmap finished (2026-10-05).** Four read-only reviews
+    checked every doc against the code once S01–S10 were done.
+
+    - **Item 33's renumbering had not reached the code.** Comments in `engine/`, the workflows,
+      the browser tests, `verify.sh`, `playwright.config.mjs` and `docs/ROLLBACK.md`, and two notes
+      in `docs/roadmap.yaml`, still cited the old numbers. Each was checked against what the item
+      now covers and corrected. New items go at the end of this list for that reason.
+    - **`tests/test_docs_paths.py` failed in every git worktree.** In a linked worktree `.git` is a
+      file, so a documented `.git/config` "did not exist" and `verify.sh` failed for every
+      concurrent session. The test now resolves `.git/` paths through `git rev-parse
+      --git-common-dir`.
+    - **Statements the code had outgrown were corrected**: the README's "there are no tags" (S06
+      tags and releases every deploy), CLAUDE.md's untested `deploy.py` and undiscussed Garden-size
+      tradeoff, `docs/SECURITY-AUDIT.md`'s open question about malformed frontmatter (settled by
+      item 26), and the `roadmap-session` skill's step for finding the next session, which now
+      handles a roadmap with every session done.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
@@ -651,11 +715,12 @@ knowing so you don't "fix" something that was a deliberate decision:
   `bg-aurelia-bg`, etc.) was found and deleted as dead code (it was never runnable and unreferenced
   anywhere) — but the migration it described was never finished, so both styles still coexist in
   templates and generated HTML.
-- **`garden.html` is large** (~3.6MB as of 2026-09-10) because every note's full body is embedded
-  inline for the instant-open modal (no network request needed). Known, not addressed — fixing it
-  means trading instant-open for a fetch-on-click UX, which wasn't chosen without discussing the
-  tradeoff first. The study layer added no per-note markup to it; `review.js` and `flashcards.js`
-  ship as separately cached files.
+- **`garden.html` is large** (about 3.6 MB) because every note's full body is embedded inline for
+  the instant-open modal (no network request needed). The tradeoff was decided on 2026-10-01
+  (item 32, backlog B04): keep every note in the page, and revisit only when the compressed page
+  passes 1 MB. Still undone from that decision: the build does not yet print the compressed size.
+  The study layer added no per-note markup to it; `review.js` and `flashcards.js` ship as
+  separately cached files.
 - No performance (Lighthouse) or visual-regression testing, and no unit-test harness for
   `assets/js/` (`review.js`'s SM-2 maths is exercised end to end by the browser suite, not unit
   by unit). Browser and accessibility tests now exist and block the merge: item 30.

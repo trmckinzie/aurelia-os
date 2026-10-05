@@ -1,4 +1,4 @@
-// Browser suite for the built site (roadmap S08, docs/DECISIONS.md item 27).
+// Browser suite for the built site (roadmap S08, docs/DECISIONS.md item 30).
 //
 // It tests dist/ as it is, and never builds: verify.sh builds first (with
 // GITHUB_REPOSITORY set, so the 404 page links under /aurelia-os/ as it does

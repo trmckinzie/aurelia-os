@@ -77,7 +77,7 @@ echo "== build (${BUILD_FLAGS[*]}) =="
 # browser suite below tests the same thing locally as in CI.
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}" "$PYTHON" build.py "${BUILD_FLAGS[@]}"
 
-# Browser suite (roadmap S08, docs/DECISIONS.md item 27): Playwright drives
+# Browser suite (roadmap S08, docs/DECISIONS.md item 30): Playwright drives
 # Chromium against the dist/ just built, served under /aurelia-os/, and runs
 # axe at WCAG A/AA. Blocking, like everything above. It never builds, so it
 # cannot race this script's build. The install is a no-op once the pinned
