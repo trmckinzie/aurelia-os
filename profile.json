@@ -3,25 +3,25 @@
 
     "identity": {
         "name": "Travis R. McKinzie",
-        "headline": "Web Solutions Lead & IT Professional — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
+        "headline": "Product & Web Solutions Lead and IT Manager — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
         "location": "Colorado, USA",
-        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website.",
+        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website. Where I'm heading: human-computer interaction that supports better learning and better mental health.",
         "photo": { "src": "assets/images/headshot.webp", "alt": "Travis R. McKinzie" }
     },
 
     "roles": [
         {
             "org": "Rocky Mountain Automation AI",
-            "title": "CFO & Head of Web Solutions",
+            "title": "CPO & Head of Web Solutions",
             "period": "2026 — present",
-            "description": "Lead web design, site architecture, and client-facing web builds and integrations for an automation-focused company, alongside financial oversight of the business.",
+            "description": "Lead product and web solutions for an automation company serving service businesses: web design, site architecture, and client builds, plus a website audit method grounded in human-centered design.",
             "primary": true
         },
         {
             "org": "Adams State University — Computing Services",
             "title": "Help Desk Manager",
             "period": "2026 — present",
-            "description": "Run the campus IT help desk: manage a student support team, own the ticketing workflow, and lead the migration of internal IT documentation into a searchable knowledge base.",
+            "description": "Run the campus IT help desk and its team of student assistants. Leading the move from Request Tracker to Freshservice, rebuilding the public How-To site around the EDUCAUSE service categories, and producing self-help guides that head off common problems before they become calls. Member of EDUCAUSE and the Colorado Higher Education Computing Organization (CHECO).",
             "url": "https://www.adams.edu/",
             "primary": true
         }
@@ -32,7 +32,7 @@
             "institution": "Adams State University",
             "credential": "B.A., Psychology",
             "period": "2026",
-            "detail": "Chapter President, Psi Chi International Honor Society in Psychology.",
+            "detail": "Chapter President, Psi Chi International Honor Society in Psychology. Presented research on political polarization at the Rocky Mountain Psychological Association.",
             "url": "https://www.adams.edu/"
         },
         {
@@ -50,7 +50,7 @@
         },
         {
             "group": "Software",
-            "items": ["Python", "JavaScript", "TypeScript", "Next.js", "Node.js", "Jinja2", "Static site generation", "Git & GitHub", "CI/CD (GitHub Actions)"]
+            "items": ["Python", "JavaScript", "TypeScript", "Next.js", "Node.js", "Jinja2", "Static site generation", "Git & GitHub", "CI/CD (GitHub Actions)", "OWASP ASVS", "NIST SSDF"]
         },
         {
             "group": "AI & Automation",
@@ -58,7 +58,11 @@
         },
         {
             "group": "IT Operations",
-            "items": ["Help desk management", "IT service management", "Knowledge base design", "Identity & directory administration", "Endpoint support", "Technical documentation"]
+            "items": ["Help desk management", "IT service management", "Freshservice", "Request Tracker", "Knowledge base design", "Google Workspace administration", "Microsoft 365 administration", "Active Directory", "Endpoint support", "Technical documentation"]
+        },
+        {
+            "group": "Leadership & Training",
+            "items": ["Team leadership", "Student staff development", "SOP writing", "Training content design", "Self-service enablement"]
         },
         {
             "group": "Research & Cognition",
@@ -100,16 +104,21 @@
             "url": "https://github.com/trmckinzie/file-sorter",
             "tags": ["Python", "CLI", "Automation"],
             "status": "maintained"
+        },
+        {
+            "name": "Web Design Hub",
+            "description": "A personal reference app for web design: principles, patterns, and checklists I use when building and auditing sites.",
+            "tags": ["Web design", "Accessibility"],
+            "status": "active"
         }
     ],
 
     "links": [
-        { "label": "GitHub", "url": "https://github.com/trmckinzie", "kind": "code" },
-        { "label": "Email", "url": "mailto:travis@rockymountainautomationai.com", "kind": "email" }
+        { "label": "GitHub", "url": "https://github.com/trmckinzie", "kind": "code" }
     ],
 
     "meta": {
-        "updated": "2026-09-07",
-        "availability": "Professional inquiries welcome by email: web solutions, IT systems, and human-centered design."
+        "updated": "2026-10-07",
+        "availability": "Professional inquiries welcome through GitHub: web solutions, IT systems, and human-centered design."
     }
 }
