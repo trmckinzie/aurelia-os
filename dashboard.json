@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "commands": [
+    { "name": "verify", "run": ["bash", "verify.sh"], "kind": "check", "timeoutSec": 900, "description": "pytest, pyflakes, schema, roadmap, strict-in-CI build, Playwright + axe: what CI and pre-push run" },
+    { "name": "test", "run": [".venv/bin/python", "-m", "pytest", "tests/", "-q"], "kind": "test", "timeoutSec": 300, "description": "pytest only" },
+    { "name": "build", "run": [".venv/bin/python", "build.py", "--no-sort"], "kind": "build", "timeoutSec": 300, "description": "Build dist/ without the Drop Zone sort, so vault/ is never written" },
+    { "name": "preview", "run": ["node", "tools/preview.mjs", "8791"], "kind": "serve", "description": "Serve dist/ on 127.0.0.1:8791, as .claude/launch.json does" }
+  ]
+}
