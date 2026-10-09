@@ -58,7 +58,7 @@ escaping helper (`assets/js/utils.js`) ship as separately cached files.
 
 ```bash
 # One-time setup. Versions live in .python-version and .nvmrc, the files CI reads too.
-# Run from a virtual environment: python3 -m venv .venv (py -3.14 -m venv .venv on Windows).
+# Run from a virtual environment: uv venv --python 3.14 (or python3 -m venv .venv).
 pip install --require-hashes -r requirements-dev.txt   # Python deps + pytest + pyflakes, hash-checked
                                                        # (requirements.txt alone is enough to just build)
 npm ci                                                 # Tailwind CLI, from package-lock.json
@@ -73,8 +73,7 @@ python build.py
 # checkout, or any session under a no-vault-edits rule. dist/ is identical
 # either way; the drop zone just stays unsorted.
 python build.py --no-sort
-AURELIA_SKIP_DROPZONE=1 python build.py     # same thing, for CI            (bash)
-$env:AURELIA_SKIP_DROPZONE=1; python build.py                        # (PowerShell)
+AURELIA_SKIP_DROPZONE=1 python build.py     # same thing, for CI
 
 # Tests
 python -m pytest tests/ -q
