@@ -163,7 +163,6 @@ def test_lobby_profile_card_shows_location_and_skill_group_chips():
 def test_lobby_garden_card_renders_type_counts_as_links_with_counts():
     stats = {
         "total_notes": 12,
-        "latest_log_date": None,
         "maturity_counts": {"seed": 0, "growing": 0, "evergreen": 0},
         "hub_notes": [],
         "type_counts": [
@@ -188,14 +187,6 @@ def test_lobby_garden_card_falls_back_to_the_static_list_without_type_counts():
     html = render_index()  # default stats fixture carries no type_counts key
     assert "Concepts &middot; Sources &middot; Authors &middot; Disciplines &middot; Deep dives" in html
     assert 'href="garden.html?type=' not in html
-
-
-def test_lobby_latest_note_date_is_human_readable_and_in_a_time_element():
-    html = render_index(stats={
-        "total_notes": 1, "latest_log_date": "2026-09-07",
-        "maturity_counts": {"seed": 1, "growing": 0, "evergreen": 0}, "hub_notes": [],
-    })
-    assert '<time datetime="2026-09-07">September 7, 2026</time>' in html
 
 
 def test_lobby_maturity_legend_wraps_instead_of_breaking_mid_item():
@@ -439,3 +430,11 @@ def test_real_user_config_tech_stack_entries_satisfy_the_toolkit_contract():
             non_draft_count += 1
 
     assert non_draft_count >= 1, "every tech_stack entry is a draft -- nothing would render"
+
+
+def test_lobby_shows_no_latest_note_date():
+    # Removed 2026-10-10: the date came from the newest daily log, which had
+    # not changed since 2026-06-26, so the line read as stale rather than live.
+    html = render_index()
+    assert "Latest note" not in html
+    assert "latest_log_date" not in html

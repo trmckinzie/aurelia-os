@@ -114,24 +114,6 @@ def test_lobby_context_ranks_hub_notes_by_connection_count():
     assert stats["hub_notes"][0] == {"id": "note-a", "title": "A", "type": "concept", "connections": 2}
 
 
-def test_lobby_context_finds_latest_daily_log_date():
-    cards = [
-        _lobby_card("note-2025-01-01", "2025-01-01"),
-        _lobby_card("note-2025-12-31", "2025-12-31"),
-        _lobby_card("note-some-concept", "Some Concept"),  # not a daily log
-    ]
-    graph_index = {"nodes": [], "edges": []}
-    stats = _build_lobby_context(cards, graph_index)
-    assert stats["latest_log_date"] == "2025-12-31"
-
-
-def test_lobby_context_latest_log_date_is_none_without_daily_logs():
-    cards = [_lobby_card("note-some-concept", "Some Concept")]
-    graph_index = {"nodes": [], "edges": []}
-    stats = _build_lobby_context(cards, graph_index)
-    assert stats["latest_log_date"] is None
-
-
 def _typed_card(note_id, title, note_type):
     return {"id": note_id, "title": title, "maturity": "", "type": note_type}
 

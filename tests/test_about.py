@@ -319,7 +319,6 @@ def render_index(**overrides):
     context = base_context(active_page="index", **overrides)
     context.setdefault("stats", {
         "total_notes": 0,
-        "latest_log_date": None,
         "maturity_counts": {"seed": 0, "growing": 0, "evergreen": 0},
         "hub_notes": [],
     })
