@@ -401,3 +401,24 @@ def test_garden_roving_keydown_defers_to_card_topic_chips():
     start = html.index("function rovingKeydown")
     end = html.index("case 'ArrowRight'", start)
     assert "button.card-topic" in html[start:end]
+
+
+# --- roving focus lives on the card's title control (B19) ------------------
+
+def test_garden_roving_focus_targets_the_card_title_control():
+    html = render_garden()
+    start = html.index("function rovingControl(item)")
+    end = html.index("/* The filter toolbar is sticky", start)
+    block = html[start:end]
+    assert "item.querySelector('.card-open') || item" in block
+    assert "rovingControl(el).tabIndex = -1" in block
+    assert "rovingControl(items[rovingIndex]).tabIndex = 0" in block
+    assert "rovingControl(items[rovingIndex]).focus(" in block
+    # Enter/Space on the title button activate it natively; the handler must
+    # not open the note a second time.
+    assert "if (e.target.closest('.card-open')) return;" in block
+    # A pointer click on the card body focuses the title first, in the
+    # capture phase, so the reader returns focus to the card on close.
+    click = block[block.index("el.addEventListener('click'"):block.index("el.addEventListener('focusin'")]
+    assert "control.focus({ preventScroll: true })" in click
+    assert "}, true);" in click

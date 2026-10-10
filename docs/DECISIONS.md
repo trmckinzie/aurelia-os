@@ -590,8 +590,9 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **Exceptions are one rule on one selector, with a backlog id.** `AXE_EXCEPTIONS` in
       `tests/browser/fixtures.mjs`; no rule is disabled and no region excluded, and
       `tests/test_browser_suite.py` fails if an exception's backlog entry is missing or closed.
-      There is one: Garden cards are `role="button"` and contain the pill buttons
-      (`nested-interactive`, B19). The suite's first run also found two defects that are now
+      There was one, Garden cards being `role="button"` around the pill buttons
+      (`nested-interactive`, B19), removed 2026-10-09 when the card became a plain article with
+      its title as the one control. The suite's first run also found two defects that are now
       fixed: the Lobby's Search key hint at 3.62:1 contrast (`.kbd` lost its 0.75 opacity), and
       no Garden card holding `tabindex="0"` on a plain visit, so Tab skipped the grid.
     - **A known limit.** axe reports contrast it cannot compute (text over a gradient or beside a

@@ -1454,12 +1454,22 @@
        listbox or radio group has, and what a screen reader user expects
        from a grid of peers.
 
+       What carries the tabindex is the item's control, rovingControl():
+       a card's title button (.card-open, see engine/cards.py; the card
+       itself is a plain <article> since B19, so the pills inside it are
+       reachable), or the tree row itself, which has no inner control.
+       Visibility is still judged on the item.
+
        Visibility is read from style.display, matching getVisibleNoteIds()
        and updateGrid()'s own sweep, so the walk follows the active
        filter, topic, search and sort with nothing extra to keep in sync.
        The reader's [ and ] keys use that same helper, which is why
        arrowing and next/previous cannot drift apart. */
     let rovingIndex = 0;
+
+    function rovingControl(item) {
+        return item.querySelector('.card-open') || item;
+    }
 
     function rovingItems() {
         const sel = currentView === 'tree' ? '.searchable-tree-item' : '#cardGrid .searchable-item';
@@ -1496,14 +1506,16 @@
        not leave the tab stop pointing at a card that is now hidden, which
        would silently make the grid unreachable by Tab entirely. */
     function syncRoving(focusActive) {
-        allRovingCandidates().forEach(el => { el.tabIndex = -1; });
+        allRovingCandidates().forEach(el => { rovingControl(el).tabIndex = -1; });
         const items = rovingItems();
         if (items.length === 0) { rovingIndex = 0; return; }
         if (rovingIndex >= items.length) rovingIndex = items.length - 1;
         if (rovingIndex < 0) rovingIndex = 0;
-        items[rovingIndex].tabIndex = 0;
+        rovingControl(items[rovingIndex]).tabIndex = 0;
         if (focusActive) {
-            items[rovingIndex].focus({ preventScroll: true });
+            rovingControl(items[rovingIndex]).focus({ preventScroll: true });
+            // The item, not the control: scroll-margin-top (main.css) is on
+            // the card so it clears the two sticky bars.
             items[rovingIndex].scrollIntoView({ block: 'nearest' });
         }
     }
@@ -1533,7 +1545,12 @@
             case 'End':        e.preventDefault(); rovingIndex = rovingItems().length - 1; syncRoving(true); break;
             case 'Enter':
             case ' ':
-                // Space scrolls the page by default; a role="button" must not.
+                // A card's title is a real <button>: both keys fire its
+                // click natively, which bubbles to the card's handler, so
+                // opening it here too would open the note twice.
+                if (e.target.closest('.card-open')) return;
+                // A tree row is the control itself. Space scrolls the page
+                // by default; a role="button" must not.
                 e.preventDefault();
                 if (item.dataset.id) openNote(item.dataset.id);
                 break;
@@ -1545,9 +1562,23 @@
         const el = document.getElementById(id);
         if (!el) return;
         el.addEventListener('keydown', rovingKeydown);
-        // Clicking a card focuses it (elements with any tabindex, -1 included,
-        // are click-focusable), so this keeps the arrow keys continuing from
-        // wherever the mouse last was instead of jumping back to the old index.
+        // A click anywhere on a card focuses its title control first. The
+        // card is a plain <article> and not focusable, so without this a
+        // pointer click would leave focus wherever it was, and the reader,
+        // which records document.activeElement when it opens, would return
+        // focus there instead of to the card on close. Capture phase so it
+        // runs before the card's own onclick opens the note. A topic chip is
+        // left alone: it filters rather than opens, and keeps its own focus.
+        el.addEventListener('click', (e) => {
+            if (e.target.closest('button.card-topic')) return;
+            const item = e.target.closest('.searchable-item, .searchable-tree-item');
+            if (!item) return;
+            const control = rovingControl(item);
+            if (control !== document.activeElement) control.focus({ preventScroll: true });
+        }, true);
+        // Focus landing on a card or row (from that click, or from the
+        // reader returning it) keeps the arrow keys continuing from there
+        // instead of jumping back to the old index.
         el.addEventListener('focusin', (e) => {
             const item = e.target.closest('.searchable-item, .searchable-tree-item');
             if (!item) return;

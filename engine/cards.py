@@ -662,17 +662,23 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # is a no-op for every real tag -- the browser decodes entities before the
     # Garden's filter JS reads dataset.tags, so filtering is unaffected.
     #
-    # role/tabindex/aria-label make the card a real control. It was an
-    # <article onclick> with no role, no tabindex and no key handler, so not
-    # one of the 245 cards could be reached or activated without a mouse --
-    # the Garden could be filtered, sorted and searched, and then no note
-    # could be opened. tabindex starts at -1 on every card because the grid
-    # uses roving focus (gardentemplate.html's ROVING FOCUS block promotes
-    # exactly one card to 0, making the whole grid a single tab stop with
-    # arrow keys moving inside it). aria-label is the bare title: the card's
-    # visible text is type label, maturity, connection count and a body
-    # excerpt, and the accessible name should be the note, not all of that
-    # read out in sequence before you learn which note it is.
+    # The card is an <article>, not a control. The one control that opens the
+    # note is the title, a real <button class="card-open"> inside the <h3>,
+    # whose accessible name is the bare title. The card used to be
+    # role="button" itself (after a spell as an <article onclick> that no
+    # keyboard could reach at all), but a button's children are
+    # presentational, so a screen reader could not reach the link and topic
+    # pills inside it -- axe's nested-interactive, backlog B19. The article
+    # keeps the onclick so a pointer can still click anywhere on the card;
+    # the title button carries no handler of its own and its activation
+    # bubbles to that one, so Enter and Space on it open the note once.
+    #
+    # tabindex="-1" on the title because the grid uses roving focus
+    # (gardentemplate.html's ROVING FOCUS block promotes exactly one card's
+    # title to 0, making the whole grid a single tab stop with arrow keys
+    # moving inside it). data-id on the button is what rovingControl() and
+    # the grid's click handler read; the article's data-* stay where the
+    # sort comparators and filters expect them.
     #
     # Autoescape is now ON (engine/config.py, audit finding #21), so the
     # template no longer needs -- and no longer has -- a `|safe` on this
@@ -682,7 +688,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # (title, the prose fields, link_pill's label) or is a literal from this
     # module (icon, label, the Tailwind class strings).
     html_card = f"""
-    <article role="button" tabindex="-1" aria-label="{escape_attr(raw_title)}" onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">
@@ -691,7 +697,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                     <span class="w-1.5 h-1.5 {spine} rounded-full shadow-[0_0_8px_currentColor] {label_color}"></span>
                     <span class="field-label {label_color}">{label}</span>
                 </div>
-                <h3 class="display-md text-aurelia-text group-hover:text-aurelia-text transition-colors">{title}</h3>
+                <h3 class="display-md text-aurelia-text group-hover:text-aurelia-text transition-colors"><button type="button" class="card-open" tabindex="-1" data-id="{note_id}">{title}</button></h3>
             </div>
             <div class="flex flex-col items-end gap-2 shrink-0">
                 <div class="text-2xl opacity-40 group-hover:opacity-100 transition-opacity duration-300">{icon}</div>

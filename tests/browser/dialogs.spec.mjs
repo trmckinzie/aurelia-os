@@ -133,23 +133,43 @@ test("the reader: ] and [ step through notes, Tab stays inside, Escape closes", 
 
   await page.keyboard.press("Escape");
   await expect(page.locator("#modal-backdrop")).toBeHidden();
-  await expect(card).toBeFocused();
+  // Focus returns to the card's title control, the element that opened it (B19).
+  await expect(card.locator(".card-open")).toBeFocused();
 });
 
 test("the Garden grid is one tab stop, arrow keys move between cards, Enter opens one", async ({ page }) => {
   await gotoGarden(page);
   const cards = page.locator("#cardGrid .searchable-item");
-  await expect(page.locator('#cardGrid .searchable-item[tabindex="0"]')).toHaveCount(1);
-  await cards.first().focus();
+  // The tab stop is the card's title button, not the card (B19).
+  const titles = page.locator("#cardGrid .searchable-item .card-open");
+  await expect(page.locator('#cardGrid .card-open[tabindex="0"]')).toHaveCount(1);
+  await expect(page.locator('#cardGrid .searchable-item[tabindex]')).toHaveCount(0);
+  await titles.first().focus();
   await page.keyboard.press("ArrowRight");
-  await expect(cards.nth(1)).toBeFocused();
+  await expect(titles.nth(1)).toBeFocused();
   await page.keyboard.press("Home");
-  await expect(cards.first()).toBeFocused();
+  await expect(titles.first()).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("#modal-panel")).toHaveClass(/is-open/);
   await expect(page.locator("#modal-title")).toHaveText(await cards.first().getAttribute("data-title"));
   await page.keyboard.press("Escape");
-  await expect(cards.first()).toBeFocused();
+  await expect(titles.first()).toBeFocused();
+});
+
+test("a Garden card is not a button, so its pills are reachable, and a click on its body focuses its title", async ({ page }) => {
+  await gotoGarden(page);
+  const card = page.locator("#cardGrid .searchable-item").first();
+  await expect(card).not.toHaveAttribute("role", /.+/);
+  await expect(card.locator("h3 .card-open")).toHaveAttribute("type", "button");
+  // Clicking the card's body, away from the title, opens the note and
+  // returns focus to the title control on close.
+  // The bottom padding, below the pill row: a click that hits neither the
+  // title nor a pill, so only the card's own handler can open the note.
+  const box = await card.boundingBox();
+  await card.click({ position: { x: box.width / 2, y: box.height - 8 } });
+  await expect(page.locator("#modal-panel")).toHaveClass(/is-open/);
+  await page.keyboard.press("Escape");
+  await expect(card.locator(".card-open")).toBeFocused();
 });
 
 test("the Lobby's Toolkit sheet opens, closes on Escape, and returns focus", async ({ page }) => {
