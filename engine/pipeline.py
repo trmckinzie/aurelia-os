@@ -276,11 +276,14 @@ def _scan_vault():
     return garden_cards, backlinks, edges
 
 
-_OPEN_NOTE_RE = re.compile(r"openNote\('([^']+)'\)")
+# Every note link the engine renders carries its target in data-note (see
+# content.process_wikilinks and cards.link_pill); this is the one pattern
+# the backlinks index and the graph are built from.
+_OPEN_NOTE_RE = re.compile(r'data-note="([^"]+)"')
 
 
 def _build_link_graph(garden_cards):
-    """Single pass over every note body extracting openNote() targets, used
+    """Single pass over every note body extracting data-note targets, used
     to derive both the backlinks index and the knowledge-graph edges --
     these used to be two separate functions each doing their own regex scan
     and per-source dedup over the same data, which meant a build with N

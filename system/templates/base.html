@@ -174,7 +174,7 @@
                 <span id="nav-indicator" class="nav-indicator" aria-hidden="true"></span>
 
                 <div class="relative flex items-center">
-                    <button onclick="toggleThemeMenu()" id="theme-menu-btn" title="Switch theme" aria-label="Switch theme" aria-haspopup="true" aria-expanded="false" class="flex items-center text-aurelia-muted hover:text-aurelia-text transition-colors py-2">
+                    <button data-action="toggleThemeMenu" id="theme-menu-btn" title="Switch theme" aria-label="Switch theme" aria-haspopup="true" aria-expanded="false" class="flex items-center text-aurelia-muted hover:text-aurelia-text transition-colors py-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 100 18c1 0 1.5-.5 1.5-1.5 0-.4-.15-.75-.4-1.02-.25-.27-.4-.62-.4-1.02 0-.83.67-1.46 1.5-1.46H16a3 3 0 003-3c0-4.42-3.58-8-8-8z"></path>
                             <circle cx="7.5" cy="10.5" r="1" fill="currentColor" stroke="none"></circle>
@@ -188,7 +188,7 @@
 
             </div>
 
-            <button onclick="toggleMobileMenu()" id="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden text-aurelia-text" aria-label="Toggle navigation menu">
+            <button data-action="toggleMobileMenu" id="mobile-menu-btn" aria-expanded="false" aria-controls="mobile-menu" class="md:hidden text-aurelia-text" aria-label="Toggle navigation menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
@@ -197,7 +197,7 @@
             <a href="{{ site_root }}index.html"{% if active_page == 'index' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">HOME</a>
             <a href="{{ site_root }}garden.html"{% if active_page == 'garden' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
             <a href="{{ site_root }}about.html"{% if active_page == 'about' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
-            <button onclick="toggleCmd(); toggleMobileMenu();" class="py-3 text-left field-label text-aurelia-muted">Search</button>
+            <button data-action="searchFromMobileMenu" class="py-3 text-left field-label text-aurelia-muted">Search</button>
             <div id="mobile-theme-menu" class="flex flex-col gap-1 pt-2 mt-2 mb-4 border-t border-aurelia-border/40 normal-case tracking-normal"></div>
         </div>
     </nav>
@@ -415,7 +415,7 @@
             const desktop = document.getElementById('theme-menu');
             if (desktop) {
                 desktop.innerHTML = AVAILABLE_THEMES.map(t => `
-                    <button onclick="setTheme('${t.key}'); document.getElementById('theme-menu').classList.add('hidden');"
+                    <button data-action="setTheme" data-theme="${t.key}" data-close-menu="theme-menu"
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-aurelia-text/5 transition-colors ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
                         <span class="flex-grow">
@@ -430,7 +430,7 @@
             const mobile = document.getElementById('mobile-theme-menu');
             if (mobile) {
                 mobile.innerHTML = AVAILABLE_THEMES.map(t => `
-                    <button onclick="setTheme('${t.key}')" class="flex items-center gap-3 py-2 text-left ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
+                    <button data-action="setTheme" data-theme="${t.key}" class="flex items-center gap-3 py-2 text-left ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
                         <span class="text-[0.8125rem]">${escapeHtml(t.label)}</span>
                         ${t.key === active ? '<span class="text-[0.8125rem] ml-auto">✓</span>' : ''}
@@ -638,7 +638,7 @@
                 const selected = index === selectedIndex;
 
                 return `
-                <a href="${encodeURI(resultUrl(item))}" id="cmd-result-${index}" role="option" aria-selected="${selected}" data-result-index="${index}" class="group flex items-center justify-between p-3 rounded-theme hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-primary cursor-pointer transition-colors border-l-2 ${selected ? 'bg-aurelia-text/5 border-aurelia-primary' : 'border-transparent'}" onmouseenter="selectedIndex = ${index}; highlightSelected();">
+                <a href="${encodeURI(resultUrl(item))}" id="cmd-result-${index}" role="option" aria-selected="${selected}" data-result-index="${index}" class="group flex items-center justify-between p-3 rounded-theme hover:bg-aurelia-text/5 hover:border-l-2 hover:border-aurelia-primary cursor-pointer transition-colors border-l-2 ${selected ? 'bg-aurelia-text/5 border-aurelia-primary' : 'border-transparent'}">
                     <div class="flex items-center gap-3">
                         <span class="field-label px-1.5 py-0.5 rounded-theme border ${typeColor} w-20 text-center">
                             ${escapeHtml(item.type)}
@@ -650,6 +650,33 @@
                 `;
             }).join('');
             highlightSelected();
+        }
+
+        /* === DELEGATED ACTIONS (B02) ========================================
+           No inline handlers anywhere in the chrome; see assets/js/utils.js
+           for the dispatcher these maps feed. toggleCmd is registered here
+           rather than on the Lobby because the function lives here. */
+        registerActions({
+            toggleThemeMenu: () => toggleThemeMenu(),
+            toggleMobileMenu: () => toggleMobileMenu(),
+            toggleCmd: () => toggleCmd(),
+            searchFromMobileMenu: () => { toggleCmd(); toggleMobileMenu(); },
+            setTheme: (el) => {
+                setTheme(el.dataset.theme);
+                const menu = el.dataset.closeMenu && document.getElementById(el.dataset.closeMenu);
+                if (menu) menu.classList.add('hidden');
+            },
+        });
+        // Hovering a palette result selects it, as the old per-row
+        // onmouseenter did; one listener on the list survives re-renders.
+        const cmdResultsEl = document.getElementById('cmd-results');
+        if (cmdResultsEl) {
+            cmdResultsEl.addEventListener('mouseover', (e) => {
+                const row = e.target.closest('[data-result-index]');
+                if (!row) return;
+                const index = Number(row.dataset.resultIndex);
+                if (index !== selectedIndex) { selectedIndex = index; highlightSelected(); }
+            });
         }
     </script>
 </body>

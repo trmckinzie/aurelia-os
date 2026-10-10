@@ -3,7 +3,7 @@
 // a page error, a failed or 4xx request, or a request to another origin.
 import { test, expect } from "./fixtures.mjs";
 import { BASE_PATH } from "./site.mjs";
-import { PAGES, PALETTE_KEY } from "./helpers.mjs";
+import { PAGES, PALETTE_KEY, findStudyableNoteId, gotoGarden, openNoteByCard } from "./helpers.mjs";
 
 // What a page needs from its own assets/ to work, checked in the page itself:
 // the compiled stylesheet applied (a theme variable resolves and the nav is
@@ -91,4 +91,25 @@ test("the site root without its trailing slash redirects, like GitHub Pages", as
   expect(response.status()).toBe(200);
   await expect(page).toHaveURL(BASE_PATH);
   await expect(page.locator("#lobby-total-notes")).toBeVisible();
+});
+
+
+// Backlog B02: a Content-Security-Policy without 'unsafe-inline' refuses
+// inline handlers, so none may exist -- in the served markup or in anything
+// a script builds later (theme menu, backlinks, graph rows). The Python
+// guard (tests/test_no_inline_handlers.py) reads the templates; this reads
+// the live DOM, reader open included.
+const INLINE_HANDLERS = "[onclick],[onchange],[oninput],[onkeydown],[onkeyup],[onmouseenter],[onmouseover],[onsubmit],[onload],[onerror]";
+
+test("no page carries an inline event handler, in the markup or in what its scripts build", async ({ page }) => {
+  for (const { name, path } of PAGES) {
+    await page.goto(path);
+    expect(await page.locator(INLINE_HANDLERS).count(), name).toBe(0);
+  }
+  await gotoGarden(page);
+  await page.locator("#theme-menu-btn").click();
+  await expect(page.locator('#theme-menu button[data-action="setTheme"]').first()).toBeVisible();
+  await openNoteByCard(page, await findStudyableNoteId(page));
+  await expect(page.locator("#modal-panel [data-note]").first()).toBeVisible();
+  expect(await page.locator(INLINE_HANDLERS).count(), "Garden with the theme menu and a note open").toBe(0);
 });

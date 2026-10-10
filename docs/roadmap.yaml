@@ -573,8 +573,16 @@ backlog:
     area: Security
     status: open
     detail: >-
-      Cards and wikilinks are generated with inline handlers, which rules out a
-      strict policy today. Follows B01.
+      First half shipped 2026-10-09: no page carries an inline handler any more.
+      Controls name their action in data-action / data-change / data-input and
+      assets/js/utils.js dispatches to functions each page registers; note links
+      (prose wikilinks, card pills, backlinks, graph rows) carry data-note and the
+      Garden opens them from one listener; the backlinks index and graph read the
+      same attribute. tests/test_no_inline_handlers.py and the browser suite pin
+      it. Remaining: the policy itself, a <meta> Content-Security-Policy (GitHub
+      Pages sends no headers) with build-time hashes for the inline script blocks
+      and inline styles, so 'unsafe-inline' is never needed; that takes the
+      minimum of B01 (none of the module split) and closes this item.
   - id: B03
     title: Move card HTML from Python f-strings to Jinja macros
     area: Build

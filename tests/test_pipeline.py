@@ -27,9 +27,9 @@ def _lobby_card(note_id, title, maturity=""):
 
 def test_link_graph_backlinks_maps_target_to_referencing_notes():
     cards = [
-        _card("note-a", "A", "links to <button onclick=\"openNote('note-b')\">B</button>"),
+        _card("note-a", "A", "links to <button type=\"button\" data-note=\"note-b\">B</button>"),
         _card("note-b", "B", "no links here"),
-        _card("note-c", "C", "also links to <button onclick=\"openNote('note-b')\">B</button>"),
+        _card("note-c", "C", "also links to <button type=\"button\" data-note=\"note-b\">B</button>"),
     ]
     backlinks, _ = _build_link_graph(cards)
     assert backlinks == {"note-b": [{"id": "note-a", "title": "A"}, {"id": "note-c", "title": "C"}]}
@@ -43,7 +43,7 @@ def test_link_graph_omits_notes_with_no_incoming_links():
 
 
 def test_link_graph_ignores_self_links():
-    cards = [_card("note-a", "A", "links to itself: <button onclick=\"openNote('note-a')\">A</button>")]
+    cards = [_card("note-a", "A", "links to itself: <button type=\"button\" data-note=\"note-a\">A</button>")]
     backlinks, edges = _build_link_graph(cards)
     assert backlinks == {}
     assert edges == []
@@ -52,7 +52,7 @@ def test_link_graph_ignores_self_links():
 def test_link_graph_ignores_links_to_unpublished_notes():
     # note-ghost isn't in the card list at all (e.g. unpublished or a
     # scrapped page type), so it can't appear as a backlink target or edge.
-    cards = [_card("note-a", "A", "links to <button onclick=\"openNote('note-ghost')\">Ghost</button>")]
+    cards = [_card("note-a", "A", "links to <button type=\"button\" data-note=\"note-ghost\">Ghost</button>")]
     backlinks, edges = _build_link_graph(cards)
     assert backlinks == {}
     assert edges == []
@@ -61,8 +61,8 @@ def test_link_graph_ignores_links_to_unpublished_notes():
 def test_link_graph_dedupes_multiple_links_from_the_same_note():
     cards = [
         _card("note-a", "A", "mentions B twice: "
-              "<button onclick=\"openNote('note-b')\">B</button> and again "
-              "<button onclick=\"openNote('note-b')\">B</button>"),
+              "<button type=\"button\" data-note=\"note-b\">B</button> and again "
+              "<button type=\"button\" data-note=\"note-b\">B</button>"),
         _card("note-b", "B", "no links"),
     ]
     backlinks, edges = _build_link_graph(cards)
@@ -73,8 +73,8 @@ def test_link_graph_dedupes_multiple_links_from_the_same_note():
 def test_link_graph_edges_are_deduped_undirected_pairs():
     # A links to B and B links back to A -- one edge, not two.
     cards = [
-        _card("note-a", "A", "<button onclick=\"openNote('note-b')\">B</button>"),
-        _card("note-b", "B", "<button onclick=\"openNote('note-a')\">A</button>"),
+        _card("note-a", "A", "<button type=\"button\" data-note=\"note-b\">B</button>"),
+        _card("note-b", "B", "<button type=\"button\" data-note=\"note-a\">A</button>"),
     ]
     _, edges = _build_link_graph(cards)
     assert edges == [{"source": "note-a", "target": "note-b"}]
@@ -207,8 +207,8 @@ def test_link_graph_is_identical_whether_or_not_dangling_links_were_dimmed():
     in the known set. If someone later removes that guard, this fails.
     """
     body = (
-        "real <button onclick=\"openNote('note-b')\">B</button> and "
-        "dangling <button onclick=\"openNote('note-ghost')\">Ghost</button>"
+        "real <button type=\"button\" data-note=\"note-b\">B</button> and "
+        "dangling <button type=\"button\" data-note=\"note-ghost\">Ghost</button>"
     )
     known = {"note-a", "note-b"}
 

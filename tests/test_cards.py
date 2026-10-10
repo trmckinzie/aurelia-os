@@ -17,7 +17,7 @@ def test_render_items_empty_list_no_fallback_is_blank():
 
 def test_link_pill_renders_clickable_button_for_known_target():
     html = link_pill("note-a", "Alpha", "my-classes", known_ids={"note-a", "note-b"})
-    assert "onclick=\"openNote('note-a'); event.stopPropagation()\"" in html
+    assert "type=\"button\" data-note=\"note-a\"" in html
     assert "cursor-pointer" in html
     assert "Alpha" in html
 
@@ -42,20 +42,23 @@ def test_generate_garden_card_html_contains_title_and_type():
     html, _ = generate_garden_card_html(meta, "Some Concept.md", "note-some-concept", "body text")
     assert "Some Concept" in html
     assert "CONCEPT" in html
-    assert "openNote('note-some-concept')" in html
+    # The card opens through its data-id (grid delegation) and its title
+    # button; no inline handler names the note (B02).
+    assert 'data-id="note-some-concept"' in html
+    assert "openNote(" not in html
 
 
 def test_concept_card_related_link_is_clickable_when_target_known():
-    body = '### Definition\n> A thing.\n\n**🔗 Related:** <button onclick="openNote(\'note-other\')">Other</button>'
+    body = '### Definition\n> A thing.\n\n**🔗 Related:** <button type="button" data-note="note-other">Other</button>'
     html, _ = generate_garden_card_html(
         {"type": "concept", "tags": []}, "Thing.md", "note-thing", body,
         known_ids={"note-thing", "note-other"},
     )
-    assert "onclick=\"openNote('note-other'); event.stopPropagation()\"" in html
+    assert "type=\"button\" data-note=\"note-other\"" in html
 
 
 def test_concept_card_related_link_is_dimmed_when_target_unpublished():
-    body = '### Definition\n> A thing.\n\n**🔗 Related:** <button onclick="openNote(\'note-unpublished\')">Ghost</button>'
+    body = '### Definition\n> A thing.\n\n**🔗 Related:** <button type="button" data-note="note-unpublished">Ghost</button>'
     html, _ = generate_garden_card_html(
         {"type": "concept", "tags": []}, "Thing.md", "note-thing", body,
         known_ids={"note-thing"},  # note-unpublished is NOT in the known set
@@ -157,7 +160,7 @@ assets/audio/example.m4a
 
 def test_deep_dive_card_renders_premise_synthesis_and_related():
     meta = {"type": "deep-dive", "maturity": "growing", "tags": []}
-    body = """**🔗 Related:** <button onclick="openNote('note-idea')">Idea</button>
+    body = """**🔗 Related:** <button type="button" data-note="note-idea">Idea</button>
 
 ---
 
@@ -177,7 +180,7 @@ The synthesis text goes here.
     assert "border-aurelia-insight" in html
     assert "A short premise line" in html
     assert "The synthesis text goes here." in html
-    assert "onclick=\"openNote('note-idea'); event.stopPropagation()\"" in html
+    assert "type=\"button\" data-note=\"note-idea\"" in html
 
 
 def test_deep_dive_card_shows_no_links_placeholder_when_related_empty():
@@ -309,7 +312,10 @@ def test_card_article_is_not_a_button():
     assert "role=" not in article
     assert "tabindex=" not in article
     assert "aria-label=" not in article
-    assert "onclick=\"openNote('note-alpha')\"" in article
+    # No inline handler either (B02): the grid's delegated listener opens
+    # data-id.
+    assert "onclick" not in article
+    assert 'data-id="note-alpha"' in article
 
 
 def test_card_title_is_the_one_control_that_opens_the_note():

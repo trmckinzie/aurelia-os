@@ -49,14 +49,17 @@ def link_pill(target_id, label, classes, known_ids):
     finding #21's "wikilink labels reach HTML unescaped" sibling), and it has
     to be for generate_garden_card_html() to honestly return Markup.
     `target_id` needs no escaping of its own: it only ever comes from
-    content.make_id(), whose output is `note-` plus [a-z0-9-], so it cannot
-    carry the quote that would break out of the onclick's JS string.
+    content.make_id(), whose output is `note-` plus [a-z0-9-].
     """
     label = escape(label)
     if target_id and target_id in known_ids:
-        # A real <button>, not a <span onclick>. Assistive tech announces this
-        # as a control and can activate it; a span announced nothing and was
-        # invisible to every keyboard affordance on the page.
+        # A real <button>, not a span with a handler. Assistive tech
+        # announces this as a control and can activate it; a span announced
+        # nothing and was invisible to every keyboard affordance on the page.
+        #
+        # data-note, not an inline onclick (backlog B02): the Garden's
+        # delegated listeners open the pill's target and leave the card
+        # alone, so no stopPropagation() is needed either.
         #
         # tabindex="-1" keeps it out of the global tab order on purpose. The
         # grid uses roving focus (one tab stop, arrow keys between cards -- see
@@ -68,8 +71,7 @@ def link_pill(target_id, label, classes, known_ids):
         # `pill-live` adds the hover treatment (see main.css) -- a live link
         # should look reactive, not just colored, since color alone is what
         # made these look clickable when they weren't.
-        return (f'<button type="button" tabindex="-1" '
-                f'onclick="openNote(\'{target_id}\'); event.stopPropagation()" '
+        return (f'<button type="button" data-note="{target_id}" tabindex="-1" '
                 f'class="{classes} pill-live cursor-pointer">{label}</button>')
     if target_id:
         # grayscale neutralizes whatever hue `classes` set (so a dangling
@@ -527,8 +529,8 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
         # wikilink each, so a Related row would be empty -- and this is what
         # gives the card the bottom-anchored pill row every other type has.
         #
-        # data-tag + the grid's delegated listener, never an inline
-        # onclick="toggleTopicFilter('...')": the tag is vault-authored text,
+        # data-tag + the grid's delegated listener, never an inline handler
+        # (none exist anywhere now, B02): the tag is vault-authored text,
         # and the topic cloud's own renderer documents why that distinction
         # matters (an apostrophe alone breaks such a handler). escape_attr
         # covers the attribute; nothing here is parsed as JS.
@@ -668,10 +670,12 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # role="button" itself (after a spell as an <article onclick> that no
     # keyboard could reach at all), but a button's children are
     # presentational, so a screen reader could not reach the link and topic
-    # pills inside it -- axe's nested-interactive, backlog B19. The article
-    # keeps the onclick so a pointer can still click anywhere on the card;
-    # the title button carries no handler of its own and its activation
-    # bubbles to that one, so Enter and Space on it open the note once.
+    # pills inside it -- axe's nested-interactive, backlog B19. A pointer can
+    # still click anywhere on the card: the grid's one delegated click
+    # listener (gardentemplate.html) opens data-id unless the click landed
+    # on a pill, a topic chip or the title button's own activation, so Enter
+    # and Space on the title open the note once. No inline onclick anywhere
+    # on the card (backlog B02).
     #
     # tabindex="-1" on the title because the grid uses roving focus
     # (gardentemplate.html's ROVING FOCUS block promotes exactly one card's
@@ -688,7 +692,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # (title, the prose fields, link_pill's label) or is a literal from this
     # module (icon, label, the Tailwind class strings).
     html_card = f"""
-    <article onclick="openNote('{note_id}')" data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
+    <article data-id="{note_id}" data-type="{escape_attr(note_type)}" data-label="{escape_attr(label)}" data-maturity="{maturity_slug}" data-tags="{escape_attr(tags_attr)}" data-title="{escape_attr(raw_title)}" data-connections="{connections}" data-created="{escape_attr(created)}" class="{base_classes} {color}">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] {spine} opacity-70 group-hover:opacity-100 transition-opacity"></span>
         <span aria-hidden="true" class="bracket-mark {label_color}"></span>
         <div class="flex justify-between items-start gap-3">

@@ -278,13 +278,13 @@ def test_parse_frontmatter_tolerates_trailing_whitespace_on_the_fence():
 
 def test_process_wikilinks_simple():
     html = process_wikilinks("See [[Some Note]] for detail")
-    assert "openNote('note-some-note')" in html
+    assert 'data-note="note-some-note"' in html
     assert ">Some Note</button>" in html
 
 
 def test_process_wikilinks_piped_label():
     html = process_wikilinks("[[Target Note|Custom Label]]")
-    assert "openNote('note-target-note')" in html
+    assert 'data-note="note-target-note"' in html
     assert ">Custom Label</button>" in html
 
 
@@ -297,16 +297,16 @@ def test_dim_dangling_links_leaves_known_target_untouched():
 def test_dim_dangling_links_rewrites_unknown_target():
     html = process_wikilinks("See [[Some Note]] for detail")
     result = dim_dangling_links(html, known_ids=set())
-    assert "openNote(" not in result
+    assert "data-note=" not in result
     assert '<span class="opacity-70 grayscale cursor-default" title="Not yet published">Some Note</span>' in result
 
 
 def test_dim_dangling_links_handles_mixed_known_and_unknown():
     html = process_wikilinks("[[Real Note]] and [[Ghost Note]]")
     result = dim_dangling_links(html, known_ids={"note-real-note"})
-    assert "openNote('note-real-note')" in result
+    assert 'data-note="note-real-note"' in result
     assert ">Real Note</button>" in result
-    assert "openNote('note-ghost-note')" not in result
+    assert 'data-note="note-ghost-note"' not in result
     assert '<span class="opacity-70 grayscale cursor-default" title="Not yet published">Ghost Note</span>' in result
 
 
@@ -750,14 +750,14 @@ def test_resolver_alias_collision_between_two_notes_drops_the_key(capsys):
 def test_process_wikilinks_with_no_resolver_is_unchanged():
     text = "See [[Some Note]] and [[Target|Label]]"
     assert process_wikilinks(text) == process_wikilinks(text, resolve=None)
-    assert "openNote('note-some-note')" in process_wikilinks(text)
+    assert 'data-note="note-some-note"' in process_wikilinks(text)
 
 
 def test_process_wikilinks_uses_the_given_resolver():
     notes = [_note("note-dopamine", "Dopamine (Reward Prediction Error)", aliases=["Dopamine"])]
     resolve = content_module.build_link_resolver(notes)
     html = process_wikilinks("See [[Dopamine]] for detail", resolve=resolve)
-    assert "openNote('note-dopamine')" in html
+    assert 'data-note="note-dopamine"' in html
 
 
 def test_dim_dangling_links_records_unresolved_targets():
