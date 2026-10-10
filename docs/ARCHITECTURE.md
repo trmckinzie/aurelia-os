@@ -324,6 +324,16 @@ against new HTML. Templates write `{{ asset_url('assets/js/utils.js') }}`, which
 characters of the SHA-256 of that file as it sits in `dist/`, after the Tailwind compile has
 written the final `main.css`. Fonts carry their own hash inside `fonts.css`.
 
+Every page carries a Content-Security-Policy (backlog B02, DECISIONS items 35 and 36). GitHub
+Pages sends no headers, so it is a `<meta http-equiv>` tag, the first element of `<head>`,
+rendered with a token that `engine/csp.py` fills after the asset stamp: `'self'` plus a sha256
+hash of each of that page's own inline `<script>` and `<style>` blocks, never `'unsafe-inline'`.
+That is what lets the Garden keep its one large inline script. Nothing else inline is allowed:
+no page carries an inline event handler or style attribute (controls name a `data-action` that
+`assets/js/utils.js` dispatches; styles live in `main.css` or are set through the CSSOM), and
+`tests/test_no_inline_handlers.py`, the build's own warning and the browser suite, which reads
+the live policy and fails on any violation, keep it that way.
+
 The 404 page is the one page served from any depth (a missing URL two folders down still gets
 `404.html`), so it alone links by absolute path, using `site_root` (`/aurelia-os/` in CI, `/`
 locally or on a custom domain). Every other page keeps relative links.

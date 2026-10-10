@@ -778,7 +778,7 @@
                     <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-aurelia-insight"></span>Deep Dive</span>
                 </div>
             </div>
-            <div id="graph-canvas-wrap" class="relative border border-aurelia-border bg-aurelia-bg/40 rounded-theme overflow-hidden" style="height: 70vh;">
+            <div id="graph-canvas-wrap" class="relative border border-aurelia-border bg-aurelia-bg/40 rounded-theme overflow-hidden">
                 <canvas id="graph-canvas" class="w-full h-full"></canvas>
                 <div id="graph-tooltip" class="hidden absolute pointer-events-none z-20 px-2.5 py-1.5 bg-aurelia-bg border border-aurelia-primary/50 rounded-theme text-[0.8125rem] font-mono text-aurelia-text shadow-lg"></div>
                 <div id="graph-empty" class="hidden absolute inset-0 flex items-center justify-center text-[0.8125rem] font-mono text-aurelia-muted uppercase tracking-[0.06em]">No notes match the current filter</div>
@@ -809,7 +809,7 @@
          not parsing -- anything in here is parsed by the browser at page
          load whether or not a reader ever opens the note. That is why the
          sanitizer runs at build time rather than in openNote(). -->
-    <div id="data-storage" style="display: none;">
+    <div id="data-storage" class="hidden">
         {% for card in cards %}
             <div id="{{ card.id }}" class="hidden">{{ card.body }}</div>
         {% endfor %}
@@ -862,7 +862,7 @@
             </div>
             <div aria-hidden="true" class="reader-accent-rule"></div>
             <div class="h-[2px] bg-aurelia-bg/40 shrink-0">
-                <div id="modal-progress" class="h-full" style="width: 0%; background: var(--note-accent); box-shadow: 0 0 10px var(--note-accent)"></div>
+                <div id="modal-progress" class="h-full"></div>
             </div>
             <div id="modal-scroll" class="flex-grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
                 <div class="reader-layout">
@@ -2784,8 +2784,11 @@
             // attribute, so an apostrophe alone breaks the handler and a
             // crafted tag could close the string and run its own code.
             // escapeHtml covers the attribute; nothing is parsed as JS at all.
-            return `<button type="button" data-tag="${escapeHtml(tag)}" class="font-mono px-2.5 py-1 rounded-theme border transition-colors ${activeClasses}" style="font-size:${size}px">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
+            return `<button type="button" data-tag="${escapeHtml(tag)}" class="font-mono px-2.5 py-1 rounded-theme border transition-colors ${activeClasses}" data-size="${size}">${escapeHtml(label)} <span class="opacity-50">${count}</span></button>`;
         }).join('');
+        // Frequency-weighted size through the CSSOM, not a style attribute in
+        // the markup string, which the Content-Security-Policy refuses.
+        document.querySelectorAll('#topic-cloud-items [data-size]').forEach((b) => { b.style.fontSize = b.dataset.size + 'px'; });
     }
 
     // Delegated: renderTopicCloud() replaces the whole list on every toggle,

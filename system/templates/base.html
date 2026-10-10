@@ -10,6 +10,13 @@
 {% set site = config.site or {} %}<!DOCTYPE html>
 <html lang="en" data-theme="{{ theme_key }}">
 <head>
+    <!-- The Content-Security-Policy, first so it governs everything below.
+         GitHub Pages sends no headers, so it is a meta tag; engine/csp.py
+         fills the token after the build with hashes of this page's inline
+         script and style blocks, so nothing inline runs unless it was
+         built here. No inline handler or style attribute exists anywhere
+         (backlog B02) -- the policy refuses them, and the build warns. -->
+    <meta http-equiv="Content-Security-Policy" content="@@csp@@">
     <!-- Runs before any stylesheet is applied, so a returning visitor's
          saved theme (if different from the build-time default above) is
          already correct by first paint -- no flash of the wrong theme. -->
@@ -403,9 +410,9 @@
 
         function themeSwatchHtml(t) {
             return `<span class="flex gap-1 shrink-0">
-                <span class="w-2.5 h-2.5 rounded-full border border-black/10" style="background:${t.swatch.primary}"></span>
-                <span class="w-2.5 h-2.5 rounded-full border border-black/10" style="background:${t.swatch.secondary}"></span>
-                <span class="w-2.5 h-2.5 rounded-full border border-black/10" style="background:${t.swatch.accent}"></span>
+                <span class="w-2.5 h-2.5 rounded-full border border-black/10" data-swatch="${t.swatch.primary}"></span>
+                <span class="w-2.5 h-2.5 rounded-full border border-black/10" data-swatch="${t.swatch.secondary}"></span>
+                <span class="w-2.5 h-2.5 rounded-full border border-black/10" data-swatch="${t.swatch.accent}"></span>
             </span>`;
         }
 
@@ -437,6 +444,10 @@
                     </button>
                 `).join('');
             }
+            // Swatch colours through the CSSOM, not a style attribute in the
+            // markup string: the Content-Security-Policy allows the former
+            // and refuses the latter (engine/csp.py).
+            document.querySelectorAll('[data-swatch]').forEach((s) => { s.style.background = s.dataset.swatch; });
         }
         renderThemeMenus();
 

@@ -1606,3 +1606,18 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .graph-list-row { transition: none; }
 }
+
+
+/* === FORMER INLINE STYLES (backlog B02) ================================
+   The Content-Security-Policy refuses style attributes in markup (it hashes
+   <style> blocks, not attributes), so the handful the templates carried
+   live here. JS still sets widths and colours through the CSSOM, which the
+   policy allows. */
+.bracket-mark-lg { width: 56px; height: 56px; }
+.scanline-overlay { opacity: var(--aurelia-scanline-opacity); }
+#graph-canvas-wrap { height: 70vh; }
+#modal-progress {
+    width: 0%;
+    background: var(--note-accent);
+    box-shadow: 0 0 10px var(--note-accent);
+}
