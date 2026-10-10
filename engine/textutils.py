@@ -12,11 +12,11 @@ from markupsafe import Markup
 
 _HTML_TAG_RE = re.compile(r'<[^>]+>')
 _WIKILINK_RE = re.compile(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]')
-_BUTTON_ID_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
+_BUTTON_ID_RE = re.compile(r'''<button\b[^>]*?\sdata-note="([^"]+)"[^>]*>(.*?)</button>''')
 
 
 def strip_html(text):
-    """Removes HTML tags (e.g. rendered <button> wikilinks), keeping their text."""
+    """Removes HTML tags (e.g. rendered <button data-note> wikilinks), keeping their text."""
     return _HTML_TAG_RE.sub('', text)
 
 
@@ -37,7 +37,7 @@ def truncate(text, limit):
 
 def extract_links(section_text):
     """Pulls linked items out of a section as (target_id, label) pairs: rendered
-    <button onclick="openNote('id')">Label</button> wikilinks first, falling
+    <button type="button" data-note="id">Label</button> wikilinks first, falling
     back to raw [[Target]] / [[Target|Label]] brackets (pre-process_wikilinks
     text, target_id derived via make_id) if none were found.
 

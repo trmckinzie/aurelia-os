@@ -391,13 +391,13 @@
                        toggle is signalled only by a background tint, which a
                        screen reader cannot see and a colour-blind reader can
                        easily miss. #}
-                    <button onclick="switchView('grid')" id="btn-grid" aria-label="Grid view" aria-pressed="true" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid view">
+                    <button data-action="switchView" data-view="grid" id="btn-grid" aria-label="Grid view" aria-pressed="true" class="p-2 rounded-theme text-aurelia-primary bg-aurelia-text/10 transition-colors hover:text-aurelia-text" title="Grid view">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     </button>
-                    <button onclick="switchView('tree')" id="btn-tree" aria-label="List view" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="List view">
+                    <button data-action="switchView" data-view="tree" id="btn-tree" aria-label="List view" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="List view">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <button onclick="switchView('graph')" id="btn-graph" aria-label="Knowledge graph" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge graph">
+                    <button data-action="switchView" data-view="graph" id="btn-graph" aria-label="Knowledge graph" aria-pressed="false" class="p-2 rounded-theme text-aurelia-muted hover:text-aurelia-text transition-colors" title="Knowledge graph">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5" stroke-width="2"></circle><circle cx="18" cy="6" r="2.5" stroke-width="2"></circle><circle cx="12" cy="18" r="2.5" stroke-width="2"></circle><path stroke-linecap="round" stroke-width="2" d="M8 7.2L11 16M16 7.2L13 16M8.4 6H15.6"></path></svg>
                     </button>
                 </div>
@@ -405,35 +405,35 @@
                 <div class="h-6 w-px bg-aurelia-border shrink-0"></div>
 
                 <div id="filter-controls" class="flex gap-2 md:flex-wrap transition-opacity duration-300">
-                    <button onclick="setFilter('all', this)" data-filter="all" aria-pressed="true" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
+                    <button data-action="setFilter" data-filter="all" aria-pressed="true" class="filter-btn active chip border border-aurelia-primary bg-aurelia-primary/10 text-aurelia-primary">
                         All Notes
                     </button>
 
-                    <button onclick="setFilter('daily-bridge', this)" data-filter="daily-bridge" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
+                    <button data-action="setFilter" data-filter="daily-bridge" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-tertiary hover:border-aurelia-tertiary hover:bg-aurelia-tertiary/5">
                         Daily Logs
                     </button>
 
-                    <button onclick="setFilter('concept', this)" data-filter="concept" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
+                    <button data-action="setFilter" data-filter="concept" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-primary hover:border-aurelia-primary hover:bg-aurelia-primary/5">
                         Concepts
                     </button>
 
-                    <button onclick="setFilter('source', this)" data-filter="source" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
+                    <button data-action="setFilter" data-filter="source" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-highlight hover:border-aurelia-highlight hover:bg-aurelia-highlight/5">
                         Sources
                     </button>
 
-                    <button onclick="setFilter('author', this)" data-filter="author" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
+                    <button data-action="setFilter" data-filter="author" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-secondary hover:border-aurelia-secondary hover:bg-aurelia-secondary/5">
                         Authors
                     </button>
 
-                    <button onclick="setFilter('discipline', this)" data-filter="discipline" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
+                    <button data-action="setFilter" data-filter="discipline" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-accent hover:border-aurelia-accent hover:bg-aurelia-accent/5">
                         Disciplines
                     </button>
 
-                    <button onclick="setFilter('gemini-notebook', this)" data-filter="gemini-notebook" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
+                    <button data-action="setFilter" data-filter="gemini-notebook" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-info hover:border-aurelia-info hover:bg-aurelia-info/5">
                         Gemini Notebook
                     </button>
 
-                    <button onclick="setFilter('deep-dive', this)" data-filter="deep-dive" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
+                    <button data-action="setFilter" data-filter="deep-dive" aria-pressed="false" class="filter-btn chip border border-aurelia-border text-aurelia-muted hover:text-aurelia-insight hover:border-aurelia-insight hover:bg-aurelia-insight/5">
                         Deep Dive
                     </button>
                 </div>
@@ -459,12 +459,12 @@
                    monochrome stroke icons. aria-label because the icon-only
                    form (everything below 2xl) has no accessible name otherwise
                    -- title alone is not reliably announced. #}
-                <button onclick="toggleTopicCloud()" id="btn-topics" title="Browse by topic" aria-label="Browse by topic" aria-expanded="false" aria-controls="topic-cloud" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                <button data-action="toggleTopicCloud" id="btn-topics" title="Browse by topic" aria-label="Browse by topic" aria-expanded="false" aria-controls="topic-cloud" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.53 0 1.04.21 1.41.59l7 7a2 2 0 010 2.82l-7 7a2 2 0 01-2.82 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Topics</span>
                 </button>
 
-                <button onclick="openRandomNote()" title="Open a random note" aria-label="Open a random note" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                <button data-action="openRandomNote" title="Open a random note" aria-label="Open a random note" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Random</span>
                 </button>
@@ -473,7 +473,7 @@
                      is a convenience rather than the mechanism -- but without
                      something visible, a reader has no reason to suspect the
                      URL is worth copying. -->
-                <button onclick="copyViewLink()" id="btn-share" title="Copy a link to this view" aria-label="Copy a link to this view" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
+                <button data-action="copyViewLink" id="btn-share" title="Copy a link to this view" aria-label="Copy a link to this view" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-accent hover:text-aurelia-accent shrink-0">
                     <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.83 10.17a4 4 0 010 5.66l-3 3a4 4 0 01-5.66-5.66l1.5-1.5M10.17 13.83a4 4 0 010-5.66l3-3a4 4 0 015.66 5.66l-1.5 1.5"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Share View</span>
                 </button>
@@ -485,7 +485,7 @@
                      A second instance lives in the modal footer; both share
                      the .study-toggle-btn class and are kept in sync by
                      setStudyModeButtons(). -->
-                <button onclick="toggleStudyMode()" id="btn-study-mode" title="Study mode: try to recall each note's answer before revealing it" aria-label="Toggle Study mode" aria-pressed="false" class="chip toolbar-icon-btn study-toggle-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                <button data-action="toggleStudyMode" id="btn-study-mode" title="Study mode: try to recall each note's answer before revealing it" aria-label="Toggle Study mode" aria-pressed="false" class="chip toolbar-icon-btn study-toggle-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Study Mode</span>
                 </button>
@@ -495,7 +495,7 @@
                      openShortcutSheet() in the scripts block. Also reachable
                      with the '?' key from anywhere on the page (the global
                      keydown handler below). -->
-                <button type="button" onclick="openShortcutSheet()" id="btn-shortcuts" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
+                <button type="button" data-action="openShortcutSheet" id="btn-shortcuts" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts" class="chip toolbar-icon-btn border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary shrink-0">
                     <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M9.09 9a3 3 0 015.83 1c0 2-3 2-3 4"></path><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"></circle></svg>
                     <span class="hidden 2xl:inline uppercase tracking-wider">Shortcuts</span>
                 </button>
@@ -520,7 +520,7 @@
                    label would wrap the select onto a fourth row. #}
                 <div id="sort-control" class="shrink-0 max-w-[9rem] md:max-w-none">
                     <label class="sr-only" for="sort-select">Sort notes</label>
-                    <select id="sort-select" onchange="setSort(this.value)" title="Order the notes"
+                    <select id="sort-select" data-change="setSort" title="Order the notes"
                             class="chip toolbar-sort-select max-w-full border border-aurelia-border text-aurelia-muted bg-aurelia-bg/50 hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
                         <option value="relevance">Relevance</option>
                         <option value="connected">Most connected</option>
@@ -542,7 +542,7 @@
                          autofill and most IME composition all change the value
                          without ever releasing a key, so onkeyup silently
                          ignored every one of them. `input` covers typing too. -->
-                    <input type="text" id="searchInput" oninput="handleSearch()" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full min-w-0 placeholder-[var(--aurelia-text-muted)]">
+                    <input type="text" id="searchInput" data-input="handleSearch" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full min-w-0 placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
@@ -593,7 +593,7 @@
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <p class="field-label text-aurelia-muted flex items-center gap-3 flex-wrap">
                     Due today: <span id="due-count" class="text-aurelia-text text-base font-extrabold tabular-nums">0</span>
-                    <button type="button" id="btn-start-review" onclick="startReviewSession()" disabled
+                    <button type="button" id="btn-start-review" data-action="startReviewSession" disabled
                             title="No notes are due for review yet. Rate a note in Study mode to add it to the queue."
                             class="chip border border-aurelia-primary text-aurelia-primary bg-aurelia-primary/10 hover:bg-aurelia-primary/20 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-aurelia-primary/10">
                         Start review
@@ -609,12 +609,12 @@
                             Your review history lives only in this browser. Export it to keep a copy, or import one from another device.
                         </p>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <button type="button" onclick="exportReviewProgress()" class="chip border border-aurelia-border text-aurelia-muted hover:border-aurelia-primary hover:text-aurelia-primary">
+                            <button type="button" data-action="exportReviewProgress" class="chip border border-aurelia-border text-aurelia-muted hover:border-aurelia-primary hover:text-aurelia-primary">
                                 Export progress
                             </button>
                             <label class="chip border border-aurelia-border text-aurelia-muted hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer">
                                 Import progress
-                                <input type="file" id="import-progress-input" accept="application/json" class="sr-only" onchange="importReviewProgress(this.files[0]); this.value = '';">
+                                <input type="file" id="import-progress-input" accept="application/json" class="sr-only" data-change="importReviewProgress">
                             </label>
                         </div>
                         <p id="progress-panel-result" class="text-[0.8125rem] text-aurelia-muted" role="status"></p>
@@ -630,7 +630,7 @@
                 </span>
                 <span id="topic-active-label" class="hidden field-label text-aurelia-muted normal-case">
                     Filtering: <span id="topic-active-name" class="text-aurelia-accent"></span>
-                    <button onclick="clearTopicFilter()" class="ml-2 text-aurelia-muted hover:text-aurelia-text">✕ clear</button>
+                    <button data-action="clearTopicFilter" class="ml-2 text-aurelia-muted hover:text-aurelia-text">✕ clear</button>
                 </span>
             </div>
             <div id="topic-cloud-items" class="flex flex-wrap gap-2 items-center"></div>
@@ -728,7 +728,6 @@
                             <div class="tree-node group/node cursor-pointer searchable-tree-item"
                                  role="button" tabindex="-1"
                                  aria-label="{{ card.title }}"
-                                 onclick="openNote('{{ card.id }}')"
                                  data-id="{{ card.id }}"
                                  data-title="{{ card.title }}"
                                  data-type="{{ card.type|lower }}"
@@ -816,13 +815,13 @@
         {% endfor %}
     </div>
 
-    <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300" onclick="closeModal()">
+    <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <!-- tabindex="-1" so openNote() can move focus into the dialog: with
              aria-modal="true" and focus left on <body>, a screen reader
              announces nothing and Tab walks the 20 controls *behind* the
              backdrop. aria-labelledby (not a fixed aria-label) so the dialog
              announces the note's own title. -->
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-none" onclick="event.stopPropagation()">
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-none">
             {# Identity strip. Replaces three macOS traffic lights (two of
                which were inert <div>s) plus "OBSIDIAN_VIEWER // ACTIVE",
                eleven characters that were identical for all 245 notes. Every
@@ -853,10 +852,10 @@
                          #topic-active-label handles its own conditional (not
                          responsive-breakpoint) visibility. -->
                     <span id="modal-session" class="hidden field-label text-aurelia-muted"></span>
-                    <button type="button" onclick="copyNoteLink()" id="btn-copy-note" class="reader-icon-btn" aria-label="Copy link to this note" title="Copy link to this note">
+                    <button type="button" data-action="copyNoteLink" id="btn-copy-note" class="reader-icon-btn" aria-label="Copy link to this note" title="Copy link to this note">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 010 5.656l-3 3a4 4 0 01-5.656-5.656l1.5-1.5M10.172 13.828a4 4 0 010-5.656l3-3a4 4 0 015.656 5.656l-1.5 1.5"></path></svg>
                     </button>
-                    <button type="button" onclick="closeModal()" data-variant="close" class="reader-icon-btn" aria-label="Close note" title="Close (Esc)">
+                    <button type="button" data-action="closeModal" data-variant="close" class="reader-icon-btn" aria-label="Close note" title="Close (Esc)">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
@@ -905,11 +904,11 @@
             <div id="tts-settings-panel" class="surface-raised hidden absolute bottom-14 right-3 sm:right-4 border border-aurelia-border rounded-theme p-3 flex flex-col gap-2 field-label text-aurelia-muted z-10 w-52">
                 <label class="flex flex-col gap-1.5">
                     VOICE
-                    <select id="tts-voice-select" onchange="onVoiceChange(this.value)" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[0.8125rem] normal-case tracking-normal"></select>
+                    <select id="tts-voice-select" data-change="onVoiceChange" class="bg-aurelia-bg border border-aurelia-border rounded-theme px-2 py-1.5 text-aurelia-text font-mono text-[0.8125rem] normal-case tracking-normal"></select>
                 </label>
                 <label class="flex flex-col gap-1.5">
                     SPEED: <span id="tts-rate-label" class="text-aurelia-primary">1.0x</span>
-                    <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" oninput="onRateChange(this.value)" class="accent-aurelia-primary">
+                    <input type="range" id="tts-rate-input" min="0.5" max="2" step="0.1" value="1" data-input="onRateChange" class="accent-aurelia-primary">
                 </label>
             </div>
             {# Two groups, not three. The session info truncates; the controls
@@ -929,7 +928,7 @@
                          toolbar's copy of the control is reachable from
                          every breakpoint, so nothing is lost by keeping this
                          one off the tightest viewport. -->
-                    <button type="button" id="btn-study-mode-modal" onclick="toggleStudyMode()" aria-pressed="false" aria-label="Toggle Study mode" title="Study mode: try to recall each note's answer before revealing it" class="reader-icon-btn study-toggle-btn hidden sm:inline-flex shrink-0">
+                    <button type="button" id="btn-study-mode-modal" data-action="toggleStudyMode" aria-pressed="false" aria-label="Toggle Study mode" title="Study mode: try to recall each note's answer before revealing it" class="reader-icon-btn study-toggle-btn hidden sm:inline-flex shrink-0">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </button>
                     <span aria-hidden="true" class="text-aurelia-border shrink-0 hidden sm:inline">·</span>
@@ -944,19 +943,19 @@
                     <span class="shrink-0 hidden xl:inline opacity-70">[ / ] NAVIGATE &nbsp;·&nbsp; ESC CLOSE</span>
                 </div>
                 <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                    <button type="button" id="btn-read-aloud" onclick="toggleReading()" aria-pressed="false" aria-label="Read this note aloud" title="Read this note aloud (R). Select text first to read just that selection." class="reader-icon-btn"></button>
-                    <button type="button" id="btn-tts-settings" onclick="toggleTtsSettings()" aria-expanded="false" aria-label="Voice settings" title="Voice settings" class="reader-icon-btn">
+                    <button type="button" id="btn-read-aloud" data-action="toggleReading" aria-pressed="false" aria-label="Read this note aloud" title="Read this note aloud (R). Select text first to read just that selection." class="reader-icon-btn"></button>
+                    <button type="button" id="btn-tts-settings" data-action="toggleTtsSettings" aria-expanded="false" aria-label="Voice settings" title="Voice settings" class="reader-icon-btn">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
                     </button>
                     <span aria-hidden="true" class="w-px h-5 bg-aurelia-border shrink-0 mx-0.5 sm:mx-1"></span>
                     <!-- 34px square on a phone, a labelled pill from `sm` up:
                          one button, one label, rather than a duplicate pair
                          toggled by breakpoint. -->
-                    <button type="button" onclick="navigateNote(-1)" aria-label="Previous note" title="Previous in current view ([)" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
+                    <button type="button" data-action="navigateNote" data-step="-1" aria-label="Previous note" title="Previous in current view ([)" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                         <span class="hidden sm:inline">PREV</span>
                     </button>
-                    <button type="button" onclick="navigateNote(1)" aria-label="Next note" title="Next in current view (])" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
+                    <button type="button" data-action="navigateNote" data-step="1" aria-label="Next note" title="Next in current view (])" class="reader-icon-btn gap-1.5 sm:w-auto sm:px-2.5">
                         <span class="hidden sm:inline">NEXT</span>
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </button>
@@ -977,7 +976,7 @@
     <dialog id="shortcut-sheet" aria-labelledby="shortcut-sheet-title" class="shortcut-sheet">
         <div class="shortcut-sheet-header">
             <h2 id="shortcut-sheet-title" tabindex="-1" class="font-display font-bold text-base text-aurelia-text">Keyboard shortcuts</h2>
-            <button type="button" id="btn-shortcut-sheet-close" onclick="closeShortcutSheet()" class="reader-icon-btn" aria-label="Close" title="Close (Esc)">
+            <button type="button" id="btn-shortcut-sheet-close" data-action="closeShortcutSheet" class="reader-icon-btn" aria-label="Close" title="Close (Esc)">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
         </div>
@@ -1293,8 +1292,9 @@
         });
 
         // 2. Activate Target Button
-        // btn is passed explicitly from onclick="setFilter(type, this)" --
-        // previously read from the implicit global `event` object, which
+        // btn is passed explicitly (the delegated setFilter action hands
+        // over the clicked chip) -- previously read from the implicit global
+        // `event` object, which
         // only worked because every call site happened to be a live click
         // and would break if setFilter were ever called programmatically.
         const target = btn;
@@ -1985,8 +1985,8 @@
 
         const actionsHtml = isGemini ? `
             <div class="modal-outline-actions">
-                <button type="button" class="modal-outline-action" onclick="setAllGeminiSections(true)">Expand all</button>
-                <button type="button" class="modal-outline-action" onclick="setAllGeminiSections(false)">Collapse all</button>
+                <button type="button" class="modal-outline-action" data-action="setAllGeminiSections" data-open="true">Expand all</button>
+                <button type="button" class="modal-outline-action" data-action="setAllGeminiSections" data-open="false">Collapse all</button>
             </div>` : '';
 
         sidebar.innerHTML = `<p class="field-label modal-outline-heading">On this page</p>${actionsHtml}${listHtml}`;
@@ -2064,14 +2064,14 @@
         // there are at most a dozen or so here, and the reader already traps
         // focus around its own content, so they cost nothing to tab through.
         const pill = (r) => `
-                    <button type="button" onclick="openNote('${r.id}')" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
+                    <button type="button" data-note="${r.id}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
         container.innerHTML = `
             <div class="mt-6 pt-6 border-t border-aurelia-border">
                 <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
                 <div class="flex flex-wrap gap-2">
                     ${shown.map(pill).join('')}
                     ${rest.length ? `<span id="backlinks-rest" hidden>${rest.map(pill).join('')}</span>` : ''}
-                    ${rest.length ? `<button type="button" onclick="expandBacklinks(this)" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
+                    ${rest.length ? `<button type="button" data-action="expandBacklinks" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
                 </div>
             </div>
         `;
@@ -2135,7 +2135,7 @@
                 <span class="field-label text-aurelia-accent block mb-3">✦ Related by Topic</span>
                 <div class="flex flex-wrap gap-2">
                     ${related.map(r => `
-                    <button type="button" onclick="openNote('${r.node.id}')" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
+                    <button type="button" data-note="${r.node.id}" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
                     `).join('')}
                 </div>
             </div>
@@ -2779,7 +2779,7 @@
                 ? 'border-aurelia-accent text-aurelia-accent bg-aurelia-accent/10'
                 : 'border-aurelia-border text-aurelia-muted hover:border-aurelia-accent hover:text-aurelia-accent';
             // data-tag + the delegated listener below, not an inline
-            // onclick="toggleTopicFilter('${tag}')": the tag is vault-authored
+            // an inline toggleTopicFilter('${tag}') handler: the tag is vault-authored
             // text being dropped into a JS string literal inside an HTML
             // attribute, so an apostrophe alone breaks the handler and a
             // crafted tag could close the string and run its own code.
@@ -2795,40 +2795,58 @@
         if (btn) toggleTopicFilter(btn.dataset.tag);
     });
 
-    // The Gemini Notebook card's own topic chips (cards.py). Delegated on the
-    // grid for the same reason plus one more: updateGrid() re-sorts and
-    // re-parents the cards, so a per-chip listener would not survive a sort.
-    //
-    // CAPTURE phase (the `true`), and that is load-bearing. The card is an
-    // <article onclick="openNote(...)"> with the chip inside it, so an
-    // inline handler on the card runs during bubbling -- i.e. BEFORE a
-    // bubble-phase listener up here on the grid. Verified: with bubbling the
-    // chip both filtered the Garden and opened the note on top of it.
-    // Capturing at the grid runs before the card's handler, so
-    // stopPropagation() actually suppresses it. (link_pill() solves the same
-    // problem the other way, with event.stopPropagation() inline on its own
-    // button; that is not available here, because the tag is vault-authored
-    // text and must not be interpolated into a JS string -- see the topic
-    // cloud's renderer.)
-    //
-    // Also reveals the cloud, so the active filter is visible somewhere the
-    // reader can clear it; filtering with no visible control is how the topic
-    // deep-link handler already justifies doing this.
-    document.getElementById('cardGrid').addEventListener('click', (e) => {
+    /* === DELEGATED CLICKS: GRID, TREE AND NOTE LINKS (B02) ============
+       No card, pill, chip or tree row carries an inline handler. One
+       listener on each container decides what a click meant, in priority
+       order inside a card: a Gemini card's topic chip filters (and is left
+       alone by the card), a pill or prose link (data-note) opens its own
+       target through the document listener below, and anything else on
+       the card -- the title button's activation included -- opens the
+       card's note. Delegated on the container rather than per element
+       because updateGrid() re-sorts and re-parents the cards, so a
+       per-element listener would not survive a sort.
+
+       The chip also reveals the topic cloud, so the active filter is
+       visible somewhere the reader can clear it; filtering with no visible
+       control is how the topic deep-link handler already justifies this. */
+    function handleGridClick(e) {
         const chip = e.target.closest('button.card-topic[data-tag]');
-        if (!chip) return;
-        e.stopPropagation();
-        const cloud = document.getElementById('topic-cloud');
-        const topicsBtn = document.getElementById('btn-topics');
-        if (cloud && cloud.classList.contains('hidden')) {
-            cloud.classList.remove('hidden');
-            if (topicsBtn) {
-                topicsBtn.setAttribute('aria-expanded', 'true');
-                topicsBtn.classList.add('text-aurelia-accent');
+        if (chip) {
+            const cloud = document.getElementById('topic-cloud');
+            const topicsBtn = document.getElementById('btn-topics');
+            if (cloud && cloud.classList.contains('hidden')) {
+                cloud.classList.remove('hidden');
+                if (topicsBtn) {
+                    topicsBtn.setAttribute('aria-expanded', 'true');
+                    topicsBtn.classList.add('text-aurelia-accent');
+                }
             }
+            toggleTopicFilter(chip.dataset.tag);
+            return;
         }
-        toggleTopicFilter(chip.dataset.tag);
-    }, true);
+        if (e.target.closest('[data-note], [data-action]')) return;
+        const item = e.target.closest('.searchable-item, .searchable-tree-item');
+        if (item && item.dataset.id) openNote(item.dataset.id);
+    }
+    ['cardGrid', 'treeView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', handleGridClick);
+    });
+
+    // Every note link the engine or this script renders -- a prose wikilink
+    // in the reader, a card pill, a backlink, a related note, a graph list
+    // row -- is a <button data-note="id">. The id is make_id() output.
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('[data-note]');
+        if (link) openNote(link.dataset.note);
+    });
+
+    // A click on the backdrop itself closes the reader; a click inside the
+    // panel bubbles up here too, which is why the target is checked rather
+    // than propagation stopped.
+    modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) closeModal();
+    });
 
     function toggleTopicFilter(tag) {
         currentTopic = (currentTopic === tag) ? '' : tag;
@@ -2932,7 +2950,7 @@
         container.innerHTML = matches.map((n) => {
             const d = degree[n.id] || 0;
             return `<li>
-                <button type="button" onclick="openNote('${n.id}')" class="graph-list-row">
+                <button type="button" data-note="${n.id}" class="graph-list-row">
                     <span class="graph-list-title">${escapeHtml(n.title)}</span>
                     <span class="graph-list-degree">◉ ${d} ${d === 1 ? 'LINK' : 'LINKS'}</span>
                 </button>
@@ -3571,7 +3589,7 @@
                     ${scored.map(r => `
                     <p class="text-[0.8125rem] text-aurelia-muted">
                         How does this connect to
-                        <button type="button" onclick="openNote('${r.node.id}')" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-insight hover:text-aurelia-insight cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>?
+                        <button type="button" data-note="${r.node.id}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-insight hover:text-aurelia-insight cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>?
                     </p>
                     `).join('')}
                 </div>
@@ -3657,7 +3675,7 @@
         if (elaborateEl) elaborateEl.innerHTML = '';
         row.innerHTML = `
             <p class="rate-confirm" tabindex="-1">Session complete: ${count} note${count === 1 ? '' : 's'} reviewed.
-                <button type="button" class="rate-change-btn" onclick="closeModal()">Back to the Garden</button>
+                <button type="button" class="rate-change-btn" data-action="closeModal">Back to the Garden</button>
             </p>
         `;
         const confirmEl = row.querySelector('.rate-confirm');
@@ -3833,5 +3851,35 @@
     // does this) when the URL actually carried state to restore.
     refreshDueState();
     applyDueMarkers();
+
+    /* === DELEGATED ACTIONS (B02) ========================================
+       The toolbar, reader and sheet controls name their action in
+       data-action / data-change / data-input; assets/js/utils.js dispatches
+       to these. Registered last so every function above exists. */
+    registerActions({
+        switchView: (el) => switchView(el.dataset.view),
+        setFilter: (el) => setFilter(el.dataset.filter, el),
+        toggleTopicCloud: () => toggleTopicCloud(),
+        openRandomNote: () => openRandomNote(),
+        copyViewLink: () => copyViewLink(),
+        toggleStudyMode: () => toggleStudyMode(),
+        openShortcutSheet: () => openShortcutSheet(),
+        closeShortcutSheet: () => closeShortcutSheet(),
+        startReviewSession: () => startReviewSession(),
+        exportReviewProgress: () => exportReviewProgress(),
+        importReviewProgress: (el) => { importReviewProgress(el.files[0]); el.value = ''; },
+        clearTopicFilter: () => clearTopicFilter(),
+        copyNoteLink: () => copyNoteLink(),
+        closeModal: () => closeModal(),
+        toggleReading: () => toggleReading(),
+        toggleTtsSettings: () => toggleTtsSettings(),
+        navigateNote: (el) => navigateNote(Number(el.dataset.step)),
+        setAllGeminiSections: (el) => setAllGeminiSections(el.dataset.open === 'true'),
+        expandBacklinks: (el) => expandBacklinks(el),
+        setSort: (el) => setSort(el.value),
+        handleSearch: () => handleSearch(),
+        onVoiceChange: (el) => onVoiceChange(el.value),
+        onRateChange: (el) => onRateChange(el.value),
+    });
 </script>
 {% endblock %}

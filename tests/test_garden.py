@@ -164,7 +164,7 @@ def test_garden_has_due_status_and_start_review_button():
     # Disabled by default server-side; refreshDueState() (client-side)
     # enables it once the log says there's actually something due -- no
     # per-note review payload is rendered here to answer that up front.
-    assert 'onclick="startReviewSession()"' in html
+    assert 'data-action="startReviewSession"' in html
     assert "disabled" in html.split('id="btn-start-review"', 1)[1].split('>', 1)[0]
 
 
@@ -178,7 +178,7 @@ def test_garden_has_study_mode_toggle_in_toolbar_and_modal_footer():
     # .study-toggle-btn class and toggleStudyMode() handler so they stay in
     # sync (see gardentemplate.html's setStudyModeButtons()).
     html = render_garden()
-    assert html.count('onclick="toggleStudyMode()"') == 2
+    assert html.count('data-action="toggleStudyMode"') == 2
     assert 'id="btn-study-mode"' in html
     assert 'id="btn-study-mode-modal"' in html
     assert html.count("study-toggle-btn") >= 2
@@ -187,8 +187,8 @@ def test_garden_has_study_mode_toggle_in_toolbar_and_modal_footer():
 def test_garden_has_progress_panel_with_export_and_import():
     html = render_garden()
     assert '<details id="progress-panel"' in html
-    assert 'onclick="exportReviewProgress()"' in html
-    assert 'onchange="importReviewProgress(this.files[0])' in html
+    assert 'data-action="exportReviewProgress"' in html
+    assert 'data-change="importReviewProgress"' in html
     assert '<p id="progress-panel-result"' in html
 
 
@@ -255,7 +255,7 @@ def test_garden_scripts_build_session_completion_and_change_rating_markup():
     # this pins their literal source text rather than executing the JS.
     html = render_garden()
     assert "Session complete:" in html
-    assert 'onclick="closeModal()">Back to the Garden' in html
+    assert 'data-action="closeModal">Back to the Garden' in html
     assert "Change rating" in html
 
 
@@ -300,7 +300,7 @@ def test_garden_has_modal_outline_containers():
 def test_garden_has_shortcut_sheet_dialog_and_toolbar_button():
     html = render_garden()
     assert '<dialog id="shortcut-sheet"' in html
-    assert 'onclick="openShortcutSheet()"' in html
+    assert 'data-action="openShortcutSheet"' in html
     assert 'id="btn-shortcuts"' in html
     # aria-label, not just a title attribute -- the icon-only toolbar form
     # (everything below 2xl) has no other accessible name, same reasoning
@@ -373,24 +373,29 @@ def test_related_by_topic_excludes_daily_logs_from_ranked_candidates():
     assert "daily-bridge" in html  # confirms the set itself lists it
 
 
-def test_garden_card_topic_chip_listener_uses_the_capture_phase():
-    """The chip's grid listener must capture, not bubble.
+def test_garden_grid_click_handler_decides_chip_then_link_then_card():
+    """One delegated click handler per container, in a fixed priority.
 
-    A Gemini card is an <article onclick="openNote(...)"> and the chip sits
-    inside it, so the card's inline handler runs during bubbling -- i.e.
-    before a bubble-phase listener on #cardGrid. Verified in a browser: with
-    bubbling the chip both filtered the Garden and opened the note on top of
-    the filter. Capturing at the grid runs first, so its stopPropagation()
-    actually suppresses the card. Pinned because the trailing `true` is a
-    single easily-dropped token whose loss reintroduces exactly that bug.
+    A Gemini card's topic chip must filter without also opening the note it
+    sits in, a pill must open its own target and not the card around it,
+    and anything else on the card opens the card. Pinned as source order:
+    the chip check comes first and returns, the data-note/data-action guard
+    second, and the card open last. Inline handlers used to force a
+    capture-phase trick here; with no inline handler on the card there is
+    one listener and the order is explicit (B02).
     """
     html = render_garden()
-    start = html.index("document.getElementById('cardGrid').addEventListener('click'")
+    start = html.index("function handleGridClick(e)")
     end = html.index("function toggleTopicFilter", start)
-    listener = html[start:end]
-    assert "button.card-topic[data-tag]" in listener
-    assert "e.stopPropagation()" in listener
-    assert "}, true);" in listener
+    handler = html[start:end]
+    chip = handler.index("button.card-topic[data-tag]")
+    guard = handler.index("closest('[data-note], [data-action]')")
+    open_card = handler.index("openNote(item.dataset.id)")
+    assert chip < guard < open_card
+    assert "toggleTopicFilter(chip.dataset.tag)" in handler
+    assert "document.addEventListener('click'" in handler
+    assert "openNote(link.dataset.note)" in handler
+    assert "}, true);" not in handler
 
 
 def test_garden_roving_keydown_defers_to_card_topic_chips():

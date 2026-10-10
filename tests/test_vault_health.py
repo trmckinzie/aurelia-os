@@ -133,8 +133,8 @@ def test_pending_count_agrees_with_the_build_unresolved_count(tmp_path, monkeypa
 
 def test_find_orphans_returns_notes_with_degree_at_most_one():
     cards = [
-        _card("note-hub", "Hub", "<button onclick=\"openNote('note-a')\">A</button>"
-              "<button onclick=\"openNote('note-b')\">B</button>"),
+        _card("note-hub", "Hub", "<button type=\"button\" data-note=\"note-a\">A</button>"
+              "<button type=\"button\" data-note=\"note-b\">B</button>"),
         _card("note-a", "A", "no links"),
         _card("note-b", "B", "no links"),
         _card("note-isolated", "Isolated", "no links"),
@@ -153,8 +153,8 @@ def test_find_orphans_respects_type_filter():
 
 def test_find_promotion_candidates_seed_to_growing_needs_two_backlinks():
     cards = [
-        _card("note-a", "A", "<button onclick=\"openNote('note-target')\">T</button>"),
-        _card("note-b", "B", "<button onclick=\"openNote('note-target')\">T</button>"),
+        _card("note-a", "A", "<button type=\"button\" data-note=\"note-target\">T</button>"),
+        _card("note-b", "B", "<button type=\"button\" data-note=\"note-target\">T</button>"),
         _card("note-target", "Target", "no links", maturity="seed"),
     ]
     candidates = find_promotion_candidates(cards)
@@ -163,8 +163,8 @@ def test_find_promotion_candidates_seed_to_growing_needs_two_backlinks():
 
 def test_find_promotion_candidates_growing_to_evergreen_needs_two_disciplines():
     cards = [
-        _card("note-d1", "Discipline One", "<button onclick=\"openNote('note-target')\">T</button>", note_type="DISCIPLINE"),
-        _card("note-d2", "Discipline Two", "<button onclick=\"openNote('note-target')\">T</button>", note_type="DISCIPLINE"),
+        _card("note-d1", "Discipline One", "<button type=\"button\" data-note=\"note-target\">T</button>", note_type="DISCIPLINE"),
+        _card("note-d2", "Discipline Two", "<button type=\"button\" data-note=\"note-target\">T</button>", note_type="DISCIPLINE"),
         _card("note-target", "Target", "no links", maturity="growing"),
     ]
     candidates = find_promotion_candidates(cards)
@@ -173,8 +173,8 @@ def test_find_promotion_candidates_growing_to_evergreen_needs_two_disciplines():
 
 def test_find_promotion_candidates_ignores_evergreen_notes():
     cards = [
-        _card("note-a", "A", "<button onclick=\"openNote('note-target')\">T</button>"),
-        _card("note-b", "B", "<button onclick=\"openNote('note-target')\">T</button>"),
+        _card("note-a", "A", "<button type=\"button\" data-note=\"note-target\">T</button>"),
+        _card("note-b", "B", "<button type=\"button\" data-note=\"note-target\">T</button>"),
         _card("note-target", "Target", "no links", maturity="evergreen"),
     ]
     candidates = find_promotion_candidates(cards)

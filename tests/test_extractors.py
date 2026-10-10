@@ -14,7 +14,7 @@ def test_extract_concept_data_with_wikilinked_related():
 ### Definition
 > A concept is a unit of thought.
 
-**🔗 Related:** <button onclick="openNote('note-idea-one')">Idea One</button>, <button onclick="openNote('note-idea-two')">Idea Two</button>
+**🔗 Related:** <button type="button" data-note="note-idea-one">Idea One</button>, <button type="button" data-note="note-idea-two">Idea Two</button>
 """
     definition, links, _ = extract_concept_data(text)
     assert definition == "A concept is a unit of thought."
@@ -36,7 +36,7 @@ def test_extract_concept_data_falls_back_to_plain_related_text():
 
 def test_extract_concept_data_keeps_up_to_twelve_related_links():
     buttons = ", ".join(
-        f"<button onclick=\"openNote('note-{i}')\">Idea {i}</button>" for i in range(15)
+        f"<button type=\"button\" data-note=\"note-{i}\">Idea {i}</button>" for i in range(15)
     )
     text = f"""
 ### Definition
@@ -54,7 +54,7 @@ def test_extract_concept_data_with_wikilinked_contrasts():
 ### Definition
 > A concept is a unit of thought.
 
-**⚡ Contrasts With:** <button onclick="openNote('note-opposing-idea')">Opposing Idea</button>
+**⚡ Contrasts With:** <button type="button" data-note="note-opposing-idea">Opposing Idea</button>
 """
     _, _, tensions = extract_concept_data(text)
     assert tensions == [("note-opposing-idea", "Opposing Idea")]
@@ -71,7 +71,7 @@ def test_extract_concept_data_no_contrasts_field_returns_empty_list():
 
 def test_extract_concept_data_keeps_up_to_six_contrasts():
     buttons = ", ".join(
-        f"<button onclick=\"openNote('note-{i}')\">Idea {i}</button>" for i in range(9)
+        f"<button type=\"button\" data-note=\"note-{i}\">Idea {i}</button>" for i in range(9)
     )
     text = f"**⚡ Contrasts With:** {buttons}"
     _, _, tensions = extract_concept_data(text)
@@ -80,13 +80,13 @@ def test_extract_concept_data_keeps_up_to_six_contrasts():
 
 def test_extract_source_data_author_and_argument():
     text = """
-**Author:** <button onclick="openNote('note-jordan-peterson')">Jordan Peterson</button>
+**Author:** <button type="button" data-note="note-jordan-peterson">Jordan Peterson</button>
 
 ### Core Argument (Thesis)
 > Meaning comes from responsibility.
 
 ### Concepts Extracted
-<button onclick="openNote('note-hierarchy')">Hierarchy</button>
+<button type="button" data-note="note-hierarchy">Hierarchy</button>
 """
     author, argument, concepts = extract_source_data(text)
     assert author == ("note-jordan-peterson", "JORDAN PETERSON")
@@ -101,7 +101,7 @@ def test_extract_source_data_missing_author_defaults_to_unknown():
 
 def test_extract_source_data_keeps_up_to_twelve_concepts():
     buttons = "\n".join(
-        f"<button onclick=\"openNote('note-{i}')\">Concept {i}</button>" for i in range(15)
+        f"<button type=\"button\" data-note=\"note-{i}\">Concept {i}</button>" for i in range(15)
     )
     text = f"""
 ### Concepts Extracted
@@ -117,10 +117,10 @@ def test_extract_author_data_works_and_concepts():
 > A researcher.
 
 ### Key Works
-<button onclick="openNote('note-book-one')">Book One</button>
+<button type="button" data-note="note-book-one">Book One</button>
 
 ### Core Concepts
-<button onclick="openNote('note-idea')">Idea</button>
+<button type="button" data-note="note-idea">Idea</button>
 """
     context, works, concepts = extract_author_data(text)
     assert context == "A researcher."
@@ -130,10 +130,10 @@ def test_extract_author_data_works_and_concepts():
 
 def test_extract_author_data_keeps_up_to_six_works_and_eight_concepts():
     works_buttons = "\n".join(
-        f"<button onclick=\"openNote('note-w{i}')\">Work {i}</button>" for i in range(8)
+        f"<button type=\"button\" data-note=\"note-w{i}\">Work {i}</button>" for i in range(8)
     )
     concepts_buttons = "\n".join(
-        f"<button onclick=\"openNote('note-c{i}')\">Concept {i}</button>" for i in range(10)
+        f"<button type=\"button\" data-note=\"note-c{i}\">Concept {i}</button>" for i in range(10)
     )
     text = f"""
 ### Key Works
@@ -153,10 +153,10 @@ def test_extract_discipline_data_pillars_and_canon():
 > The scope of the field.
 
 ### Core Concepts
-<button onclick="openNote('note-pillar')">Pillar</button>
+<button type="button" data-note="note-pillar">Pillar</button>
 
 ### Foundational Texts
-<button onclick="openNote('note-text')">The Text</button>
+<button type="button" data-note="note-text">The Text</button>
 """
     scope, pillars, canon, _ = extract_discipline_data(text)
     assert scope == "The scope of the field."
@@ -166,10 +166,10 @@ def test_extract_discipline_data_pillars_and_canon():
 
 def test_extract_discipline_data_keeps_up_to_ten_pillars_and_texts():
     pillars_buttons = "\n".join(
-        f"<button onclick=\"openNote('note-p{i}')\">Pillar {i}</button>" for i in range(12)
+        f"<button type=\"button\" data-note=\"note-p{i}\">Pillar {i}</button>" for i in range(12)
     )
     canon_buttons = "\n".join(
-        f"<button onclick=\"openNote('note-t{i}')\">Text {i}</button>" for i in range(12)
+        f"<button type=\"button\" data-note=\"note-t{i}\">Text {i}</button>" for i in range(12)
     )
     text = f"""
 ### Core Concepts
@@ -188,7 +188,7 @@ def test_extract_discipline_data_with_wikilinked_contrasts():
 ### Definition
 > The scope of the field.
 
-**⚡ Contrasts With:** <button onclick="openNote('note-rival-field')">Rival Field</button>
+**⚡ Contrasts With:** <button type="button" data-note="note-rival-field">Rival Field</button>
 """
     _, _, _, tensions = extract_discipline_data(text)
     assert tensions == [("note-rival-field", "Rival Field")]
@@ -205,7 +205,7 @@ def test_extract_discipline_data_no_contrasts_field_returns_empty_list():
 
 def test_extract_discipline_data_keeps_up_to_six_contrasts():
     buttons = ", ".join(
-        f"<button onclick=\"openNote('note-{i}')\">Field {i}</button>" for i in range(9)
+        f"<button type=\"button\" data-note=\"note-{i}\">Field {i}</button>" for i in range(9)
     )
     text = f"**⚡ Contrasts With:** {buttons}"
     _, _, _, tensions = extract_discipline_data(text)
@@ -216,9 +216,9 @@ def test_extract_log_data_source_and_concepts_are_link_aware():
     text = """
 **GOAL:** Read chapter one.
 
-**SOURCE:** <button onclick="openNote('note-the-selfish-gene')">The Selfish Gene</button>
+**SOURCE:** <button type="button" data-note="note-the-selfish-gene">The Selfish Gene</button>
 
-* **Concept:** <button onclick="openNote('note-replicator')">Replicator</button>
+* **Concept:** <button type="button" data-note="note-replicator">Replicator</button>
 * **Concept:** Unlinked Idea
 
 **📝 BRIEF SUMMARY:**
@@ -364,7 +364,7 @@ def test_extract_deep_dive_data_with_wikilinked_related():
     # Related sits before the pasted body, matching TPL_Deep_Dive.md's
     # actual layout -- Part 3 is the last section in the document, same as
     # a real pasted-in piece, so its section correctly runs to the end.
-    text = """**🔗 Related:** <button onclick="openNote('note-idea-one')">Idea One</button>, <button onclick="openNote('note-idea-two')">Idea Two</button>
+    text = """**🔗 Related:** <button type="button" data-note="note-idea-one">Idea One</button>, <button type="button" data-note="note-idea-two">Idea Two</button>
 
 ---
 

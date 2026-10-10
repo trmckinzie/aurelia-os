@@ -161,7 +161,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 - `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`
   into `dist/`, so the site serves everything itself.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
-- `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, `utils.js`.
+- `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, and `utils.js`,
+  which also holds the `data-action` dispatcher: no page carries an inline event handler
+  (`tests/test_no_inline_handlers.py`); controls name an action and the page registers it.
   `search-index.js` is generated into this folder at build time (gitignored) — see
   `pipeline._write_deep_search_index`.
 - `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`, and `preview.mjs` (the

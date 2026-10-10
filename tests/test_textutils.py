@@ -24,7 +24,7 @@ def test_strip_wikilinks_piped():
 
 
 def test_clean_text_handles_rendered_button_wikilink():
-    rendered = '<button onclick="openNote(\'x\')" class="c">The Selfish Gene</button>'
+    rendered = '<button type="button" data-note="x" class="c">The Selfish Gene</button>'
     assert clean_text(rendered) == "The Selfish Gene"
 
 
@@ -42,7 +42,7 @@ def test_truncate_handles_none():
 
 
 def test_extract_links_prefers_rendered_buttons_and_keeps_target_id():
-    section = '<button onclick="openNote(\'note-a\')">Alpha</button> <button onclick="openNote(\'note-b\')">Beta</button>'
+    section = '<button type="button" data-note="note-a">Alpha</button> <button type="button" data-note="note-b">Beta</button>'
     assert extract_links(section) == [("note-a", "Alpha"), ("note-b", "Beta")]
 
 

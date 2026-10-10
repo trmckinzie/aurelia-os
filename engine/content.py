@@ -169,7 +169,12 @@ def process_wikilinks(text, resolve=None):
             target, label = link_content, link_content
 
         target_id = resolve(target)
-        return (f'<button onclick="openNote(\'{target_id}\')" '
+        # data-note, not an inline onclick: the Garden's one delegated click
+        # listener opens it (gardentemplate.html, "DELEGATED NOTE LINKS"),
+        # which is what lets the pages carry a Content-Security-Policy with
+        # no 'unsafe-inline' (backlog B02). The id is make_id() output, so
+        # it needs no escaping in the attribute.
+        return (f'<button type="button" data-note="{target_id}" '
                 f'class="text-aurelia-primary hover:underline font-bold bg-transparent '
                 f'border-none cursor-pointer p-0 inline">{label}</button>')
 
@@ -343,7 +348,10 @@ def build_link_resolver(notes):
     return resolve
 
 
-_WIKILINK_BUTTON_RE = re.compile(r'''<button\s+onclick="openNote\('([^']+)'\)"[^>]*>(.*?)</button>''')
+# The engine's own note-link button, in prose (process_wikilinks above) and
+# in card fields (cards.link_pill): data-note carries the target. Attributes
+# may precede it (link_pill puts tabindex first), hence the lazy prefix.
+_WIKILINK_BUTTON_RE = re.compile(r'''<button\b[^>]*?\sdata-note="([^"]+)"[^>]*>(.*?)</button>''')
 
 
 def dim_dangling_links(html, known_ids):

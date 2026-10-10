@@ -704,6 +704,19 @@ knowing so you don't "fix" something that was a deliberate decision:
       item 26), and the `roadmap-session` skill's step for finding the next session, which now
       handles a roadmap with every session done.
 
+35. **No inline event handlers anywhere; actions are delegated (2026-10-09, backlog B02, first
+    half).** Every `onclick`, `onchange`, `oninput` and `onmouseenter` in the templates, the
+    engine's card and wikilink markup, and the Garden's JS-built lists is gone. A control names
+    its action in `data-action` (or `data-change` / `data-input`) and `assets/js/utils.js`
+    dispatches one document-level listener per event type to a function the page registered
+    with `registerActions()`. Note links carry `data-note`, and the Garden opens them from one
+    listener; the card grid's one click handler decides chip, then link, then card, which
+    replaced the capture-phase trick the inline card handler had forced. `_OPEN_NOTE_RE` and
+    the two wikilink-button regexes now match `data-note`. Reason: a Content-Security-Policy
+    without `'unsafe-inline'` refuses inline handlers, and they also meant note-derived text
+    had to be interpolated into JS source to be acted on. The policy itself is the second
+    half, with build-time hashes for the inline script blocks rather than the B01 module split.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

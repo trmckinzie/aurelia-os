@@ -195,7 +195,7 @@ def test_ordinary_formatting_still_renders_in_the_published_body(tmp_path, monke
 
 
 def test_engine_injected_wikilink_buttons_survive_sanitizing(tmp_path, monkeypatch):
-    # The ordering guard. Wikilink buttons carry an onclick and <button> is
+    # The ordering guard. Wikilink buttons carry a data-note and <button> is
     # not on nh3's allowlist, so sanitizing the *finished* body instead of
     # the raw note would delete every link in the vault. If this fails, the
     # sanitize step has been moved after process_wikilinks().
@@ -207,4 +207,4 @@ def test_engine_injected_wikilink_buttons_survive_sanitizing(tmp_path, monkeypat
     garden_cards, _, _ = pipeline._scan_vault()
 
     body = next(c["body"] for c in garden_cards if c["id"] == "note-a")
-    assert "<button onclick=\"openNote('note-b')\"" in body
+    assert "<button type=\"button\" data-note=\"note-b\"" in body

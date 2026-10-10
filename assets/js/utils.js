@@ -72,3 +72,40 @@ function aureliaReveal(el, options) {
     // Safety net, deliberately longer than duration + delay.
     setTimeout(settle, ((opts.duration || 0.45) + (opts.delay || 0)) * 1000 + 700);
 }
+
+
+/* === DELEGATED ACTIONS (backlog B02) ====================================
+   No page carries an inline event handler (onclick="..." and friends): a
+   Content-Security-Policy without 'unsafe-inline' refuses them, and they
+   also mean note-derived text would have to be interpolated into JS source
+   to be acted on. Instead an element names its action in a data attribute
+   and one listener per event type, here on the document, dispatches to a
+   function the page registered:
+
+       <button data-action="setFilter" data-filter="concept">
+       <select data-change="setSort">      <input data-input="handleSearch">
+
+       registerActions({ setFilter: (el) => setFilter(el.dataset.filter, el) });
+
+   The handler receives the element (so it can read its other data-*
+   attributes, value or files) and the event. Pages register their maps at
+   the end of their own script; an action nobody registered is ignored, not
+   an error, so a page can carry markup for a feature it does not load.
+   Elements that open a note use data-note instead (gardentemplate.html
+   handles it, since only the Garden has notes to open). */
+var AURELIA_ACTIONS = Object.create(null);
+
+function registerActions(map) {
+    Object.assign(AURELIA_ACTIONS, map);
+}
+
+function dispatchAction(attribute, event) {
+    var el = event.target.closest('[' + attribute + ']');
+    if (!el) return;
+    var handler = AURELIA_ACTIONS[el.getAttribute(attribute)];
+    if (handler) handler(el, event);
+}
+
+document.addEventListener('click', function (e) { dispatchAction('data-action', e); });
+document.addEventListener('change', function (e) { dispatchAction('data-change', e); });
+document.addEventListener('input', function (e) { dispatchAction('data-input', e); });

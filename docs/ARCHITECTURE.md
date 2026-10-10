@@ -37,7 +37,7 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   arbitrary local files on a static site generator if one were planted under `vault/` or `assets/`.
 - **`content.py`** — markdown-level parsing: `parse_frontmatter()` (real YAML via PyYAML, not regex),
   `parse_body()`, `make_id()` (filename → slug), `process_wikilinks(text, resolve=None)`
-  (`[[Target]]` / `[[Target|Label]]` → `<button onclick="openNote('id')">Label</button>`; with no
+  (`[[Target]]` / `[[Target|Label]]` → `<button type="button" data-note="id">Label</button>`; with no
   resolver the target is plain `make_id(text)`, the historical behaviour),
   `build_link_resolver(notes)` (added 2026-09-10: three tiers, an earlier one never overwritten —
   exact `make_id(title)`, any entry in the note's frontmatter `aliases:`, and a *unique*
@@ -57,7 +57,7 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   linked items returns `(target_id, label)` tuples, not bare strings (see "Link system" below).
 - **`textutils.py`** — shared string helpers used by extractors and cards: `strip_html`,
   `strip_wikilinks`, `clean_text`, `truncate`, `extract_links` (the core link-extraction helper —
-  prefers rendered `<button onclick="openNote('id')">` form, falls back to deriving an id from raw
+  prefers rendered `<button type="button" data-note="id">` form, falls back to deriving an id from raw
   `[[brackets]]` via `make_id`), `section_after_header`, `first_blockquote_after`,
   `dumps_for_script_tag` (JSON-dumps but escapes `</script` so embedded JSON can't break out of its
   `<script>` tag; returns `Markup`, since a `<script>` block is exactly the sink it vouches for —
@@ -69,7 +69,7 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
 - **`sanitize.py`** — `sanitize_note_html()`, the allowlist sanitizer (nh3) for note-authored HTML,
   applied by `pipeline._scan_vault()` to the **raw** note body. Read the module docstring before
   moving that call: it has to run before `process_wikilinks()` and the media/section passes, since
-  those inject the engine's own `onclick` buttons and `<audio>`/`<img>` widgets that a sanitizer
+  those inject the engine's own `data-note` buttons and `<audio>`/`<img>` widgets that a sanitizer
   would strip. It also explains why the cleaner must *strip* rather than escape (`openNote()`
   decodes entities through a `<textarea>` before handing the body to `marked.parse()`).
 - **`cards.py`** — `generate_garden_card_html()` is the single card-rendering function; it branches
@@ -194,7 +194,7 @@ This is the mechanism most likely to need touching if you're asked to change how
 other. The flow for one wikilink, end to end:
 
 1. Author writes `[[Target Note]]` or `[[Target Note|Custom Label]]` in a vault note.
-2. `content.process_wikilinks()` converts it to `<button onclick="openNote('note-target-note')">Label</button>` — this happens *before* extraction. The id comes from the build's link resolver (exact title, then `aliases:`, then a unique `Base (…)` title suffix — see `content.py` above), so an alias is a legitimate fix for a dangling link on the site as well as in Obsidian.
+2. `content.process_wikilinks()` converts it to `<button type="button" data-note="note-target-note">Label</button>` — this happens *before* extraction. The id comes from the build's link resolver (exact title, then `aliases:`, then a unique `Base (…)` title suffix — see `content.py` above), so an alias is a legitimate fix for a dangling link on the site as well as in Obsidian.
 3. Extractors call `textutils.extract_links()` on the relevant section, which regex-matches that
    button form (or, for text that was never run through `process_wikilinks`, falls back to raw
    `[[brackets]]` and derives the id itself). Every extractor field that represents a linked item
