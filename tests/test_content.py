@@ -382,6 +382,35 @@ def test_resolve_asset_allows_a_nested_subdirectory(tmp_path, monkeypatch):
         resolved, vault / "assets" / "flashcards" / "unit-1" / "nested.csv")
 
 
+def test_resolve_asset_records_what_it_resolved_for_the_publish_gate(tmp_path, monkeypatch):
+    vault, _ = _asset_sandbox(tmp_path, monkeypatch)
+    content_module.reset_missing_asset_count()
+
+    resolved = content_module.resolve_asset("assets/flashcards/deck.csv")
+
+    assert content_module.get_referenced_assets() == {"assets/flashcards/deck.csv": resolved}
+
+
+def test_resolve_asset_records_nothing_for_a_missing_or_refused_reference(tmp_path, monkeypatch):
+    vault, outside = _asset_sandbox(tmp_path, monkeypatch)
+    content_module.reset_missing_asset_count()
+
+    assert content_module.resolve_asset("assets/flashcards/gone.csv") is None
+    assert content_module.resolve_asset("../outside/secrets.csv") is None
+
+    assert content_module.get_referenced_assets() == {}
+
+
+def test_reset_missing_asset_count_clears_the_registry_too(tmp_path, monkeypatch):
+    _asset_sandbox(tmp_path, monkeypatch)
+    content_module.resolve_asset("assets/flashcards/deck.csv")
+    assert content_module.get_referenced_assets()
+
+    content_module.reset_missing_asset_count()
+
+    assert content_module.get_referenced_assets() == {}
+
+
 def test_resolve_asset_refuses_a_dotdot_escape(tmp_path, monkeypatch, capsys):
     _, outside = _asset_sandbox(tmp_path, monkeypatch)
     escape = "assets/flashcards/../../../outside/secrets.csv"

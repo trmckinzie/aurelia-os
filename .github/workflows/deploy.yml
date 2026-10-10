@@ -185,11 +185,12 @@ jobs:
       - name: Run Build Script
         # --no-sort, always, in CI. Without it the build runs
         # organize_assets(), the one step that WRITES to vault/: it moves
-        # everything under vault/99_DROP_ZONE/ into vault/assets/<kind>/,
-        # and sync_vault_assets() then copies audio/video/images/flashcards
-        # from there into dist/ with no `publish:` gate of any kind. So an
-        # unsorted file sitting in the drop zone at push time gets published
-        # to the live site by CI, having been reviewed by nobody.
+        # everything under vault/99_DROP_ZONE/ into vault/assets/<kind>/.
+        # That is a write to the vault on a throwaway runner, reviewed by
+        # nobody. The media publish gate (backlog B06) keeps an unreferenced
+        # file off the site, but a drop-zone file a published note already
+        # names would ship, and the vault write itself is the thing CI must
+        # never do.
         #
         # engine/pipeline.py's build_all() docstring names CI as exactly the
         # place this must not happen. The runner's checkout is a throwaway,

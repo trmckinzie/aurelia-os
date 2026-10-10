@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-05
+updated: 2026-10-09
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -616,8 +616,17 @@ backlog:
   - id: B06
     title: Publish a media file only when a published note references it
     area: Privacy
-    status: open
-    detail: Finding 19 of the 2026-09 security audit, still open.
+    status: done
+    detail: >-
+      Finding 19 of the 2026-09 security audit. Closed 2026-10-09:
+      content.resolve_asset() records every asset a published note resolves,
+      and assets_pipeline.publish_referenced_media(), run after the vault scan,
+      copies exactly those files into dist/ and prints every other file in
+      vault/assets/{audio,video,images,flashcards} and the repo's
+      assets/{audio,video,flashcards} as not published. prepare_dist() now
+      copies only css, js and images whole. On the real vault that publishes
+      the four referenced flashcard decks and withholds the one no note names.
+      tests/test_assets_pipeline.py and tests/test_content.py cover the gate.
     decision: >-
       Decide how vault media is published, since media files have no publish
       gate. Decided 2026-10-01: publish a media file only when a published note

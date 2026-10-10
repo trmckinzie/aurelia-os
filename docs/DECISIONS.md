@@ -653,8 +653,9 @@ knowing so you don't "fix" something that was a deliberate decision:
       `main`, CodeQL and secret scanning.
     - **B06: a media file publishes only when a published note references it**, for
       `vault/assets/` and the repo's own `assets/` media folders alike, with the build listing what
-      it skipped. Decided, not yet built: `engine/assets_pipeline.py` still copies every file in a
-      publishable folder. Nothing is exposed by that today, because `vault/assets/` holds no files.
+      it skipped. Built 2026-10-09: `resolve_asset()` records what the published notes resolve,
+      and `publish_referenced_media()` copies exactly those files after the vault scan, listing
+      the rest as not published. The one unreferenced deck today is the AI-usage one, tabled.
     - **B08: git stops tracking Obsidian plugin code** (pull request #10, under a one-time vault
       override). Obsidian installs and updates each plugin's `main.js`, `manifest.json` and
       `styles.css` itself; Calendar's and Templater's `data.json` stay tracked so their settings

@@ -290,7 +290,7 @@ def test_search_index_contains_an_about_entry():
 def test_build_fails_when_profile_is_invalid(monkeypatch):
     monkeypatch.setattr(pipeline, "prepare_dist", lambda: None)
     monkeypatch.setattr(pipeline, "organize_assets", lambda: None)
-    monkeypatch.setattr(pipeline, "sync_vault_assets", lambda: None)
+    monkeypatch.setattr(pipeline, "publish_referenced_media", lambda referenced: None)
 
     def _raise():
         raise ProfileError("profile.json: forced failure for test")
