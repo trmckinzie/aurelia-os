@@ -109,6 +109,10 @@ def _stub_build(monkeypatch, warning=None):
     monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: None)
     monkeypatch.setattr(pipeline, "generate_theme_css", lambda: None)
     monkeypatch.setattr(pipeline, "compile_css", lambda: None)
+    # The size report reads dist/garden.html, which the stubbed _render_pages
+    # never writes. A stale dist/ from an earlier local build hid that until
+    # CI's fresh checkout ran these.
+    monkeypatch.setattr(pipeline, "report_page_sizes", lambda: {})
 
     def _scan():
         if warning:

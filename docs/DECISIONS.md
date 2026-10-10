@@ -646,7 +646,8 @@ knowing so you don't "fix" something that was a deliberate decision:
 
     - **B04: keep every Garden note in `garden.html`.** Notes keep opening instantly; revisit when
       the compressed page passes 1 MB. It was about 580 KB at 259 notes, of which the note bodies
-      were about 375 KB. Printing that size on every build is the decision's open follow-up.
+      were about 375 KB. Since 2026-10-09 every build prints that size and warns past the
+      threshold, which `--strict` turns into a failed CI build (closed B04).
     - **B05: the repo stays public.** `publish:` remains a rendering switch, not access control,
       and anything that must stay private is kept out of the repo. Going private would recall
       nothing already pushed, and on GitHub's free plan it would give up Pages, the ruleset on
@@ -719,7 +720,8 @@ knowing so you don't "fix" something that was a deliberate decision:
 - **`garden.html` is large** (about 3.6 MB) because every note's full body is embedded inline for
   the instant-open modal (no network request needed). The tradeoff was decided on 2026-10-01
   (item 32, backlog B04): keep every note in the page, and revisit only when the compressed page
-  passes 1 MB. Still undone from that decision: the build does not yet print the compressed size.
+  passes 1 MB. Since 2026-10-09 the build prints the compressed size on every run and warns past
+  the threshold, so CI's `--strict` build fails the day it is crossed.
   The study layer added no per-note markup to it; `review.js` and `flashcards.js` ship as
   separately cached files.
 - No performance (Lighthouse) or visual-regression testing, and no unit-test harness for

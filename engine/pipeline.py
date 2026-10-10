@@ -7,6 +7,7 @@ transmission notes are recognized by type but intentionally skipped --
 there's no page left for them to link to.
 """
 import datetime
+import gzip
 import os
 import re
 from collections import Counter
@@ -527,10 +528,64 @@ def _write_deep_search_index(deep_search_json):
     return len(encoded)
 
 
+# Backlog B04 (docs/DECISIONS.md item 32, decided 2026-10-01): garden.html
+# carries every note body so a note opens with no network request, and that
+# stays so until the page's compressed size passes 1 MB. The build measures
+# the page the way a visitor receives it, after the asset-version stamp, and
+# goes through warn() past the limit so CI's --strict build fails and forces
+# the revisit rather than letting the page grow unnoticed. The limit is
+# 1 MiB, which is what "1 MB" meant when the 580 KB figure was recorded.
+GARDEN_COMPRESSED_LIMIT_BYTES = 1024 * 1024
+
+# What report_page_sizes() measures, as (label, path under dist/). The index
+# is listed too so the two numbers that decide B04's trade-off sit on
+# adjacent lines of every build log.
+_SIZED_OUTPUTS = (
+    ("Garden page", "garden.html"),
+    ("Deep-search index", os.path.join("assets", "js", "search-index.js")),
+)
+
+
+def compressed_size(data):
+    """Bytes gzip produces for `data` at level 6, the level GitHub Pages and
+    most CDNs serve with; close enough to what a visitor downloads to decide
+    the B04 threshold on, and deterministic (mtime=0) so a build log diff
+    shows a real change in the page and not the clock."""
+    return len(gzip.compress(data, compresslevel=6, mtime=0))
+
+
+def report_page_sizes(output_dir=None, limit=GARDEN_COMPRESSED_LIMIT_BYTES):
+    """Prints the raw and compressed size of garden.html and the deep-search
+    index, and warns when the compressed Garden page passes `limit`.
+
+    Returns {path: compressed_bytes} so a test (or a future dashboard) can
+    read the numbers without parsing the log. Run after stamp_asset_versions()
+    so the bytes measured are the bytes served.
+    """
+    output_dir = OUTPUT_DIR if output_dir is None else output_dir
+    sizes = {}
+    for label, rel_path in _SIZED_OUTPUTS:
+        with open(os.path.join(output_dir, rel_path), "rb") as f:
+            data = f.read()
+        compressed = compressed_size(data)
+        sizes[rel_path] = compressed
+        print(f"   + {label}: {compressed / 1024:,.0f} KB compressed, {len(data) / 1024:,.0f} KB raw"
+              f" -> {rel_path.replace(os.sep, '/')}")
+    garden = sizes["garden.html"]
+    print(f"   + Garden page limit: {limit / 1024:,.0f} KB compressed (backlog B04)")
+    if garden > limit:
+        warn(f"garden.html is {garden / 1024:,.0f} KB compressed, past the {limit / 1024:,.0f} KB "
+             "threshold decided 2026-10-01 (docs/DECISIONS.md item 32, backlog B04). The first "
+             "step is to move the note bodies into one separately cached file, the way the "
+             "deep-search index already is.")
+    return sizes
+
+
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
                    build_commit=None, build_commit_time=None, has_social_preview=True):
-    index_bytes = _write_deep_search_index(deep_search_json)
-    print(f"   + Deep-search index: {index_bytes / 1024:.0f} KB -> assets/js/search-index.js (cached separately)")
+    # Its size is reported with garden.html's by report_page_sizes(), once
+    # the build has finished writing both.
+    _write_deep_search_index(deep_search_json)
 
     pages = [
         # `profile` also goes to the Lobby: its first module card is a short
@@ -811,6 +866,9 @@ def build_all(sort_dropzone=None, strict=False):
     # After the compile: main.css is only final now, and its hash (with every
     # other asset's) goes into the URLs the pages already carry as tokens.
     stamp_asset_versions(OUTPUT_DIR)
+
+    # Measured last, so the numbers are the bytes a visitor downloads.
+    report_page_sizes()
 
     warnings = get_warnings()
     if warnings:
