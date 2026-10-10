@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-05
+updated: 2026-10-09
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -585,13 +585,16 @@ backlog:
   - id: B04
     title: Keep every Garden note in the page, and watch its size against a 1 MB threshold
     area: Performance
-    status: open
+    status: done
     detail: >-
-      Remaining work: have the build print garden.html's compressed size next to
-      the search index's. The threshold is recorded (docs/DECISIONS.md item 32)
-      and CLAUDE.md's wording was corrected on 2026-10-05. If it passes 1 MB, the
-      first step is to move the note bodies into one separately cached file, the
-      way the search index already works.
+      Closed 2026-10-09: every build ends by printing the compressed and raw
+      size of garden.html and the deep-search index on adjacent lines
+      (engine/pipeline.py report_page_sizes, measured after the asset stamp so
+      the bytes are the bytes served), and a Garden page past the 1 MiB limit
+      goes through warn(), so CI's --strict build fails and forces the revisit.
+      When that happens, the first step is to move the note bodies into one
+      separately cached file, the way the search index already works.
+      tests/test_garden_size.py covers the gauge.
     decision: >-
       garden.html embeds every note body so notes open instantly. Keep that, or
       trade it for a smaller page that fetches each note on demand.
