@@ -31,10 +31,11 @@ the link graph itself made visible and navigable.
   schema.org `Person` structured data — rendered from a repo-root `profile.json`. The file is
   validated strictly at build time (unknown keys, non-`http`/`https`/`mailto` URLs, over-long or
   missing fields all fail the build), and every value is escaped on output; it carries no HTML.
-- Five runtime-switchable themes (no rebuild required — swappable via `<html data-theme>` and a
-  single CSS-variable source of truth), each with its own palette, typography, and material
-  language: `TIMBERLINE` (light/professional, the default, the TRM / Pine personal brand palette),
-  `CYBER_PRIME` (dark/neon), `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA` (Stoic
+- A light and a dark theme in the nav's theme menu (no rebuild required — swappable via
+  `<html data-theme>` and a single CSS-variable source of truth): `TIMBERLINE` (light/professional,
+  the default, the TRM / Pine personal brand palette) and `CYBER_PRIME` (dark/neon). Three more
+  themes, each with its own palette, typography, and material language, are built and tested but
+  not offered for now: `THE_PATRIOT` (light/civic, USWDS-grounded), `THE_STOA` (Stoic
   Greco-Roman/Helvetic), and `GRIZZ` (dark, Adams State University green/black/white).
 - Gemini Notebook export support: audio/video overviews, flashcard decks, mind maps and other
   synthesis assets are auto-detected from the export's headers and rendered as interactive widgets,

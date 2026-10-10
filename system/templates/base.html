@@ -19,12 +19,17 @@
     <meta http-equiv="Content-Security-Policy" content="@@csp@@">
     <!-- Runs before any stylesheet is applied, so a returning visitor's
          saved theme (if different from the build-time default above) is
-         already correct by first paint -- no flash of the wrong theme. -->
+         already correct by first paint -- no flash of the wrong theme.
+         Only a theme the menu offers is applied (engine/theming.py's
+         available_theme_slugs): a saved choice the menu no longer lists,
+         such as one of the experimental themes after roadmap S11, is left
+         alone and the build-time default stays. -->
     <script>
         (function() {
+            var offered = {{ available_theme_slugs_json }};
             try {
                 var stored = localStorage.getItem('aurelia_theme');
-                if (stored) document.documentElement.setAttribute('data-theme', stored);
+                if (stored && offered.indexOf(stored) !== -1) document.documentElement.setAttribute('data-theme', stored);
             } catch (e) {}
         })();
     </script>
@@ -369,9 +374,10 @@
         })();
 
         /* --- THEME SWITCHER ---
-           AVAILABLE_THEMES is every entry in engine/config.py's
-           THEME_CONFIG (see engine/theming.py.available_themes) -- add a
-           theme there and it appears here automatically, no template
+           AVAILABLE_THEMES is every `switchable` entry in engine/config.py's
+           THEME_CONFIG (see engine/theming.py.available_themes), in that
+           order, each labelled light or dark from its own background -- add
+           a theme there and it appears here automatically, no template
            changes needed. Switching is a pure attribute change: every
            color/font/radius/glass/scanline/cursor value in the page reads
            from a CSS custom property (see assets/css/main.css and
@@ -408,6 +414,12 @@
             renderThemeMenus();
         }
 
+        // The menu's second line: which of the two kinds of theme this is,
+        // in plain words, rather than the theme's own description.
+        function themeModeLabel(t) {
+            return t.mode === 'dark' ? 'Dark theme' : 'Light theme';
+        }
+
         function themeSwatchHtml(t) {
             return `<span class="flex gap-1 shrink-0">
                 <span class="w-2.5 h-2.5 rounded-full border border-black/10" data-swatch="${t.swatch.primary}"></span>
@@ -427,7 +439,7 @@
                         ${themeSwatchHtml(t)}
                         <span class="flex-grow">
                             <span class="block text-[0.8125rem] font-bold">${escapeHtml(t.label)}</span>
-                            <span class="block text-[0.8125rem] text-aurelia-muted">${escapeHtml(t.description)}</span>
+                            <span class="block text-[0.8125rem] text-aurelia-muted">${themeModeLabel(t)}</span>
                         </span>
                         ${t.key === active ? '<span class="text-[0.8125rem]">✓</span>' : ''}
                     </button>
@@ -440,6 +452,7 @@
                     <button data-action="setTheme" data-theme="${t.key}" class="flex items-center gap-3 py-2 text-left ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
                         <span class="text-[0.8125rem]">${escapeHtml(t.label)}</span>
+                        <span class="text-[0.8125rem] text-aurelia-muted">${themeModeLabel(t)}</span>
                         ${t.key === active ? '<span class="text-[0.8125rem] ml-auto">✓</span>' : ''}
                     </button>
                 `).join('');

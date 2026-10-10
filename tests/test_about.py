@@ -20,7 +20,7 @@ from markupsafe import Markup
 
 from engine.config import CURRENT_THEME, env
 from engine.textutils import dumps_for_script_tag
-from engine.theming import available_themes, default_theme_slug
+from engine.theming import available_theme_slugs, available_themes, default_theme_slug
 
 
 # --- fixtures ---------------------------------------------------------------
@@ -129,6 +129,7 @@ def base_context(**overrides):
         "theme": CURRENT_THEME,
         "theme_key": default_theme_slug(),
         "available_themes_json": dumps_for_script_tag(available_themes()),
+        "available_theme_slugs_json": dumps_for_script_tag(available_theme_slugs()),
         "search_index": Markup("[]"),
         "build_year": 2026,
         "has_social_preview": True,
@@ -542,6 +543,28 @@ def test_theme_switcher_button_has_accessible_name():
     assert 'id="theme-menu-btn"' in html
     btn = html[html.index('id="theme-menu-btn"') - 200:html.index('id="theme-menu-btn"') + 100]
     assert 'aria-label="Switch theme"' in btn
+
+
+def test_head_script_applies_only_a_theme_the_menu_offers():
+    # Roadmap S11: a saved preference for a theme the menu no longer lists
+    # (one of the experimental three) must not be applied at first paint, so
+    # that visitor gets the build-time default. The head script carries the
+    # offered slugs and checks the stored value against them.
+    html = render_about()
+    head = html[:html.index("<body")]
+    assert 'var offered = ["timberline", "cyber-prime"];' in head
+    assert "offered.indexOf(stored) !== -1" in head
+    assert "localStorage.getItem('aurelia_theme')" in head
+
+
+def test_theme_menu_payload_offers_the_light_and_dark_choice_only():
+    html = render_about()
+    start = html.index("const AVAILABLE_THEMES = ") + len("const AVAILABLE_THEMES = ")
+    payload = json.loads(html[start:html.index(";", start)])
+    assert [(t["key"], t["mode"]) for t in payload] == [("timberline", "light"), ("cyber-prime", "dark")]
+    # The menu labels each entry by kind, not by the theme's own description.
+    assert "Light theme" in html and "Dark theme" in html
+    assert "description" not in {k for t in payload for k in t}
 
 
 def test_mobile_menu_search_entry_is_plain_english():

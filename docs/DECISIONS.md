@@ -742,6 +742,22 @@ knowing so you don't "fix" something that was a deliberate decision:
     came from the newest daily log and had read 2026-06-26 since the daily logs stopped, so it
     signalled staleness rather than activity. The stat and its tests went with it.
 
+38. **The theme menu offers one light and one dark theme (roadmap S11, 2026-10-10).** Travis's
+    ask: of the five themes, only TIMBERLINE and CYBER_PRIME are reachable from the nav, labelled
+    "Light theme" and "Dark theme" under their names. The other three (THE_PATRIOT, THE_STOA,
+    GRIZZ) are experimental and were kept rather than deleted: each `THEME_CONFIG` entry now
+    carries a `switchable` flag, `theming.available_themes()` returns only the true ones, and
+    `theme-vars.css` is still generated for all five, so they stay buildable and
+    `tests/test_theming.py`'s Python contrast sweep still covers them. The light/dark label is read
+    off each theme's `bg_main` luminance rather than typed, so it cannot be the wrong way round.
+    `base.html`'s head script applies a saved `aurelia_theme` only when it is in the offered list;
+    a visitor whose browser still names an experimental theme gets the default with no error, and
+    the stale key is left in place rather than deleted, so returning a theme (backlog B20, where
+    flipping its flag is the whole change) restores their choice. One cost, accepted: the browser
+    suite's axe colour-contrast sweep reads the offered list from the page, so it now covers
+    CYBER_PRIME only; the three experimental themes keep the Python check on `text_main` and
+    `text_muted` until B20 brings them back under axe.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

@@ -565,7 +565,10 @@ sessions:
   # obligation, S13 is the largest engineering item left in the backlog.
   - id: S11
     title: Offer two themes in the switcher, a light one and a dark one
-    status: todo
+    status: done
+    started: 2026-10-10
+    completed: 2026-10-10
+    commits: []
     area: Frontend
     effort: S
     model: sonnet
@@ -576,20 +579,31 @@ sessions:
       nothing is deleted and their contrast checks keep running.
     tasks:
       - text: Add a switchable flag (or an ACTIVE_THEMES tuple) in engine/config.py and have theming.available_themes() return only the two active themes, in that order
-        done: false
+        done: true
       - text: Label them as the light and dark theme in the switcher, and keep generating theme-vars.css for all five
-        done: false
+        done: true
       - text: Fall back to the default theme when localStorage holds a theme the switcher no longer offers
-        done: false
+        done: true
       - text: Update tests/test_theming.py (available_themes no longer covers every entry) and keep the Python contrast sweep over all five
-        done: false
+        done: true
       - text: Update CLAUDE.md, README.md and docs/ARCHITECTURE.md where they say five themes or list the switcher, and add a DECISIONS item
-        done: false
+        done: true
     done_when:
       - The theme menu on every page offers exactly TIMBERLINE and CYBER_PRIME, as a light and a dark choice
       - A visitor whose saved theme is one of the three experimental ones gets the default on the next visit, with no console error
       - THEME_CONFIG still holds all five and tests/test_theming.py still checks contrast for all five
       - bash verify.sh passes and the live check is green
+    notes: >-
+      Each THEME_CONFIG entry carries a `switchable` flag (True on TIMBERLINE and
+      CYBER_PRIME, False on the other three); theming.available_themes() returns only
+      the true ones, labelled light or dark from each theme's own bg_main luminance,
+      and theming.available_theme_slugs() feeds base.html's head script, which applies
+      a saved aurelia_theme only when it is on that list. theme-vars.css still carries
+      all five blocks and the Python contrast sweep still runs over all five. New
+      browser spec tests/browser/themes.spec.mjs covers the menu on every page, a
+      choice surviving a reload, and the fallback for each experimental slug; the
+      axe contrast sweep now covers the offered themes only (docs/DECISIONS.md item
+      38). The squash commit is recorded after the pull request merges.
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
     status: todo
