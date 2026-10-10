@@ -758,6 +758,15 @@ knowing so you don't "fix" something that was a deliberate decision:
     CYBER_PRIME only; the three experimental themes keep the Python check on `text_main` and
     `text_muted` until B20 brings them back under axe.
 
+39. **The domain and Cloudflare come before further development (2026-10-10).** With S11 shipped,
+    Travis decided the site gets its own domain and is served from Cloudflare before S12 and S13,
+    so a new session S14 sits ahead of them in `docs/roadmap.yaml` (ids never change, file order
+    is priority). It carries a decision for him first: Cloudflare Pages as the host, or Cloudflare
+    DNS in front of GitHub Pages as a smaller first step. Buying the domain and creating the zone
+    are his own steps; a session never handles a purchase or an account. The build has been ready
+    for this since item 15: `site.domain` writes `dist/CNAME` and moves the 404 page's links to
+    "/", and CLAUDE.md's note that the domain is not yet purchased comes out when S14 closes.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

@@ -605,6 +605,68 @@ sessions:
       choice surviving a reload, and the fallback for each experimental slug; the
       axe contrast sweep now covers the offered themes only (docs/DECISIONS.md item
       38).
+  # ---- Added 2026-10-10, after S11 shipped: Travis's call that the site gets its
+  # own domain and Cloudflare hosting before any further development, so S14
+  # comes before S12 and S13 in priority order (ids never change; order does).
+  - id: S14
+    title: Buy the domain and serve the site from Cloudflare
+    status: todo
+    area: Deploy
+    effort: M
+    model: opus
+    why: >-
+      Travis's decision of 2026-10-10: the site gets its own domain and is hosted
+      on Cloudflare before any further development, so this comes before S12 and
+      S13. Today the site is a GitHub Pages project site at
+      trmckinzie.github.io/aurelia-os/, which is why the 404 page links under
+      /aurelia-os/, the browser suite serves dist/ at that base path, and the
+      deploy workflow's live check, tag and release hang off deploy-pages. The
+      build already knows how to write dist/CNAME from user_config.json's
+      site.domain and to serve from "/" when it is set. Opus because the deploy
+      workflow, the live check and the rollback runbook change shape together,
+      and a wrong step here takes the public site down.
+    decision: >-
+      The first call, before anything else: which Cloudflare arrangement. (a)
+      Cloudflare Pages hosts the site, built and uploaded by the existing
+      workflow in place of GitHub Pages, so the Content-Security-Policy and
+      caching become real response headers and the github.io URL redirects.
+      (b) Cloudflare holds the DNS only, in front of GitHub Pages, keeping
+      every workflow; it needs just site.domain, a CNAME record and HTTPS
+      enforcement, and (a) can follow later. The session recommends one and
+      waits. The later calls are taken one at a time, in the order in notes.
+    tasks:
+      - text: "Travis: buy the domain and add it as a zone in Cloudflare (the only steps a session cannot do); record the registrar and the zone's nameservers in the session notes, never a credential"
+        done: false
+      - text: Set site.domain in user_config.json, confirm the build writes dist/CNAME and serves the 404 page from "/", and update the browser suite's BASE_PATH so it tests the site as it will be served
+        done: false
+      - text: Point the deploy at the chosen host (per the decision), with the live check reading the new URL and the tag and release still gated on it
+        done: false
+      - text: Enforce HTTPS, redirect the www and github.io forms to the canonical domain, and confirm the canonical URL, the social-preview URL and schema.org links all carry it
+        done: false
+      - text: Rehearse a rollback on the new host and update docs/ROLLBACK.md, docs/ARCHITECTURE.md (Deploy, Privacy model), README.md and CLAUDE.md's domain note; add a DECISIONS item
+        done: false
+    done_when:
+      - The site answers on the custom domain over HTTPS, and the old github.io URL redirects to it
+      - The deploy workflow's live check runs against the custom domain and the tag and release still follow a green check
+      - A rollback to the previous deploy tag has been rehearsed on the new host and docs/ROLLBACK.md describes it
+      - bash verify.sh passes and the live check is green
+    notes: >-
+      Run this session as a guided walk, not a batch: one checkpoint at a time,
+      each with a recommendation, Travis's answer, then a real check (dig, curl
+      -I, the live site) before the next. Order: 1 confirm the domain name
+      (travisrmckinzie.com is the working name). 2 pick the registrar
+      (Cloudflare Registrar keeps DNS and billing in one place). 3 the decision
+      above. 4 Travis buys the domain and creates the zone; the session verifies
+      the nameservers with dig and records them in notes, never a credential.
+      5 set site.domain, confirm dist/CNAME and the 404 root, update
+      tests/browser/site.mjs BASE_PATH, run verify.sh. 6 per the decision: the
+      DNS record for GitHub Pages plus its custom-domain setting, or the
+      Cloudflare Pages project and the deploy job that uploads to it. 7 HTTPS on,
+      then www and github.io redirecting to the canonical domain. 8 the live
+      check reads the new URL; a deploy proves the tag and release still follow
+      it. 9 rollback rehearsal on the new host, then the docs. Each of these
+      lands as its own small pull request where that is practical, so a wrong
+      step is one revert.
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
     status: todo
