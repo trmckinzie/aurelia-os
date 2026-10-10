@@ -39,8 +39,8 @@ themes, not part of the brand.
   requests" below); a ruleset on `main` rejects direct pushes.
 - **CI must keep `--no-sort`.** Both the `check` and `build` jobs in `.github/workflows/deploy.yml`
   run `python build.py --no-sort` (with `--strict`, below). Without the flag `organize_assets()` sweeps
-  `vault/99_DROP_ZONE/` into `vault/assets/` and `sync_vault_assets()` publishes it with no
-  `publish:` gate, reviewed by nobody.
+  `vault/99_DROP_ZONE/` into `vault/assets/` on the runner, a vault write reviewed by nobody; the
+  media publish gate then keeps an unreferenced file off the site, but not out of the vault.
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
   runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, a
   `--no-sort` build, then the Playwright browser suite with axe at WCAG A/AA on that build) in
@@ -153,8 +153,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   file is fatal by design so the nav never differs build to build.
 - `engine/theming.py` and `tailwind_build.py`: generate `theme-vars.css` and `tailwind.config.js`
   from `THEME_CONFIG`. Never hand-edit either output.
-- `engine/assets_pipeline.py`: the Drop Zone sort, syncing vault/system assets into `dist/`, and
-  ffmpeg compression for oversized drop-zone audio.
+- `engine/assets_pipeline.py`: the Drop Zone sort, the site's own assets into `dist/`, the media
+  publish gate (a media file ships only when a published note references it), and ffmpeg
+  compression for oversized drop-zone audio.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
   deploy's new files aren't masked by GitHub Pages' ten-minute cache.
 - `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`

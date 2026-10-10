@@ -461,6 +461,14 @@ def _render_image(path):
 _missing_asset_count = 0
 _missing_assets = []
 
+# Every asset reference a published note resolved during this build, as the
+# path written in the note -> the file it resolved to. assets_pipeline's
+# publish gate (backlog B06) copies exactly these into dist/ and nothing
+# else from the media folders, so a file reaches the public site only when
+# a published note names it. Only published notes are processed by the vault
+# scan, so nothing an unpublished note names ever lands here.
+_referenced_assets = {}
+
 
 def get_missing_asset_count():
     return _missing_asset_count
@@ -470,10 +478,19 @@ def get_missing_assets():
     return list(_missing_assets)
 
 
+def get_referenced_assets():
+    """{reference as written in a note: resolved on-disk path} for every asset
+    a published note resolved this build. Read by the media publish gate."""
+    return dict(_referenced_assets)
+
+
 def reset_missing_asset_count():
+    """Clears the missing-asset counters and the referenced-asset registry,
+    which the vault scan does once before it walks the vault."""
     global _missing_asset_count
     _missing_asset_count = 0
     _missing_assets.clear()
+    _referenced_assets.clear()
 
 
 def _is_within(candidate, base):
@@ -494,7 +511,8 @@ def resolve_asset(path):
 
     Note bodies reference media as `assets/audio/x.m4a`, which lives at
     `vault/assets/audio/x.m4a` and is copied to `dist/assets/` by
-    assets_pipeline.sync_vault_assets(). The ROOT_DIR fallback is kept from
+    assets_pipeline.publish_referenced_media() once a published note has
+    resolved it here. The ROOT_DIR fallback is kept from
     the original flashcard resolver, which supported decks committed at the
     repo root rather than in the vault -- the five tracked flashcard CSVs
     actually live there, so it is load-bearing, not vestigial.
@@ -515,6 +533,7 @@ def resolve_asset(path):
             warn(f"Refusing out-of-tree asset reference: {path}")
             continue
         if os.path.isfile(candidate):
+            _referenced_assets[path] = candidate
             return candidate
     return None
 

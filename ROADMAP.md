@@ -19,7 +19,7 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 - [ ] B02 replace the inline `onclick` handlers with delegated listeners, then add a Content-Security-Policy #next
 - [x] B19 stop nesting buttons inside Garden cards, so screen readers reach the pills (2026-10-09)
 - [x] B04 keep every Garden note in the page and watch its size against a 1 MB threshold (2026-10-09)
-- [ ] B06 publish a media file only when a published note references it
+- [x] B06 publish a media file only when a published note references it (2026-10-09)
 
 ## Parked
 - [ ] The rest of the backlog in `docs/roadmap.yaml` (B01, B03, B07, B10, B13–B18), plus the content work in the vault note (note-reader readability, `Contrasts With`)

@@ -182,11 +182,12 @@ the site. It is not an access control, and it never was:
 |---|---|---|
 | `publish: true` note | yes | yes |
 | `publish: false` note | no | **yes** |
-| `vault/assets/documents/` | no (not synced) | **yes** |
+| Media no published note references | no (publish gate) | **yes** |
 | Anything else in `vault/` | no | **yes** |
 
-The same applies to the `documents` carve-out in `engine/assets_pipeline.py`: not syncing a folder
-into `dist/` keeps it off the *website*, not out of the *repository*.
+The same applies to the media publish gate in `engine/assets_pipeline.py`: a media file reaches
+`dist/` only when a published note references it, and the build lists what it left behind, but
+leaving a file out of `dist/` keeps it off the *website*, not out of the *repository*.
 
 One further caveat, learned the hard way: `publish:` and the sync carve-out both govern the
 *current* build. Git keeps every past version of every committed file, so anything committed once

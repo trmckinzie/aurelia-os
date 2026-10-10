@@ -86,10 +86,15 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
 - **`assets_pipeline.py`** — `organize_assets()` (sorts `vault/99_DROP_ZONE` into
   `vault/assets/{images,audio,video,flashcards,documents}` by extension; audio over 15MB gets
   auto-compressed via ffmpeg if it's installed, otherwise copied as-is with a warning),
-  `prepare_dist()` (wipes and recreates `dist/`), `sync_vault_assets()` (copies
-  `vault/assets/{audio,video,images,flashcards}` into `dist/assets/` — `documents` is deliberately
-  *not* synced, so anything sorted there stays off the **website**; it does *not* thereby become
-  private, see "Privacy model" below).
+  `prepare_dist()` (wipes and recreates `dist/`, then copies the site's own `assets/{css,js,images}`
+  whole), and `publish_referenced_media()`, the media publish gate (backlog B06, decided
+  2026-10-01, built 2026-10-09). It runs after the vault scan and copies into `dist/` exactly the
+  files that published notes referenced, which `content.resolve_asset()` records in a registry as
+  it resolves them, then prints every other file in `vault/assets/{audio,video,images,flashcards}`
+  and the repo's `assets/{audio,video,flashcards}` as not published. A file in a media folder
+  therefore never reaches the site merely by being there, and `vault/assets/documents` is never
+  published, referenced or not. Neither keeps anything out of the **repository**; see "Privacy
+  model" below.
 
   **No vault media is committed.** `vault/assets/` does not exist at all any more (git tracks no
   empty directories, so the placeholders an earlier revision of this file described are gone);
@@ -350,7 +355,7 @@ Don't hand-edit either; both are regenerated, and `tailwind.config.js` is gitign
 the vault is therefore publicly readable, *including* notes with `publish: false`.
 
 `publish:` is a rendering flag read by `_scan_vault()` — it decides what becomes a card in `dist/`.
-It is not an access control and never has been. Neither is the `documents` sync carve-out in
+It is not an access control and never has been. Neither is the media publish gate in
 `assets_pipeline.py`. Both keep content off the *website*; neither keeps it out of the *repository*.
 The same holds for `draft: true` on a `user_config.json` `tech_stack` entry: it keeps the entry
 off the Lobby, not out of the repository.

@@ -105,7 +105,7 @@ def _stub_build(monkeypatch, warning=None):
     with broken frontmatter would."""
     monkeypatch.setattr(pipeline, "prepare_dist", lambda: None)
     monkeypatch.setattr(pipeline, "_write_cname", lambda cfg: None)
-    monkeypatch.setattr(pipeline, "sync_vault_assets", lambda: None)
+    monkeypatch.setattr(pipeline, "publish_referenced_media", lambda referenced: None)
     monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: None)
     monkeypatch.setattr(pipeline, "generate_theme_css", lambda: None)
     monkeypatch.setattr(pipeline, "compile_css", lambda: None)

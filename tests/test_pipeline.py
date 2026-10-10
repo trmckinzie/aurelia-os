@@ -383,7 +383,8 @@ def _stub_build_steps(monkeypatch):
     calls = []
     monkeypatch.setattr(pipeline, "prepare_dist", lambda: calls.append("prepare_dist"))
     monkeypatch.setattr(pipeline, "organize_assets", lambda: calls.append("organize_assets"))
-    monkeypatch.setattr(pipeline, "sync_vault_assets", lambda: calls.append("sync_vault_assets"))
+    monkeypatch.setattr(pipeline, "publish_referenced_media",
+                        lambda referenced: calls.append("publish_referenced_media"))
 
     def _stop():
         raise _StopBuild
@@ -407,8 +408,16 @@ def test_build_all_no_sort_does_not_call_organize_assets(monkeypatch):
         pipeline.build_all(sort_dropzone=False)
     assert "organize_assets" not in calls
     # The rest of the build still happens -- this skips a vault mutation, not
-    # a build step that produces dist/.
-    assert calls == ["prepare_dist", "sync_vault_assets"]
+    # a build step that produces dist/. The media gate runs after the scan,
+    # which the stub stops at, so it is not in this list.
+    assert calls == ["prepare_dist"]
+
+
+def test_build_all_publishes_media_only_after_the_vault_scan():
+    # The gate publishes what the scan recorded, so it cannot run before it.
+    import inspect
+    source = inspect.getsource(pipeline.build_all)
+    assert source.index("_scan_vault()") < source.index("publish_referenced_media(get_referenced_assets())")
 
 
 def test_build_all_env_var_skips_the_dropzone_sort(monkeypatch):
@@ -518,8 +527,9 @@ def test_ci_workflow_builds_with_the_vault_guard_on():
     """Every workflow that invokes build.py must pass --no-sort.
 
     Without it, the step runs organize_assets() in the runner, moving
-    vault/99_DROP_ZONE/ into vault/assets/<kind>/ -- which sync_vault_assets()
-    then copies into the published dist/ with no `publish:` gate. The guard
+    vault/99_DROP_ZONE/ into vault/assets/<kind>/ -- a write to the vault on
+    a runner where nobody reviews it (and until B06's publish gate, straight
+    into the published dist/). The guard
     exists (this module's build_all docstring names CI as the reason); it
     just was not being used, and nothing but this test notices.
 

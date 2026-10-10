@@ -16,7 +16,7 @@ from pathlib import Path
 from markupsafe import Markup
 
 from engine import cards
-from engine.assets_pipeline import organize_assets, prepare_dist, sync_vault_assets
+from engine.assets_pipeline import organize_assets, prepare_dist, publish_referenced_media
 from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.cachebust import stamp_asset_versions
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
@@ -26,6 +26,7 @@ from engine.content import (
     get_malformed_count,
     get_missing_asset_count,
     get_missing_assets,
+    get_referenced_assets,
     get_resolved_wikilink_targets,
     get_unresolved_wikilink_targets,
     get_wikilink_resolution_counts,
@@ -793,9 +794,12 @@ def build_all(sort_dropzone=None, strict=False):
         organize_assets()
     else:
         print("\n⏭️  Drop Zone sort skipped -- vault/ will not be modified")
-    sync_vault_assets()
 
     garden_cards, backlinks, edges = _scan_vault()
+    # After the scan, not before: the scan is what records which media the
+    # published notes reference, and only those files are published
+    # (backlog B06; assets_pipeline.publish_referenced_media).
+    publish_referenced_media(get_referenced_assets())
     garden_cards.sort(key=lambda x: x['title'].lower())
 
     print(f"   + Indexing: {len(garden_cards)} Notes")
