@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-09
+updated: 2026-10-10
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -560,6 +560,95 @@ sessions:
       removed. S01-S03 had no decision-log entries (numbering jumped 21 to 22/S04); added as
       22-24 and renumbered later items and their cross-references accordingly.
 
+  # ---- Second roadmap, planned 2026-10-10 after the first Done line was met.
+  # Priority order, as above: S11 is Travis's own ask, S12 is the one dated
+  # obligation, S13 is the largest engineering item left in the backlog.
+  - id: S11
+    title: Offer two themes in the switcher, a light one and a dark one
+    status: todo
+    area: Frontend
+    effort: S
+    model: sonnet
+    why: >-
+      The switcher lists five themes. Travis wants only TIMBERLINE (light) and
+      CYBER_PRIME (dark) reachable for now; THE_PATRIOT, THE_STOA and GRIZZ are
+      experimental and stay defined in THEME_CONFIG for a later return, so
+      nothing is deleted and their contrast checks keep running.
+    tasks:
+      - text: Add a switchable flag (or an ACTIVE_THEMES tuple) in engine/config.py and have theming.available_themes() return only the two active themes, in that order
+        done: false
+      - text: Label them as the light and dark theme in the switcher, and keep generating theme-vars.css for all five
+        done: false
+      - text: Fall back to the default theme when localStorage holds a theme the switcher no longer offers
+        done: false
+      - text: Update tests/test_theming.py (available_themes no longer covers every entry) and keep the Python contrast sweep over all five
+        done: false
+      - text: Update CLAUDE.md, README.md and docs/ARCHITECTURE.md where they say five themes or list the switcher, and add a DECISIONS item
+        done: false
+    done_when:
+      - The theme menu on every page offers exactly TIMBERLINE and CYBER_PRIME, as a light and a dark choice
+      - A visitor whose saved theme is one of the three experimental ones gets the default on the next visit, with no console error
+      - THEME_CONFIG still holds all five and tests/test_theming.py still checks contrast for all five
+      - bash verify.sh passes and the live check is green
+  - id: S12
+    title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
+    status: todo
+    area: Build
+    effort: M
+    model: opus
+    why: >-
+      Backlog B07. 3.4.19 is the v3 long-term-support release and v4 changes
+      how configuration works, so tailwind_build.py, which generates the config
+      from THEME_CONFIG, needs a migration. The eight dev-only npm advisories in
+      the Playwright and Tailwind toolchain are due 2026-11-30 and ride with
+      this upgrade (or with Dependabot's pull requests if they land first).
+      Opus because the generated config, the compile step the build runs and
+      the safelist all change shape at once.
+    tasks:
+      - text: Read the v4 migration guide and decide between the CSS-first config and the JavaScript config bridge; record the choice in DECISIONS
+        done: false
+      - text: Migrate tailwind_build.py and the compile step, keeping every aurelia-* class and the dist/**/*.html content scan
+        done: false
+      - text: Confirm the rendered CSS is equivalent (every page passes the browser and contrast suites unchanged)
+        done: false
+      - text: Bring npm audit --omit=dev and npm audit to zero advisories, regenerating package-lock.json
+        done: false
+      - text: Update docs that describe the Tailwind step and close B07
+        done: false
+    done_when:
+      - npm audit reports zero advisories, dev dependencies included
+      - The browser suite and the contrast tests pass with no change to the expected values
+      - bash verify.sh passes and the live check is green
+  - id: S13
+    title: Split the Garden's inline script into modules with unit tests
+    status: todo
+    area: Frontend
+    effort: L
+    model: opus
+    why: >-
+      Backlog B01. gardentemplate.html carries one script of about 2,800 lines
+      that no unit test can reach; the browser suite exercises it end to end
+      only. The Content-Security-Policy hashes it today, so this is no longer
+      a security prerequisite, but a served file shrinks the policy to 'self'
+      and lets the read-aloud panel, topic cloud, graph renderer, review
+      sessions and roving focus be tested one at a time. The browser suite
+      guards the move.
+    tasks:
+      - text: Move the script into assets/js/garden/ modules served through asset_url(), leaving only build-time data in the page as JSON data blocks
+        done: false
+      - text: Add a JavaScript unit-test runner and lint step to verify.sh and CI, with tests for the pure functions first (sorting, filtering, roving focus, review scheduling glue)
+        done: false
+      - text: Keep the delegated-action registry and the data-note listener as the modules' only entry points
+        done: false
+      - text: Confirm the policy's script-src hash list shrinks and the browser suite passes unchanged
+        done: false
+      - text: Update CLAUDE.md's map and docs/ARCHITECTURE.md, and close B01
+        done: false
+    done_when:
+      - garden.html carries no inline script beyond JSON data blocks, and the browser suite passes unchanged
+      - A JavaScript unit-test run is part of verify.sh and CI, with tests for at least the sorting, filtering and roving-focus logic
+      - bash verify.sh passes and the live check is green
+
 backlog:
   - id: B01
     title: Split the Garden's 2,800-line inline script into modules, with linting and unit tests
@@ -567,7 +656,9 @@ backlog:
     status: open
     detail: >-
       Natural modules include the read-aloud panel, topic cloud, graph renderer
-      and review sessions. Best done after S08, so browser tests guard the move.
+      and review sessions. Scheduled as S13 on the second roadmap (2026-10-10);
+      closes when that session does. No longer a security prerequisite since
+      B02's policy hashes the inline script.
   - id: B02
     title: Replace inline onclick handlers with delegated listeners, then add a Content-Security-Policy
     area: Security
@@ -651,7 +742,9 @@ backlog:
     status: open
     detail: >-
       3.4.19 is the v3 long-term-support release. v4 changes how configuration
-      works, so tailwind_build.py needs a migration.
+      works, so tailwind_build.py needs a migration. Scheduled as S12 on the
+      second roadmap (2026-10-10), together with the eight dev-only npm
+      advisories due 2026-11-30; closes when that session does.
   - id: B08
     title: Stop tracking the Obsidian plugin bundles under vault/.obsidian/plugins
     area: Repo hygiene
@@ -765,3 +858,12 @@ backlog:
       natively, and a pointer click anywhere on the card focuses the title first so
       the reader still returns focus to the card. AXE_EXCEPTIONS in
       tests/browser/fixtures.mjs is empty; the browser suite pins the new shape.
+  - id: B20
+    title: Return the three experimental themes to the switcher
+    area: Frontend
+    status: open
+    detail: >-
+      S11 narrows the switcher to TIMBERLINE and CYBER_PRIME; THE_PATRIOT,
+      THE_STOA and GRIZZ stay in THEME_CONFIG, built and contrast-checked but
+      not offered. Travis's call, whenever he returns to them: flipping each
+      one's switchable flag is the whole change.

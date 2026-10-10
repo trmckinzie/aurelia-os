@@ -403,9 +403,6 @@ def _build_lobby_context(garden_cards, graph_index):
         for note_id, count in degree.most_common(5)
     ]
 
-    log_ids = sorted((c['id'] for c in garden_cards if _DAILY_LOG_ID_RE.match(c['id'])), reverse=True)
-    latest_log_date = log_ids[0].replace('note-', '', 1) if log_ids else None
-
     return {
         "total_notes": len(garden_cards),
         "maturity_counts": {
@@ -414,7 +411,6 @@ def _build_lobby_context(garden_cards, graph_index):
             "evergreen": maturity_counts.get("evergreen", 0),
         },
         "hub_notes": hub_notes,
-        "latest_log_date": latest_log_date,
         "type_counts": _lobby_type_counts(garden_cards),
     }
 

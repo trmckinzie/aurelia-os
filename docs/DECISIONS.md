@@ -731,6 +731,17 @@ knowing so you don't "fix" something that was a deliberate decision:
     as a console error. Known limit: a `<meta>` policy cannot carry `frame-ancestors` or a
     report endpoint; both need headers the host does not send.
 
+37. **Second roadmap (2026-10-10).** The first `ROADMAP.md` Done line (B04, B06, B19, B02) was met
+    on 2026-10-09, so a new one was written rather than working against a met target. Three
+    sessions, in priority order: S11 narrows the theme switcher to TIMBERLINE and CYBER_PRIME as a
+    light and a dark choice, Travis's own ask, with the three experimental themes kept in
+    `THEME_CONFIG` (backlog B20 brings them back); S12 is the Tailwind v4 upgrade with the dev-only
+    npm advisories, the one dated obligation (2026-11-30); S13 is the Garden script split with a
+    JavaScript unit-test run, the largest engineering item left, no longer a security
+    prerequisite since item 36. Also removed the same day: the Lobby's "Latest note" date, which
+    came from the newest daily log and had read 2026-06-26 since the daily logs stopped, so it
+    signalled staleness rather than activity. The stat and its tests went with it.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
