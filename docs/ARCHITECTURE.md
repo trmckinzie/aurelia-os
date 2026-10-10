@@ -152,7 +152,10 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   discipline) and written by `_write_deep_search_index()` to `assets/js/search-index.js` — a file
   generated at build time, gitignored, and loaded by `gardentemplate.html` as a separately cached
   script rather than inlined, so re-opening the Garden doesn't re-parse it from the page's own
-  JSON every load. `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
+  JSON every load. `report_page_sizes()` runs last, after the asset-version stamp, and prints the
+  compressed and raw size of `garden.html` and that index; a Garden page over
+  `GARDEN_COMPRESSED_LIMIT_BYTES` (1 MiB, backlog B04) is a build warning, which `--strict` fails
+  on. `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
   `404.html` and nothing else. `build_all()` loads `profile.json` (below) *before* scanning the
   vault, so a malformed profile aborts the build before any vault work; it also writes
   `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).

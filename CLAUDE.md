@@ -240,5 +240,5 @@ Card HTML as Jinja macros (deferred), any server or synced store for study progr
 promises no tracking), Lighthouse or visual-regression tests, and a unit-test harness for
 `assets/js/`. Browser and accessibility tests do exist now and block the merge
 (`docs/DECISIONS.md` item 30). `garden.html` keeps every note's body inline rather than fetching
-a note when it opens: decided 2026-10-01, to revisit once the compressed page passes 1 MB
-(`docs/roadmap.yaml`, backlog B04). The full list with reasons is in `docs/DECISIONS.md`.
+a note when it opens: decided 2026-10-01, to revisit once the compressed page passes 1 MB; the
+build prints that size and warns past the limit (`docs/DECISIONS.md` item 32). The full list with reasons is in `docs/DECISIONS.md`.
