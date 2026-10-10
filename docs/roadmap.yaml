@@ -737,13 +737,14 @@ backlog:
   - id: B19
     title: Stop nesting buttons inside Garden cards so screen readers reach the pills
     area: Frontend
-    status: open
+    status: done
     detail: >-
-      Found by the S08 browser suite (axe rule nested-interactive). Each card is an
-      article with role=button that contains the link and topic pills, which are
-      buttons too. A button's children are presentational, so a screen reader cannot
-      reach the pills from the card. The usual fix is a card that is not itself a
-      button, with the title as the one control that opens the note, which changes
-      engine/cards.py and the grid's roving focus. Until then the suite carries one
-      exception for this rule on the card element only (AXE_EXCEPTIONS in
-      tests/browser/fixtures.mjs); remove it in the same change as the fix.
+      Found by the S08 browser suite (axe rule nested-interactive): each card was an
+      article with role=button containing the link and topic pills, which are buttons
+      too, and a button's children are presentational. Closed 2026-10-09: the card is
+      a plain article again and its title is a <button class="card-open">, the one
+      control that opens the note (engine/cards.py). The grid's roving focus moves
+      that control's tabindex instead of the card's, Enter and Space on it activate
+      natively, and a pointer click anywhere on the card focuses the title first so
+      the reader still returns focus to the card. AXE_EXCEPTIONS in
+      tests/browser/fixtures.mjs is empty; the browser suite pins the new shape.

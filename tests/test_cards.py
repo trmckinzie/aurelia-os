@@ -290,3 +290,40 @@ def test_connection_badge_is_silent_at_zero():
     # An orphan reads better as an absent chip than as a "0" that looks
     # like a defect.
     assert _connection_badge(0, "border-aurelia-primary") == ""
+
+
+# --- the card is an article; its title is the one control (B19) -----------
+
+def _card_html(title="Alpha Note"):
+    meta = {"type": "concept", "tags": [], "maturity": "seed"}
+    html, _ = generate_garden_card_html(meta, f"{title}.md", "note-alpha", "body text", known_ids={"note-alpha"})
+    return str(html)
+
+
+def test_card_article_is_not_a_button():
+    # A button's children are presentational, so the pills inside a
+    # role=button card were unreachable to a screen reader (axe
+    # nested-interactive, backlog B19).
+    html = _card_html()
+    article = html[html.index("<article"):html.index(">", html.index("<article"))]
+    assert "role=" not in article
+    assert "tabindex=" not in article
+    assert "aria-label=" not in article
+    assert "onclick=\"openNote('note-alpha')\"" in article
+
+
+def test_card_title_is_the_one_control_that_opens_the_note():
+    html = _card_html("Alpha Note")
+    assert ('<h3 class="display-md text-aurelia-text group-hover:text-aurelia-text transition-colors">'
+            '<button type="button" class="card-open" tabindex="-1" data-id="note-alpha">Alpha Note</button></h3>') in html
+    # Exactly one control opens this note from the card face: the title.
+    # The pills carry their own targets and the article its pointer handler.
+    assert html.count('class="card-open"') == 1
+
+
+def test_card_title_control_escapes_the_title():
+    html = _card_html('Say "hi" <b>')
+    button = html[html.index('class="card-open"'):html.index("</button>", html.index('class="card-open"'))]
+    assert "<b>" not in button
+    assert '"hi"' not in button
+    assert "&lt;b&gt;" in button

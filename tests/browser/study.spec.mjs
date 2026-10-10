@@ -26,7 +26,8 @@ test("Read mode opens a note with nothing covered, and closing returns focus to 
   await reader.getByRole("button", { name: "Close note" }).click();
   await expect(page.locator("#modal-backdrop")).toBeHidden();
   await expect(page).not.toHaveURL(/#/);
-  await expect(card).toBeFocused();
+  // The card's title button is the control focus returns to (B19).
+  await expect(card.locator(".card-open")).toBeFocused();
 });
 
 test("Study mode covers the answer, reveals it, records a rating and can undo it", async ({ page }) => {

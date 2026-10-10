@@ -595,10 +595,36 @@ body {
    One ring for both, in the primary role colour rather than each card's
    identity colour: a focus ring answers "where am I", and it reads
    faster when the answer looks the same everywhere. */
-.searchable-item:focus-visible,
+.card-open:focus-visible,
 .searchable-tree-item:focus-visible {
     outline: 2px solid var(--aurelia-primary);
     outline-offset: 3px;
+}
+
+/* A card's title is the control (B19: the card itself is a plain article
+   so the pills inside it are reachable), but the ring reads better around
+   the whole card, as it did when the card was the control. :has() moves it
+   there where supported; the rule above is the fallback. */
+@supports selector(:has(a)) {
+    .searchable-item:has(.card-open:focus-visible) {
+        outline: 2px solid var(--aurelia-primary);
+        outline-offset: 3px;
+    }
+    .searchable-item .card-open:focus-visible {
+        outline: none;
+    }
+}
+
+/* The title button looks like the heading it sits in: no button chrome,
+   the h3's font and colour, and the whole card is already the pointer
+   target. text-align keeps a wrapped title left-aligned like the old h3. */
+.card-open {
+    all: unset;
+    display: inline;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
 }
 
 /* The Garden's chrome is two stacked sticky bars: base.html's nav

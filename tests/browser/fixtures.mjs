@@ -79,15 +79,9 @@ export const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 // disable a rule outright or exclude a region: add an entry here instead,
 // and delete it in the change that fixes the defect.
 export const AXE_EXCEPTIONS = [
-  {
-    rule: "nested-interactive",
-    selector: '#cardGrid > article.searchable-item[role="button"]',
-    backlog: "B19",
-    reason:
-      "A Garden card is role=button and contains the link and topic pills, which are buttons too. " +
-      "A button's children are presentational, so a screen reader cannot reach the pills from the card. " +
-      "Fixing it changes how every card is built and navigated, which is more than S08's scope.",
-  },
+  // None at present. The last one, nested-interactive on the Garden cards,
+  // went with B19 (2026-10-09): the card is a plain article and its title is
+  // the one control that opens the note.
 ];
 
 // Runs axe on the page as it stands and fails on any violation not listed in
