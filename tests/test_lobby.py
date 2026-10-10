@@ -213,7 +213,9 @@ def test_lobby_carousel_readout_stripe_opacity_is_theme_driven():
     # TIMBERLINE (scanline_opacity: 0%); it now follows the same
     # --aurelia-scanline-opacity every other scanline overlay reads.
     html = render_index()
-    assert 'style="opacity: var(--aurelia-scanline-opacity)"' in html
+    # A class, not a style attribute: the Content-Security-Policy refuses the
+    # latter (B02). main.css's .scanline-overlay reads the same property.
+    assert 'pointer-events-none scanline-overlay"' in html
     assert "bg-[size:100%_4px] pointer-events-none opacity-20" not in html
 
 

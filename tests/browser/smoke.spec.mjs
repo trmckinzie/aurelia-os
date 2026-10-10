@@ -101,6 +101,24 @@ test("the site root without its trailing slash redirects, like GitHub Pages", as
 // the live DOM, reader open included.
 const INLINE_HANDLERS = "[onclick],[onchange],[oninput],[onkeydown],[onkeyup],[onmouseenter],[onmouseover],[onsubmit],[onload],[onerror]";
 
+test("every page carries a Content-Security-Policy with hashes and nothing unsafe", async ({ page }) => {
+  for (const { name, path } of PAGES) {
+    await page.goto(path);
+    const policy = await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute("content");
+    expect(policy, name).toContain("default-src 'self'");
+    expect(policy, name).toMatch(/script-src 'self' 'sha256-/);
+    expect(policy, name).toMatch(/style-src 'self'/);
+    expect(policy, name).not.toContain("unsafe");
+    expect(policy, name).toContain("object-src 'none'");
+  }
+  // The guard fixture fails this test on any console error, and a policy
+  // violation is reported as one, so reaching here with the theme menu and a
+  // note open means every inline block was hashed and nothing was refused.
+  await gotoGarden(page);
+  await page.locator("#theme-menu-btn").click();
+  await openNoteByCard(page, await findStudyableNoteId(page));
+});
+
 test("no page carries an inline event handler, in the markup or in what its scripts build", async ({ page }) => {
   for (const { name, path } of PAGES) {
     await page.goto(path);

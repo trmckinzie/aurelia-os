@@ -158,6 +158,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   compression for oversized drop-zone audio.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
   deploy's new files aren't masked by GitHub Pages' ten-minute cache.
+- `engine/csp.py`: fills `base.html`'s Content-Security-Policy meta tag after the stamp with
+  sha256 hashes of each page's inline `<script>` and `<style>` blocks. Nothing else inline is
+  allowed.
 - `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`
   into `dist/`, so the site serves everything itself.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
@@ -229,6 +232,11 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
   `{% set %}` `site` themselves.
 - **Don't reintroduce `review_seed`.** `dueCount()` counts logged entries only, so the Lobby
   teaser needs no per-note payload.
+- **No inline handler, no inline style attribute, anywhere.** The Content-Security-Policy hashes
+  inline `<script>` and `<style>` blocks at build time and refuses everything else inline, so an
+  `onclick=` or `style=` in a template, an f-string or a JS markup string renders dead on the
+  live site. Name a `data-action` and register it, or set the style through the CSSOM;
+  `tests/test_no_inline_handlers.py` and the build's own warning catch the rest.
 - **Verify the built site with a real browser against a local server on `dist/`**
   (`node tools/preview.mjs` sends `no-store`; any other server needs a query string), or the
   browser serves a cached `garden.html` after a rebuild.

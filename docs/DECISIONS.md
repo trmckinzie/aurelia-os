@@ -717,6 +717,20 @@ knowing so you don't "fix" something that was a deliberate decision:
     had to be interpolated into JS source to be acted on. The policy itself is the second
     half, with build-time hashes for the inline script blocks rather than the B01 module split.
 
+36. **A Content-Security-Policy on every page, with build-time hashes (2026-10-09, backlog B02,
+    second half).** GitHub Pages sends no headers, so the policy is the first element of `<head>`
+    as a `<meta http-equiv>` tag. `engine/csp.py` fills it after the asset stamp with a sha256
+    hash of each page's own inline `<script>` and `<style>` blocks, so `script-src` and
+    `style-src` are `'self'` plus those hashes and never `'unsafe-inline'`, `'unsafe-eval'` or
+    `'unsafe-hashes'`; `object-src`, `frame-src`, `base-uri` and `form-action` are `'none'`, and
+    `img-src` admits `data:` for the favicon only. Hashing the blocks rather than moving the
+    Garden's script into a file is what let B02 close without B01's module split. The
+    templates' inline style attributes moved to `main.css` or are set through the CSSOM, which
+    the policy allows; the build warns when a style attribute or handler reappears, and the
+    browser suite reads the live policy and fails on any violation, since Chromium reports one
+    as a console error. Known limit: a `<meta>` policy cannot carry `frame-ancestors` or a
+    report endpoint; both need headers the host does not send.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

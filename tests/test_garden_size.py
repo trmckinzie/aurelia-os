@@ -90,4 +90,4 @@ def test_build_all_reports_sizes_after_the_asset_stamp():
     # taken before it measures bytes that never ship.
     import inspect
     source = inspect.getsource(pipeline.build_all)
-    assert source.index("stamp_asset_versions(OUTPUT_DIR)") < source.index("report_page_sizes()")
+    assert source.index("stamp_asset_versions(OUTPUT_DIR)") < source.index("apply_csp(OUTPUT_DIR)") < source.index("report_page_sizes()")

@@ -571,18 +571,18 @@ backlog:
   - id: B02
     title: Replace inline onclick handlers with delegated listeners, then add a Content-Security-Policy
     area: Security
-    status: open
+    status: done
     detail: >-
-      First half shipped 2026-10-09: no page carries an inline handler any more.
-      Controls name their action in data-action / data-change / data-input and
+      Closed 2026-10-09 in two pull requests. First: no inline handler anywhere.
+      Controls name an action in data-action / data-change / data-input and
       assets/js/utils.js dispatches to functions each page registers; note links
-      (prose wikilinks, card pills, backlinks, graph rows) carry data-note and the
-      Garden opens them from one listener; the backlinks index and graph read the
-      same attribute. tests/test_no_inline_handlers.py and the browser suite pin
-      it. Remaining: the policy itself, a <meta> Content-Security-Policy (GitHub
-      Pages sends no headers) with build-time hashes for the inline script blocks
-      and inline styles, so 'unsafe-inline' is never needed; that takes the
-      minimum of B01 (none of the module split) and closes this item.
+      carry data-note and the Garden opens them from one listener; the backlinks
+      index and graph read the same attribute. Second: a <meta>
+      Content-Security-Policy (Pages sends no headers) that engine/csp.py fills
+      after the build with sha256 hashes of each page's inline <script> and
+      <style> blocks, so 'unsafe-inline' is never needed and none of B01 was.
+      Inline style attributes moved to main.css or the CSSOM; the build warns if
+      one returns; the browser suite reads the live policy. DECISIONS 35 and 36.
   - id: B03
     title: Move card HTML from Python f-strings to Jinja macros
     area: Build

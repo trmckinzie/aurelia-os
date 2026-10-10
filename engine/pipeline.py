@@ -19,6 +19,7 @@ from engine import cards
 from engine.assets_pipeline import organize_assets, prepare_dist, publish_referenced_media
 from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.cachebust import stamp_asset_versions
+from engine.csp import apply_csp
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
 from engine.content import (
     build_link_resolver,
@@ -870,7 +871,9 @@ def build_all(sort_dropzone=None, strict=False):
     # other asset's) goes into the URLs the pages already carry as tokens.
     stamp_asset_versions(OUTPUT_DIR)
 
-    # Measured last, so the numbers are the bytes a visitor downloads.
+    # After the stamp and before the size report: the policy's hashes are of
+    # each page's final inline blocks, and the report measures final bytes.
+    apply_csp(OUTPUT_DIR)
     report_page_sizes()
 
     warnings = get_warnings()

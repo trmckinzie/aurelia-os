@@ -16,7 +16,7 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 - [ ] 8 dev-only npm advisories (Playwright/Tailwind toolchain): let Dependabot's PRs land, or review them with the B07 Tailwind upgrade (due 2026-11-30)
 
 ## Reach done
-- [ ] B02 replace the inline `onclick` handlers with delegated listeners, then add a Content-Security-Policy #next
+- [x] B02 replace the inline `onclick` handlers with delegated listeners, then add a Content-Security-Policy (2026-10-09)
 - [x] B19 stop nesting buttons inside Garden cards, so screen readers reach the pills (2026-10-09)
 - [x] B04 keep every Garden note in the page and watch its size against a 1 MB threshold (2026-10-09)
 - [x] B06 publish a media file only when a published note references it (2026-10-09)

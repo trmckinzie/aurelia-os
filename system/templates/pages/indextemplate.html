@@ -161,7 +161,7 @@
     {% if profile %}
     <a href="about.html" data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-secondary/50">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-secondary opacity-70 group-hover:opacity-100 transition-opacity"></span>
-        <span aria-hidden="true" class="bracket-mark text-aurelia-secondary" style="width:56px;height:56px;"></span>
+        <span aria-hidden="true" class="bracket-mark bracket-mark-lg text-aurelia-secondary"></span>
 
         {# Top-down flow, not justify-between: with the card stretched to the
            status card's height, pinning the last block to the bottom left a
@@ -214,7 +214,7 @@
        not just the heading. #}
     <div data-reveal class="group surface lift bloom relative min-h-[20rem] border border-aurelia-border rounded-theme p-8 overflow-hidden hover:border-aurelia-primary/50">
         <span aria-hidden="true" class="absolute left-0 top-0 bottom-0 w-[3px] bg-aurelia-primary opacity-70 group-hover:opacity-100 transition-opacity"></span>
-        <span aria-hidden="true" class="bracket-mark text-aurelia-primary" style="width:56px;height:56px;"></span>
+        <span aria-hidden="true" class="bracket-mark bracket-mark-lg text-aurelia-primary"></span>
 
         {# Top-down flow, not justify-between: with the card stretched to the
            status card's height, pinning the last block to the bottom left a
@@ -269,9 +269,9 @@
         <div class="mb-6" title="Zettelkasten-style note maturity: seeds are raw capture, growing notes are being worked, evergreen notes are fully synthesized.">
             <div id="lobby-maturity-bar" class="flex h-2.5 rounded-full overflow-hidden bg-aurelia-bg border border-aurelia-border">
                 {% if stats.total_notes %}
-                <div class="bg-aurelia-highlight" style="width: {{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
-                <div class="bg-aurelia-accent" style="width: {{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
-                <div class="bg-aurelia-secondary" style="width: {{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-highlight" data-width="{{ (stats.maturity_counts.seed / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-accent" data-width="{{ (stats.maturity_counts.growing / stats.total_notes * 100)|round(1) }}%"></div>
+                <div class="bg-aurelia-secondary" data-width="{{ (stats.maturity_counts.evergreen / stats.total_notes * 100)|round(1) }}%"></div>
                 {% endif %}
             </div>
             {# flex-wrap + explicit gaps (rather than justify-between alone)
@@ -378,7 +378,7 @@
                        the same --aurelia-scanline-opacity every other scanline/stripe overlay
                        already uses (main.css's .scanline), so it goes fully off on TIMBERLINE
                        and stays at its previous strength on the neon themes. #}
-                    <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none" style="opacity: var(--aurelia-scanline-opacity)"></div>
+                    <div class="absolute inset-0 bg-[linear-gradient(color-mix(in_srgb,var(--aurelia-text-main)_35%,transparent)_50%,transparent_50%)] bg-[size:100%_4px] pointer-events-none scanline-overlay"></div>
 
                     {# Seeded server-side with the first item rather than a
                        placeholder: the carousel calls updateReadout() on init,
@@ -453,6 +453,13 @@
 
 {% block scripts %}
 <script>
+    /* --- MATURITY BAR WIDTHS ---
+       Set through the CSSOM from data-width rather than a style attribute in
+       the markup, which the Content-Security-Policy refuses (engine/csp.py).
+       The bars start at zero width and take their share here, before first
+       paint completes for most visitors since this script follows them. */
+    document.querySelectorAll('[data-width]').forEach((el) => { el.style.width = el.dataset.width; });
+
     /* --- SPACED-REVIEW TEASER ---
        Purely client-side: reads Review.dueCount() (assets/js/review.js),
        which itself reads only the aurelia_review_log localStorage key --
