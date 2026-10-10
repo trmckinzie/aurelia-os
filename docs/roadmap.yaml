@@ -568,7 +568,8 @@ sessions:
     status: done
     started: 2026-10-10
     completed: 2026-10-10
-    commits: []
+    commits:
+      - "fe8748c"
     area: Frontend
     effort: S
     model: sonnet
@@ -603,7 +604,7 @@ sessions:
       browser spec tests/browser/themes.spec.mjs covers the menu on every page, a
       choice surviving a reload, and the fallback for each experimental slug; the
       axe contrast sweep now covers the offered themes only (docs/DECISIONS.md item
-      38). The squash commit is recorded after the pull request merges.
+      38).
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
     status: todo
