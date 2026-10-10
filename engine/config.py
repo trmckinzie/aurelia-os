@@ -66,6 +66,16 @@ env.globals["asset_url"] = asset_url
 # Tailwind config, and the switcher's dropdown all derive their list from
 # this dict's keys.
 #
+# `switchable` (roadmap S11, 2026-10-10) decides whether the nav's theme
+# menu offers a theme. Every theme is still generated into theme-vars.css
+# and contrast-checked by tests/test_theming.py whatever the flag says; a
+# False only keeps it out of the menu, and a saved preference for it is
+# ignored at first paint (base.html's head script), so that visitor gets
+# the default. Travis wants one light and one dark choice reachable for now
+# (TIMBERLINE and CYBER_PRIME); THE_PATRIOT, THE_STOA and GRIZZ are
+# experimental and wait on backlog B20, where flipping this flag is the
+# whole change. A theme that omits the key is offered.
+#
 # Every value is a plain, ready-to-use CSS value string -- write it exactly
 # as it would appear on the right-hand side of a CSS declaration. Hex colors
 # are bare (no quotes: "#0a0a0b"); font-family lists keep the quotes CSS
@@ -174,6 +184,7 @@ THEME_CONFIG = {
     "TIMBERLINE": {
         "label": "Timberline",
         "description": "Light / Editorial",
+        "switchable": True,   # the light choice in the theme menu
         "colors": {
             "bg_main": "#f5f2eb",       # ivory paper
             "bg_layer_1": "#fdfcf9",    # cards -- barely lifted off the page
@@ -248,6 +259,7 @@ THEME_CONFIG = {
     "CYBER_PRIME": {
         "label": "Cyber Prime",
         "description": "Dark / Neon",
+        "switchable": True,   # the dark choice in the theme menu
         "colors": {
             # Base Layer
             "bg_main": "#0a0a0b",       # Deepest Black
@@ -323,6 +335,7 @@ THEME_CONFIG = {
     "THE_PATRIOT": {
         "label": "The Patriot",
         "description": "Light / Americana",
+        "switchable": False,  # experimental; backlog B20 returns it to the menu
         "colors": {
             # Base Layer -- warm gold-tinted parchment (USWDS gold-5/10),
             # not neutral gray, but light enough to stay well above AA
@@ -414,6 +427,7 @@ THEME_CONFIG = {
     "THE_STOA": {
         "label": "The Stoa",
         "description": "Stoic / Helvetic",
+        "switchable": False,  # experimental; backlog B20 returns it to the menu
         "colors": {
             # Base Layer -- Carrara marble, not neutral gray: a warm,
             # faintly stone-toned surface, pulled back from paper-white so
@@ -505,6 +519,7 @@ THEME_CONFIG = {
     "GRIZZ": {
         "label": "Grizz",
         "description": "Dark / Collegiate",
+        "switchable": False,  # experimental; backlog B20 returns it to the menu
         "colors": {
             # Base Layer -- a genuinely dark FOREST green-black, not a
             # near-neutral near-black: each layer step gets visibly richer
@@ -586,7 +601,9 @@ THEME_CONFIG = {
 # moving away from the "AURELIA" terminal-neon identity toward a
 # professional portfolio (see CLAUDE.md's rebrand notes), and a light,
 # quiet, CV-appropriate theme is what a first-time visitor should land on
-# now. CYBER_PRIME and the other three remain fully shipped and
-# switchable -- this only changes the default.
+# now. Every other theme is still shipped in theme-vars.css -- this only
+# changes the default -- and which ones the menu offers is each theme's own
+# `switchable` flag. The default has to be one of those (tests/test_theming.py
+# pins it), or the menu could never show the theme a visitor is looking at.
 CURRENT_THEME = THEME_CONFIG["TIMBERLINE"]
 

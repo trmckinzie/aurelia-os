@@ -135,7 +135,8 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 - `build.py` is a short entrypoint (arg parsing and error reporting only); all real logic is in
   `engine/`.
 - `engine/config.py`: paths, the Jinja env (`autoescape=True`, unconditional), `THEME_CONFIG`
-  (five themes, `TIMBERLINE` default). Adding a theme is one dict entry.
+  (five themes, `TIMBERLINE` default; each theme's `switchable` flag decides whether the menu
+  offers it, and only TIMBERLINE and CYBER_PRIME are offered). Adding a theme is one dict entry.
 - `engine/user_config.py`: `user_config.json` loader and strict validator (site identity, the
   Lobby Toolkit). Like `profile.py`, any error is fatal.
 - `engine/buildlog.py`: `warn()`, the one path for build warnings, which `--strict` counts.

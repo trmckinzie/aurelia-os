@@ -4,11 +4,19 @@ from engine import theming
 from engine.theming import (
     _hex_to_rgba,
     _variables_for,
+    available_theme_slugs,
     available_themes,
     default_theme_slug,
     generate_theme_css,
+    is_switchable,
+    theme_mode,
     theme_slug,
 )
+
+# Every theme THEME_CONFIG holds, offered or not. Roadmap S11 narrowed the
+# menu to two of them and deliberately deleted none: the experimental three
+# stay built and contrast-checked (backlog B20 returns them to the menu).
+ALL_THEME_KEYS = ["TIMBERLINE", "CYBER_PRIME", "THE_PATRIOT", "THE_STOA", "GRIZZ"]
 
 
 def test_theme_slug_converts_key_to_kebab_case():
@@ -147,22 +155,57 @@ def test_timberline_overrides_the_type_register_keys():
     assert variables["--aurelia-halo"] == "0%"
 
 
-def test_available_themes_covers_every_theme_config_entry():
+def test_theme_config_still_holds_all_five_themes():
     from engine.config import THEME_CONFIG
-    themes = available_themes()
-    assert len(themes) == len(THEME_CONFIG)
-    assert {t["key"] for t in themes} == {theme_slug(k) for k in THEME_CONFIG}
+    assert list(THEME_CONFIG) == ALL_THEME_KEYS
 
 
-def test_available_themes_entries_carry_label_and_swatch():
+def test_every_theme_declares_its_switchable_flag():
+    # The key is optional (an omitted one is offered), but each theme here
+    # states it, so the menu's contents can be read straight off config.py.
+    from engine.config import THEME_CONFIG
+    for key, theme in THEME_CONFIG.items():
+        assert isinstance(theme.get("switchable"), bool), f"{key} has no explicit switchable flag"
+    assert is_switchable({"colors": {}}) is True
+
+
+def test_available_themes_offers_only_the_switchable_themes_in_config_order():
+    # Roadmap S11: TIMBERLINE as the light choice and CYBER_PRIME as the dark
+    # one, nothing else. The experimental three stay in THEME_CONFIG.
+    from engine.config import THEME_CONFIG
+    assert [t["key"] for t in available_themes()] == ["timberline", "cyber-prime"]
+    assert available_theme_slugs() == ["timberline", "cyber-prime"]
+    assert [k for k, t in THEME_CONFIG.items() if not is_switchable(t)] == ["THE_PATRIOT", "THE_STOA", "GRIZZ"]
+
+
+def test_default_theme_is_offered_by_the_menu():
+    # Otherwise the menu could never mark the theme a first-time visitor is
+    # looking at, and the head script would refuse a saved copy of it.
+    assert default_theme_slug() in available_theme_slugs()
+
+
+def test_available_themes_entries_carry_label_mode_and_swatch():
     themes = available_themes()
     for t in themes:
         assert t["label"]
+        assert t["mode"] in ("light", "dark")
         assert set(t["swatch"].keys()) == {"bg", "primary", "secondary", "accent"}
+    assert [(t["label"], t["mode"]) for t in themes] == [("Timberline", "light"), ("Cyber Prime", "dark")]
+
+
+def test_theme_mode_follows_the_page_background_of_every_theme():
+    # Light or dark is read off bg_main rather than typed by hand, so a
+    # theme cannot be labelled the wrong way round.
+    from engine.config import THEME_CONFIG
+    assert {k: theme_mode(t) for k, t in THEME_CONFIG.items()} == {
+        "TIMBERLINE": "light", "CYBER_PRIME": "dark", "THE_PATRIOT": "light",
+        "THE_STOA": "light", "GRIZZ": "dark",
+    }
 
 
 def test_card_text_roles_meet_aa_contrast_in_every_theme():
-    """text_main and text_muted must clear AA on every surface of every theme.
+    """text_main and text_muted must clear AA on every surface of every theme,
+    the three the menu does not offer included (roadmap S11).
 
     The Gemini card's topic chips and its "what's inside" strip are 13px
     text, so AA's 4.5:1 floor applies rather than the large-text exception.
@@ -175,6 +218,7 @@ def test_card_text_roles_meet_aa_contrast_in_every_theme():
     """
     from engine.config import THEME_CONFIG
 
+    assert list(THEME_CONFIG) == ALL_THEME_KEYS
     for theme, cfg in THEME_CONFIG.items():
         colors = cfg["colors"]
         for role in ("text_main", "text_muted"):
@@ -198,6 +242,9 @@ def test_generate_theme_css_writes_a_bare_root_and_one_block_per_theme(tmp_path,
     css = open(output_path, encoding="utf-8").read()
 
     assert ":root {" in css
+    # Every theme, the ones the menu does not offer included: the stylesheet
+    # is what keeps an experimental theme buildable while it waits (B20).
+    assert list(THEME_CONFIG) == ALL_THEME_KEYS
     for key in THEME_CONFIG:
         assert f':root[data-theme="{theme_slug(key)}"] {{' in css
     # Every theme's own primary color lands somewhere in its own block --

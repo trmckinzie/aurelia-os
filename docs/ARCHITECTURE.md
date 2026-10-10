@@ -13,12 +13,17 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   system (`THEME_CONFIG`, five presets in switcher order: **`TIMBERLINE` light/professional, the
   default since 2026-09**, then `CYBER_PRIME` dark/neon, `THE_PATRIOT` light/civic, `THE_STOA`
   Stoic/Helvetic, `GRIZZ` dark/collegiate). `user_config.json` is read by `user_config.py`, below.
-  `CURRENT_THEME` selects the *default* only — every theme is shipped and switchable at runtime
-  (see `theming.py`). Adding a theme means adding a dict entry here and nothing else: the CSS
+  `CURRENT_THEME` selects the *default* only — every theme is shipped in `theme-vars.css` and
+  switchable at runtime (see `theming.py`), but the nav's menu offers only the themes whose
+  `switchable` flag is true: TIMBERLINE as the light choice and CYBER_PRIME as the dark one since
+  2026-10-10 (roadmap S11, `docs/DECISIONS.md` item 38). The other three are experimental and wait
+  on backlog B20; a saved preference for one of them is ignored at first paint, so that visitor
+  gets the default. Adding a theme means adding a dict entry here and nothing else: the CSS
   generator, the Tailwind config, and the switcher UI all derive from these keys. Only `colors` is
   mandatory; the optional keys (each with a default in `theming.py` that reproduces the historical
-  hard-coded value) are `font_mono`, `font_display`, `font_body`, `font_reader_heading`,
-  `display_weight`/`display_tracking`/`display_leading`, `label_weight`, `halo` (text-glow
+  hard-coded value) are `switchable` (true when omitted), `font_mono`, `font_display`,
+  `font_body`, `font_reader_heading`, `display_weight`/`display_tracking`/`display_leading`,
+  `label_weight`, `halo` (text-glow
   strength; `0%` turns every neon halo off), `rounded`, the glass/scanline keys, the depth-system
   keys, and `cursor_default`/`cursor_interactive` (`auto`/`pointer` opts out of the SVG cursors).
   TIMBERLINE is the reference for a theme that uses all of them.
@@ -136,7 +141,10 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   bare `:root` block mirroring the default so the first paint isn't unstyled before the switcher's
   init script runs. Also emits `-rgb` channel twins of each color (Tailwind's opacity modifiers
   like `bg-aurelia-primary/10` need decomposable channels, not a hex string) and the per-theme
-  cursor SVGs. `available_themes()` feeds the nav switcher's embedded JSON.
+  cursor SVGs. `available_themes()` feeds the nav switcher's embedded JSON with the switchable
+  themes only, each labelled `light` or `dark` from its own background luminance, and
+  `available_theme_slugs()` gives `base.html`'s head script the list a saved preference is
+  checked against.
 - **`pipeline.py`** — orchestrates everything. `_scan_vault()` is **two-pass**: pass one walks
   `vault/`, reads and sanitizes every published garden note, and computes its `note_id`, building
   the full `known_ids` set and the link resolver; pass two runs `process_wikilinks()` with that

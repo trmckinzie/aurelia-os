@@ -47,7 +47,7 @@ from engine.sanitize import sanitize_note_html
 from engine.tailwind_build import compile_css
 from engine.vendor import copy_vendor_assets
 from engine.textutils import dumps_for_script_tag, truncate
-from engine.theming import available_themes, default_theme_slug, generate_theme_css
+from engine.theming import available_theme_slugs, available_themes, default_theme_slug, generate_theme_css
 from engine.user_config import load_user_config
 
 
@@ -625,6 +625,7 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["theme"] = CURRENT_THEME
             context["theme_key"] = default_theme_slug()
             context["available_themes_json"] = dumps_for_script_tag(available_themes())
+            context["available_theme_slugs_json"] = dumps_for_script_tag(available_theme_slugs())
             context["search_index"] = json_index
             context["config"] = user_config
             context.setdefault("site_root", "")
