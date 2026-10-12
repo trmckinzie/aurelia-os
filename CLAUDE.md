@@ -7,7 +7,7 @@ commands, a map, and the traps. Depth lives in `docs/` and is linked where a ses
 
 A personal static-site generator: `build.py` turns the Obsidian vault in `vault/` into a
 three-page GitHub Pages site (Lobby `index.html`, Garden `garden.html`, About `about.html`) at
-https://trmckinzie.github.io/aurelia-os/ for Travis McKinzie. The Garden is an "external
+https://travisrmckinzie.com/ for Travis McKinzie. The Garden is an "external
 cortex": atomic notes linked Zettelkasten-style, with the link graph, maturity, and backlinks
 visible on the published site, plus a client-side spaced-repetition study layer. `README.md` is
 the public description; `docs/ARCHITECTURE.md` is the engine walkthrough.
@@ -93,9 +93,10 @@ bash verify.sh                                          # everything above, in C
 ```
 
 The browser suite (`tests/browser/`, `playwright.config.mjs`) tests `dist/` and never builds it,
-so it cannot race a build; it serves `dist/` under `/aurelia-os/` via `tools/preview.mjs` on port
-8792. An axe finding is fixed, or added to `AXE_EXCEPTIONS` in `tests/browser/fixtures.mjs` as
-one rule on one selector with an open backlog id; never disable a rule. CI keeps failure
+so it cannot race a build; it serves `dist/` at `BASE_PATH` from `tests/browser/site.mjs` ("/"
+since roadmap S14) via `tools/preview.mjs` on port 8792. An axe finding is fixed, or added to
+`AXE_EXCEPTIONS` in `tests/browser/fixtures.mjs` as one rule on one selector with an open backlog
+id; never disable a rule. CI keeps failure
 screenshots and traces as the `browser-suite-failures-<os>` artifact. `docs/DECISIONS.md` item 30.
 
 Machine-specific notes (interpreter path, console encoding, local preview server) live in the
@@ -198,6 +199,8 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
+- Essays (planned as roadmap S15 to S18, not built yet): `docs/ESSAYS.md` is the design and its
+  data contract, and `docs/DECISIONS.md` item 41 records why.
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 
