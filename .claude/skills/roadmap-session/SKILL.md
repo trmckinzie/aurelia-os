@@ -37,7 +37,8 @@ nothing is ready. When every session is done (true of S01 to S10 since 2026-10-0
 unit of work is a `backlog` entry or a new session that Travis adds; agree on it with him rather
 than picking one. Read the chosen entry directly out of `docs/roadmap.yaml` rather than trusting
 a summary — `title`, `why`, `decision` (if present and not yet `decided`, stop and ask Travis
-before writing code: CLAUDE.md's decision-pending rule), `depends_on`, `tasks`, and `done_when`.
+before writing code: CLAUDE.md's decision-pending rule), `depends_on`, `tasks`, `done_when`, and
+`notes` (planning instructions that are part of the scope; `--next` prints them too).
 
 **Read every `depends_on` entry too**, not just this one. S09 built on S01; skipping that context
 is how a session reinvents something an earlier one already decided.

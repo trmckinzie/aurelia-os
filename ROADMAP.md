@@ -7,6 +7,9 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 **`docs/roadmap.yaml` is the source of truth** for sessions and the full backlog, checked by `tools/roadmap.py --check` in `verify.sh`; `python tools/roadmap.py --next` prints the kickoff prompt for the next session. This file names only the items that gate the Done line so the dev-dashboard can show progress. Close an item in the yaml first, then tick it here. The public site is the constraint: nothing private reaches `dist/`, and `vault/` is edited only with Travis's explicit go-ahead.
 
 ## Reach done (second roadmap, planned 2026-10-10)
+
+Order from here: **S12 next**, then S15, S16, S17, S18 (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
+
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
 - [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)
 - [ ] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (due 2026-11-30) #next

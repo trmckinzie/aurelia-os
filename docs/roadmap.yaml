@@ -757,6 +757,22 @@ sessions:
       - The essay does not appear as a card on the Garden page
       - A build with a draft, an unknown field, a NotebookLM link or a PDF in the Essays folder fails without --strict, each proven by a test
       - bash verify.sh passes and the live check is green
+    notes: >-
+      Read docs/ESSAYS.md first. Its contract is fixed: if the code argues
+      against it, stop and bring it to Travis as a decision. Work in a worktree
+      on a branch named s15-essays, and run ListAgents first; do not run beside
+      a session editing engine/config.py, engine/pipeline.py, CLAUDE.md,
+      docs/DECISIONS.md or docs/roadmap.yaml. Hard lines: vault/ stays
+      untouched and vault/30_ESSAYS is not created; build and test against a
+      fixture essay under tests/fixtures/. The privacy checks fail every build,
+      strict or not, never through warn(), because verify.sh adds --strict
+      only on GitHub and a pushed branch is public before CI runs. Vet the
+      Markdown library before installing it (current maintainer and version)
+      and record the verdict in 50_Library/Resources.md in the dev vault. The
+      live site looks unchanged afterwards. Hand the diff to
+      garden-publication-reviewer before the pull request, attach 375-pixel
+      screenshots of the fixture build's /essays/ and essay page to it, and
+      show Travis the diff before committing.
   - id: S16
     title: Resolve essay citations and format references in APA 7
     status: todo
@@ -837,6 +853,13 @@ sessions:
       - The disclosure note's counts match the reference list
       - A test audio file on media.travisrmckinzie.com plays in the fixture build, and the YouTube player appears only after Play episode is pressed
       - bash verify.sh passes and the live check is green
+    notes: >-
+      Design: docs/ESSAYS.md, "The essay page" and "Media". Start with the
+      Travis task: the R2 bucket and subdomain are his account steps, so ask
+      for them first and verify the subdomain answers before wiring it in. The
+      companion zone holds only players and links built from structured
+      fields, never prose. After this session Travis may publish the first
+      real essay; until then nothing goes into vault/30_ESSAYS.
   - id: S18
     title: Add the web citation style, essay structured data and the Essays feed
     status: todo

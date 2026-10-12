@@ -518,6 +518,11 @@ def kickoff_prompt(session):
                       f"asking me again: {session['decision']}"]
     elif session["decision"]:
         lines += ["", f"Before changing anything, ask me to decide this: {session['decision']}"]
+    if session["notes"]:
+        # Planning puts how-to-run instructions here (S14's guided walk, S15's
+        # hard lines), so the generated prompt is the whole kickoff and no
+        # hand-written copy has to survive in a chat transcript.
+        lines += ["", f"Notes from planning, part of the scope: {session['notes']}"]
     lines += [
         "",
         f"Suggested model: {MODEL_LABELS[session['model']]} (90_Meta/Model Routing.md).",
