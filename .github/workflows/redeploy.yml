@@ -110,6 +110,19 @@ jobs:
           AURELIA_BUILD_COMMIT_TIME: ${{ steps.commit-stamp.outputs.commit_time }}
         run: python build.py --no-sort --strict
 
+      - name: Refuse a tag from before the custom domain
+        # Since roadmap S14 the site is served at user_config.json's
+        # site.domain. A tag built before that has no dist/CNAME and a 404
+        # page linking under /aurelia-os/: redeployed, it would serve that
+        # broken 404 page at the domain and could clear the Pages
+        # custom-domain setting. docs/ROLLBACK.md says what to do instead.
+        run: |
+          set -euo pipefail
+          if [ ! -s dist/CNAME ]; then
+            echo "::error::This tag predates the custom domain (roadmap S14) and builds no dist/CNAME. Roll back to a later tag, or revert forward on main (docs/ROLLBACK.md)."
+            exit 1
+          fi
+
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

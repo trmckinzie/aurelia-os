@@ -642,9 +642,9 @@ sessions:
       - text: Set site.domain in user_config.json, confirm the build writes dist/CNAME and serves the 404 page from "/", and update the browser suite's BASE_PATH so it tests the site as it will be served
         done: true
       - text: Point the deploy at the chosen host (per the decision), with the live check reading the new URL and the tag and release still gated on it
-        done: false
+        done: true
       - text: Enforce HTTPS, redirect the www and github.io forms to the canonical domain, and confirm the canonical URL, the social-preview URL and schema.org links all carry it
-        done: false
+        done: true
       - text: Rehearse a rollback on the new host and update docs/ROLLBACK.md, docs/ARCHITECTURE.md (Deploy, Privacy model), README.md and CLAUDE.md's domain note; add a DECISIONS item
         done: false
     done_when:
@@ -669,6 +669,7 @@ sessions:
       Done: 1 travisrmckinzie.com only. 2 Cloudflare Registrar. 3 (b).
       4 bought 2026-10-11, nameservers mitchell and rosemary.ns.cloudflare.com.
       6-7 2026-10-11: verified with GitHub, A/AAAA/www DNS only, HTTPS on.
+      8 PR #40 (7ce0a13): live check green on the domain, then its tag.
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
     status: todo
