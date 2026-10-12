@@ -610,8 +610,12 @@ sessions:
   # comes before S12 and S13 in priority order (ids never change; order does).
   - id: S14
     title: Buy the domain and serve the site from Cloudflare
-    status: in_progress
+    status: done
     started: 2026-10-10
+    completed: 2026-10-11
+    commits:
+      - "7ce0a13"
+      - "87c2f6e"
     area: Deploy
     effort: M
     model: opus
@@ -646,30 +650,26 @@ sessions:
       - text: Enforce HTTPS, redirect the www and github.io forms to the canonical domain, and confirm the canonical URL, the social-preview URL and schema.org links all carry it
         done: true
       - text: Rehearse a rollback on the new host and update docs/ROLLBACK.md, docs/ARCHITECTURE.md (Deploy, Privacy model), README.md and CLAUDE.md's domain note; add a DECISIONS item
-        done: false
+        done: true
     done_when:
       - The site answers on the custom domain over HTTPS, and the old github.io URL redirects to it
       - The deploy workflow's live check runs against the custom domain and the tag and release still follow a green check
       - A rollback to the previous deploy tag has been rehearsed on the new host and docs/ROLLBACK.md describes it
       - bash verify.sh passes and the live check is green
     notes: >-
-      Run this session as a guided walk, not a batch: one checkpoint at a time,
-      each with a recommendation, Travis's answer, then a real check (dig, curl
-      -I, the live site) before the next. Order: 1 the domain name. 2 the
-      registrar. 3 the decision above. 4 Travis buys the domain and creates the
-      zone; the session verifies the nameservers with dig and records them here,
-      never a credential. 5 set site.domain, confirm dist/CNAME and the 404
-      root, update tests/browser/site.mjs BASE_PATH, run verify.sh. 6 verify
-      the domain with GitHub, then the DNS records for GitHub Pages and its
-      custom-domain setting. 7 HTTPS on, then www and github.io redirecting to
-      the canonical domain. 8 the live check reads the new URL; a deploy proves
-      the tag and release still follow it. 9 rollback rehearsal on the new
-      host, then the docs. Each lands as its own small pull request where
-      practical, so a wrong step is one revert.
-      Done: 1 travisrmckinzie.com only. 2 Cloudflare Registrar. 3 (b).
-      4 bought 2026-10-11, nameservers mitchell and rosemary.ns.cloudflare.com.
-      6-7 2026-10-11: verified with GitHub, A/AAAA/www DNS only, HTTPS on.
-      8 PR #40 (7ce0a13): live check green on the domain, then its tag.
+      Run as a guided walk, one checkpoint at a time: a recommendation,
+      Travis's answer, then a real check (dig, curl, the Pages API) before the
+      next. 1 travisrmckinzie.com only. 2 Cloudflare Registrar. 3 (b), DNS only
+      in front of GitHub Pages. 4 bought 2026-10-11; nameservers mitchell and
+      rosemary.ns.cloudflare.com. 5 site.domain, dist/CNAME, the 404 root and
+      BASE_PATH (PR #40). 6 GitHub domain verification, then the four A and
+      four AAAA records GitHub publishes and a www CNAME, all DNS only. 7 the
+      Pages custom domain and Enforce HTTPS, before PR #40 merged, so only the
+      404 page's links lagged for a few minutes. 8 PR #40 (7ce0a13): live check
+      green on the domain, then its tag. 9 rehearsed 2026-10-11: redeploy to
+      7ce0a13's tag, then to 87c2f6e's (PR #41), each live check green and the
+      Pages domain kept; PR #41 also made redeploy.yml refuse any tag from
+      before the domain (docs/ROLLBACK.md). DECISIONS item 40.
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
     status: todo
