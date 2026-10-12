@@ -788,6 +788,43 @@ knowing so you don't "fix" something that was a deliberate decision:
     gained a floor: a tag built before the domain has no `dist/CNAME`, so `redeploy.yml` refuses
     it (`docs/ROLLBACK.md`).
 
+41. **Essays are planned as S15 to S18 (2026-10-12).** Travis's handoff of 2026-10-11 adds a
+    fourth kind of published content: short human-written essays, each with a fixed disclosure
+    note and an AI-generated study companion. `docs/ESSAYS.md` is the design; this item records
+    his calls, taken one at a time, with the reason for each.
+    - **Sequence: after S12, before S13.** The essay pages are then styled once, on Tailwind v4,
+      and S12's 2026-11-30 deadline keeps its slack; S13 does not touch Essays. Essays are not
+      held back for other work (the handoff mentioned a 2026-09-18 sequencing call that neither
+      this repo nor the dev vault records).
+    - **Vault path: `vault/` gains a top-level 30_ESSAYS folder**, a sibling of the Garden, over a
+      Garden subfolder (which would blur finished essays with notes) or `00_Meta` (which publishes
+      nothing today). **Drafts never enter the vault**: a committed draft is public whatever it
+      renders, so any note there without `publish: true` fails every build.
+    - **References: one sidecar file per essay**, in CSL field names, over frontmatter (Obsidian's
+      Properties panel cannot edit nested records) and one shared file (a key rename would touch
+      every essay, and "never cited" would weaken to "cited by no essay"). The engine formats APA 7
+      from the records, the handoff's stated preference, so one record renders both styles.
+    - **Citation syntax: Pandoc's `[@key]`**, over `[[@key]]` (Obsidian would treat it as a link
+      to a missing note, and the wikilink pass would take it first) and plain author-year text
+      (matching it is a guess, and a guess cannot fail a build reliably). The cost is converting
+      each citation to its key at publish time.
+    - **Audio: a Cloudflare R2 bucket on `media.travisrmckinzie.com`**, played with
+      `preload="none"`, over YouTube-only, GitHub release attachments (which would mix with the
+      deploy's own releases) and a podcast host's tracking player. Kept swappable at Travis's
+      request: the allowed media origins are one list in `user_config.json`.
+    - **YouTube: tap to load**, from `youtube-nocookie.com`, over a link only and a standard
+      embed that loads about a megabyte of player script on every visit. No thumbnail, since
+      fetching one is a request to Google.
+    - **Garden: one-way links in the first version**: essays link out to Garden notes through the
+      existing resolver. Essays in Garden backlinks are backlog B22, after S13, so the Garden's
+      inline script is changed once, after it becomes testable modules.
+    - **Analytics are separate (backlog B21).** Travis is not committed to the footer's "No
+      analytics or tracking.": basic analytics are likely. Until B21 lands, the footer stays true,
+      and when it lands the footer changes in the same change.
+
+    Privacy checks for Essays fail every build rather than warning, because `verify.sh` builds
+    with `--strict` only on GitHub, and a pushed branch is already public before CI runs.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
