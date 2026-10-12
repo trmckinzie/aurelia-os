@@ -16,8 +16,9 @@ The site was rebranded away from "Aurelia" in 2026-09 (name collision). What rem
 is deliberately not branding and must stay: the GitHub repo name and Pages URL, `aurelia-*` CSS
 classes and `--aurelia-*` custom properties, JS identifiers such as `aureliaReveal`, the
 `aurelia_theme` localStorage key, the `AURELIA_SKIP_DROPZONE` env var, and the `20_AURELIA` vault
-folder. The working domain `travisrmckinzie.com` is not yet purchased; `site.domain` in
-`user_config.json` stays empty until it is (a value makes the build write `dist/CNAME`).
+folder. The site's domain is `travisrmckinzie.com` (bought 2026-10-11 through Cloudflare
+Registrar; Cloudflare holds the DNS, GitHub Pages still hosts; roadmap S14). It is
+`site.domain` in `user_config.json`, which writes `dist/CNAME` and serves every page from "/".
 
 TIMBERLINE is the TRM / Pine personal brand, documented in `brand/readme.md`. `brand/` is an
 export from a design tool: nobody edits files in it directly, since changes are made in the tool

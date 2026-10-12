@@ -277,6 +277,20 @@ def test_person_jsonld_worksfor_only_primary_roles():
     assert ld["worksFor"] == [{"@type": "Organization", "name": "Primary Org"}]
 
 
+def test_person_jsonld_carries_the_site_url_only_when_given():
+    # Roadmap S14: the schema.org Person names the custom domain, and claims
+    # no address at all without one.
+    assert "url" not in person_jsonld(minimal_profile())
+    ld = person_jsonld(minimal_profile(), "https://example.com/")
+    assert ld["url"] == "https://example.com/"
+
+
+def test_site_url_follows_site_domain():
+    assert pipeline._site_url({"site": {"domain": "example.com"}}) == "https://example.com/"
+    assert pipeline._site_url({"site": {"domain": ""}}) is None
+    assert pipeline._site_url({}) is None
+
+
 # --- pipeline wiring -----------------------------------------------------
 
 def test_search_index_contains_an_about_entry():

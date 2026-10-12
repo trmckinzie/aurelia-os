@@ -422,11 +422,15 @@ def load_profile(path=None):
     return validate_profile(data, root=ROOT_DIR)
 
 
-def person_jsonld(profile):
+def person_jsonld(profile, url=None):
     """Builds a schema.org Person JSON-LD object from a validated profile
     dict. Returns a plain dict -- no HTML, no Markup, no Jinja -- callers
     serialize it with textutils.dumps_for_script_tag(), the sink that knows
     how to embed JSON safely inside a <script> tag.
+
+    url is the site's canonical address (https://<site.domain>/), given only
+    when user_config.json sets a domain; without one there is no address
+    worth claiming, so the key is left out rather than pointing at github.io.
     """
     identity = profile["identity"]
 
@@ -449,7 +453,7 @@ def person_jsonld(profile):
             seen_institutions.add(institution)
             alumni_of.append({"@type": "EducationalOrganization", "name": institution})
 
-    return {
+    person = {
         "@context": "https://schema.org",
         "@type": "Person",
         "name": identity["name"],
@@ -460,3 +464,6 @@ def person_jsonld(profile):
         "worksFor": works_for,
         "alumniOf": alumni_of,
     }
+    if url:
+        person["url"] = url
+    return person

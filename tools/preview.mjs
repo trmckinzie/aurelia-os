@@ -10,9 +10,9 @@
 // Usage: node tools/preview.mjs [port] [base]
 //   port  default 8791
 //   base  the path dist/ is served under, default "/". The browser suite
-//         (playwright.config.mjs) passes "/aurelia-os/", which is where
-//         GitHub Pages serves this project site, so a link that only works
-//         at the root of a domain fails there the way it would live.
+//         (playwright.config.mjs) passes BASE_PATH from tests/browser/site.mjs:
+//         "/" on the custom domain, "/aurelia-os/" for the github.io project
+//         site, so a link that only works at one of them fails here as live.
 //
 // Behaves like GitHub Pages where that matters to a test: a folder without
 // its trailing slash redirects to it, a folder serves its index.html, and
