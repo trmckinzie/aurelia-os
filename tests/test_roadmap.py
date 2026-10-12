@@ -374,6 +374,16 @@ def test_kickoff_prompt_acts_on_a_recorded_decision_instead_of_asking_again():
     assert "ask me to decide" not in prompt
 
 
+def test_kickoff_prompt_carries_the_planning_notes():
+    roadmap = validate_roadmap(_roadmap(
+        _session("S01", notes="Work in a worktree. vault/ stays untouched."),
+        _session("S02"),
+    ))
+    assert "Notes from planning, part of the scope: Work in a worktree. vault/ stays untouched." in (
+        kickoff_prompt(roadmap["sessions"][0]))
+    assert "Notes from planning" not in kickoff_prompt(roadmap["sessions"][1])
+
+
 # --- the dashboard -----------------------------------------------------------------
 
 def _html(*sessions, **overrides):
