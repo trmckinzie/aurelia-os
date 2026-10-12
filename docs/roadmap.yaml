@@ -27,7 +27,7 @@
 
 schema_version: 1
 title: Engineering roadmap
-updated: 2026-10-11
+updated: 2026-10-12
 repository: https://github.com/trmckinzie/aurelia-os
 
 sessions:
@@ -699,6 +699,174 @@ sessions:
       - npm audit reports zero advisories, dev dependencies included
       - The browser suite and the contrast tests pass with no change to the expected values
       - bash verify.sh passes and the live check is green
+  # ---- Essays, planned 2026-10-12 from Travis's handoff of 2026-10-11. A fourth
+  # kind of published content: short human-written essays, each with a fixed
+  # disclosure note and an AI-generated study companion. Design: docs/ESSAYS.md;
+  # decisions: docs/DECISIONS.md item 41. Placed after S12 and before S13 by
+  # Travis's call, so the essay pages are styled once, on Tailwind v4.
+  - id: S15
+    title: Add essays as a content type, with their index and pages and the privacy checks
+    status: todo
+    area: Content
+    effort: L
+    model: opus
+    why: >-
+      The first piece of Essays (docs/ESSAYS.md). Today every published note
+      becomes a Garden card and the site is four fixed pages, so this session
+      adds the one thing the rest builds on: essays from vault/30_ESSAYS/
+      routed to their own pipeline, an index at /essays/ and a page per essay,
+      and the checks that keep the private half of the essay workflow out of
+      a public repo. Opus because it changes the publish surface and the shape
+      of the build's output (the first pages below the top of dist/), and
+      anything that changes what the public site renders goes to
+      garden-publication-reviewer.
+    decision: >-
+      Decided 2026-10-12. Sequence: after S12, before S13. Vault path:
+      vault/30_ESSAYS/, a sibling of the Garden. Drafts: an essay enters the
+      vault only when final, and any note there without publish: true fails
+      every build, since a committed draft is public whatever it renders.
+      Garden: one-way; essays link out to Garden notes through the existing
+      resolver, and essays in Garden backlinks wait for B22, after S13.
+    decided: 2026-10-12
+    depends_on: [S12]
+    tasks:
+      - text: Vet a server-side Markdown library under the dev root's rule (current maintainer and version; markdown-it-py is the first candidate), record the verdict in 50_Library/Resources.md, and add it to requirements.in with the lock regenerated
+        done: false
+      - text: Route type essay notes out of _scan_vault's card path into an Essays pipeline; a test holds that no essay ever becomes a Garden card
+        done: false
+      - text: Validate the essay frontmatter contract in docs/ESSAYS.md (field allowlist, id, slug, dates, closed ai_roles vocabulary) and give the schema check an Essays section
+        done: false
+      - text: Add the privacy checks that fail every build, strict or not - drafts, unknown fields, CSL abstract/annote/note, Google Drive/Docs/Sheets, Gemini, NotebookLM and reMarkable URLs, and any file in the folder other than .md and .yaml
+        done: false
+      - text: Render /essays/ (newest first; title, date with weekday, disciplines, thesis, reading time) and /essays/<slug>/ (byline, dates, disciplines, the body), with Essays added to the nav and footer
+        done: false
+      - text: Resolve [[wikilinks]] in essays through build_link_resolver() into links to /garden.html#id, warning on a missing or unpublished target
+        done: false
+      - text: Make engine/csp.py and engine/cachebust.py walk dist/ recursively, with tests that an essay page carries a filled policy and cache-busted URLs
+        done: false
+      - text: Build and test against a fixture essay under tests/fixtures/, never the vault, including a fixture build the browser suite runs on (axe in both themes, no horizontal scroll at 375 pixels); extend the reproducible-build test
+        done: false
+      - text: Show the Essays nav item and index only once at least one essay is published, so the live site changes nothing until the first real essay
+        done: false
+      - text: Decide whether deploy.py's factory clone carries Essays and record it; update CLAUDE.md (three-page description, map), docs/ARCHITECTURE.md (pipeline, privacy model, content model) and README.md, and add a DECISIONS item
+        done: false
+    done_when:
+      - In phone-width screenshots of the fixture build (375 pixels, in the pull request), /essays/ lists the fixture essay with its title, weekday date, disciplines, thesis and reading time, and the nav shows Essays
+      - In the same screenshots, the essay page shows its byline, dates and body, and a test proves its Garden links open the right Garden notes
+      - The live site, with no essay published yet, shows no Essays link and no empty index
+      - The essay does not appear as a card on the Garden page
+      - A build with a draft, an unknown field, a NotebookLM link or a PDF in the Essays folder fails without --strict, each proven by a test
+      - bash verify.sh passes and the live check is green
+  - id: S16
+    title: Resolve essay citations and format references in APA 7
+    status: todo
+    area: Content
+    effort: L
+    model: sonnet
+    why: >-
+      An essay's references are the half of it a reader checks. This session
+      reads each essay's reference file, links every citation in the text to
+      its entry, and formats the list in APA 7 from structured records, so
+      there is one source of truth for both citation styles. The contract is
+      fixed in docs/ESSAYS.md ("Citations"), which makes it Sonnet's work;
+      the size is in the golden-output tests per source type.
+    decision: >-
+      Decided 2026-10-12. References: one sidecar file per essay
+      (E01.refs.yaml beside the essay), in CSL field names, so one record
+      renders both APA 7 and the web style. Citation syntax: Pandoc's
+      [@key], [@key, p. 12], [@a; @b] and narrative @key. The engine formats
+      APA 7 from the records rather than accepting pre-formatted strings.
+    decided: 2026-10-12
+    depends_on: [S15]
+    tasks:
+      - text: Check whether a maintained CSL processor renders APA 7 correctly for the five first-version types (vetted like any dependency); otherwise write a small in-house formatter. Record the choice in DECISIONS
+        done: false
+      - text: Load and validate each essay's reference file against the allowed CSL fields, with verified true or false per record
+        done: false
+      - text: Parse Pandoc citations (parenthetical, page locators, several sources, narrative) and link each to its reference entry; leave email addresses alone
+        done: false
+      - text: Warn on a citation with no record, a record nothing cites, a duplicate key, and an unsupported source type
+        done: false
+      - text: Format APA 7 for journal article, book, chapter in an edited book, encyclopedia entry and preprint, with the author-count, group-author, 1979a/1979b, DOI-over-URL, en-dash and ordering rules in docs/ESSAYS.md, and a hanging indent
+        done: false
+      - text: Golden-output tests for every type and rule above, and for each citation form
+        done: false
+    done_when:
+      - In phone-width screenshots of the fixture build, the essay's citations read as APA 7 in-text citations and each one jumps to its reference entry
+      - The reference list has hanging indents, italics where APA 7 puts them, and DOIs as https://doi.org/ links
+      - A citation with no record, or a record nothing cites, fails the strict build, each proven by a test
+      - bash verify.sh passes and the live check is green
+  - id: S17
+    title: Add the essay disclosure note, the study companion and its media
+    status: todo
+    area: Content
+    effort: M
+    model: sonnet
+    why: >-
+      The two parts of an essay page that say who made what. The disclosure
+      note is rendered from data, never hand-written, and its numbers are
+      counted from the reference file so they cannot drift. The study
+      companion is the one place AI output appears, and it has to look
+      unmistakably separate on a phone. Audio lives on Cloudflare R2 and video
+      on YouTube, so no media enters the repo.
+    decision: >-
+      Decided 2026-10-12. Audio: a Cloudflare R2 bucket on
+      media.travisrmckinzie.com, played by an audio element with
+      preload="none"; the allowed media origins are one list in
+      user_config.json, so a host change is a config edit. YouTube: a
+      type-only tap-to-load control that swaps in a youtube-nocookie.com
+      player, with nothing from Google loaded before the tap. Analytics are
+      separate (B21).
+    decided: 2026-10-12
+    depends_on: [S16]
+    tasks:
+      - text: "Travis: create the R2 bucket and connect media.travisrmckinzie.com in Cloudflare (an account step a session does not take); record the bucket name in notes, never a credential"
+        done: false
+      - text: Render "How this essay was made" from methods and the reference file, with the audit sentence only when citation audit is a role
+        done: false
+      - text: Render the study companion zone on an inverted surface from theme tokens, labelled AI-generated, holding only players and links built from the companion list
+        done: false
+      - text: Add the media origin allowlist to user_config.json and its validator, feed it to the policy's media-src, and fail every build on a companion or audio URL outside it
+        done: false
+      - text: Add the YouTube tap-to-load control as a delegated data-action, with frame-src youtube-nocookie.com and a line beside it saying nothing loads until it is pressed
+        done: false
+      - text: Browser tests - no request to YouTube before the tap and one after it, no audio request before play, the companion label present, axe in both themes
+        done: false
+    done_when:
+      - In phone-width screenshots of the fixture build, the essay text, the disclosure note and the references read as one paper surface, and the study companion is visibly a different zone with its AI label
+      - The disclosure note's counts match the reference list
+      - A test audio file on media.travisrmckinzie.com plays in the fixture build, and the YouTube player appears only after Play episode is pressed
+      - bash verify.sh passes and the live check is green
+  - id: S18
+    title: Add the web citation style, essay structured data and the Essays feed
+    status: todo
+    area: Content
+    effort: M
+    model: sonnet
+    why: >-
+      Finishes the first version of Essays (docs/ESSAYS.md). A second
+      citation style for essays written for the web, from the same reference
+      records; Article structured data and per-essay Open Graph tags so a
+      shared or indexed essay shows its own title, dates and citations; an
+      Atom feed so readers can follow new essays; and essays in the site
+      search. Absolute URLs come from site.domain (S14).
+    depends_on: [S17]
+    tasks:
+      - text: Render citation_style web - each citation a link on the short author-year text to the DOI or URL, and a short Sources list in place of the APA list
+        done: false
+      - text: Emit an Article JSON-LD block per essay (headline, author as the About page's Person, dates, citation entries) and test it parses
+        done: false
+      - text: Give essay pages og:type article, their own title, the thesis as description, and article published and modified times
+        done: false
+      - text: Write an Atom feed at /essays/feed.xml with full essay text and the disclosure note, linked from every page's head, and test it against the Atom required elements
+        done: false
+      - text: Add essays to the site search, and update docs/ARCHITECTURE.md and docs/ESSAYS.md
+        done: false
+    done_when:
+      - In phone-width screenshots of the fixture build, an essay set to citation_style web shows linked citations and a Sources list
+      - A test proves an essay page's Open Graph title and description come from its title and thesis, and its JSON-LD parses as an Article
+      - A test proves /essays/feed.xml is valid Atom listing the fixture essay
+      - bash verify.sh passes and the live check is green
   - id: S13
     title: Split the Garden's inline script into modules with unit tests
     status: todo
@@ -947,3 +1115,32 @@ backlog:
       THE_STOA and GRIZZ stay in THEME_CONFIG, built and contrast-checked but
       not offered. Travis's call, whenever he returns to them: flipping each
       one's switchable flag is the whole change.
+  - id: B21
+    title: Add basic analytics, and make the footer say what is then true
+    area: Privacy
+    status: open
+    detail: >-
+      Every page's footer says "No analytics or tracking." and two tests pin
+      that wording (tests/test_about.py, tests/browser/origin.spec.mjs). Travis
+      said on 2026-10-12 that he is not committed to that promise: basic
+      analytics are likely, partly to learn how analytics tools work within
+      legal limits. The footer line changes in the same change that turns any
+      tracking on, never after. Study progress stays in the visitor's browser:
+      no analytics script reads review data. Raised during the Essays planning
+      (docs/DECISIONS.md item 41).
+    decision: >-
+      Which tool (cookie-free, such as Cloudflare Web Analytics, or one that
+      sets cookies), what the footer and a short privacy note then say, and the
+      Content-Security-Policy and docs/ARCHITECTURE.md "Privacy model" changes
+      that follow.
+  - id: B22
+    title: Show essays in Garden backlinks
+    area: Content
+    status: open
+    detail: >-
+      Essays link out to Garden notes from S15, but a Garden note does not list
+      the essays that cite it. Backlinks and the graph assume every entry is a
+      Garden note and are drawn by the Garden's inline script, which S13 splits
+      into modules, so this waits for S13 and is built once, in testable code.
+      Decided 2026-10-12 as the second step of option (b), docs/DECISIONS.md
+      item 41.

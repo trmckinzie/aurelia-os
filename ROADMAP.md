@@ -1,6 +1,6 @@
 # aurelia-os roadmap
 
-Done when: sessions S11 (the switcher offers two themes, light and dark), S14 (the site on its own domain, served from Cloudflare), S12 (Tailwind v4 with every npm advisory cleared, due 2026-11-30) and S13 (the Garden's script split into served modules with unit tests) are done in `docs/roadmap.yaml`, with `bash verify.sh` and the live check green.
+Done when: sessions S11 (the switcher offers two themes, light and dark), S14 (the site on its own domain, served from Cloudflare), S12 (Tailwind v4 with every npm advisory cleared, due 2026-11-30), S15 to S18 (Essays, `docs/ESSAYS.md`) and S13 (the Garden's script split into served modules with unit tests) are done in `docs/roadmap.yaml`, with `bash verify.sh` and the live check green.
 
 Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This repo already meets it, and the standard was modelled on it.
 
@@ -8,8 +8,12 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 
 ## Reach done (second roadmap, planned 2026-10-10)
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
-- [ ] S14 the site on its own domain, served from Cloudflare, with the live check and rollback runbook moved with it (added 2026-10-10, ahead of S12 by Travis's call; needs his decision on the Cloudflare arrangement first) #next
-- [ ] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (due 2026-11-30)
+- [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)
+- [ ] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (due 2026-11-30) #next
+- [ ] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (added 2026-10-12)
+- [ ] S16 essay citations resolved and references formatted in APA 7
+- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player
+- [ ] S18 the web citation style, essay structured data, the Essays feed and search
 - [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh`
 
 ## Standardize
@@ -28,4 +32,4 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 - [x] B02 replace the inline `onclick` handlers with delegated listeners, then add a Content-Security-Policy (2026-10-09)
 
 ## Parked
-- [ ] The rest of the backlog in `docs/roadmap.yaml` (B03, B10 waits on the About interview file, B13–B18, B20), plus the content work in the vault note (note-reader readability, `Contrasts With`)
+- [ ] The rest of the backlog in `docs/roadmap.yaml` (B03, B10 waits on the About interview file, B13–B18, B20, B21 analytics, B22 essays in Garden backlinks), plus the content work in the vault note (note-reader readability, `Contrasts With`)
