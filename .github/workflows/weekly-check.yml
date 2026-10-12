@@ -71,7 +71,9 @@ jobs:
       - name: Check the live site
         uses: ./.github/actions/live-check
         with:
-          site-url: https://trmckinzie.github.io/aurelia-os/
+          # The canonical address, user_config.json's site.domain
+          # (tests/test_browser_suite.py holds them together).
+          site-url: https://travisrmckinzie.com/
           # No expected-commit: this run deploys nothing, so there is no
           # freshly built SHA to compare the live site against -- it only
           # proves the site that's already up still answers correctly.

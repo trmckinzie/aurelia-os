@@ -71,14 +71,15 @@ if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   BUILD_FLAGS+=(--strict)
 fi
 echo "== build (${BUILD_FLAGS[*]}) =="
-# GITHUB_REPOSITORY decides the 404 page's absolute links (engine/pipeline.py
-# _site_root()). CI sets it; locally it defaults to this repository, so the
-# dist/ built here is the one GitHub Pages serves under /aurelia-os/ and the
-# browser suite below tests the same thing locally as in CI.
+# The 404 page's absolute links come from engine/pipeline.py _site_root():
+# "/" while user_config.json sets site.domain (roadmap S14), otherwise the
+# project-site folder that GITHUB_REPOSITORY names. CI sets it; locally it
+# defaults to this repository, so the dist/ built here matches CI's either way
+# and the browser suite below tests the same thing locally as in CI.
 GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}" "$PYTHON" build.py "${BUILD_FLAGS[@]}"
 
 # Browser suite (roadmap S08, docs/DECISIONS.md item 30): Playwright drives
-# Chromium against the dist/ just built, served under /aurelia-os/, and runs
+# Chromium against the dist/ just built, served under BASE_PATH, and runs
 # axe at WCAG A/AA. Blocking, like everything above. It never builds, so it
 # cannot race this script's build. The install is a no-op once the pinned
 # Playwright's Chromium is present; CI installs it with --with-deps first.

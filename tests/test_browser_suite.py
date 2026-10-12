@@ -38,11 +38,51 @@ def test_verify_sh_runs_the_browser_suite_after_the_build():
 
 
 def test_verify_sh_builds_for_the_project_site_prefix():
-    # The suite serves dist/ under /aurelia-os/; the 404 page only links
-    # there when GITHUB_REPOSITORY names the repository (pipeline._site_root).
+    # Without site.domain the 404 page links under /aurelia-os/ only when
+    # GITHUB_REPOSITORY names the repository (pipeline._site_root), so the
+    # local build sets it the way CI does, whichever root is in force.
     script = _read("verify.sh")
     line = next(ln for ln in script.splitlines() if 'build.py "${BUILD_FLAGS[@]}"' in ln)
     assert 'GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}"' in line
+
+
+def _site_mjs_constant(name):
+    match = re.search(rf'export const {name} = "([^"]*)";', _read("tests", "browser", "site.mjs"))
+    assert match, f"tests/browser/site.mjs no longer exports {name}"
+    return match.group(1)
+
+
+def _site_domain():
+    return json.loads(_read("user_config.json"))["site"].get("domain", "")
+
+
+def test_browser_suite_serves_dist_from_the_root_the_build_links_from():
+    # Roadmap S14: setting site.domain moves the site from /aurelia-os/ to
+    # "/". BASE_PATH has to move with it, or the suite tests a layout
+    # nothing serves (global-setup.mjs would stop it, but only locally).
+    from engine.pipeline import _site_root
+    config = json.loads(_read("user_config.json"))
+    repo = _site_mjs_constant("SITE_REPOSITORY")
+    assert _site_mjs_constant("BASE_PATH") == _site_root(config, {"GITHUB_REPOSITORY": repo})
+
+
+def test_weekly_check_reads_the_canonical_address():
+    # GitHub answers the github.io address with a redirect once a custom
+    # domain is set, and the live check does not follow redirects, so the
+    # weekly check has to name the address the site is really served from.
+    # The deploy and redeploy checks read deploy-pages' page_url instead,
+    # which follows the domain on its own.
+    workflow = yaml.safe_load(_read(".github", "workflows", "weekly-check.yml"))
+    step = next(s for s in workflow["jobs"]["live-check"]["steps"]
+                if s.get("uses") == "./.github/actions/live-check")
+    domain = _site_domain()
+    expected = f"https://{domain}/" if domain else "https://trmckinzie.github.io/aurelia-os/"
+    assert step["with"]["site-url"] == expected
+    for name in ("deploy.yml", "redeploy.yml"):
+        workflow = yaml.safe_load(_read(".github", "workflows", name))
+        assert workflow["jobs"]["live-check"]["steps"][-1]["with"]["site-url"] == (
+            "${{ needs.deploy.outputs.page_url }}"
+        ), name
 
 
 # --- CI -------------------------------------------------------------------

@@ -67,8 +67,8 @@ test("a missing page two folders deep serves the 404 page, styled, with working 
   await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
   await expectAssetsLoaded(page);
 
-  // Absolute links (docs/DECISIONS.md item 29): from /aurelia-os/a/b/ a
-  // relative "index.html" would point at /aurelia-os/a/b/index.html.
+  // Absolute links (docs/DECISIONS.md item 29): from /a/b/ a relative
+  // "index.html" would point at /a/b/index.html.
   await page.getByRole("link", { name: "Back to home" }).click();
   await expect(page).toHaveURL(`${BASE_PATH}index.html`);
   await expect(page.locator("#lobby-total-notes")).toBeVisible();
@@ -87,6 +87,9 @@ test("the search palette on a deep 404 page links to real pages", async ({ page,
 });
 
 test("the site root without its trailing slash redirects, like GitHub Pages", async ({ page }) => {
+  // Only a project site lives in a folder; at a domain's root there is no
+  // slash to leave off.
+  test.skip(BASE_PATH === "/", "served from the domain root");
   const response = await page.goto(BASE_PATH.slice(0, -1));
   expect(response.status()).toBe(200);
   await expect(page).toHaveURL(BASE_PATH);

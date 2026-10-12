@@ -7,7 +7,7 @@ atomic notes (concepts, sources, authors, disciplines, daily logs, Gemini Notebo
 dives) linked the way a Zettelkasten links, rendered, styled, and published as a real website with
 the link graph itself made visible and navigable.
 
-**Live site:** [trmckinzie.github.io/aurelia-os](https://trmckinzie.github.io/aurelia-os/)
+**Live site:** [travisrmckinzie.com](https://travisrmckinzie.com/)
 
 ## What it does
 

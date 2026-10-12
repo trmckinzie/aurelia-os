@@ -503,6 +503,14 @@ def _site_root(user_config, environ=None):
     return "/"
 
 
+def _site_url(user_config):
+    """The canonical address, "https://<site.domain>/", or None without a
+    domain -- the same rule base.html applies to the canonical link."""
+    site = user_config.get("site") if isinstance(user_config, dict) else None
+    domain = site.get("domain") if isinstance(site, dict) else None
+    return f"https://{domain}/" if domain else None
+
+
 def _write_deep_search_index(deep_search_json):
     """Writes the deep-search index to its own JS file rather than inlining it.
 
@@ -606,7 +614,8 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             "page_title": "The Garden",
         }),
         ("pages/abouttemplate.html", "about.html", {
-            "profile": profile, "person_jsonld": dumps_for_script_tag(person_jsonld(profile)),
+            "profile": profile,
+            "person_jsonld": dumps_for_script_tag(person_jsonld(profile, _site_url(user_config))),
             "page_title": None,
         }),
         # The only page a visitor can load from any depth (a missing URL two

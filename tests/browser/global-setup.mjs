@@ -7,7 +7,7 @@ import { BASE_PATH, SITE_REPOSITORY } from "./site.mjs";
 
 const DIST = fileURLToPath(new URL("../../dist/", import.meta.url));
 const BUILD_HINT =
-  "Build it first with the project-site prefix:\n" +
+  "Build it first, the way verify.sh does:\n" +
   `  GITHUB_REPOSITORY=${SITE_REPOSITORY} .venv/bin/python build.py --no-sort\n` +
   "or run everything with: bash verify.sh";
 
@@ -19,8 +19,9 @@ export default async function globalSetup() {
     throw new Error(`dist/404.html not found, so dist/ has not been built.\n${BUILD_HINT}`);
   }
   // The 404 page is the one page with absolute links (docs/DECISIONS.md
-  // item 29). Built without GITHUB_REPOSITORY it links from "/", which the
-  // test server, serving under /aurelia-os/ like GitHub Pages, cannot satisfy.
+  // item 29), so it records the root the build linked from. A dist/ built
+  // for another root (an older build, or site.domain emptied without
+  // BASE_PATH following it) would fail every deep-link test confusingly.
   const root = /const SITE_ROOT = "([^"]*)";/.exec(html)?.[1];
   if (root !== BASE_PATH) {
     throw new Error(

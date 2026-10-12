@@ -1,8 +1,8 @@
 // Browser suite for the built site (roadmap S08, docs/DECISIONS.md item 30).
 //
-// It tests dist/ as it is, and never builds: verify.sh builds first (with
-// GITHUB_REPOSITORY set, so the 404 page links under /aurelia-os/ as it does
-// in CI) and then runs this. Two build.py runs at once would wipe each
+// It tests dist/ as it is, and never builds: verify.sh builds first (the 404
+// page links from the root tests/browser/site.mjs names, as it does in CI)
+// and then runs this. Two build.py runs at once would wipe each
 // other's dist/, so the suite stays out of the build entirely, and
 // tests/browser/global-setup.mjs stops with instructions if dist/ is missing
 // or was built for the wrong prefix.
