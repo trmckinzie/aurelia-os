@@ -767,6 +767,27 @@ knowing so you don't "fix" something that was a deliberate decision:
     for this since item 15: `site.domain` writes `dist/CNAME` and moves the 404 page's links to
     "/", and CLAUDE.md's note that the domain is not yet purchased comes out when S14 closes.
 
+40. **The site moves to travisrmckinzie.com, with Cloudflare as DNS only (2026-10-11).** Roadmap
+    S14, taken one checkpoint at a time. Travis chose `travisrmckinzie.com` alone (no second
+    domain redirecting to it), bought it through Cloudflare Registrar (at cost, WHOIS privacy,
+    the zone created with it), and chose option (b): Cloudflare holds the DNS in front of GitHub
+    Pages, which keeps hosting, over (a) moving the hosting to Cloudflare. (b) kept every
+    workflow, the live check and the rollback rehearsed in S06, and GitHub's own custom-domain
+    redirect covers `www` and the github.io address; (a) remains possible as its own session,
+    and is the way to real response headers (the Content-Security-Policy stays a meta tag).
+    What was done by hand, each step checked with `dig` or `curl` before the next: GitHub domain
+    verification (a TXT record at the account level, so no other account can claim the domain),
+    the four A and four AAAA records GitHub publishes for Pages and a `www` CNAME, all "DNS only",
+    since a proxied record blocks GitHub's certificate and would put Cloudflare in the path of
+    every visit; then the Pages custom domain and Enforce HTTPS. The code change (PR #40) set
+    `site.domain`, moved the browser suite's `BASE_PATH` to "/", added the domain to the About
+    page's schema.org Person, and pointed the weekly live check at the domain, because the live
+    check does not follow redirects; the deploy and redeploy checks already read deploy-pages'
+    `page_url`. Order mattered: the domain was set on Pages and served over HTTPS before the code
+    change merged, so the only gap was the 404 page's absolute links for a few minutes. Rollback
+    gained a floor: a tag built before the domain has no `dist/CNAME`, so `redeploy.yml` refuses
+    it (`docs/ROLLBACK.md`).
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

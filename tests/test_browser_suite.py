@@ -85,6 +85,21 @@ def test_weekly_check_reads_the_canonical_address():
         ), name
 
 
+def test_a_rollback_cannot_redeploy_a_tag_from_before_the_domain():
+    # Roadmap S14: a tag built before site.domain was set has no dist/CNAME
+    # and a 404 page linking under /aurelia-os/. redeploy.yml must refuse it
+    # after building and before anything is uploaded (docs/ROLLBACK.md).
+    assert _site_domain(), "the guard only makes sense while site.domain is set"
+    steps = yaml.safe_load(_read(".github", "workflows", "redeploy.yml"))["jobs"]["build"]["steps"]
+    names = [s.get("name", "") for s in steps]
+    build = names.index("Run Build Script")
+    guard = names.index("Refuse a tag from before the custom domain")
+    upload = names.index("Upload Artifact")
+    assert build < guard < upload
+    assert "[ ! -s dist/CNAME ]" in steps[guard]["run"]
+    assert "exit 1" in steps[guard]["run"]
+
+
 # --- CI -------------------------------------------------------------------
 
 def _step_index(steps, needle, key="run"):

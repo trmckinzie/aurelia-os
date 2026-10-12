@@ -310,8 +310,8 @@ no legacy voice tokens). The behaviour is tested in a real browser by the Playwr
 `tests/browser/` (`study.spec.mjs`: reveal, rating, Change rating, a full review session against
 a seeded log; `dialogs.spec.mjs`: the shortcut sheet and the reader's keys; `accessibility.spec.mjs`:
 axe on the reader covered, revealed and rated), which `verify.sh` and CI run against `dist/`
-served under `/aurelia-os/` by `node tools/preview.mjs 8792 /aurelia-os/` (`docs/DECISIONS.md`
-item 30). There is still no unit-test harness for `assets/js/`. For a manual look,
+served under `BASE_PATH` from `tests/browser/site.mjs` by `node tools/preview.mjs 8792` (`/`
+since the site moved to its own domain in roadmap S14; `docs/DECISIONS.md` items 30 and 40). There is still no unit-test harness for `assets/js/`. For a manual look,
 `node tools/preview.mjs` serves `dist/` at the root (the `dist-preview` entry in
 `.claude/launch.json`). `preview.mjs` sends `Cache-Control: no-store`; against any other server,
 a browser will happily serve a cached `garden.html` after a rebuild unless you add a query string.
@@ -343,8 +343,9 @@ no page carries an inline event handler or style attribute (controls name a `dat
 the live policy and fails on any violation, keep it that way.
 
 The 404 page is the one page served from any depth (a missing URL two folders down still gets
-`404.html`), so it alone links by absolute path, using `site_root` (`/aurelia-os/` in CI, `/`
-locally or on a custom domain). Every other page keeps relative links.
+`404.html`), so it alone links by absolute path, using `site_root`: `/` while `site.domain` is
+set, as it is since roadmap S14, and `/aurelia-os/` for the github.io project site without one.
+Every other page keeps relative links.
 
 ### CSS
 
@@ -395,6 +396,14 @@ Two consequences worth holding onto when working here:
 
 Making `publish: false` genuinely mean private requires a structural change, not a code fix: vault
 in a private repo, CI pushing only built `dist/` to a separate public Pages repo.
+
+**Who serves the site, and who sees a visit.** Since roadmap S14 the site is
+https://travisrmckinzie.com/, registered through Cloudflare Registrar. Cloudflare holds the DNS
+only: every record is "DNS only", not proxied, so Cloudflare answers the lookup and never sees a
+page request. GitHub Pages serves every page, with its own Let's Encrypt certificate, and
+redirects `www` and the old github.io address to the domain. The site's no-tracking promise is
+unchanged by the move, and switching on Cloudflare's proxy later would change it: that would put
+Cloudflare in the path of every visit (`docs/DECISIONS.md` item 40).
 
 ### Content model (vault conventions)
 
