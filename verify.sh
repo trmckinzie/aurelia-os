@@ -3,10 +3,6 @@
 # Run before pushing; the pre-push hook in .claude/githooks also runs this
 # automatically (warn-only) if it finds this file.
 #
-# Bare `python` resolves to the Microsoft Store alias on the Alienware and
-# fails, so this script prefers a project venv over $PATH. A worktree under
-# .claude/worktrees/ has no venv of its own and borrows the main checkout's.
-# CI has neither, so it falls through to python3/python there.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
