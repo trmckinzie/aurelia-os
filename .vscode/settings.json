@@ -10,10 +10,7 @@
         "**/.obsidian": true,        // Hides Obsidian config
         "**/__pycache__": true,      // Hides compiled python files
         "**/*.dist-info": true
-    },
+    }
     // No python.defaultInterpreterPath on purpose: the Python extension finds a
-    // .venv at the workspace root by itself, and the path differs by OS
-    // (.venv\Scripts\python.exe on Windows, .venv/bin/python on macOS), so any
-    // single value written here would be wrong on one of the two machines.
-    "terminal.integrated.defaultProfile.windows": "PowerShell"
+    // .venv at the workspace root by itself.
 }

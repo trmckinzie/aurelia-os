@@ -129,8 +129,8 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   reach these worktrees only through a per-machine include in `.git/config`
   (`docs/MOVING-MACHINES.md`), and `verify.sh` warns when they do not. Don't commit from a
   worktree that shows the warning: a pushed branch is public before it merges.
-- **Look into another worktree with `git -C <path>`, not `cd`.** The session follows a `cd`, and
-  Windows will not delete a folder a shell is still in.
+- **Look into another worktree with `git -C <path>`, not `cd`.** The session follows a `cd`, so
+  `git -C <path>` works from any cwd without changing it.
 
 ## Map
 

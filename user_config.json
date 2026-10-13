@@ -26,24 +26,7 @@
             "icon": "🔳",
             "desc": "Primary development machine. Builds and tests this site.",
             "what_it_is": "Apple's small desktop computer, in its 2026 version with the M6 chip. Its processor and graphics share one pool of fast memory, which lets a compact, quiet machine handle heavy development work and run AI models locally.",
-            "how_i_use_it": "My primary development machine. It builds and tests this site and runs my local AI models.",
-            "draft": true
-        },
-        {
-            "name": "Alienware Aurora R16",
-            "type": "HARDWARE / WORKSTATION",
-            "icon": "🖥️",
-            "desc": "Primary development machine. Builds and tests this site.",
-            "what_it_is": "A tower desktop computer from Dell's Alienware line, designed for gaming. The parts that make it fast for games, an Intel Core i7 processor and an NVIDIA GeForce RTX 4070 graphics card, also make it good at heavy development work and at running AI models on the machine itself rather than in the cloud.",
-            "how_i_use_it": "My primary development machine. It builds and tests this site, and its graphics card runs my local AI models."
-        },
-        {
-            "name": "MacBook Air M1",
-            "type": "HARDWARE / LAPTOP",
-            "icon": "🍏",
-            "desc": "Daily driver for design and writing; runs some scheduled automation.",
-            "what_it_is": "Apple's thin, lightweight laptop. This model uses the M1, the first chip Apple designed for the Mac. It is efficient enough to need no fan at all, so the laptop runs silently and lasts all day on a charge.",
-            "how_i_use_it": "My everyday laptop for design and writing. It also runs some of my scheduled automation."
+            "how_i_use_it": "My primary development machine. It builds and tests this site and runs my local AI models."
         },
         {
             "name": "Mac mini M1",
