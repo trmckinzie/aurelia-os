@@ -675,7 +675,7 @@ sessions:
     status: done
     started: 2026-10-14
     completed: 2026-10-14
-    commits: []
+    commits: [c1ed731]
     area: Build
     effort: M
     model: opus
