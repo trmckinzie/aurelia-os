@@ -154,8 +154,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 - `engine/paths.py`: junction/symlink containment for the vault walk.
 - `engine/profile.py`: `profile.json` loader and strict validator for the About page. A missing
   file is fatal by design so the nav never differs build to build.
-- `engine/theming.py` and `tailwind_build.py`: generate `theme-vars.css` and `tailwind.config.js`
-  from `THEME_CONFIG`. Never hand-edit either output.
+- `engine/theming.py` and `tailwind_build.py`: generate `theme-vars.css` and `tailwind.input.css`
+  (Tailwind v4's CSS-first config, which the CLI compiles) from `THEME_CONFIG`. Never hand-edit
+  either output.
 - `engine/assets_pipeline.py`: the Drop Zone sort, the site's own assets into `dist/`, the media
   publish gate (a media file ships only when a published note references it), and ffmpeg
   compression for oversized drop-zone audio.
@@ -232,7 +233,15 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 - **`git rev-list --objects` lists a blob once**, so a file at two paths looks like one. Use
   `git log --all --name-only` when auditing exposure.
 - **Tailwind scans `dist/**/*.html`**, so classes assembled in Python are fine but classes built
-  client-side after load need a `safelist` entry.
+  client-side after load need an `@source inline(...)` entry in `tailwind_build.py`.
+- **Hand-written CSS lives inside Tailwind's `utilities` layer**: `main.css` through the generated
+  import, and each template's inline `<style>` through an `@layer utilities { }` wrapper. There a
+  rule wins a specificity tie with any utility, responsive variants included (v3 appended those
+  after it), and loses to a more specific one. Unlayered CSS beats every utility regardless of
+  specificity, so never drop the wrapper or move the import. And never declare a site variable
+  under a bare `--text-*`, `--ease-*`, `--font-*`, `--color-*`, `--spacing`, `--radius-*` or
+  `--shadow-*` name: v4's utilities read those at runtime, so the site's value replaces theirs.
+  `tests/test_tailwind_build.py` pins both.
 - **A parent template's top-level `{% set %}` is invisible in a child's blocks.** Child templates
   `{% set %}` `site` themselves.
 - **Don't reintroduce `review_seed`.** `dueCount()` counts logged entries only, so the Lobby

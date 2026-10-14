@@ -1,17 +1,13 @@
 /*
-  This is the main CSS file for Aurelia OS.
-  It uses Tailwind CSS, a utility-first CSS framework.
-  https://tailwindcss.com/
+  The site's hand-written stylesheet, compiled by Tailwind CSS (v4) at build
+  time. It is not the compiler's entry point: engine/tailwind_build.py
+  generates tailwind.input.css, which imports Tailwind, declares the theme
+  tokens, and then imports this file into Tailwind's `utilities` cascade
+  layer, after Tailwind's own utilities. So the rules here follow the
+  ordinary cascade against utility classes: they win a tie on specificity,
+  and a more specific utility wins otherwise. Keep that in mind before
+  relying on a rule here to beat, or to lose to, a class in the markup.
 */
-
-/*
-  These are called "directives". They tell Tailwind to inject its
-  "base" styles, "components" styles, and "utilities" styles into the CSS.
-  This is what makes all the `bg-`, `text-`, `p-` classes work.
-*/
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* === AURELIA OS: THE ATMOSPHERE (scanline overlay) ===
    The <div class="scanline"> in base.html's <body> gets this styling on
@@ -174,8 +170,8 @@ body {
    border-aurelia-{color} utility for its type identity (cyan/purple/
    gold/etc.), and without :where() here, this rule's normal class-level
    specificity plus its later position in the compiled stylesheet (this
-   file's hand-written CSS is textually after `@tailwind utilities`, so it
-   wins ties) silently overrode every card's border-color AND border-style
+   file's hand-written CSS sits after Tailwind's utilities in the same
+   cascade layer, so it wins ties) silently overrode every card's border-color AND border-style
    with this theme's glass default -- on CYBER_PRIME (glass_border: none)
    that meant `border-style: none`, erasing the colored border entirely;
    on THE_PATRIOT it meant every card showed the same flat gold border
@@ -218,8 +214,8 @@ body {
    should confirm that something happened, not perform. Anything above
    ~400ms starts to feel like waiting rather than responding.
 
-   --ease-out is the workhorse for things entering or settling.
-   --ease-spring overshoots very slightly; reserved for direct
+   --aurelia-ease-out is the workhorse for things entering or settling.
+   --aurelia-ease-spring overshoots very slightly; reserved for direct
    manipulation (a press, a panel opening under the cursor) where a little
    physicality reads as responsiveness rather than as decoration. */
 :root {
@@ -227,9 +223,9 @@ body {
     --dur-2: 220ms;   /* standard: hover lift, colour change */
     --dur-3: 320ms;   /* deliberate: panels, indicators, theme swap */
     --dur-4: 460ms;   /* entrance: reveals, modal open */
-    --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
-    --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
-    --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+    --aurelia-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --aurelia-ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+    --aurelia-ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 /* ============================================================
@@ -247,18 +243,27 @@ body {
    small-text sites. Nothing sets a font-size on <html>, so 1rem is the
    browser's own default (16px unless the reader says otherwise).
 
-   --text-2xs is the floor: nothing on the site should go below it.
+   --aurelia-text-2xs is the floor: nothing on the site should go below it.
 
    The ~50 inline `text-[...]` sizes in cards.py and the templates use the
    plain rem values from this scale rather than var() references. Tailwind
    needs a `length:` type hint to accept a custom property as a font size,
    and adding that at 50 call sites buys nothing behavioural -- this
-   comment is the mapping. */
+   comment is the mapping.
+
+   The aurelia- prefix is load-bearing since Tailwind v4 (roadmap S12):
+   v4's own theme tokens are plain custom properties (--text-xs, --text-sm,
+   --ease-in, --ease-out), and its utilities read them with var() at
+   runtime, so a :root { --text-xs } here would silently redefine the
+   `text-xs` utility for the whole site. The same goes for the motion
+   curves above. Nothing of the site's own may be declared under a bare
+   --text-*, --ease-*, --font-*, --color-*, --spacing, --radius-* or
+   --shadow-* name. */
 :root {
-    --text-2xs: 0.75rem;    /* 12px -- incidental metadata, keycaps */
-    --text-xs:  0.8125rem;  /* 13px -- micro-labels, chips, pills */
-    --text-sm:  0.875rem;   /* 14px -- buttons, dense secondary text */
-    --text-md:  1rem;       /* 16px -- body copy */
+    --aurelia-text-2xs: 0.75rem;    /* 12px -- incidental metadata, keycaps */
+    --aurelia-text-xs:  0.8125rem;  /* 13px -- micro-labels, chips, pills */
+    --aurelia-text-sm:  0.875rem;   /* 14px -- buttons, dense secondary text */
+    --aurelia-text-md:  1rem;       /* 16px -- body copy */
 }
 
 /* ============================================================
@@ -286,14 +291,14 @@ body {
     background: var(--aurelia-surface-1);
     box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-1);
     border-bottom: 1px solid color-mix(in srgb, var(--aurelia-primary) 14%, transparent);
-    transition: height var(--dur-3) var(--ease-out), box-shadow var(--dur-3) ease;
+    transition: height var(--dur-3) var(--aurelia-ease-out), box-shadow var(--dur-3) ease;
 }
 :root[data-nav="condensed"] .nav-shell {
     box-shadow: var(--aurelia-rim-light), var(--aurelia-elevation-2);
 }
 /* Page content and the Garden's sticky toolbar both key off --nav-h. */
 .nav-offset { padding-top: calc(var(--nav-h) + 4rem); }
-.nav-anchored { top: var(--nav-h); transition: top var(--dur-3) var(--ease-out); }
+.nav-anchored { top: var(--nav-h); transition: top var(--dur-3) var(--aurelia-ease-out); }
 
 /* The brand's "// SUBTITLE" is the first thing to go when space tightens. */
 .nav-sub { transition: opacity var(--dur-2) ease, max-width var(--dur-3) ease; max-width: 16rem; }
@@ -310,8 +315,8 @@ body {
     box-shadow: 0 0 10px var(--aurelia-primary);
     border-radius: 2px;
     opacity: 0;
-    transition: left var(--dur-3) var(--ease-out),
-                width var(--dur-3) var(--ease-out),
+    transition: left var(--dur-3) var(--aurelia-ease-out),
+                width var(--dur-3) var(--aurelia-ease-out),
                 opacity var(--dur-2) ease;
     pointer-events: none;
 }
@@ -332,7 +337,7 @@ body {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transition: max-height var(--dur-3) var(--ease-out), opacity var(--dur-2) ease;
+    transition: max-height var(--dur-3) var(--aurelia-ease-out), opacity var(--dur-2) ease;
 }
 .mobile-menu.is-open { max-height: 26rem; opacity: 1; }
 
@@ -388,8 +393,8 @@ body {
    because it composes three properties that have to move together, and
    because the reduced-motion block below needs one place to disable it. */
 .lift {
-    transition: transform var(--dur-2) var(--ease-out),
-                box-shadow var(--dur-2) var(--ease-out),
+    transition: transform var(--dur-2) var(--aurelia-ease-out),
+                box-shadow var(--dur-2) var(--aurelia-ease-out),
                 border-color var(--dur-2) ease;
     will-change: transform;
 }
@@ -456,7 +461,7 @@ body {
    caller via a text-aurelia-* utility (color: inherit here on purpose). */
 .field-label {
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     font-weight: var(--aurelia-label-weight);
     line-height: 1.4;
     /* Tracking falls as size rises. 0.12em existed to keep uppercase mono
@@ -476,7 +481,7 @@ body {
     align-items: center;
     gap: 0.65rem;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     font-weight: var(--aurelia-label-weight);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -536,7 +541,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     font-weight: var(--aurelia-label-weight);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -565,14 +570,14 @@ body {
    Closing is faster than opening (--dur-2 vs --dur-4) and uses ease-in:
    dismissal should feel immediate, not like waiting for an exit. */
 .modal-panel-anim {
-    transition: transform var(--dur-4) var(--ease-spring),
-                opacity var(--dur-3) var(--ease-out);
+    transition: transform var(--dur-4) var(--aurelia-ease-spring),
+                opacity var(--dur-3) var(--aurelia-ease-out);
     transform: scale(0.96) translateY(8px);
     opacity: 0;
 }
 .modal-panel-anim.is-open { transform: scale(1) translateY(0); opacity: 1; }
 .modal-panel-anim.is-closing {
-    transition: transform var(--dur-2) var(--ease-in), opacity var(--dur-2) var(--ease-in);
+    transition: transform var(--dur-2) var(--aurelia-ease-in), opacity var(--dur-2) var(--aurelia-ease-in);
     transform: scale(0.98) translateY(4px);
     opacity: 0;
 }
@@ -687,11 +692,20 @@ body {
 /* Square icon buttons in the header and footer. 34px, comfortably over the
    24px floor in WCAG 2.5.8 Target Size (Minimum) -- the close control was
    a 12x12 dot, half the minimum, with no focus ring at all. */
+/* The square's width sits in :where(), at zero specificity, so a width
+   utility on the same element beats it: the footer's prev/next buttons carry
+   `sm:w-auto` to widen for their label. On Tailwind v3 that worked because
+   responsive variants were appended after this file; on v4 every utility
+   compiles before this file in the same cascade layer, so a plain
+   `.reader-icon-btn { width }` would win the tie and pin them square
+   (roadmap S12). Height has no such override and stays in the main rule. */
+:where(.reader-icon-btn) {
+    width: 34px;
+}
 .reader-icon-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
     height: 34px;
     flex-shrink: 0;
     border: 1px solid transparent;
@@ -772,7 +786,7 @@ body {
 
 .kbd {
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-2xs);
+    font-size: var(--aurelia-text-2xs);
     line-height: 1;
     padding: 0.3rem 0.4rem;
     border: 1px solid var(--aurelia-border-main);
@@ -882,7 +896,7 @@ body {
     display: inline-flex;
     align-items: center;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     font-weight: 500;
     letter-spacing: 0.02em;
     line-height: 1.4;
@@ -1019,7 +1033,7 @@ body {
 }
 .recall-cover p {
     margin: 0;
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     color: var(--aurelia-text-muted);
 }
 
@@ -1049,7 +1063,7 @@ body {
     background: var(--aurelia-surface-1);
     color: var(--aurelia-text-main);
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     transition: border-color var(--dur-2) ease, background-color var(--dur-2) ease;
 }
 .rate-btn:hover { border-color: var(--note-accent, var(--aurelia-primary)); }
@@ -1086,7 +1100,7 @@ body {
     flex-wrap: wrap;
     gap: 0.6rem;
     margin: 0.5rem 0 1.25rem;
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     color: var(--aurelia-text-muted);
 }
 
@@ -1098,7 +1112,7 @@ body {
     text-decoration: underline;
     text-underline-offset: 2px;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
 }
 .rate-change-btn:hover { opacity: 0.8; }
 
@@ -1165,7 +1179,7 @@ body {
     align-items: center;
     gap: 0.5rem;
     min-height: 24px;
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     color: var(--aurelia-text-muted);
     cursor: pointer;
 }
@@ -1177,18 +1191,18 @@ body {
 }
 .deck-question {
     margin: 0 0 0.75rem;
-    font-size: var(--text-md);
+    font-size: var(--aurelia-text-md);
     font-weight: 700;
     color: var(--aurelia-text-main);
 }
 .deck-answer {
     margin: 0 0 0.75rem;
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     color: var(--aurelia-text-muted);
 }
 .deck-empty {
     margin: 0 0 0.85rem;
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     color: var(--aurelia-text-muted);
 }
 .deck-widget-nav {
@@ -1201,7 +1215,7 @@ body {
 .deck-progress {
     margin: 0;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     color: var(--aurelia-text-muted);
     letter-spacing: 0.04em;
 }
@@ -1356,7 +1370,7 @@ body {
 }
 .modal-outline-action {
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     color: var(--note-accent, var(--aurelia-primary));
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -1378,7 +1392,7 @@ body {
     text-align: left;
     border-radius: var(--aurelia-radius);
     color: var(--aurelia-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
     line-height: 1.4;
     transition: color var(--dur-2) ease, background-color var(--dur-2) ease;
 }
@@ -1503,7 +1517,7 @@ body {
     margin: 0;
     align-self: center;
     color: var(--aurelia-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
 }
 
 @media (max-width: 479px) {
@@ -1552,7 +1566,7 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 .toolkit-sheet[open] {
-    animation: toolkit-sheet-in var(--dur-2) var(--ease-out);
+    animation: toolkit-sheet-in var(--dur-2) var(--aurelia-ease-out);
 }
 @media (prefers-reduced-motion: reduce) {
     .toolkit-sheet[open] { animation: none; }
@@ -1594,12 +1608,12 @@ body {
     outline-offset: 2px;
 }
 .graph-list-title {
-    font-size: var(--text-sm);
+    font-size: var(--aurelia-text-sm);
 }
 .graph-list-degree {
     flex-shrink: 0;
     font-family: var(--aurelia-font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--aurelia-text-xs);
     color: var(--aurelia-text-muted);
 }
 

@@ -32,7 +32,7 @@ CHECKED_EXACT = {
 ALLOWED_GENERATED = {
     "dist",
     "assets/js/search-index.js",
-    "tailwind.config.js",
+    "tailwind.input.css",
     "reports/roadmap.html",
     "test-results",
     "playwright-report",

@@ -7,7 +7,7 @@ theme-switcher init script runs -- already has real values instead of
 flashing unstyled.
 
 Everything that used to be baked into HTML/JS at build time (a template's
-{{ theme.colors.primary }}, tailwind.config.js's literal hex, even the
+{{ theme.colors.primary }}, the Tailwind config's literal hex, even the
 custom cursor's hardcoded SVG colors) now resolves through one of these
 variables instead, so switching themes at runtime is a pure CSS swap --
 no rebuild, and nothing left hardcoded to one theme.
@@ -172,13 +172,14 @@ def _hex_to_rgba(hex_color, alpha):
 
 
 def _hex_to_rgb_triple(hex_color):
-    """'#00f2ff' -> '0 242 255' -- Tailwind's documented pattern for a
+    """'#00f2ff' -> '0 242 255'. Tailwind v3's documented pattern for a
     CSS-variable-backed color that still supports the /opacity modifier
-    (bg-aurelia-primary/10) is `rgb(var(--x-rgb) / <alpha-value>)`, which
-    needs the channels as bare numbers, not a hex string or a pre-built
-    rgb()/var() value. Without this, Tailwind can't decompose the color to
-    apply an alpha and silently omits the opacity-modifier class entirely
-    -- bg-aurelia-primary/10 would compile to nothing at all."""
+    (bg-aurelia-primary/10) was `rgb(var(--x-rgb) / <alpha-value>)`, which
+    needs the channels as bare numbers: without them v3 could not decompose
+    the color to apply an alpha and silently omitted the opacity-modifier
+    class entirely. v4 (roadmap S12) builds the modifier with color-mix()
+    and no longer needs the split, but the -rgb twins stay: main.css uses
+    them directly, and tailwind_build.py's tokens still read them."""
     r, g, b = _hex_channels(hex_color)
     return f"{r} {g} {b}"
 

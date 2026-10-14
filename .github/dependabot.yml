@@ -1,7 +1,8 @@
 # Weekly version updates for the three dependency surfaces this repo has.
 # Minor and patch bumps arrive as one grouped PR per ecosystem; a major bump
 # arrives on its own, because it is the one most likely to need a real look
-# (tailwindcss 3 to 4, for example, changes the config format).
+# (tailwindcss 3 to 4, for example, changed the config format; roadmap S12
+# did that one by hand).
 #
 # Every PR runs the full check suite (see deploy.yml), and nothing merges
 # itself. Security updates are a separate GitHub setting and ignore this file's

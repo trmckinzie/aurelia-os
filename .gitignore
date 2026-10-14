@@ -42,7 +42,7 @@ __pycache__/
 # --- IGNORE NODE/TAILWIND BUILD FILES ---
 node_modules/
 # Regenerated from engine/config.py THEME_CONFIG on every build; not source.
-tailwind.config.js
+tailwind.input.css
 
 # --- IGNORE SMART CONNECTIONS PLUGIN DATA ---
 **/.smart-env/

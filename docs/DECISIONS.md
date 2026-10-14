@@ -825,6 +825,76 @@ knowing so you don't "fix" something that was a deliberate decision:
     Privacy checks for Essays fail every build rather than warning, because `verify.sh` builds
     with `--strict` only on GitHub, and a pushed branch is already public before CI runs.
 
+42. **Tailwind CSS v4, configured in CSS, with `main.css` inside the utilities layer (roadmap S12,
+    2026-10-14).** Tailwind 3.4.19 was the v3 line's last release, and every one of the seven
+    `npm audit` advisories (braces, micromatch, fast-glob, chokidar, postcss-selector-parser) sat
+    under it. Dependabot's own bump (PR #1, 2026-09-18) failed at the CSS compile because v4 no
+    longer reads `tailwind.config.js`. Decided, one call at a time:
+    - **CSS-first `@theme`, not the `@config` JavaScript bridge.** The bridge exists for large
+      hand-written configs. Ours is forty generated lines, so `tailwind_build.py` now writes a
+      gitignored `tailwind.input.css` instead: `@import "tailwindcss" source(none)`, an explicit
+      `@source "./dist/**/*.html"`, an `@theme inline` block of `var(--aurelia-*)` tokens, then
+      `@import "./assets/css/main.css" layer(utilities)`. The CLI is the separate `@tailwindcss/cli`
+      package, run with `npx --no-install`. `source(none)` matters: v4's automatic source detection
+      skips gitignored paths, and `dist/` is one, so without it the build would scan the vault and
+      the templates and miss every class `cards.py` assembles.
+    - **`main.css` goes into the `utilities` layer, after Tailwind's rules.** v4 puts all of its
+      utilities in cascade layers, and unlayered CSS beats a layered rule whatever its
+      specificity. Left unlayered, `main.css` would have overridden every utility it shares a
+      property with, including through its zero-specificity `:where(.glass)` border rule, which
+      exists so that a card's `border-aurelia-*` utility can beat it. Inside the same layer the
+      ordinary cascade applies. One v3 detail does not survive: v3 appended responsive and other
+      variant utilities *after* `main.css`, so `sm:w-auto` on the modal footer's buttons used to
+      beat `.reader-icon-btn { width: 34px }` by order. On v4 the hand-written rule wins that tie,
+      so the width moved into `:where(.reader-icon-btn)`. Pseudo-class variants (`hover:`,
+      `focus:`) carry their own specificity and are unaffected; only media-query variants
+      (`sm:`, `md:`, `motion-reduce:`) can meet this, and a computed-style diff of every element on
+      every page, at four widths and both motion settings, found that one case. The same diff
+      caught the mirror image: the Garden template's inline `<style>` has a `details > summary`
+      rule that v3's `border-aurelia-border` beat on specificity, and left unlayered it beat the
+      utility on v4, so both templates' inline blocks are now wrapped in `@layer utilities { }`.
+      And it caught a namespace collision: `main.css` declared `--text-xs`, `--text-sm`,
+      `--ease-in` and `--ease-out` on `:root` for its own type and motion scales, names that are
+      v4 theme tokens read by `var()` at runtime, so the site's 13px `--text-xs` had replaced the
+      `text-xs` utility's 12px. They are `--aurelia-text-*` and `--aurelia-ease-*` now.
+      (`CLAUDE.md`, "Traps", carries both rules; `tests/test_tailwind_build.py` pins them.)
+    - **Renamed or removed utilities, updated in the markup:** `flex-grow` to `grow` (removed in
+      v4), `bg-gradient-to-*` to `bg-linear-to-*`, `focus:outline-none` to `focus:outline-hidden`
+      (v4's `outline-none` is a real `outline-style: none`; `outline-hidden` is the v3 behaviour),
+      and `backdrop-blur-sm` to `backdrop-blur-xs` (v4 shifted the size scale one step, so the old
+      name now means 8px, not 4px). Bare `backdrop-blur`, `blur` and `shadow` still render as
+      before. v4's default border colour is now `currentColor` rather than gray-200; a probe found
+      no border drawn without a colour class on any page, so nothing changed. v4's preflight also
+      makes form controls transparent and gives `[hidden]` an `!important`; the first changes
+      nothing visible here (the read-aloud speed slider never painted its white box), and the
+      second fixes a v3-era bug: flashcards.js sets `hidden` on the raw question list once its
+      widget is built, and `.deck { display: flex }` had been overriding that, so every answer
+      was readable in plain text below the widget. It is hidden now, as the markup intended.
+    - **Accepted differences, not reproduced:** (1) `leading-*` now wins over a responsive
+      `md:text-*` at every width, where v3 let the later text-size utility reset the line-height
+      at `md` and up, so four paragraphs on the Lobby and About pages are up to 1.25px per line
+      taller on desktop, which is what their markup asked for; (2) gradients and the `/opacity`
+      modifier interpolate in oklab (`color-mix()`), with no visible change at these sizes; (3)
+      the browser floor rises to Safari 16.4, Chrome 111 and Firefox 128, since v4 relies on
+      `@property`, `color-mix()` and cascade layers; (4) v4 also stopped emitting dead CSS v3 had
+      generated from the Garden script's `if (!grid)` and from class names in comments.
+    - **Verified three ways** before the suites ran: every class selector in the v3 build's
+      `main.css` has a v4 counterpart or a rename above; full-page screenshots of every page in
+      both switchable themes, pixel-identical for the Garden and 404 pages and differing on the
+      Lobby, About and modal only by the items above; and the computed-style diff. The browser
+      and contrast suites pass unchanged. `npm audit` is at zero, dev dependencies included;
+      Playwright and axe were not bumped, since nothing flagged them and Dependabot's grouped
+      minor updates cover them. One package the v3 chain carried is still present: braces 3.0.3
+      (GHSA-vfj7-8cjw-p6xm, no fixed release) remains through `@tailwindcss/cli`'s file watcher,
+      a `--watch` dependency this build never exercises. npm's audit no longer reports it; the
+      dev root's OSV-based pre-push gate (its ADR-008, 2026-10-14) does, and carries a dated
+      exception for it in `osv-scanner.toml`.
+    - **Node 20 is the floor** (`@tailwindcss/oxide`'s `engines`); `.nvmrc` pins 24 and the
+      factory README says 20+. `@tailwindcss/cli` pulls in `@parcel/watcher`, whose install
+      script builds from source only when no prebuilt binary matches; npm warns about it and
+      runs nothing. The dev root's install-script policy, when it reaches this repo, will need an
+      explicit allow or deny for that package.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

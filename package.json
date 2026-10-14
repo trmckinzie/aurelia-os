@@ -6,7 +6,8 @@
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0",
-    "tailwindcss": "3.4.19"
+    "@tailwindcss/cli": "4.3.3",
+    "tailwindcss": "4.3.3"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "5.3.0",
