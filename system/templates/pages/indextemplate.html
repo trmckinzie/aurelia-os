@@ -23,6 +23,11 @@
      loaded in base.html: About and 404 have no use for it. -->
 <script src="{{ asset_url('assets/js/review.js') }}"></script>
 <style>
+/* Inside Tailwind's utilities layer, after main.css, so these rules meet
+   utility classes on the ordinary cascade (specificity, then order), as
+   they did on Tailwind v3. Left unlayered, every rule here would beat every
+   utility on the page regardless of specificity (roadmap S12). */
+@layer utilities {
     /* === 3D CAROUSEL SCENE === */
     .carousel-scene {
         perspective: 1000px;
@@ -80,6 +85,7 @@
            detail window. */
         .carousel { transition: none; }
     }
+}
 </style>
 {% endblock %}
 
@@ -281,7 +287,7 @@
             </div>
         </div>
 
-        <div class="flex-grow min-h-0">
+        <div class="grow min-h-0">
             <span class="field-label text-aurelia-muted block mb-2.5" title="The most-connected notes in the wikilink graph -- a derived Map of Content, not a hand-picked one.">
                 Start here &mdash; most-connected notes
             </span>
@@ -318,11 +324,11 @@
     <section data-reveal class="hud-grid w-full max-w-[1400px] mx-auto mt-32 relative px-6">
         <div class="text-center mb-20 relative z-10">
             <div class="inline-flex items-center gap-4">
-                <div class="h-px w-12 bg-gradient-to-r from-transparent to-aurelia-primary"></div>
+                <div class="h-px w-12 bg-linear-to-r from-transparent to-aurelia-primary"></div>
                 <h2 class="display-lg text-aurelia-text drop-shadow-[0_0_18px_color-mix(in_srgb,var(--aurelia-primary)_var(--aurelia-halo),transparent)]">
                     Toolkit
                 </h2>
-                <div class="h-px w-12 bg-gradient-to-l from-transparent to-aurelia-primary"></div>
+                <div class="h-px w-12 bg-linear-to-l from-transparent to-aurelia-primary"></div>
             </div>
             <div class="mt-4 flex justify-center items-center gap-2 text-aurelia-primary field-label opacity-80">
                 <span>The hardware, software, and AI tooling behind the work</span>
@@ -340,7 +346,7 @@
 
             <div class="flex items-center justify-between mb-8 px-4 md:px-12">
                  <button data-action="rotateCarousel" data-step="-1" aria-label="Previous item" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors">
-                    <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
+                    <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-xs">
                         <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-current"></div>
                         <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-current"></div>
                         <span aria-hidden="true" class="font-mono text-2xl">&lt;</span>
@@ -355,7 +361,7 @@
                 </div>
 
                 <button data-action="rotateCarousel" data-step="1" aria-label="Next item" class="group flex items-center gap-3 text-aurelia-muted hover:text-aurelia-primary transition-colors flex-row-reverse">
-                    <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-sm">
+                    <div class="w-12 h-12 border border-aurelia-border group-hover:border-aurelia-primary group-hover:bg-aurelia-primary/10 flex items-center justify-center transition-colors relative overflow-hidden backdrop-blur-xs">
                         <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-current"></div>
                         <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current"></div>
                         <span aria-hidden="true" class="font-mono text-2xl">&gt;</span>
@@ -366,7 +372,7 @@
 
             <div class="bg-aurelia-bg border border-aurelia-border p-1 relative group">
                 <div class="absolute inset-0 border border-aurelia-primary/30 opacity-50"></div>
-                <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
+                <div class="absolute top-0 left-0 w-full h-[1px] bg-linear-to-r from-transparent via-aurelia-primary to-transparent opacity-20"></div>
 
                 <div class="bg-aurelia-bg p-8 min-h-[160px] flex flex-col justify-center items-center text-center relative overflow-hidden">
                     {# opacity was a flat 20% before -- on TIMBERLINE (scanline_opacity: 0%,
@@ -711,7 +717,7 @@
                 card.innerHTML = `
                     <div class="w-full h-full transform transition-transform duration-500 group-hover:scale-105 relative z-10 flex flex-col items-center justify-center p-6">
 
-                        <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-aurelia-primary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                         <div class="text-7xl mb-6 opacity-80 filter drop-shadow-[0_0_15px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*0.4),transparent)] transform group-hover:drop-shadow-[0_0_30px_color-mix(in_srgb,var(--aurelia-primary)_calc(var(--aurelia-halo)*1.2),transparent)] transition duration-500">
                             ${escapeHtml(tech.icon)}

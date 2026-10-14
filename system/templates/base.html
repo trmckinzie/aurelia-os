@@ -214,7 +214,7 @@
         </div>
     </nav>
 
-    <main id="main-content" class="nav-offset flex-grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
+    <main id="main-content" class="nav-offset grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
         {% block content %}{% endblock %}
     </main>
 
@@ -260,7 +260,7 @@
     <dialog id="cmd-dialog" class="cmd-dialog" aria-label="Search notes and pages">
         <div class="flex items-center px-4 border-b border-aurelia-border gap-3">
             <span aria-hidden="true" class="text-aurelia-primary text-xl font-mono shrink-0">&gt;</span>
-            <input type="text" id="cmd-input" role="combobox" aria-label="Search notes and pages" aria-autocomplete="list" aria-expanded="false" aria-controls="cmd-results" autocomplete="off" placeholder="Search notes and pages&hellip;" class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-none placeholder-[var(--aurelia-text-muted)]">
+            <input type="text" id="cmd-input" role="combobox" aria-label="Search notes and pages" aria-autocomplete="list" aria-expanded="false" aria-controls="cmd-results" autocomplete="off" placeholder="Search notes and pages&hellip;" class="w-full h-16 bg-transparent text-aurelia-text font-mono text-lg focus:outline-hidden placeholder-[var(--aurelia-text-muted)]">
             <div class="hidden md:flex gap-1 shrink-0" aria-hidden="true">
                 <kbd class="kbd text-aurelia-muted">ESC</kbd>
             </div>
@@ -437,7 +437,7 @@
                     <button data-action="setTheme" data-theme="${t.key}" data-close-menu="theme-menu"
                         class="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-aurelia-text/5 transition-colors ${t.key === active ? 'text-aurelia-primary' : 'text-aurelia-muted'}">
                         ${themeSwatchHtml(t)}
-                        <span class="flex-grow">
+                        <span class="grow">
                             <span class="block text-[0.8125rem] font-bold">${escapeHtml(t.label)}</span>
                             <span class="block text-[0.8125rem] text-aurelia-muted">${themeModeLabel(t)}</span>
                         </span>

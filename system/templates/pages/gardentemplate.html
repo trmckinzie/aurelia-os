@@ -30,6 +30,11 @@
      above. Versioned like every other script (engine/cachebust.py). -->
 <script src="{{ asset_url('assets/js/flashcards.js') }}"></script>
 <style>
+/* Inside Tailwind's utilities layer, after main.css, so these rules meet
+   utility classes on the ordinary cascade (specificity, then order), as
+   they did on Tailwind v3. Left unlayered, every rule here would beat every
+   utility on the page regardless of specificity (roadmap S12). */
+@layer utilities {
     /* 1. SEARCH HIGHLIGHTING (PRESERVED) */
     .highlight {
         background-color: rgba(238, 241, 30, 0.966);
@@ -341,6 +346,7 @@
             font-size: 0.6875rem; text-transform: none; letter-spacing: normal;
         }
     }
+}
 </style>
 {% endblock %}
 
@@ -542,13 +548,13 @@
                          autofill and most IME composition all change the value
                          without ever releasing a key, so onkeyup silently
                          ignored every one of them. `input` covers typing too. -->
-                    <input type="text" id="searchInput" data-input="handleSearch" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-none w-full min-w-0 placeholder-[var(--aurelia-text-muted)]">
+                    <input type="text" id="searchInput" data-input="handleSearch" aria-label="Search notes" placeholder="Search notes…" class="bg-transparent border-none text-[0.8125rem] font-mono text-aurelia-primary focus:outline-hidden w-full min-w-0 placeholder-[var(--aurelia-text-muted)]">
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="garden-content flex-grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
+    <div class="garden-content grow pb-20 px-6 w-full max-w-[1600px] mx-auto">
         
         <div class="w-full max-w-[1600px] mx-auto mb-10 relative group rounded-theme overflow-hidden border border-aurelia-border bg-aurelia-bg h-64">
             <canvas id="neural-canvas" class="absolute inset-0 w-full h-full z-0 opacity-70"></canvas>
@@ -716,7 +722,7 @@
                                 <span class="text-sm font-bold font-mono {{ group_color }} uppercase tracking-[0.08em]">{{ type_names.get(type|lower, type|lower|replace('-', ' ')) }}</span>
                             </div>
                             
-                            <div class="h-px bg-aurelia-border flex-grow mx-4 opacity-50"></div>
+                            <div class="h-px bg-aurelia-border grow mx-4 opacity-50"></div>
                             
                             <span class="text-[0.8125rem] text-aurelia-muted font-mono border border-aurelia-border bg-aurelia-bg px-2 py-0.5 rounded-theme">
                                 {{ group|length }} notes
@@ -815,13 +821,13 @@
         {% endfor %}
     </div>
 
-    <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-sm z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+    <div id="modal-backdrop" class="fixed inset-0 bg-aurelia-bg/90 backdrop-blur-xs z-[60] hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <!-- tabindex="-1" so openNote() can move focus into the dialog: with
              aria-modal="true" and focus left on <body>, a screen reader
              announces nothing and Tab walks the 20 controls *behind* the
              backdrop. aria-labelledby (not a fixed aria-label) so the dialog
              announces the note's own title. -->
-        <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-none">
+        <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1" class="modal-panel-anim surface-raised relative border border-aurelia-border w-full max-w-[90vw] h-[90vh] rounded-theme flex flex-col focus:outline-hidden">
             {# Identity strip. Replaces three macOS traffic lights (two of
                which were inert <div>s) plus "OBSIDIAN_VIEWER // ACTIVE",
                eleven characters that were identical for all 245 notes. Every
@@ -864,7 +870,7 @@
             <div class="h-[2px] bg-aurelia-bg/40 shrink-0">
                 <div id="modal-progress" class="h-full"></div>
             </div>
-            <div id="modal-scroll" class="flex-grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
+            <div id="modal-scroll" class="grow overflow-y-auto bg-aurelia-bg custom-scrollbar">
                 <div class="reader-layout">
                     <!-- On-page outline for long notes (Phase 4), built by
                          buildOutline() (scripts block) right after

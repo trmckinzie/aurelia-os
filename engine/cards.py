@@ -252,7 +252,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow">
+            <div class="grow">
                 <span class="field-label text-aurelia-tertiary">Summary:</span>
                 <p class="text-base text-aurelia-text font-sans mt-1 leading-relaxed italic line-clamp-3 opacity-90">
                     {summary if summary else "No summary available."}
@@ -309,7 +309,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
 
             <div class="pt-3 border-t border-aurelia-border/50">
                 <span class="field-label text-aurelia-primary block mb-2">Related:</span>
@@ -365,7 +365,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
 
             <div class="mt-auto">
                  <span class="field-label text-aurelia-highlight block mb-1">Related concepts:</span>
@@ -400,7 +400,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
 
             <div>
                 <span class="field-label text-aurelia-secondary block mb-1">Key concepts:</span>
@@ -458,7 +458,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
 
             <div>
                 <span class="field-label text-aurelia-accent block mb-1">Core pillars:</span>
@@ -607,7 +607,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
                 </p>
             </div>
 
-            <div class="flex-grow"></div>
+            <div class="grow"></div>
 
             <div class="pt-3 border-t border-aurelia-border/50">
                 <span class="field-label text-aurelia-insight block mb-2">See also:</span>

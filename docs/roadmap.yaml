@@ -672,7 +672,10 @@ sessions:
       before the domain (docs/ROLLBACK.md). DECISIONS item 40.
   - id: S12
     title: Upgrade Tailwind CSS to v4 and clear the dev-only npm advisories
-    status: todo
+    status: done
+    started: 2026-10-14
+    completed: 2026-10-14
+    commits: []
     area: Build
     effort: M
     model: opus
@@ -686,15 +689,15 @@ sessions:
       the safelist all change shape at once.
     tasks:
       - text: Read the v4 migration guide and decide between the CSS-first config and the JavaScript config bridge; record the choice in DECISIONS
-        done: false
+        done: true
       - text: Migrate tailwind_build.py and the compile step, keeping every aurelia-* class and the dist/**/*.html content scan
-        done: false
+        done: true
       - text: Confirm the rendered CSS is equivalent (every page passes the browser and contrast suites unchanged)
-        done: false
+        done: true
       - text: Bring npm audit --omit=dev and npm audit to zero advisories, regenerating package-lock.json
-        done: false
+        done: true
       - text: Update docs that describe the Tailwind step and close B07
-        done: false
+        done: true
     done_when:
       - npm audit reports zero advisories, dev dependencies included
       - The browser suite and the contrast tests pass with no change to the expected values
@@ -1010,12 +1013,12 @@ backlog:
   - id: B07
     title: Upgrade Tailwind CSS from the v3 line to v4
     area: Build
-    status: open
+    status: done
     detail: >-
       3.4.19 is the v3 long-term-support release. v4 changes how configuration
       works, so tailwind_build.py needs a migration. Scheduled as S12 on the
       second roadmap (2026-10-10), together with the eight dev-only npm
-      advisories due 2026-11-30; closes when that session does.
+      advisories due 2026-11-30. Closed 2026-10-14 with S12 (DECISIONS item 42).
   - id: B08
     title: Stop tracking the Obsidian plugin bundles under vault/.obsidian/plugins
     area: Repo hygiene

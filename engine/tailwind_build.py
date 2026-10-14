@@ -1,19 +1,36 @@
 """Compiles Tailwind CSS at build time via the Tailwind CLI (see package.json).
 
-Generates tailwind.config.js wiring each aurelia-* utility class to a CSS
-custom property (var(--aurelia-primary), not a literal hex value) -- so the
-generated config itself is theme-independent. The actual per-theme values
-live in dist/assets/css/theme-vars.css (see engine/theming.py), swapped at
-runtime via the <html data-theme="..."> attribute. Before this split, a
-theme change meant re-baking literal colors into this file and rebuilding;
-now the config only has to be regenerated when the *set* of utility class
-names changes, not when a theme's colors do.
+Generates tailwind.input.css, the stylesheet the CLI compiles: it imports
+Tailwind v4, names the rendered pages as the only source to scan, declares
+the site's theme tokens in a CSS `@theme` block (v4's configuration format,
+which replaced tailwind.config.js in roadmap S12; docs/DECISIONS.md item 42),
+and then imports the hand-written assets/css/main.css. Each aurelia-* utility
+class is wired to a CSS custom property (var(--aurelia-primary-rgb), not a
+literal hex value) -- so the generated file itself is theme-independent. The
+actual per-theme values live in dist/assets/css/theme-vars.css (see
+engine/theming.py), swapped at runtime via the <html data-theme="...">
+attribute. Before this split, a theme change meant re-baking literal colors
+into the Tailwind config and rebuilding; now this file only has to be
+regenerated when the *set* of utility class names changes, not when a
+theme's colors do.
 
 The CLI scans the *rendered* dist/**/*.html output rather than the
 Python/Jinja source: cards.py builds some class names dynamically (e.g.
 color.replace('border-', 'bg-')), and by the time that HTML is written to
 dist/, those are already literal text Tailwind's scanner can see --
-scanning the .py source directly would miss them.
+scanning the .py source directly would miss them. v4's automatic source
+detection would never look there, because it skips every gitignored path
+and dist/ is one, so the import turns it off (`source(none)`) and the
+`@source` line names the pages explicitly.
+
+main.css is imported into Tailwind's `utilities` cascade layer, after
+Tailwind's own utilities, and not left unlayered. v4 puts every utility in
+that layer, and unlayered CSS beats a layered rule whatever its specificity,
+so an unlayered main.css would override every utility it shares a property
+with -- including through its `:where(.glass)` border rule, which exists so
+that a card's border-aurelia-* utility can beat it. Inside the same layer the
+ordinary cascade applies, which is exactly the v3 arrangement (hand-written
+rules after `@tailwind utilities`: they win ties, specificity wins otherwise).
 """
 import os
 import shutil
@@ -21,19 +38,22 @@ import subprocess
 
 from engine.config import OUTPUT_DIR, ROOT_DIR
 
+# The file the CLI compiles. Gitignored and regenerated on every build, like
+# the tailwind.config.js it replaced.
+INPUT_CSS_NAME = "tailwind.input.css"
+
 
 def generate_config():
-    # Every one of these compiles to `rgb(var(--aurelia-x-rgb) / <alpha>)`,
-    # not a baked-in hex value -- see engine/theming.py for where
-    # --aurelia-x-rgb actually gets its per-theme value. The RGB-channel
-    # form (not a plain var(--aurelia-x) hex reference) is required for
-    # Tailwind's /opacity modifier syntax to work at all: bg-aurelia-primary
-    # /10 needs a color Tailwind can decompose into channels + an alpha
-    # value, and a bare hex-string var() isn't decomposable -- Tailwind
-    # would just silently skip generating that class. The pre-"semantic
-    # theme" aliases are gone: aurelia-orange/green/purple lost their last
-    # call sites when the Project/Protocol pages were deleted (see
-    # docs/DECISIONS.md), and aurelia-cyan/dim/dark are covered below.
+    # Every one of these compiles to `rgb(var(--aurelia-x-rgb))`, not a
+    # baked-in hex value -- see engine/theming.py for where --aurelia-x-rgb
+    # actually gets its per-theme value. v4 builds the /opacity modifier
+    # (bg-aurelia-primary/10) with color-mix() over whatever the token holds,
+    # so unlike v3 it no longer needs the channels split out; the RGB-channel
+    # form stays because theming.py emits it anyway and main.css uses the
+    # twins directly. The pre-"semantic theme" aliases are gone:
+    # aurelia-orange/green/purple lost their last call sites when the
+    # Project/Protocol pages were deleted (see docs/DECISIONS.md), and
+    # aurelia-cyan/dim/dark are covered below.
     color_map = {
         "aurelia-bg": "bg-main",
         "aurelia-card": "bg-layer-1",
@@ -58,54 +78,58 @@ def generate_config():
     # copy-paste: a stray `border-aurelia-dim` is now simply an undefined
     # class that compiles to nothing, which is visible, rather than a
     # second valid spelling that quietly fragments the vocabulary.
-    color_lines = ",\n      ".join(
-        f"'{name}': 'rgb(var(--aurelia-{var}-rgb) / <alpha-value>)'" for name, var in color_map.items()
+    color_lines = "\n".join(
+        f"  --color-{name}: rgb(var(--aurelia-{var}-rgb));" for name, var in color_map.items()
     )
 
-    config_js = f"""/* AUTO-GENERATED by engine/tailwind_build.py.
- * Do not edit by hand -- this file no longer varies by theme (see
- * engine/theming.py for the per-theme values these classes reference). */
-module.exports = {{
-  content: ["./dist/**/*.html"],
-  theme: {{
-    extend: {{
-      colors: {{
-      {color_lines}
-      }},
-      borderRadius: {{ theme: 'var(--aurelia-radius)' }},
-      fontFamily: {{
-        // Body/paragraph face. Defaults to 'Inter' for every theme that
-        // doesn't set font_body (see engine/theming.py's _DEFAULTS), so
-        // this is theme-independent in effect for every existing theme --
-        // only a theme with its own editorial brief (TIMBERLINE) overrides
-        // the variable it reads from.
-        sans: ['var(--aurelia-font-body)', 'Inter', 'sans-serif'],
-        mono: ['var(--aurelia-font-mono)', 'monospace'],
-        // Headings. Defaults to the theme's own mono (the house style is
-        // mono-first display type); a theme can point font_display at a
-        // real display family instead -- see engine/theming.py.
-        display: ['var(--aurelia-font-display)', 'monospace'],
-      }},
-      // Depth ladder -- shadow-e1/e2/e3 plus the inset rim highlight.
-      // Values are per-theme (derived or hand-tuned); see engine/theming.py.
-      boxShadow: {{
-        e1: 'var(--aurelia-elevation-1)',
-        e2: 'var(--aurelia-elevation-2)',
-        e3: 'var(--aurelia-elevation-3)',
-        rim: 'var(--aurelia-rim-light)',
-        'rim-e2': 'var(--aurelia-rim-light), var(--aurelia-elevation-2)',
-        'rim-e3': 'var(--aurelia-rim-light), var(--aurelia-elevation-3)',
-      }},
-      animation: {{ 'scanline': 'scanline 8s linear 1 forwards' }},
-    }}
-  }}
+    input_css = f"""/* AUTO-GENERATED by engine/tailwind_build.py.
+ * Do not edit by hand -- this file does not vary by theme (see
+ * engine/theming.py for the per-theme values these tokens reference). */
+
+/* source(none): scan only what @source names, never the gitignored-aware
+ * default walk, which would skip dist/ (gitignored) and read the vault and
+ * the templates instead. */
+@import "tailwindcss" source(none);
+@source "./dist/**/*.html";
+
+/* `inline` because every value is a var() reference to a runtime-switched
+ * custom property: the utility then carries the var() itself, rather than
+ * a second variable that resolves on :root. */
+@theme inline {{
+{color_lines}
+  --radius-theme: var(--aurelia-radius);
+  /* Body/paragraph face. Defaults to 'Inter' for every theme that doesn't
+   * set font_body (see engine/theming.py's _DEFAULTS), so this is
+   * theme-independent in effect for every existing theme -- only a theme
+   * with its own editorial brief (TIMBERLINE) overrides the variable it
+   * reads from. */
+  --font-sans: var(--aurelia-font-body), Inter, sans-serif;
+  --font-mono: var(--aurelia-font-mono), monospace;
+  /* Headings. Defaults to the theme's own mono (the house style is
+   * mono-first display type); a theme can point font_display at a real
+   * display family instead -- see engine/theming.py. */
+  --font-display: var(--aurelia-font-display), monospace;
+  /* Depth ladder -- shadow-e1/e2/e3 plus the inset rim highlight. Values
+   * are per-theme (derived or hand-tuned); see engine/theming.py. */
+  --shadow-e1: var(--aurelia-elevation-1);
+  --shadow-e2: var(--aurelia-elevation-2);
+  --shadow-e3: var(--aurelia-elevation-3);
+  --shadow-rim: var(--aurelia-rim-light);
+  --shadow-rim-e2: var(--aurelia-rim-light), var(--aurelia-elevation-2);
+  --shadow-rim-e3: var(--aurelia-rim-light), var(--aurelia-elevation-3);
+  /* The keyframes live in main.css. */
+  --animate-scanline: scanline 8s linear 1 forwards;
 }}
+
+/* The site's own stylesheet, in the utilities layer and after Tailwind's
+ * (see the module docstring for why not unlayered). */
+@import "./assets/css/main.css" layer(utilities);
 """
-    config_path = os.path.join(ROOT_DIR, "tailwind.config.js")
+    config_path = os.path.join(ROOT_DIR, INPUT_CSS_NAME)
     # newline="\n": same reproducibility concern as engine/theming.py --
     # text mode would otherwise write CRLF on Windows (roadmap S09).
     with open(config_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(config_js)
+        f.write(input_css)
     return config_path
 
 
@@ -113,20 +137,22 @@ def compile_css():
     """Runs the Tailwind CLI, overwriting dist/assets/css/main.css (previously
     just a passthrough copy) with the real compiled, minified stylesheet."""
     print("\n🎨 COMPILING TAILWIND CSS...")
-    generate_config()
+    input_css = generate_config()
 
     npx = shutil.which("npx") or shutil.which("npx.cmd")
     if not npx:
         raise RuntimeError(
-            "npx not found on PATH. Install Node.js, then run `npm install` in "
+            "npx not found on PATH. Install Node.js, then run `npm ci` in "
             "the project root before building (see package.json)."
         )
 
-    input_css = os.path.join(ROOT_DIR, "assets", "css", "main.css")
     output_css = os.path.join(OUTPUT_DIR, "assets", "css", "main.css")
 
+    # --no-install: the CLI is @tailwindcss/cli from package-lock.json, and a
+    # missing node_modules/ must fail here, not make npx download whatever
+    # the registry has today.
     result = subprocess.run(
-        [npx, "tailwindcss", "-i", input_css, "-o", output_css, "--minify"],
+        [npx, "--no-install", "@tailwindcss/cli", "-i", input_css, "-o", output_css, "--minify"],
         cwd=ROOT_DIR, capture_output=True, text=True,
     )
     if result.returncode != 0:

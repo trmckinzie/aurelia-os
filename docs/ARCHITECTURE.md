@@ -126,16 +126,25 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   compression path above still works and is
   what keeps new drop-zone audio from re-inflating the repo, but the intended long-term answer is
   object storage linked from the notes, not files in git.
-- **`tailwind_build.py`** — generates `tailwind.config.js` (gitignored) from `THEME_CONFIG` and runs
-  the Tailwind CLI. Runs **last**, after pages are rendered, scanning `dist/**/*.html` rather than
-  the Python/Jinja source — this matters because `cards.py` builds some class names dynamically
+- **`tailwind_build.py`** — generates `tailwind.input.css` (gitignored) and runs the Tailwind v4
+  CLI (`@tailwindcss/cli`) on it. The generated file is v4's CSS-first configuration (roadmap S12,
+  `docs/DECISIONS.md` item 42): it imports Tailwind with `source(none)`, names `dist/**/*.html` as
+  the only `@source`, declares the `aurelia-*` colour tokens and the radius, font, shadow and
+  animation tokens in an `@theme inline` block (each a `var(--aurelia-*)` reference, so the file
+  is theme-independent), and finally imports `assets/css/main.css` into the `utilities` cascade
+  layer. That last part matters: v4 puts every utility in a layer, and unlayered CSS beats any
+  layered rule regardless of specificity, so an unlayered `main.css` would override every utility
+  it shares a property with. Inside the layer, after Tailwind's own rules, the ordinary cascade
+  applies. Runs **last**, after pages are rendered, scanning `dist/**/*.html` rather than the
+  Python/Jinja source — this matters because `cards.py` builds some class names dynamically
   (e.g. `color.replace('border-', 'bg-')`), and those are only literal, scannable text once they're
-  in the rendered HTML. There's no `safelist` currently (a prior one existed only for a client-side
-  JS `text-*` → `bg-*` class derivation in the now-deleted protocol page; removed once confirmed
-  unused). If a future template assembles Tailwind class names in the browser after page load
-  (rather than server-side in Python, which the `dist/**/*.html` scan already covers), those classes
-  will need a `safelist` entry added back — the content scanner can't see anything that only exists
-  once client-side JS runs.
+  in the rendered HTML; v4's default source detection skips gitignored paths, which is why `dist/`
+  has to be named explicitly. Nothing is safelisted (a prior v3 `safelist` existed only for a
+  client-side JS `text-*` → `bg-*` class derivation in the now-deleted protocol page; removed once
+  confirmed unused). If a future template assembles Tailwind class names in the browser after page
+  load (rather than server-side in Python, which the `dist/**/*.html` scan already covers), those
+  classes need an `@source inline("...")` line in the generated file — the content scanner can't
+  see anything that only exists once client-side JS runs.
 - **`theming.py`** — turns `THEME_CONFIG` into `dist/assets/css/theme-vars.css`: one
   `:root[data-theme="<slug>"]` block per theme defining every `--aurelia-*` custom property, plus a
   bare `:root` block mirroring the default so the first paint isn't unstyled before the switcher's
@@ -359,14 +368,15 @@ once all 74 call sites were migrated, so there is exactly one spelling per color
 `green`/`purple` had gone earlier, when the Protocol/Portfolio pages left them with zero call
 sites.) The palette is split across two generated files:
 
-- `tailwind.config.js` (from `tailwind_build.py`) maps each utility class to
-  `rgb(var(--aurelia-x-rgb) / <alpha-value>)` — **theme-independent**, only needs regenerating when
-  the *set* of class names changes.
+- `tailwind.input.css` (from `tailwind_build.py`) declares each `--color-aurelia-*` token as
+  `rgb(var(--aurelia-x-rgb))` in an `@theme inline` block — **theme-independent**, only needs
+  regenerating when the *set* of class names changes. (v4 builds the `/opacity` modifier with
+  `color-mix()`, so the token no longer carries v3's `<alpha-value>` slot.)
 - `dist/assets/css/theme-vars.css` (from `theming.py`) holds the actual per-theme values.
 
 So **theme colors still have exactly one source of truth** — `THEME_CONFIG` in `engine/config.py` —
 but it reaches the page through those two files rather than being baked into the Tailwind config.
-Don't hand-edit either; both are regenerated, and `tailwind.config.js` is gitignored.
+Don't hand-edit either; both are regenerated, and `tailwind.input.css` is gitignored.
 
 ### Privacy model (read before touching anything vault-related)
 

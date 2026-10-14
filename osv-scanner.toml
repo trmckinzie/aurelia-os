@@ -1,0 +1,7 @@
+# OSV-Scanner exceptions, read by the dev root's pre-push gate (Dev Roadmap ADR-008).
+# Every entry needs an expiry and a reason; an expired entry blocks pushes again.
+
+[[IgnoredVulns]]
+id = "GHSA-vfj7-8cjw-p6xm"
+ignoreUntil = 2026-11-30
+reason = "braces 3.0.3 (DoS via deeply nested patterns): no fixed release exists. Dev/build-time only, through the Tailwind CLI's file watcher (micromatch); never shipped to the site. Same exception as aurelia-mission-control, chosen by Travis 2026-10-14."
