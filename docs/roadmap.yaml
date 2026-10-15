@@ -709,7 +709,10 @@ sessions:
   # Travis's call, so the essay pages are styled once, on Tailwind v4.
   - id: S15
     title: Add essays as a content type, with their index and pages and the privacy checks
-    status: todo
+    status: done
+    started: 2026-10-14
+    completed: 2026-10-14
+    commits: []
     area: Content
     effort: L
     model: opus
@@ -734,25 +737,25 @@ sessions:
     depends_on: [S12]
     tasks:
       - text: Vet a server-side Markdown library under the dev root's rule (current maintainer and version; markdown-it-py is the first candidate), record the verdict in 50_Library/Resources.md, and add it to requirements.in with the lock regenerated
-        done: false
+        done: true
       - text: Route type essay notes out of _scan_vault's card path into an Essays pipeline; a test holds that no essay ever becomes a Garden card
-        done: false
+        done: true
       - text: Validate the essay frontmatter contract in docs/ESSAYS.md (field allowlist, id, slug, dates, closed ai_roles vocabulary) and give the schema check an Essays section
-        done: false
+        done: true
       - text: Add the privacy checks that fail every build, strict or not - drafts, unknown fields, CSL abstract/annote/note, Google Drive/Docs/Sheets, Gemini, NotebookLM and reMarkable URLs, and any file in the folder other than .md and .yaml
-        done: false
+        done: true
       - text: Render /essays/ (newest first; title, date with weekday, disciplines, thesis, reading time) and /essays/<slug>/ (byline, dates, disciplines, the body), with Essays added to the nav and footer
-        done: false
+        done: true
       - text: Resolve [[wikilinks]] in essays through build_link_resolver() into links to /garden.html#id, warning on a missing or unpublished target
-        done: false
+        done: true
       - text: Make engine/csp.py and engine/cachebust.py walk dist/ recursively, with tests that an essay page carries a filled policy and cache-busted URLs
-        done: false
+        done: true
       - text: Build and test against a fixture essay under tests/fixtures/, never the vault, including a fixture build the browser suite runs on (axe in both themes, no horizontal scroll at 375 pixels); extend the reproducible-build test
-        done: false
+        done: true
       - text: Show the Essays nav item and index only once at least one essay is published, so the live site changes nothing until the first real essay
-        done: false
+        done: true
       - text: Decide whether deploy.py's factory clone carries Essays and record it; update CLAUDE.md (three-page description, map), docs/ARCHITECTURE.md (pipeline, privacy model, content model) and README.md, and add a DECISIONS item
-        done: false
+        done: true
     done_when:
       - In phone-width screenshots of the fixture build (375 pixels, in the pull request), /essays/ lists the fixture essay with its title, weekday date, disciplines, thesis and reading time, and the nav shows Essays
       - In the same screenshots, the essay page shows its byline, dates and body, and a test proves its Garden links open the right Garden notes

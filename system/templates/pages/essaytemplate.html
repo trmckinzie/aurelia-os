@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{# === ONE ESSAY (/essays/<slug>/) ============================================
+   The essay itself, the first of the five parts docs/ESSAYS.md lays out for
+   this page: title in the display serif, the byline, the publish date with
+   its weekday (and "Updated" when set), discipline labels, the reading
+   time, then the body at the brand's 68-character measure. The disclosure
+   note, the reference list, the study companion and the YouTube episode are
+   roadmap S16 to S18 and are not rendered yet.
+
+   `essay.body_html` is the one value here that is not autoescaped: it
+   arrives as Markup from engine/essays.py's render_body(), which rendered
+   the note text with markdown-it (raw HTML off, so every tag it emits is
+   its own), cleaned the result with nh3, and resolved the [[wikilinks]]
+   into Garden links through a markdown-it inline rule. Nothing on this
+   page uses |safe.
+
+   This page sits two folders below the top of dist/, so like 404.html it
+   links from the site root (`site_root`); `page_path` feeds base.html's
+   canonical link. Legible with zero JavaScript: no [data-reveal], and the
+   Garden links are plain anchors to garden.html#<note id>, which the Garden
+   opens from the hash on load.
+============================================================================ #}
+
+{% set active_page = "essays" %}
+{% block title %}{{ essay.title }} — {{ site.get('name', 'Personal site') }}{% endblock %}
+{% block nav_title %}ESSAYS{% endblock %}
+{% block og_title %}{{ essay.title }}{% endblock %}
+{% block description %}{{ essay.thesis }}{% endblock %}
+
+{% block head_extra %}
+<style>
+/* Inside Tailwind's utilities layer, after main.css (roadmap S12). The
+   .essay-body rules mirror the Garden reader's .obsidian-reader typography
+   (gardentemplate.html) on the same theme tokens, so both offered themes
+   get them and the contrast sweep covers them. */
+@layer utilities {
+    .essay-column {
+        width: 100%;
+        max-width: 68ch;
+        margin-inline: auto;
+    }
+    .essay-body {
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--aurelia-text-main);
+        font-size: 1.125rem;
+        line-height: 1.8;
+        /* A long URL or an unbroken word must wrap inside the column, never
+           push the page wider than a phone (375 pixels). */
+        overflow-wrap: anywhere;
+    }
+    .essay-body > *:first-child { margin-top: 0; }
+    .essay-body > *:last-child { margin-bottom: 0; }
+
+    .essay-body h1, .essay-body h2, .essay-body h3,
+    .essay-body h4, .essay-body h5, .essay-body h6 {
+        color: var(--aurelia-text-main);
+        font-family: var(--aurelia-font-reader-heading);
+        font-weight: 700; line-height: 1.3;
+        margin-top: 2em; margin-bottom: 0.75em;
+        text-wrap: balance;
+    }
+    .essay-body h1 { font-size: 2rem; }
+    .essay-body h2 { font-size: 1.625rem; }
+    .essay-body h3 { font-size: 1.3125rem; }
+    .essay-body h4 { font-size: 1.125rem; }
+    .essay-body h5, .essay-body h6 {
+        font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em;
+        color: var(--aurelia-text-muted);
+    }
+
+    .essay-body p { margin-bottom: 1.5em; }
+
+    .essay-body ul, .essay-body ol { margin: 0 0 1.5em; padding-left: 1.5em; }
+    .essay-body ul { list-style-type: disc; }
+    .essay-body ol { list-style-type: decimal; }
+    .essay-body ul ul, .essay-body ol ol, .essay-body ul ol, .essay-body ol ul { margin: 0.4em 0 0; }
+    .essay-body li { margin-bottom: 0.4em; }
+    .essay-body li > p { margin-bottom: 0.4em; }
+    .essay-body li::marker { color: var(--aurelia-accent); }
+
+    .essay-body a {
+        color: var(--aurelia-accent);
+        text-decoration: underline;
+        text-decoration-color: color-mix(in srgb, var(--aurelia-accent) 33%, transparent);
+        text-underline-offset: 3px;
+        transition: text-decoration-color var(--dur-2) ease;
+    }
+    .essay-body a:hover { text-decoration-color: var(--aurelia-accent); }
+    /* A wikilink whose Garden note is not published: plain text, marked so
+       the owner can find it (the build also warns). */
+    .essay-missing-link { color: var(--aurelia-text-muted); }
+
+    .essay-body strong { color: var(--aurelia-text-main); font-weight: 700; }
+    .essay-body em { font-style: italic; }
+    .essay-body del { color: var(--aurelia-text-muted); opacity: 0.65; }
+
+    .essay-body blockquote {
+        border-left: 4px solid var(--aurelia-secondary);
+        background: var(--aurelia-bg-layer-2);
+        padding: 1em 1.5em; margin: 1.5em 0;
+        font-style: italic; color: var(--aurelia-text-muted);
+    }
+    .essay-body blockquote > *:last-child { margin-bottom: 0; }
+
+    .essay-body pre {
+        background: var(--aurelia-bg-layer-1);
+        border: 1px solid var(--aurelia-border-main);
+        border-radius: var(--aurelia-radius); padding: 16px; margin: 1.5em 0;
+        overflow-x: auto; line-height: 1.5;
+    }
+    .essay-body code {
+        font-family: var(--aurelia-font-mono);
+        font-size: 0.9em;
+        background: var(--aurelia-bg-layer-2);
+        color: var(--aurelia-accent);
+        padding: 0.15em 0.4em; border-radius: 3px;
+    }
+    .essay-body pre code {
+        background: none; color: inherit; padding: 0; border-radius: 0;
+        font-size: 0.95em;
+    }
+
+    .essay-body hr {
+        border: none; border-top: 1px solid var(--aurelia-border-main);
+        margin: 2.5em 0;
+    }
+
+    .essay-body img {
+        max-width: 100%; height: auto; margin: 1em 0;
+        border: 1px solid var(--aurelia-border-main);
+        border-radius: var(--aurelia-radius);
+    }
+
+    /* A wide table scrolls inside the column instead of widening the page. */
+    .essay-body table {
+        display: block; overflow-x: auto; max-width: 100%;
+        border-collapse: collapse; margin: 1.5em 0;
+        font-size: 0.95em; line-height: 1.5;
+    }
+    .essay-body th, .essay-body td {
+        border: 1px solid var(--aurelia-border-main);
+        padding: 0.5em 0.75em; text-align: left; vertical-align: top;
+    }
+    .essay-body th { background: var(--aurelia-bg-layer-2); font-weight: 700; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .essay-body a { transition: none; }
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<article class="essay-column" aria-labelledby="essay-title">
+
+    <header class="pb-8 mb-10 border-b border-aurelia-border">
+        <p class="field-label text-aurelia-primary mb-5">
+            <a href="{{ site_root }}essays/" class="hover:text-aurelia-text transition-colors">Essays</a>
+        </p>
+
+        <h1 id="essay-title" class="display-lg text-aurelia-text mb-5">{{ essay.title }}</h1>
+
+        <p class="essay-byline text-base text-aurelia-text">{{ config.author.name }}</p>
+
+        <p class="essay-dates text-sm text-aurelia-muted mt-2">
+            <time datetime="{{ essay.published_iso }}">{{ essay.published_text }}</time>
+            {% if essay.updated %}
+            <span aria-hidden="true" class="mx-2 text-aurelia-border">/</span>
+            <span class="essay-updated">Updated <time datetime="{{ essay.updated_iso }}">{{ essay.updated_text }}</time></span>
+            {% endif %}
+            <span aria-hidden="true" class="mx-2 text-aurelia-border">/</span>
+            <span class="essay-reading-time">{{ essay.reading_minutes }}-minute read</span>
+        </p>
+
+        {% if essay.disciplines %}
+        <ul class="essay-disciplines flex flex-wrap gap-2 mt-5" aria-label="Disciplines">
+            {% for discipline in essay.disciplines %}
+            <li>
+                {% if discipline.href %}
+                <a href="{{ discipline.href }}" class="chip-static border border-aurelia-border text-aurelia-text hover:border-aurelia-primary hover:text-aurelia-primary transition-colors">{{ discipline.label }}</a>
+                {% else %}
+                <span class="chip-static border border-aurelia-border text-aurelia-muted">{{ discipline.label }}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </header>
+
+    <div class="essay-body">{{ essay.body_html }}</div>
+
+</article>
+{% endblock %}

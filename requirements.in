@@ -6,3 +6,7 @@ PyYAML==6.0.3
 # Allowlist HTML sanitizer for note-authored markup (engine/sanitize.py).
 # Build-time, not dev-only: the site cannot be built without it.
 nh3==0.3.7
+# Server-side Markdown for essays (engine/essays.py, roadmap S15). Vetted
+# 2026-10-14: Executable Books, MIT, 4.2.0 released 2026-05-07, no open
+# advisories; verdict in the dev vault's 50_Library/Resources.md.
+markdown-it-py==4.2.0

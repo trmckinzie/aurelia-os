@@ -47,6 +47,10 @@ ALLOWED_GENERATED = {
 # to the vault root rather than this repo, and a file DECISIONS.md records as
 # having been deleted once its one-off migration finished.
 KNOWN_ABSENT = {
+    # The Essays folder (roadmap S15, docs/ESSAYS.md): named everywhere the
+    # privacy checks are described, and absent by design until the first
+    # real essay is published after S17.
+    "vault/30_ESSAYS",
     ".claude/settings.local.json",
     ".claude/githooks/pre-push",
     ".claude/worktrees",

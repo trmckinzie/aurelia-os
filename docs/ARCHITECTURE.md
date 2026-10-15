@@ -178,11 +178,33 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   compressed and raw size of `garden.html` and that index; a Garden page over
   `GARDEN_COMPRESSED_LIMIT_BYTES` (1 MiB, backlog B04) is a build warning, which `--strict` fails
   on. `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
-  `404.html` and nothing else. `build_all()` loads `profile.json` (below) *before* scanning the
+  `404.html`, and, once an essay is published, `essays/index.html` and one
+  `essays/<slug>/index.html` per essay (`_essay_pages()`), which link from the site root the way
+  `404.html` does and name their own path for the canonical link. `build_all()` loads `profile.json` (below) *before* scanning the
   vault, so a malformed profile aborts the build before any vault work; it also writes
   `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).
   `build_all(strict=True)` (`build.py --strict`, CI only) raises `StrictBuildError` at the end of
   a build that recorded any warning.
+- **`essays.py`** — Essays (roadmap S15, `docs/ESSAYS.md`). `scan_essays()` reads the Essays
+  folder (`vault/30_ESSAYS/`, or `AURELIA_ESSAYS_DIR`, which the tests and `verify.sh` point at
+  `tests/fixtures/essays/`), validates every note against the contract (a field allowlist, `E01`
+  ids, URL slugs, dates, the closed `ai_roles` vocabulary) and every `E01.refs.yaml` against the
+  CSL field allowlist, runs the privacy checks, renders each body with markdown-it (CommonMark
+  plus tables and strikethrough, raw HTML off; nh3 then cleans the rendered page, not the
+  Markdown, because reading Markdown as HTML deletes an autolink) and resolves its
+  `[[wikilinks]]` through the same resolver the Garden uses, as a markdown-it inline rule, into
+  `<a href="/garden.html#id">` links, warning on a target that is missing or unpublished. The privacy checks raise
+  `EssayError`, which `build.py` reports like a bad `user_config.json`, whether or not `--strict`
+  is on: a draft (`publish:` anything but `true`), an unknown frontmatter or reference field (so
+  CSL `abstract`, `annote` and `note` are refused), a Google Drive, Docs or Sheets, Gemini,
+  NotebookLM or reMarkable host anywhere in a file, with or without a scheme, and any file other
+  than `.md` and `.yaml` in the folder, or an essay in a subfolder, a linked folder, or two
+  case variants of its name. `pipeline._scan_garden()` carries the other half: the folder is
+  pruned from the Garden walk, so an essay is never a card, and a `type: essay` note anywhere
+  else, the pruned `20_AURELIA` included and read from the raw frontmatter text, raises the
+  same error. Essays sort newest first and render only once at least
+  one is published; until then `_render_pages()` writes no `essays/` folder and `base.html`
+  shows no Essays link.
 - **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
   the end. Every skip a human should fix goes through it (malformed frontmatter and an
   unrecognized `publish:` value, naming the note; ambiguous aliases, each one; a missing media
@@ -243,7 +265,10 @@ Three things to know before editing links in bulk (all learned in item 17's clea
 
 ### Templates (`system/templates/`)
 
-Only five template files exist: `base.html` (nav, footer, command palette, theme CSS block, loads
+Seven template files exist. Two are the Essays pages (roadmap S15): `pages/essaystemplate.html`,
+the index, and `pages/essaytemplate.html`, one essay, both at a 68-character reading measure with
+their prose rules in an inline `<style>` wrapped in `@layer utilities`, and both rendered only
+once an essay is published. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
 the self-hosted fonts, `marked.js` and Motion from `assets/fonts/` and `assets/vendor/`, loads
 `assets/js/utils.js` for the shared `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
 (Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live
@@ -339,7 +364,10 @@ GitHub Pages sends `Cache-Control: max-age=600`, so a returning visitor can run 
 against new HTML. Templates write `{{ asset_url('assets/js/utils.js') }}`, which emits a
 `?v=@@asset:<path>@@` token; `engine/cachebust.py` swaps each token for the first ten hex
 characters of the SHA-256 of that file as it sits in `dist/`, after the Tailwind compile has
-written the final `main.css`. Fonts carry their own hash inside `fonts.css`.
+written the final `main.css`. Fonts carry their own hash inside `fonts.css`. The stamp and the
+policy fill below both walk `dist/` recursively since roadmap S15: the essay pages are the first
+output below its top, and a page the walk missed would ship with an unstamped URL and an
+unfilled policy.
 
 Every page carries a Content-Security-Policy (backlog B02, DECISIONS items 35 and 36). GitHub
 Pages sends no headers, so it is a `<meta http-equiv>` tag, the first element of `<head>`,
@@ -407,6 +435,16 @@ Two consequences worth holding onto when working here:
 Making `publish: false` genuinely mean private requires a structural change, not a code fix: vault
 in a private repo, CI pushing only built `dist/` to a separate public Pages repo.
 
+**Essays have their own gate, and it is stricter** (`docs/ESSAYS.md`, "The privacy boundary";
+roadmap S15). The essay workflow has a private half that must never be committed: drafts, a
+Source Ledger, AI summaries, notebook links, source PDFs. So `engine/essays.py` fails the build,
+strict or not, on a note in `vault/30_ESSAYS/` without `publish: true`, on any field outside the
+allowlist (CSL's `abstract`, `annote` and `note` included), on a Google Drive, Docs or Sheets,
+Gemini, NotebookLM or reMarkable host anywhere in an essay or its reference file, on any file in
+the folder other than `.md` and `.yaml`, and on a `type: essay` note anywhere else in the vault.
+A failure here is not a warning, because `verify.sh` adds `--strict` only on GitHub and a pushed
+branch is public before CI runs. Like `publish:`, it governs the current tree, not git history.
+
 **Who serves the site, and who sees a visit.** Since roadmap S14 the site is
 https://travisrmckinzie.com/, registered through Cloudflare Registrar. Cloudflare holds the DNS
 only: every record is "DNS only", not proxied, so Cloudflare answers the lookup and never sees a
@@ -470,6 +508,14 @@ never applies anything.
 
 `type: project`, `type: protocol`, and `type: transmission` notes are recognized and explicitly
 skipped in `_scan_vault()` — the templates/card generators for them were deleted, not just disabled.
+
+`type: essay` (roadmap S15) is the one type that lives outside `10_GARDEN`: in `vault/30_ESSAYS/`,
+a sibling of the Garden, with the frontmatter contract in `docs/ESSAYS.md` (`type, id, title,
+slug, publish, published, disciplines, thesis, citation_style, methods`, plus optional `updated`,
+`companion` and `youtube`; nothing else) and a reference file `E01.refs.yaml` beside each note in
+CSL field names. `tools/validate_vault_schema.py` reports the folder in its own section through
+the same checks the build runs. An essay never becomes a Garden card, and the folder does not
+exist in the vault yet.
 
 **The vault is off-limits to modify.** Every session working on this repo has operated under an
 explicit standing instruction not to edit, delete, or add vault content (notes, folders) — treat

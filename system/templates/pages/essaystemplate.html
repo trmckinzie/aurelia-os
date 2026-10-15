@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{# === ESSAYS INDEX (/essays/) ================================================
+   One entry per published essay, newest first: title, publish date with its
+   weekday, discipline labels, the thesis and the reading time
+   (docs/ESSAYS.md, "Pages and URLs"). Rendered only once at least one essay
+   is published (engine/pipeline.py's _essay_pages), so the live site has no
+   empty index until the first real essay.
+
+   This page sits one folder below the top of dist/ (essays/index.html), so
+   like 404.html it links from the site root: `site_root` is "/" on the
+   custom domain and `page_path` ("essays/") feeds base.html's canonical link.
+
+   Everything here is autoescaped. The reading column is the Garden reader's
+   68-character measure, set on the body face, as docs/ESSAYS.md asks.
+   Legible with zero JavaScript: no [data-reveal], nothing built on load.
+============================================================================ #}
+
+{% set active_page = "essays" %}
+{% block nav_title %}ESSAYS{% endblock %}
+{% block og_title %}Essays{% endblock %}
+{% block description %}Essays by {{ config.author.name }}: short pieces on psychology, philosophy and adjacent subjects.{% endblock %}
+
+{% block head_extra %}
+<style>
+/* Inside Tailwind's utilities layer, after main.css, so these rules meet
+   utility classes on the ordinary cascade (specificity, then order). Left
+   unlayered, every rule here would beat every utility on the page
+   regardless of specificity (roadmap S12, docs/DECISIONS.md item 42). */
+@layer utilities {
+    .essay-column {
+        width: 100%;
+        max-width: 68ch;
+        margin-inline: auto;
+    }
+    .essay-entry-title {
+        font-family: var(--aurelia-font-reader-heading);
+        font-weight: 700;
+        font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+        line-height: 1.2;
+        letter-spacing: calc(var(--aurelia-display-tracking) + 0.01em);
+        text-wrap: balance;
+    }
+    .essay-entry-title a {
+        color: var(--aurelia-text-main);
+        text-decoration: underline;
+        text-decoration-color: color-mix(in srgb, var(--aurelia-accent) 33%, transparent);
+        text-underline-offset: 4px;
+        transition: color var(--dur-2) ease, text-decoration-color var(--dur-2) ease;
+    }
+    .essay-entry-title a:hover { color: var(--aurelia-accent); text-decoration-color: var(--aurelia-accent); }
+    .essay-thesis {
+        font-size: 1.0625rem;
+        line-height: 1.65;
+        color: var(--aurelia-text-main);
+        text-wrap: pretty;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .essay-entry-title a { transition: none; }
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="essay-column">
+
+    <header class="pb-10 mb-10 border-b border-aurelia-border">
+        <p class="field-label text-aurelia-primary mb-5">Writing</p>
+        <h1 class="display-lg text-aurelia-text mb-5">Essays</h1>
+        <p class="text-lg text-aurelia-text/90 leading-snug text-pretty">
+            Short essays, written by hand, on psychology, philosophy and adjacent subjects.
+        </p>
+    </header>
+
+    <ol id="essay-list" class="flex flex-col gap-12">
+        {% for essay in essays %}
+        <li>
+            <article class="essay-entry" data-essay-id="{{ essay.id }}" aria-labelledby="essay-{{ essay.id|lower }}-title">
+                <h2 id="essay-{{ essay.id|lower }}-title" class="essay-entry-title mb-3">
+                    <a href="{{ site_root }}{{ essay.url }}">{{ essay.title }}</a>
+                </h2>
+                <p class="essay-entry-meta text-sm text-aurelia-muted mb-4">
+                    <time datetime="{{ essay.published_iso }}">{{ essay.published_text }}</time>
+                    <span aria-hidden="true" class="mx-2 text-aurelia-border">/</span>
+                    <span class="essay-reading-time">{{ essay.reading_minutes }}-minute read</span>
+                </p>
+                {% if essay.disciplines %}
+                <ul class="essay-disciplines flex flex-wrap gap-2 mb-4" aria-label="Disciplines">
+                    {% for discipline in essay.disciplines %}
+                    <li>
+                        {% if discipline.href %}
+                        <a href="{{ discipline.href }}" class="chip-static border border-aurelia-border text-aurelia-text hover:border-aurelia-primary hover:text-aurelia-primary transition-colors">{{ discipline.label }}</a>
+                        {% else %}
+                        <span class="chip-static border border-aurelia-border text-aurelia-muted">{{ discipline.label }}</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <p class="essay-thesis">{{ essay.thesis }}</p>
+            </article>
+        </li>
+        {% endfor %}
+    </ol>
+
+</div>
+{% endblock %}

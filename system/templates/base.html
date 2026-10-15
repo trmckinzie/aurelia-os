@@ -85,9 +85,11 @@
 
     {# Only emitted once a real domain is configured. A canonical URL built
        from an empty domain would point every page at "https:///page.html",
-       which is worse than having none. #}
+       which is worse than having none. A page below the top of dist/ (the
+       Essays index and each essay page, roadmap S15) names its own path
+       in `page_path`; the top-level pages derive it from active_page. #}
     {% if site.get('domain') %}
-    <link rel="canonical" href="https://{{ site.get('domain') }}/{% if active_page != 'index' %}{{ active_page }}.html{% endif %}">
+    <link rel="canonical" href="https://{{ site.get('domain') }}/{% if page_path %}{{ page_path }}{% elif active_page != 'index' %}{{ active_page }}.html{% endif %}">
     {% endif %}
 
     <!-- Theme-independent monogram favicon: a square #2f6b4f (TRM / Pine)
@@ -180,6 +182,14 @@
                 <a href="{{ site_root }}garden.html" data-nav-link {% if active_page == 'garden' %}data-active aria-current="page"{% endif %}
                    class="nav-link h-full flex items-center {% if active_page == 'garden' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
 
+                {# Essays (roadmap S15): shown only once an essay is
+                   published (engine/pipeline.py's essays_published), so
+                   the live site carries no link to an empty index. #}
+                {% if essays_published %}
+                <a href="{{ site_root }}essays/" data-nav-link {% if active_page == 'essays' %}data-active aria-current="page"{% endif %}
+                   class="nav-link h-full flex items-center {% if active_page == 'essays' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">ESSAYS</a>
+                {% endif %}
+
                 <a href="{{ site_root }}about.html" data-nav-link {% if active_page == 'about' %}data-active aria-current="page"{% endif %}
                    class="nav-link h-full flex items-center {% if active_page == 'about' %}text-aurelia-primary text-shadow-cyan{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
 
@@ -208,6 +218,9 @@
         <div id="mobile-menu" class="mobile-menu md:hidden flex flex-col gap-1 px-6 bg-aurelia-bg/95 border-t border-aurelia-border/40">
             <a href="{{ site_root }}index.html"{% if active_page == 'index' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'index' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">HOME</a>
             <a href="{{ site_root }}garden.html"{% if active_page == 'garden' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'garden' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">GARDEN</a>
+            {% if essays_published %}
+            <a href="{{ site_root }}essays/"{% if active_page == 'essays' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'essays' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">ESSAYS</a>
+            {% endif %}
             <a href="{{ site_root }}about.html"{% if active_page == 'about' %} aria-current="page"{% endif %} class="py-3 field-label {% if active_page == 'about' %}text-aurelia-primary{% else %}text-aurelia-muted{% endif %}">ABOUT</a>
             <button data-action="searchFromMobileMenu" class="py-3 text-left field-label text-aurelia-muted">Search</button>
             <div id="mobile-theme-menu" class="flex flex-col gap-1 pt-2 mt-2 mb-4 border-t border-aurelia-border/40 normal-case tracking-normal"></div>
@@ -237,6 +250,9 @@
             <nav aria-label="Footer" class="flex flex-wrap justify-center items-center gap-x-6 gap-y-1">
                 <a href="{{ site_root }}index.html" class="hover:text-aurelia-text transition-colors">Home</a>
                 <a href="{{ site_root }}garden.html" class="hover:text-aurelia-text transition-colors">Garden</a>
+                {% if essays_published %}
+                <a href="{{ site_root }}essays/" class="hover:text-aurelia-text transition-colors">Essays</a>
+                {% endif %}
                 <a href="{{ site_root }}about.html" class="hover:text-aurelia-text transition-colors">About</a>
                 {% if config.links and config.links.github %}
                 <a href="{{ config.links.github }}" rel="noopener noreferrer" class="hover:text-aurelia-text transition-colors">GitHub</a>

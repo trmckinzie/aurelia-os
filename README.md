@@ -27,6 +27,12 @@ the link graph itself made visible and navigable.
   a JSON export/import to move it between devices; nothing is sent anywhere.
 - Wikilinks resolve through frontmatter `aliases:` and unique parenthetical title suffixes, so
   `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename.
+- Essays (`/essays/`, one page per essay): short human-written pieces from a `vault/30_ESSAYS/`
+  folder, rendered server-side from Markdown with their `[[wikilinks]]` resolved into Garden
+  links, listed newest first with the publish date, disciplines, thesis and reading time. The
+  index and its nav link appear only once an essay is published, and the folder's contents are
+  held to a contract and a set of privacy checks that fail the build outright (a draft, an
+  unknown field, a notebook or Drive link, any non-text file). See `docs/ESSAYS.md`.
 - A professional About page (`about.html`) — roles, education, skills, selected work, and
   schema.org `Person` structured data — rendered from a repo-root `profile.json`. The file is
   validated strictly at build time (unknown keys, non-`http`/`https`/`mailto` URLs, over-long or
@@ -161,7 +167,7 @@ Claude Code sessions.
 build.py               Entry point (python build.py)
 engine/                 All real build logic: parsing, extraction, card rendering, theming, pipeline
 profile.json            The About page's content: structured data validated at build time, not a vault note
-system/templates/       Jinja2 templates (base + Lobby + Garden + About + 404)
+system/templates/       Jinja2 templates (base + Lobby + Garden + About + 404 + the Essays index and page)
 assets/                 Tailwind input CSS; client JS (utils, study layer, flashcards); site images
 vault/                  The Obsidian vault itself -- source content, not source code (see License)
 tests/                  pytest suite (unit) and tests/browser/ (Playwright + axe, against a built dist/)
@@ -189,6 +195,12 @@ the site. It is not an access control, and it never was:
 The same applies to the media publish gate in `engine/assets_pipeline.py`: a media file reaches
 `dist/` only when a published note references it, and the build lists what it left behind, but
 leaving a file out of `dist/` keeps it off the *website*, not out of the *repository*.
+
+Essays are the exception that proves it: because a committed draft is public whatever it renders,
+`engine/essays.py` refuses to build at all when `vault/30_ESSAYS/` holds a note without
+`publish: true`, a field outside the allowlist, a Google Drive, Docs, Sheets, Gemini, NotebookLM
+or reMarkable link, or any file other than `.md` and `.yaml` (`docs/ESSAYS.md`). That stops a
+local build before a branch is pushed; it still does nothing about git history.
 
 One further caveat, learned the hard way: `publish:` and the sync carve-out both govern the
 *current* build. Git keeps every past version of every committed file, so anything committed once

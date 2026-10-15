@@ -33,7 +33,10 @@ def asset_url(context, path):
 
 
 def stamp_asset_versions(dist_dir):
-    """Replaces every @@asset:<path>@@ token in dist_dir's pages with a content hash."""
+    """Replaces every @@asset:<path>@@ token in dist_dir's pages, at any
+    depth, with a content hash. The token names the file's path under
+    dist/, so an essay page two folders down (roadmap S15) stamps the same
+    hash as the top-level pages."""
     dist = Path(dist_dir)
     hashes = {}
 
@@ -47,7 +50,7 @@ def stamp_asset_versions(dist_dir):
                 hashes[rel] = "missing"
         return hashes[rel]
 
-    for page in sorted(dist.glob("*.html")):
+    for page in sorted(dist.rglob("*.html")):
         text = page.read_text(encoding="utf-8")
         stamped = _TOKEN_RE.sub(version, text)
         if stamped != text:

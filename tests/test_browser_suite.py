@@ -40,10 +40,28 @@ def test_verify_sh_runs_the_browser_suite_after_the_build():
 def test_verify_sh_builds_for_the_project_site_prefix():
     # Without site.domain the 404 page links under /aurelia-os/ only when
     # GITHUB_REPOSITORY names the repository (pipeline._site_root), so the
-    # local build sets it the way CI does, whichever root is in force.
+    # local build sets it the way CI does, whichever root is in force. It is
+    # exported once, before both builds (the fixture one and the real one).
     script = _read("verify.sh")
-    line = next(ln for ln in script.splitlines() if 'build.py "${BUILD_FLAGS[@]}"' in ln)
-    assert 'GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}"' in line
+    export = script.index('export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}"')
+    assert export < script.index('build.py "${BUILD_FLAGS[@]}"')
+
+
+def test_verify_sh_checks_the_essay_pages_on_a_fixture_build_then_builds_the_real_site():
+    # Roadmap S15: no essay is in the vault, so the essay spec runs against
+    # a build of tests/fixtures/essays/ first, with the flag that makes a
+    # silent skip a failure, and the real build comes last so dist/ is the
+    # site itself when the full suite runs.
+    script = _read("verify.sh")
+    builds = [m.start() for m in re.finditer(r'build\.py "\$\{BUILD_FLAGS\[@\]\}"', script)]
+    assert len(builds) == 2
+    fixture_build, real_build = builds
+    line = script[script.rfind("\n", 0, fixture_build):fixture_build]
+    assert 'AURELIA_ESSAYS_DIR="$ROOT/tests/fixtures/essays"' in line
+    essay_spec = script.index("AURELIA_ESSAYS_FIXTURE=1 npx --no-install playwright test tests/browser/essays.spec.mjs")
+    full_suite = script.index("npx --no-install playwright test\n")
+    assert fixture_build < essay_spec < real_build < full_suite
+    assert "AURELIA_ESSAYS_DIR" not in script[real_build - 200:real_build]
 
 
 def _site_mjs_constant(name):
