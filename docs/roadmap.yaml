@@ -712,7 +712,7 @@ sessions:
     status: done
     started: 2026-10-14
     completed: 2026-10-14
-    commits: []
+    commits: [50bde57]
     area: Content
     effort: L
     model: opus
