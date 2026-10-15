@@ -85,6 +85,28 @@ def test_apply_csp_fills_each_page_with_its_own_hashes(tmp_path):
     assert get_warnings() == []
 
 
+def test_apply_csp_fills_pages_below_the_top_of_dist(tmp_path):
+    # Essay pages (roadmap S15) sit at essays/index.html and
+    # essays/<slug>/index.html; a page the walk missed would ship with an
+    # unfilled policy, which a browser reads as refusing everything.
+    _page(tmp_path, "index.html", "<head><meta content=\"@@csp@@\"></head><script>a()</script>")
+    (tmp_path / "essays" / "slug").mkdir(parents=True)
+    _page(tmp_path / "essays", "index.html", "<head><meta content=\"@@csp@@\"></head><script>b()</script>")
+    _page(tmp_path / "essays" / "slug", "index.html", "<head><meta content=\"@@csp@@\"></head><style>.c{}</style>")
+    # Nothing under assets/ is a page, so a stray .html there is neither
+    # filled nor warned about.
+    (tmp_path / "assets").mkdir()
+    _page(tmp_path / "assets", "stray.html", "<p>not a page</p>")
+
+    policies = csp.apply_csp(tmp_path)
+
+    assert set(policies) == {"index.html", "essays/index.html", "essays/slug/index.html"}
+    nested = (tmp_path / "essays" / "slug" / "index.html").read_text(encoding="utf-8")
+    assert "@@csp@@" not in nested and csp.sha256_source(".c{}") in nested
+    assert csp.sha256_source("b()") in policies["essays/index.html"]
+    assert get_warnings() == []
+
+
 def test_apply_csp_warns_when_a_page_has_no_slot(tmp_path):
     _page(tmp_path, "stray.html", "<html><script>a()</script></html>")
     csp.apply_csp(tmp_path)

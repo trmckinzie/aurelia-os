@@ -66,21 +66,36 @@ BUILD_FLAGS=(--no-sort)
 if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
   BUILD_FLAGS+=(--strict)
 fi
-echo "== build (${BUILD_FLAGS[*]}) =="
 # The 404 page's absolute links come from engine/pipeline.py _site_root():
 # "/" while user_config.json sets site.domain (roadmap S14), otherwise the
 # project-site folder that GITHUB_REPOSITORY names. CI sets it; locally it
 # defaults to this repository, so the dist/ built here matches CI's either way
 # and the browser suite below tests the same thing locally as in CI.
-GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}" "$PYTHON" build.py "${BUILD_FLAGS[@]}"
+export GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-trmckinzie/aurelia-os}"
+
+# Essays (roadmap S15): no essay is in the vault yet, so the essay pages are
+# checked on a build that reads the fixture essay from tests/fixtures/essays/
+# (AURELIA_ESSAYS_DIR, engine/essays.py). This build is wiped by the real
+# one below, so dist/ ends up as the site itself; the essay spec runs here,
+# against the fixture, and again below, where it checks that the real site
+# shows no Essays link and no index.
+echo "== fixture build with the test essay (${BUILD_FLAGS[*]}) =="
+AURELIA_ESSAYS_DIR="$ROOT/tests/fixtures/essays" "$PYTHON" build.py "${BUILD_FLAGS[@]}"
+
+# The install is a no-op once the pinned Playwright's Chromium is present;
+# CI installs it with --with-deps first.
+echo "== browser suite: essay pages (Playwright, axe) =="
+npx --no-install playwright install chromium
+AURELIA_ESSAYS_FIXTURE=1 npx --no-install playwright test tests/browser/essays.spec.mjs
+
+echo "== build (${BUILD_FLAGS[*]}) =="
+"$PYTHON" build.py "${BUILD_FLAGS[@]}"
 
 # Browser suite (roadmap S08, docs/DECISIONS.md item 30): Playwright drives
 # Chromium against the dist/ just built, served under BASE_PATH, and runs
 # axe at WCAG A/AA. Blocking, like everything above. It never builds, so it
-# cannot race this script's build. The install is a no-op once the pinned
-# Playwright's Chromium is present; CI installs it with --with-deps first.
+# cannot race this script's build.
 echo "== browser suite (Playwright, axe) =="
-npx --no-install playwright install chromium
 npx --no-install playwright test
 
 echo "verify.sh: all checks passed"

@@ -895,6 +895,65 @@ knowing so you don't "fix" something that was a deliberate decision:
       runs nothing. The dev root's install-script policy, when it reaches this repo, will need an
       explicit allow or deny for that package.
 
+43. **Essays as a content type, with the privacy checks that fail every build (roadmap S15,
+    2026-10-14).** The first of the four Essays sessions (item 41, `docs/ESSAYS.md`). What it
+    built, and the calls made along the way:
+    - **A folder of its own, pruned from the Garden walk.** `engine/essays.py` reads
+      `vault/30_ESSAYS/` (a sibling of the Garden, item 41) and `pipeline._scan_garden()` never
+      descends into it, so an essay cannot become a Garden card; a `type: essay` note anywhere
+      else in the vault stops the build. The folder does not exist yet: no essay enters the vault
+      until S17, so every test and `verify.sh` build the fixture essay in `tests/fixtures/essays/`
+      through `AURELIA_ESSAYS_DIR`, the same env-var pattern as `AURELIA_SKIP_DROPZONE`.
+    - **The privacy checks raise, they never warn.** A draft, an unknown field (the allowlist
+      refuses CSL's `abstract`, `annote` and `note` by construction), a Google Drive, Docs or
+      Sheets, Gemini, NotebookLM or reMarkable host anywhere in an essay or its reference file,
+      with or without a scheme, and any file other than `.md` and `.yaml` in the folder each raise
+      `EssayError`, which `build.py` reports the way it reports a bad `user_config.json`. The
+      reason is item 41's: `verify.sh` is strict only on GitHub, and a pushed branch is public
+      before CI runs. The `garden-publication-reviewer` pass on the first cut found the holes
+      that shaped the final shape: a `type: essay` note parked in `20_AURELIA` escaped every
+      check because that folder is pruned before the walk reads it (now checked on its own, from
+      the raw frontmatter text, so broken YAML cannot hide the type); the host list lacked the
+      `googleusercontent.com` download hosts, `g.co` share links and `aistudio.google.com`, and
+      its pattern missed a host pasted after an ellipsis; the folder's own symlink, a case
+      variant of its name on CI's case-sensitive runner, and essays in subfolders were unchecked.
+      The folder is flat by contract now, and a case-variant spelling is found the way the walk
+      prunes it. One carve-out from "any file": `.DS_Store` and `Thumbs.db`, the two OS
+      metadata files `.gitignore` already refuses, so opening the folder in Finder cannot fail a
+      build. Citation and link problems leak nothing, so a wikilink to a missing or unpublished
+      note goes through `warn()` and fails only the strict build, like every other link problem.
+    - **Server-side Markdown with markdown-it-py 4.2.0**, vetted under the dev root's rule
+      (Executable Books, MIT, released 2026-05-07, repo pushed two days before the check, the
+      only advisories fixed in 2.2.0; verdict in the dev vault's `50_Library/Resources.md`).
+      CommonMark plus tables and strikethrough, raw HTML off: an essay is Markdown, and a tag
+      in one renders as visible text rather than being trusted. The Garden's `sanitize_note_html()`
+      is deliberately *not* run on the Markdown first: nh3 reads Markdown as HTML and deletes an
+      angle-bracket autolink (`<https://doi.org/...>`), the form a citation is most likely to take.
+      Instead nh3 cleans the *rendered* page as a second gate, which also drops the `style`
+      attribute markdown-it puts on an aligned table cell (the policy refuses inline styles).
+      `[[wikilinks]]` are a markdown-it inline rule, not a regex over the output, so one quoted
+      in a code span stays literal and one inside a link title cannot break out of the attribute.
+      Garden notes keep rendering in the browser with marked.js; nothing about the Garden changed.
+    - **Garden links are plain anchors.** `[[wikilinks]]` resolve through the Garden's own
+      `build_link_resolver()` (aliases and title suffixes included) into `<a href="/garden.html#id">`,
+      which the Garden already opens from the hash on load. Discipline labels link the same way
+      when a published Discipline note has that name. Both link from the site root, since an
+      essay page sits two folders down; `engine/csp.py` and `engine/cachebust.py` now walk
+      `dist/` recursively for the same reason, and `base.html` takes a `page_path` for the
+      canonical link of a page below the top.
+    - **Nothing a visitor sees changes until the first essay.** The Essays nav item (desktop,
+      phone menu, footer) and the index render only when at least one essay is published, and
+      the browser spec holds the real build to that: no Essays link, `/essays/` is the 404 page.
+      So `verify.sh` builds twice, the fixture build for the essay spec first and the real site
+      last, with a flag that turns a silent "no essays built" into a failure.
+    - **The factory clone carries Essays.** `deploy.py` copies `engine/` and the templates whole,
+      so excluding Essays would mean forking the engine; a clone with no `vault/30_ESSAYS/`
+      renders the same three pages as before, and its README now says how to add the folder.
+    - **Left to later sessions, on purpose:** citations and the reference list (S16), the
+      disclosure note, the companion zone and media (S17), per-essay Open Graph, the Article
+      structured data, the Atom feed and search (S18), and essays in Garden backlinks (B22).
+      Until S16 a citation key in an essay renders as written; the fixture essay has none.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

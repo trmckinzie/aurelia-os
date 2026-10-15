@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools"))
 
-from validate_vault_schema import check_note, check_vault, _has_topic_tag  # noqa: E402
+from validate_vault_schema import check_essays, check_note, check_vault, _has_topic_tag  # noqa: E402
 
 
 def test_real_vault_10_garden_matches_canonical_schema():
@@ -70,3 +70,29 @@ def test_has_topic_tag_true_when_any_topic_tag_present():
 
 def test_has_topic_tag_false_when_no_topic_tag():
     assert _has_topic_tag(["type/concept", "maturity/seed"]) is False
+
+
+# --- the Essays section (roadmap S15) --------------------------------------
+
+def test_real_vault_essays_folder_passes_or_is_absent():
+    count, problems = check_essays()
+    assert problems == [], problems
+    assert count >= 0
+
+
+def test_check_essays_reports_a_draft_and_a_stray_file(tmp_path):
+    (tmp_path / "E01 Draft.md").write_text(
+        "---\ntype: essay\nid: E01\ntitle: T\nslug: t\npublish: false\npublished: 2026-01-01\n"
+        "disciplines: [x]\nthesis: s\ncitation_style: apa7\nmethods: {drafted_on: a, edited_in: b, ai_roles: []}\n---\nbody\n",
+        encoding="utf-8")
+    (tmp_path / "paper.pdf").write_text("x", encoding="utf-8")
+    count, problems = check_essays(str(tmp_path))
+    assert count == 0
+    messages = [m for _rel, m in problems]
+    assert any("draft" in m for m in messages)
+    assert any("only .md and .yaml" in m for m in messages)
+
+
+def test_check_essays_passes_the_fixture_essay():
+    fixture = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "essays")
+    assert check_essays(fixture) == (1, [])

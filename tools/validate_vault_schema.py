@@ -32,8 +32,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from engine.config import VAULT_PATH  # noqa: E402
 from engine.content import parse_frontmatter  # noqa: E402
+from engine.essays import ESSAYS_DIR_NAME, check_essays_folder  # noqa: E402
 
 GARDEN = os.path.join(VAULT_PATH, "10_GARDEN")
+ESSAYS = os.path.join(VAULT_PATH, ESSAYS_DIR_NAME)
 
 # folder -> the `type:` value every published note in it must carry.
 FOLDER_TYPE = {
@@ -133,8 +135,24 @@ def check_vault():
     return violations, empty_files, untagged_notes
 
 
+def check_essays(folder=None):
+    """Validates the Essays folder (vault/30_ESSAYS, or `folder`) against the
+    contract and privacy checks in docs/ESSAYS.md, through the same
+    engine.essays code the build runs, so "does this essay pass" means one
+    thing here and in build.py.
+
+    Returns (essay_count, problems): the number of essays that passed, and
+    (relpath, problem) for everything that did not. An absent folder is
+    (0, []). Unlike the Garden checks above, every problem here also fails
+    the build itself, strict or not.
+    """
+    essays, problems = check_essays_folder(ESSAYS if folder is None else folder)
+    return len(essays), problems
+
+
 def main():
     violations, empty_files, untagged_notes = check_vault()
+    essay_count, essay_problems = check_essays()
 
     if empty_files:
         print(f"ℹ️  {len(empty_files)} zero-byte note(s) found (unpublished, not a schema violation):")
@@ -147,9 +165,18 @@ def main():
         for p in untagged_notes:
             print(f"     {p}")
 
+    if not os.path.isdir(ESSAYS):
+        print(f"ℹ️  No {ESSAYS_DIR_NAME} folder yet, so there are no essays to check.")
+    elif not essay_problems:
+        print(f"✅ Every essay in {ESSAYS_DIR_NAME} meets the Essays contract ({essay_count} essay(s)).")
+    else:
+        print(f"❌ {len(essay_problems)} problem(s) in {ESSAYS_DIR_NAME} (each fails every build, strict or not):")
+        for relpath, problem in essay_problems:
+            print(f"     {relpath}: {problem}")
+
     if not violations:
         print("✅ Every published 10_GARDEN note matches the canonical schema.")
-        return 0
+        return 1 if essay_problems else 0
 
     print(f"❌ {len(violations)} note(s) violate the canonical schema:")
     for relpath, problems in violations:

@@ -7,7 +7,9 @@ commands, a map, and the traps. Depth lives in `docs/` and is linked where a ses
 
 A personal static-site generator: `build.py` turns the Obsidian vault in `vault/` into a
 three-page GitHub Pages site (Lobby `index.html`, Garden `garden.html`, About `about.html`) at
-https://travisrmckinzie.com/ for Travis McKinzie. The Garden is an "external
+https://travisrmckinzie.com/ for Travis McKinzie, plus Essays (roadmap S15 to S18): an index at
+`/essays/` and a page per essay from `vault/30_ESSAYS/`, built and linked only once an essay is
+published there, which none is yet. The Garden is an "external
 cortex": atomic notes linked Zettelkasten-style, with the link graph, maturity, and backlinks
 visible on the published site, plus a client-side spaced-repetition study layer. `README.md` is
 the public description; `docs/ARCHITECTURE.md` is the engine walkthrough.
@@ -34,7 +36,14 @@ themes, not part of the brand.
 
 - **`vault/` is off-limits to modify.** No session edits, deletes, or adds vault content (notes,
   folders, frontmatter) without an explicit one-time override from Travis. Reading is fine.
-  Engine, templates, config, tests, and `profile.json` are fair game.
+  Engine, templates, config, tests, and `profile.json` are fair game. `vault/30_ESSAYS/` does not
+  exist yet and no session creates it: essay work builds against the fixture essay in
+  `tests/fixtures/essays/` through `AURELIA_ESSAYS_DIR`.
+- **The Essays privacy checks fail every build, strict or not** (`engine/essays.py`,
+  `docs/ESSAYS.md`): a draft, an unknown field, a Drive, Docs, Sheets, Gemini, NotebookLM or
+  reMarkable link, or any file other than `.md` and `.yaml` in the Essays folder raises
+  `EssayError` the way a bad `user_config.json` does. Never route one through `warn()`: a pushed
+  branch is public before CI's `--strict` build runs.
 - **Don't commit or push unless asked, and never push to `main`.** Make the change, verify it,
   leave it in the working tree. Shipping goes through a pull request ("Branches and pull
   requests" below); a ruleset on `main` rejects direct pushes.
@@ -77,6 +86,7 @@ themes, not part of the brand.
 pip install --require-hashes -r requirements-dev.txt && npm ci   # one-time setup, inside .venv
 python build.py                                        # writes dist/ (gitignored, rebuilt from scratch)
 python build.py --no-sort --strict                     # what CI runs: any build warning exits 1
+AURELIA_ESSAYS_DIR=tests/fixtures/essays python build.py --no-sort   # the fixture essay built in (no essay is in the vault yet)
 python -m pytest tests/ -q                             # the unit/integration suite (skips tests/browser/)
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
@@ -160,14 +170,22 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 - `engine/assets_pipeline.py`: the Drop Zone sort, the site's own assets into `dist/`, the media
   publish gate (a media file ships only when a published note references it), and ffmpeg
   compression for oversized drop-zone audio.
+- `engine/essays.py`: Essays (roadmap S15). Reads `vault/30_ESSAYS/` (or `AURELIA_ESSAYS_DIR`),
+  validates the contract in `docs/ESSAYS.md` (field allowlist, id, slug, dates, closed `ai_roles`
+  vocabulary, CSL reference fields), runs the privacy checks that raise `EssayError`, renders
+  each body with markdown-it (raw HTML off) and resolves its `[[wikilinks]]` through the Garden's
+  resolver into links to `garden.html#id`. `pipeline._scan_garden()` prunes the folder from the
+  Garden walk, so an essay is never a card, and fails on a `type: essay` note anywhere else.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
-  deploy's new files aren't masked by GitHub Pages' ten-minute cache.
+  deploy's new files aren't masked by GitHub Pages' ten-minute cache. Walks `dist/` recursively,
+  as `csp.py` does, because the essay pages sit below the top of it.
 - `engine/csp.py`: fills `base.html`'s Content-Security-Policy meta tag after the stamp with
   sha256 hashes of each page's inline `<script>` and `<style>` blocks. Nothing else inline is
   allowed.
 - `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`
   into `dist/`, so the site serves everything itself.
-- `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`.
+- `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`, and
+  `pages/essaystemplate.html` (the Essays index) and `pages/essaytemplate.html` (one essay).
 - `assets/js/`: `review.js` (SM-2 study layer, localStorage only), `flashcards.js`, and `utils.js`,
   which also holds the `data-action` dispatcher: no page carries an inline event handler
   (`tests/test_no_inline_handlers.py`); controls name an action and the page registers it.
@@ -200,8 +218,10 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
   "Privacy model", then hand to `garden-publication-reviewer`.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
-- Essays (planned as roadmap S15 to S18, not built yet): `docs/ESSAYS.md` is the design and its
-  data contract, and `docs/DECISIONS.md` item 41 records why.
+- Essays: `docs/ESSAYS.md` is the design and its data contract, `docs/DECISIONS.md` item 41
+  records why and item 43 what S15 built (the content type, the privacy checks, the index and
+  essay pages). Citations, the disclosure note, the companion, the feed and search are S16 to
+  S18, not built yet.
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 

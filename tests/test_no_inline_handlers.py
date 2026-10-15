@@ -16,6 +16,7 @@ from engine.cards import generate_garden_card_html, link_pill
 from engine.content import process_wikilinks
 
 from tests.test_about import render_about
+from tests.test_essays import render_essay_page, render_essays_index
 from tests.test_garden import render_garden
 from tests.test_lobby import render_index
 
@@ -55,6 +56,11 @@ def test_the_about_page_has_no_inline_handlers():
     _assert_clean(render_about(), "about.html")
 
 
+def test_the_essay_pages_have_no_inline_handlers():
+    _assert_clean(render_essays_index(), "essays/index.html")
+    _assert_clean(render_essay_page(), "essays/<slug>/index.html")
+
+
 def test_a_card_and_its_pills_have_no_inline_handlers():
     meta = {"type": "concept", "tags": ["topic/memory"], "maturity": "seed"}
     body = Markup('**🔗 Related:** <button type="button" data-note="note-b">B</button>')
@@ -66,7 +72,8 @@ def test_a_card_and_its_pills_have_no_inline_handlers():
 def test_every_page_renders_the_policy_slot_first_in_head():
     # engine/csp.py fills the token after the build; it has to precede the
     # theme boot script, or that script would run outside the policy.
-    for html, where in ((render_index(), "index.html"), (render_garden(), "garden.html"), (render_about(), "about.html")):
+    for html, where in ((render_index(), "index.html"), (render_garden(), "garden.html"), (render_about(), "about.html"),
+                        (render_essays_index(), "essays/index.html"), (render_essay_page(), "essays/<slug>/index.html")):
         head = html.index("<head>")
         meta = html.index('<meta http-equiv="Content-Security-Policy" content="@@csp@@">')
         first_script = html.index("<script", head)

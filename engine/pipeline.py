@@ -2,15 +2,18 @@
 
 Three pages are published: the Lobby (index.html), the Garden (garden.html),
 and About (about.html) -- the last rendered from repo-root profile.json
-rather than the vault (see engine/profile.py). Project, protocol, and
-transmission notes are recognized by type but intentionally skipped --
-there's no page left for them to link to.
+rather than the vault (see engine/profile.py). Essays (engine/essays.py,
+roadmap S15) add an index at essays/index.html and a page per essay at
+essays/<slug>/index.html, but only once at least one essay is published;
+until then the site is the three pages and nothing a visitor sees changes.
+Project, protocol, and transmission notes are recognized by type but
+intentionally skipped -- there's no page left for them to link to.
 """
 import datetime
 import gzip
 import os
 import re
-from collections import Counter
+from collections import Counter, namedtuple
 from pathlib import Path
 
 from markupsafe import Markup
@@ -21,7 +24,9 @@ from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.cachebust import stamp_asset_versions
 from engine.csp import apply_csp
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
+from engine.essays import ESSAYS_DIR_NAME, EssayError, essays_path, scan_essays
 from engine.content import (
+    _FRONTMATTER_FENCE_RE,
     build_link_resolver,
     dim_dangling_links,
     get_malformed_count,
@@ -73,9 +78,62 @@ UNPUBLISHED_DIRS = {"20_AURELIA"}
 # publishable with no error anywhere. Folding is the whole fix.
 _UNPUBLISHED_DIRS_FOLDED = frozenset(d.casefold() for d in UNPUBLISHED_DIRS)
 
+# The Essays folder is pruned from this walk for a different reason: its
+# notes are published, by engine/essays.py, as essay pages, and must never
+# become Garden cards (docs/ESSAYS.md). Folded like the denylist above.
+_ESSAYS_DIR_FOLDED = ESSAYS_DIR_NAME.casefold()
+
+# What the Garden scan hands back to build_all(): the cards and link graph
+# every caller of _scan_vault() has always received, plus the link resolver
+# and the published ids, which the essays reuse so a [[wikilink]] in an
+# essay resolves exactly as it does in a Garden note.
+GardenScan = namedtuple("GardenScan", "cards backlinks edges resolve known_ids")
+
+# `type: essay` as written in a frontmatter block, read from the raw text
+# rather than parse_frontmatter()'s result: a broken YAML block parses to
+# type "unknown" and would otherwise hide an essay from the check below.
+_ESSAY_TYPE_RE = re.compile(r'''(?im)^\s*type\s*:\s*["']?essay["']?\s*$''')
+
+
+def _declares_essay(content):
+    """True when a note's frontmatter block says `type: essay`."""
+    stripped = content.lstrip()
+    if not stripped.startswith("---"):
+        return False
+    parts = _FRONTMATTER_FENCE_RE.split(stripped, maxsplit=2)
+    return len(parts) >= 3 and bool(_ESSAY_TYPE_RE.search(parts[1]))
+
+
+def _refuse_essays_under(directory, vault_root):
+    """Raises EssayError for any `type: essay` note under a folder the
+    Garden walk prunes (20_AURELIA): pruned from publishing, not from this
+    check, or an agent draft or a parked essay in it would be the one
+    essay-typed note in the vault that no privacy check ever reads."""
+    for root, dirs, files in os.walk(directory):
+        dirs[:] = sorted(d for d in dirs if not escapes(os.path.join(root, d), vault_root))
+        for filename in sorted(files):
+            if not filename.endswith(".md"):
+                continue
+            filepath = os.path.join(root, filename)
+            if escapes(filepath, vault_root):
+                continue
+            with open(filepath, "r", encoding="utf-8") as f:
+                if _declares_essay(f.read()):
+                    raise EssayError(
+                        f"{os.path.relpath(filepath, VAULT_PATH)}: a type: essay note outside "
+                        f"{ESSAYS_DIR_NAME}/; essays live only in that folder (docs/ESSAYS.md)"
+                    )
+
 
 def _scan_vault():
     """Walks the vault, building a card for every published garden note.
+    Returns (garden_cards, backlinks, edges); see _scan_garden()."""
+    scan = _scan_garden()
+    return scan.cards, scan.backlinks, scan.edges
+
+
+def _scan_garden():
+    """The vault walk behind _scan_vault(), returning a GardenScan.
 
     Two passes: the first reads every note and computes its id (but doesn't
     generate card HTML yet), so the second pass can tell each card which
@@ -111,9 +169,13 @@ def _scan_vault():
         # unsorted walk made the same vault build to different output on
         # Windows vs. CI. See tests/test_pipeline.py's byte-identical-build
         # guard (roadmap S09).
+        for d in dirs:
+            if d.casefold() in _UNPUBLISHED_DIRS_FOLDED and not escapes(os.path.join(root, d), vault_root):
+                _refuse_essays_under(os.path.join(root, d), vault_root)
         dirs[:] = sorted(
             d for d in dirs
             if d.casefold() not in _UNPUBLISHED_DIRS_FOLDED
+            and not (d.casefold() == _ESSAYS_DIR_FOLDED and root == VAULT_PATH)
             and not escapes(os.path.join(root, d), vault_root)
         )
 
@@ -133,6 +195,19 @@ def _scan_vault():
                 content = f.read()
 
             meta = parse_frontmatter(content, source=os.path.relpath(filepath, VAULT_PATH))
+
+            # Privacy check 4, the other half (docs/ESSAYS.md): an essay
+            # belongs in the Essays folder, where every other check runs.
+            # One anywhere else, published or not, stops the build rather
+            # than becoming a Garden card or being quietly skipped. Read
+            # from the raw block as well as the parsed one, so malformed
+            # YAML around the type cannot hide it.
+            if str(meta.get("type", "")).strip().lower() == "essay" or _declares_essay(content):
+                raise EssayError(
+                    f"{os.path.relpath(filepath, VAULT_PATH)}: a type: essay note outside "
+                    f"{ESSAYS_DIR_NAME}/; essays live only in that folder (docs/ESSAYS.md)"
+                )
+
             if not meta.get("publish"):
                 continue
 
@@ -274,7 +349,7 @@ def _scan_vault():
             "connections": degree.get(p["note_id"], 0),
         })
 
-    return garden_cards, backlinks, edges
+    return GardenScan(garden_cards, backlinks, edges, resolve, known_ids)
 
 
 # Every note link the engine renders carries its target in data-note (see
@@ -589,8 +664,35 @@ def report_page_sizes(output_dir=None, limit=GARDEN_COMPRESSED_LIMIT_BYTES):
     return sizes
 
 
+def _essay_pages(user_config, essays):
+    """The Essays index and one page per essay, as (template, output path,
+    context) entries for _render_pages(). Nothing at all while no essay is
+    published, so the live site keeps no empty index and no Essays link
+    until the first real essay (docs/ESSAYS.md).
+
+    These are the first pages below the top of dist/, so like 404.html they
+    link from the site root (`site_root`), and each names its own path
+    (`page_path`) for base.html's canonical link.
+    """
+    if not essays:
+        return []
+    site_root = _site_root(user_config)
+    pages = [
+        ("pages/essaystemplate.html", os.path.join("essays", "index.html"), {
+            "essays": essays, "page_title": "Essays", "active_page": "essays",
+            "site_root": site_root, "page_path": "essays/",
+        }),
+    ]
+    for essay in essays:
+        pages.append(("pages/essaytemplate.html", os.path.join("essays", essay["slug"], "index.html"), {
+            "essay": essay, "page_title": essay["title"], "active_page": "essays",
+            "site_root": site_root, "page_path": essay["url"],
+        }))
+    return pages
+
+
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
-                   build_commit=None, build_commit_time=None, has_social_preview=True):
+                   build_commit=None, build_commit_time=None, has_social_preview=True, essays=()):
     # Its size is reported with garden.html's by report_page_sizes(), once
     # the build has finished writing both.
     _write_deep_search_index(deep_search_json)
@@ -622,12 +724,16 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
         # folders down still gets this file), so it alone links by absolute
         # path -- see _site_root().
         ("404.html", "404.html", {"page_title": None, "site_root": _site_root(user_config)}),
+        *_essay_pages(user_config, essays),
     ]
 
     # The build's own run date, not each page's render timestamp -- a footer
     # copyright year that could differ page-to-page on the same deploy would
     # look like a bug, not a feature.
     build_year = datetime.date.today().year
+    # base.html shows the Essays link on every page only once an essay is
+    # published, so the live site changes nothing until then.
+    essays_published = bool(essays)
 
     for template_name, output_name, context in pages:
         try:
@@ -638,20 +744,26 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["search_index"] = json_index
             context["config"] = user_config
             context.setdefault("site_root", "")
+            context.setdefault("page_path", None)
             context["build_year"] = build_year
             context["build_commit"] = build_commit
             context["build_commit_time"] = build_commit_time
             context["has_social_preview"] = has_social_preview
+            context["essays_published"] = essays_published
+            active_page = context.pop("active_page", output_name.replace(".html", ""))
 
             template = env.get_template(template_name)
-            rendered_html = template.render(active_page=output_name.replace(".html", ""), **context)
+            rendered_html = template.render(active_page=active_page, **context)
 
+            # An essay page sits in its own folder (essays/<slug>/index.html).
+            output_path = os.path.join(OUTPUT_DIR, output_name)
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
             # newline="\n": same reproducibility concern as
             # _write_deep_search_index -- text mode would otherwise write
             # CRLF on Windows and LF on CI for an identical commit.
-            with open(os.path.join(OUTPUT_DIR, output_name), "w", encoding="utf-8", newline="\n") as f:
+            with open(output_path, "w", encoding="utf-8", newline="\n") as f:
                 f.write(rendered_html)
-            print(f"   ✅ Deployed: {output_name}")
+            print(f"   ✅ Deployed: {output_name.replace(os.sep, '/')}")
         except Exception as e:
             # Fail the build. This used to print and continue, which meant
             # `python build.py` exited 0 with a page missing or half-written
@@ -805,7 +917,8 @@ def build_all(sort_dropzone=None, strict=False):
     else:
         print("\n⏭️  Drop Zone sort skipped -- vault/ will not be modified")
 
-    garden_cards, backlinks, edges = _scan_vault()
+    scan = _scan_garden()
+    garden_cards, backlinks, edges = scan.cards, scan.backlinks, scan.edges
     # After the scan, not before: the scan is what records which media the
     # published notes reference, and only those files are published
     # (backlog B06; assets_pipeline.publish_referenced_media).
@@ -813,6 +926,20 @@ def build_all(sort_dropzone=None, strict=False):
     garden_cards.sort(key=lambda x: x['title'].lower())
 
     print(f"   + Indexing: {len(garden_cards)} Notes")
+
+    # Essays (roadmap S15), after the Garden scan because their wikilinks
+    # resolve through the Garden's own resolver and their discipline labels
+    # link to published Discipline notes. scan_essays() raises EssayError
+    # on any contract or privacy problem, strict or not; see engine/essays.py.
+    essays = scan_essays(
+        essays_path(VAULT_PATH), scan.resolve, scan.known_ids,
+        discipline_ids={c["id"] for c in garden_cards if c["type"].lower() == "discipline"},
+        site_root=_site_root(user_config),
+    )
+    if essays:
+        print(f"   + Essays: {len(essays)} published -> essays/")
+    else:
+        print("   + Essays: none published, so no Essays index or link is built")
     malformed = get_malformed_count()
     if malformed:
         # Loud on purpose: a bulk vault edit (e.g. a frontmatter migration)
@@ -861,7 +988,7 @@ def build_all(sort_dropzone=None, strict=False):
     build_commit, build_commit_time = _build_commit_stamp()
     _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
                   build_commit=build_commit, build_commit_time=build_commit_time,
-                  has_social_preview=has_social_preview)
+                  has_social_preview=has_social_preview, essays=essays)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.

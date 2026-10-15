@@ -19,7 +19,10 @@ engine.config (a `from X import Y` binds a separate name, so patching
 engine.config.OUTPUT_DIR alone would not reach any of them) -- everything
 else (VAULT_PATH, ROOT_DIR, template dir, user_config.json, profile.json)
 is deliberately left pointing at the real repo, the same way CI's own build
-does.
+does. The one addition is the fixture essay (roadmap S15): the build reads
+tests/fixtures/essays/ through AURELIA_ESSAYS_DIR, so the essay pages, the
+first output below the top of dist/, are held to the same byte-identical
+guarantee as everything else.
 """
 import filecmp
 import os
@@ -28,7 +31,10 @@ import pytest
 
 from engine import assets_pipeline, pipeline, tailwind_build, theming, vendor
 from engine.config import ROOT_DIR
+from engine.essays import ESSAYS_DIR_ENV
 from engine.pipeline import build_all
+
+_FIXTURE_ESSAYS = os.path.join(ROOT_DIR, "tests", "fixtures", "essays")
 
 _NODE_MODULES = os.path.join(ROOT_DIR, "node_modules")
 _needs_node_modules = pytest.mark.skipif(
@@ -41,6 +47,7 @@ def _build_into(tmp_path, monkeypatch, name):
     output_dir = str(tmp_path / name)
     for module in (pipeline, theming, tailwind_build, assets_pipeline, vendor):
         monkeypatch.setattr(module, "OUTPUT_DIR", output_dir)
+    monkeypatch.setenv(ESSAYS_DIR_ENV, _FIXTURE_ESSAYS)
     build_all(sort_dropzone=False, strict=False)
     return output_dir
 
@@ -62,6 +69,8 @@ def test_two_builds_of_the_same_vault_are_byte_identical(tmp_path, monkeypatch):
     second_files = _all_files(second)
     assert first_files == second_files, "the two builds produced a different set of files"
     assert first_files, "the build produced no files at all -- this guard would pass vacuously"
+    assert "essays/why-loss-looms-larger/index.html" in [f.replace(os.sep, "/") for f in first_files], \
+        "the fixture essay was not built, so the essay pages were not compared"
 
     mismatches = [
         relpath for relpath in first_files

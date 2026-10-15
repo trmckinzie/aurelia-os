@@ -9,6 +9,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
+from engine.essays import EssayError
 from engine.pipeline import StrictBuildError, build_all
 from engine.profile import ProfileError
 from engine.user_config import UserConfigError
@@ -44,10 +45,12 @@ def main(argv=None):
         # None, not True, when --no-sort is absent -- that lets
         # AURELIA_SKIP_DROPZONE decide. An explicit --no-sort always wins.
         build_all(sort_dropzone=False if args.no_sort else None, strict=args.strict)
-    except (UserConfigError, ProfileError, StrictBuildError) as e:
+    except (UserConfigError, ProfileError, EssayError, StrictBuildError) as e:
         # Problems with the input, not bugs in the engine: one line naming
         # the file and field reads better than a traceback, in a terminal
-        # and in CI's failure summary alike.
+        # and in CI's failure summary alike. EssayError is the Essays
+        # folder's contract and privacy checks (engine/essays.py), which
+        # fail every build, strict or not.
         print(f"\n❌ BUILD FAILED: {e}", file=sys.stderr)
         return 1
     return 0

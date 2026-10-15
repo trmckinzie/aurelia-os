@@ -355,7 +355,8 @@ def test_scan_vault_resolves_an_aliased_wikilink_into_a_real_backlink(tmp_path, 
 #
 # organize_assets() moves files inside vault/. These tests must never call the
 # real one, and must never let the real build run -- so every collaborator is
-# stubbed and _scan_vault raises immediately after the decision under test.
+# stubbed and the vault scan (_scan_garden, behind _scan_vault) raises
+# immediately after the decision under test.
 
 class _StopBuild(Exception):
     """Ends build_all() right after the drop-zone decision."""
@@ -371,7 +372,7 @@ def _stub_build_steps(monkeypatch):
     def _stop():
         raise _StopBuild
 
-    monkeypatch.setattr(pipeline, "_scan_vault", _stop)
+    monkeypatch.setattr(pipeline, "_scan_garden", _stop)
     return calls
 
 
@@ -399,7 +400,7 @@ def test_build_all_publishes_media_only_after_the_vault_scan():
     # The gate publishes what the scan recorded, so it cannot run before it.
     import inspect
     source = inspect.getsource(pipeline.build_all)
-    assert source.index("_scan_vault()") < source.index("publish_referenced_media(get_referenced_assets())")
+    assert source.index("_scan_garden()") < source.index("publish_referenced_media(get_referenced_assets())")
 
 
 def test_build_all_env_var_skips_the_dropzone_sort(monkeypatch):

@@ -100,22 +100,33 @@ def _markup_only(page_html):
 
 def apply_csp(dist_dir):
     """Fills each page's policy token with hashes of that page's own inline
-    blocks. Returns {page name: policy}. Warns, so --strict fails, when a
-    page has no token to fill or carries an inline style attribute or event
-    handler, since the policy would refuse those live and the page would
-    render without them."""
+    blocks. Returns {page path under dist/: policy}. Warns, so --strict
+    fails, when a page has no token to fill or carries an inline style
+    attribute or event handler, since the policy would refuse those live
+    and the page would render without them.
+
+    Every page at any depth: the essay pages (roadmap S15) are the first
+    output below the top of dist/, and one this walk missed would ship with
+    an unfilled policy, which the browser reads as refusing everything."""
+    dist = Path(dist_dir)
     policies = {}
-    for page in sorted(Path(dist_dir).glob("*.html")):
+    for page in sorted(dist.rglob("*.html")):
+        name = page.relative_to(dist).as_posix()
+        if name.startswith("assets/"):
+            # Not a page: the site's own assets and the gated media never
+            # hold one, and anything that lands there is not rendered from
+            # base.html, so it has no slot to fill and nothing to warn about.
+            continue
         text = page.read_text(encoding="utf-8")
         if TOKEN not in text:
-            warn(f"{page.name} has no Content-Security-Policy slot (base.html's meta tag)")
+            warn(f"{name} has no Content-Security-Policy slot (base.html's meta tag)")
             continue
         markup = _markup_only(text)
         if _STYLE_ATTR_RE.search(markup):
-            warn(f"{page.name} carries an inline style attribute, which the Content-Security-Policy refuses")
+            warn(f"{name} carries an inline style attribute, which the Content-Security-Policy refuses")
         if _HANDLER_ATTR_RE.search(markup):
-            warn(f"{page.name} carries an inline event handler, which the Content-Security-Policy refuses")
+            warn(f"{name} carries an inline event handler, which the Content-Security-Policy refuses")
         policy = build_policy(inline_script_hashes(text), style_block_hashes(text))
         page.write_text(text.replace(TOKEN, html.escape(policy, quote=False)), encoding="utf-8")
-        policies[page.name] = policy
+        policies[name] = policy
     return policies

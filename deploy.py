@@ -336,6 +336,14 @@ in a note's frontmatter to choose its card layout:
 - anything else (or no `type:` at all) renders as a plain note card
 
 A note only appears on the site once its frontmatter has `publish: true`.
+
+Essays are a separate kind of page: Markdown files in `vault/30_ESSAYS/`
+(a sibling of the Garden) become an index at `/essays/` and one page each,
+once at least one is published; without the folder the site is the three
+pages above. Each essay needs the frontmatter fields the engine's
+`engine/essays.py` lists, and the folder may hold nothing but `.md` and
+`.yaml` files: a draft, an unknown field or a Google Drive, Docs, Gemini,
+NotebookLM or reMarkable link stops the build, by design.
 """
     with open(os.path.join(TARGET_DIR, "README.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write(readme_text)

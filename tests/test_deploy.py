@@ -75,6 +75,15 @@ def test_clone_builds_with_no_dangling_social_preview_reference(tmp_path, monkey
     for page in ("index.html", "garden.html", "about.html"):
         assert os.path.isfile(os.path.join(dist, page)), page
 
+    # The clone carries Essays (roadmap S15: engine/ and the templates are
+    # copied whole) but ships no essay, so its site is the three pages its
+    # README promises and no Essays index or link exists.
+    assert not os.path.exists(os.path.join(dist, "essays"))
+    with open(os.path.join(dist, "index.html"), encoding="utf-8") as f:
+        assert "essays/" not in f.read()
+    with open(os.path.join(target, "README.md"), encoding="utf-8") as f:
+        assert "vault/30_ESSAYS/" in f.read()
+
     # deploy.py deliberately never copies assets/images/ into the clone
     # (privacy -- see copy_frontend()'s own comment), so the clone has no
     # social-preview.jpg of its own. Before S09, base.html still

@@ -15,7 +15,9 @@ import build
 from engine import assets_pipeline, buildlog, content, pipeline
 from engine.cachebust import stamp_asset_versions
 from engine.buildlog import get_warnings, reset_warnings, warn
-from engine.pipeline import StrictBuildError
+from engine.content import make_id
+from engine.essays import EssayError
+from engine.pipeline import GardenScan, StrictBuildError
 from engine.user_config import UserConfigError
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -84,6 +86,23 @@ def test_cache_busting_is_silent_when_every_file_exists(tmp_path):
     assert get_warnings() == []
 
 
+def test_cache_busting_reaches_pages_below_the_top_of_dist(tmp_path):
+    # An essay page two folders down (roadmap S15) names the same asset
+    # path, under dist/, as the top-level pages, and gets the same hash.
+    (tmp_path / "assets" / "js").mkdir(parents=True)
+    (tmp_path / "assets" / "js" / "a.js").write_text("x", encoding="utf-8")
+    nested = tmp_path / "essays" / "slug"
+    nested.mkdir(parents=True)
+    for page in (tmp_path / "index.html", nested / "index.html"):
+        page.write_text('<script src="/assets/js/a.js?v=@@asset:assets/js/a.js@@">', encoding="utf-8")
+    hashes = stamp_asset_versions(tmp_path)
+    top = (tmp_path / "index.html").read_text(encoding="utf-8")
+    deep = (nested / "index.html").read_text(encoding="utf-8")
+    assert "@@asset:" not in deep and deep == top
+    assert f"?v={hashes['assets/js/a.js']}" in deep
+    assert get_warnings() == []
+
+
 def test_build_stops_when_dist_cannot_be_wiped(tmp_path, monkeypatch):
     dist = tmp_path / "dist"
     dist.mkdir()
@@ -118,9 +137,11 @@ def _stub_build(monkeypatch, warning=None):
     def _scan():
         if warning:
             warn(warning)
-        return [], {}, []
+        # What _scan_garden() hands build_all(): no cards, no graph, and the
+        # resolver and ids the essays scan (roadmap S15) reads from it.
+        return GardenScan([], {}, [], make_id, set())
 
-    monkeypatch.setattr(pipeline, "_scan_vault", _scan)
+    monkeypatch.setattr(pipeline, "_scan_garden", _scan)
 
 
 def test_strict_build_fails_on_a_warning(monkeypatch):
@@ -189,6 +210,7 @@ def test_cli_strict_flag():
 @pytest.mark.parametrize("error", [
     StrictBuildError("2 build warning(s) under --strict"),
     UserConfigError("user_config.json: author: missing required key 'name'"),
+    EssayError("Essays folder vault/30_ESSAYS: 1 problem(s)"),
 ])
 def test_cli_exits_one_with_the_message(monkeypatch, capsys, error):
     def _fail(**kwargs):

@@ -6,8 +6,13 @@ companion. Planned 2026-10-12 from Travis's handoff of 2026-10-11; built across 
 S15 to S18 (`docs/roadmap.yaml`), after S12 and before S13. The decisions behind it are
 `docs/DECISIONS.md` item 41.
 
-Nothing here is built yet. Paths that do not exist yet are written plainly rather than as code, so
-`tests/test_docs_paths.py` does not hold them to the file system until a session creates them.
+S15 is built (2026-10-14, `docs/DECISIONS.md` item 43): the content type in `engine/essays.py`,
+the draft gate and privacy checks, the index and essay pages (`system/templates/pages/essaystemplate.html`
+and `essaytemplate.html`), the Garden links, and the recursive security-policy and cache-busting
+walks. S16 to S18 are not. Paths that do not exist yet are written plainly rather than as code, so
+`tests/test_docs_paths.py` does not hold them to the file system until a session creates them;
+vault/30_ESSAYS/ is one of them, since no essay is in the vault until S17 is done. The test essay
+lives in `tests/fixtures/essays/`, and the build reads it through `AURELIA_ESSAYS_DIR`.
 
 ## Where essays come from
 
@@ -325,7 +330,9 @@ never in the vault.
 - **Build (S15):** a draft in the Essays folder fails a build without `--strict`; a `type: essay` note outside it
   fails; an essay never becomes a Garden card; essay pages carry a filled security policy and
   cache-busted URLs; a wikilink to an unpublished note fails; the build stays byte-identical on a
-  rerun (`tests/test_reproducible_build.py`).
+  rerun (`tests/test_reproducible_build.py`). A `.DS_Store` or `Thumbs.db` in the folder does
+  not fail it, since `.gitignore` already keeps both out of the repository (S15's one carve-out
+  from check 3).
 - **Privacy (S15), each in a build without `--strict`:** an unknown frontmatter or reference field fails; `abstract`, `annote` and
   `note` fail; a Drive, Docs, Gemini, NotebookLM or reMarkable URL anywhere fails; a non-text file
   in the folder fails; a companion URL off the media allowlist fails (S17).
