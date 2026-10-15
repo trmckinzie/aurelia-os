@@ -274,10 +274,13 @@ def test_a_private_workflow_link_anywhere_in_an_essay_fails(tmp_path, url):
 def test_a_private_link_in_frontmatter_or_the_reference_file_fails(tmp_path):
     _write(tmp_path, "E02 Link.md", _essay_note(
         GOOD_FRONTMATTER + "companion:\n  - kind: audio\n    label: Overview\n    url: https://drive.google.com/file/d/1/view\n"))
-    assert any("drive.google.com" in p for p in _problems(tmp_path))
+    # Whole messages, not substring checks, so the assertion cannot be read
+    # as URL sanitisation by a scanner (CodeQL flagged the `host in p` form).
+    denied = "names a host that must never enter the repository: "
+    assert denied + "drive.google.com" in _problems(tmp_path)
     _write(tmp_path, "E02 Link.md", _essay_note())
     _write(tmp_path, "E02.refs.yaml", "- id: k\n  type: book\n  URL: https://gemini.google.com/share/1\n")
-    assert any("gemini.google.com" in p for p in _problems(tmp_path))
+    assert denied + "gemini.google.com" in _problems(tmp_path)
 
 
 def test_ordinary_hosts_and_the_word_remarkable_pass():
