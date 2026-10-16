@@ -784,7 +784,7 @@ sessions:
     status: done
     started: 2026-10-15
     completed: 2026-10-15
-    commits: []
+    commits: [8efa850]
     area: Content
     effort: L
     model: sonnet
@@ -829,8 +829,9 @@ sessions:
       dependency was added. Golden tests are tests/test_citations.py; the
       strict-build tests are in tests/test_essays.py; the jump to each entry,
       the hanging indent, the italics and the DOI links are held by
-      tests/browser/essays.spec.mjs at 375 pixels. The squash commit and the
-      live check come with the merge.
+      tests/browser/essays.spec.mjs at 375 pixels. PR #55 squash-merged
+      2026-10-16 as 8efa850, the 375-pixel screenshots attached to it; the
+      deploy's live check was green and the live site serves 8efa850.
   - id: S17
     title: Add the essay disclosure note, the study companion and its media
     status: todo
