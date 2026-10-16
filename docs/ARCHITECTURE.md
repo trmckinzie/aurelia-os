@@ -202,7 +202,14 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   case variants of its name. `pipeline._scan_garden()` carries the other half: the folder is
   pruned from the Garden walk, so an essay is never a card, and a `type: essay` note anywhere
   else, the pruned `20_AURELIA` included and read from the raw frontmatter text, raises the
-  same error. Essays sort newest first and render only once at least
+  same error. Citations (roadmap S16) are two more markdown-it inline rules, from
+  **`citations.py`**: Pandoc's `[@key]`, `[@key, p. 12]`, `[@a; @b]` and narrative `@key` become
+  APA 7 in-text citations linking to `#ref-<key>`, and `References` formats the essay's
+  `E01.refs.yaml` into an APA 7 list (five source types, author-count rules, group authors,
+  1979a/1979b, DOI over URL, en-dash ranges, APA order) in-house, after citeproc-py failed the
+  same rules (`docs/DECISIONS.md` item 44). A reference record's shape (names, key, `verified`)
+  raises with the privacy checks; a citation with no record, a record nothing cites, a duplicate
+  key or an unsupported type only warns, so the strict build fails on it. Essays sort newest first and render only once at least
   one is published; until then `_render_pages()` writes no `essays/` folder and `base.html`
   shows no Essays link.
 - **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
@@ -268,7 +275,8 @@ Three things to know before editing links in bulk (all learned in item 17's clea
 Seven template files exist. Two are the Essays pages (roadmap S15): `pages/essaystemplate.html`,
 the index, and `pages/essaytemplate.html`, one essay, both at a 68-character reading measure with
 their prose rules in an inline `<style>` wrapped in `@layer utilities`, and both rendered only
-once an essay is published. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
+once an essay is published. The essay page ends with the APA 7 reference list (S16), a hanging
+indent on each entry and room under the fixed nav for the entry a citation jumps to. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
 the self-hosted fonts, `marked.js` and Motion from `assets/fonts/` and `assets/vendor/`, loads
 `assets/js/utils.js` for the shared `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
 (Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live

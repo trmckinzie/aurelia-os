@@ -38,7 +38,11 @@ let a local run pass with the leak in it.
 
 Citation and link problems leak nothing, so they stay build warnings: a
 wikilink to a missing or unpublished Garden note warns, and --strict fails
-on it in CI (S16 adds the citation checks the same way).
+on it in CI. So do the citation checks (S16, engine/citations.py): a
+citation with no record, a record nothing cites, a key used twice, a type
+the APA 7 formatter does not support. The reference file's shape (the
+field allowlist, names, keys, `verified`) is the contract, and stops every
+build like the frontmatter does.
 
 The folder is read from AURELIA_ESSAYS_DIR when that is set, so the tests
 and verify.sh build the fixture essay under tests/fixtures/essays/ without
@@ -58,6 +62,14 @@ from markdown_it.common.utils import escapeHtml
 from markupsafe import Markup
 
 from engine.buildlog import warn
+from engine.citations import (
+    References,
+    bracket_rule,
+    is_key,
+    narrative_rule,
+    plain_citations_in_alt_text,
+    render_citation,
+)
 from engine.config import VAULT_PATH
 from engine.content import _FRONTMATTER_FENCE_RE, parse_body
 from engine.paths import escapes, is_link
@@ -94,6 +106,7 @@ REFERENCE_FIELDS = frozenset({
     "edition", "volume", "issue", "page", "publisher", "DOI", "URL",
     "version", "genre", "open_access", "verified",
 })
+NAME_FIELDS = frozenset({"family", "given", "literal"})
 
 _ID_RE = re.compile(r"^E\d{2}$")
 _SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -188,6 +201,14 @@ def _render_wikilink(self, tokens, idx, options, env):
 _markdown = MarkdownIt("commonmark", {"html": False, "typographer": False}).enable(["table", "strikethrough"])
 _markdown.inline.ruler.before("link", "wikilink", _wikilink_rule)
 _markdown.add_render_rule("wikilink", _render_wikilink)
+# Pandoc citations (S16, engine/citations.py): the bracketed form before the
+# link rule, so [@key] is a citation and not a failed link; the narrative
+# @key wherever an '@' stops markdown-it's text run.
+_markdown.inline.ruler.before("link", "essay_citation", bracket_rule)
+_markdown.inline.ruler.before("link", "essay_narrative_citation", narrative_rule)
+_markdown.add_render_rule("essay_citation", lambda self, tokens, idx, options, env:
+                          env["keep"](render_citation(tokens[idx], env["essay_references"])))
+_markdown.core.ruler.after("inline", "essay_citation_alt_text", plain_citations_in_alt_text)
 
 
 class EssayError(RuntimeError):
@@ -375,9 +396,35 @@ def check_essay_frontmatter(raw):
     return problems
 
 
+def _check_names(value, where, problems):
+    """CSL names: a list of {family, given} for a person or {literal} for a
+    group. The allowlist reaches inside a name too, so nothing rides along
+    in one."""
+    if not isinstance(value, list) or not value:
+        problems.append(f"{where}: must be a non-empty list of names")
+        return
+    for j, name in enumerate(value):
+        at = f"{where}[{j}]"
+        if not isinstance(name, dict):
+            problems.append(f"{at}: must be a mapping of family and given, or literal for a group")
+            continue
+        for key in name:
+            if key not in NAME_FIELDS:
+                problems.append(f"{at}: unknown field '{key}' (a name holds family and given, or literal)")
+        if "literal" in name:
+            if not _is_str(name["literal"]) or len(name) > 1:
+                problems.append(f"{at}: a group author is literal alone, as a single-line string")
+        elif not _is_str(name.get("family")):
+            problems.append(f"{at}: needs family (or literal for a group)")
+        elif "given" in name and not _is_str(name["given"]):
+            problems.append(f"{at}.given: must be a single-line string")
+
+
 def check_reference_records(records):
     """Problems with one reference file's records (a list of CSL-field
-    mappings), as plain strings."""
+    mappings), as plain strings. This is the record's shape -- what may be
+    committed -- and stops every build; whether a record can be formatted
+    is engine/citations.py's question, and only warns."""
     if not isinstance(records, list):
         return ["references: must be a list of records"]
     problems = []
@@ -391,8 +438,25 @@ def check_reference_records(records):
                 problems.append(f"{where}: unknown field '{key}' (CSL abstract, annote and note are refused on purpose)")
         if not _is_str(record.get("id")):
             problems.append(f"{where}: missing the citation key 'id'")
-        if "verified" in record and not isinstance(record["verified"], bool):
-            problems.append(f"{where}.verified: must be true or false")
+        elif not is_key(record["id"]):
+            problems.append(f"{where}: id {record['id']!r} is not a citation key (letters, digits and _, "
+                            f"with : . / - only between them)")
+        # A year when present; a record without one is left out of the
+        # list with a warning (engine/citations.py), but a wrong one is the
+        # record's shape.
+        if "issued" in record and not (isinstance(record["issued"], int) and not isinstance(record["issued"], bool)
+                                       and 1000 <= record["issued"] <= 9999):
+            problems.append(f"{where}.issued: must be a four-digit year, got {record['issued']!r}")
+        # Every record says whether Travis checked it against the original:
+        # the disclosure note counts them (S17), so a missing answer is not
+        # a quiet "no".
+        if not isinstance(record.get("verified"), bool):
+            problems.append(f"{where}.verified: required, true or false")
+        if "open_access" in record and not isinstance(record["open_access"], bool):
+            problems.append(f"{where}.open_access: must be true or false")
+        for field in ("author", "editor"):
+            if field in record:
+                _check_names(record[field], f"{where}.{field}", problems)
     return problems
 
 
@@ -537,7 +601,7 @@ def long_date(value):
 _LINK_SLOT = "AURELIAESSAYLINK{}END"
 
 
-def render_body(body, essay_id, resolve, known_ids, garden_href):
+def render_body(body, essay_id, resolve, known_ids, garden_href, references=None):
     """The essay body as HTML. Returns Markup, since this is the end of
     the chain that can vouch for it:
 
@@ -551,9 +615,12 @@ def render_body(body, essay_id, resolve, known_ids, garden_href):
          second gate, which also drops the `style` attribute markdown-it
          puts on an aligned table cell (the Content-Security-Policy refuses
          inline styles; engine/csp.py).
-      3. The [[wikilinks]] were rendered by the inline rule above into
-         numbered slots and are written back last, as the engine's own
-         anchors to garden.html#<id>.
+      3. The [[wikilinks]] and the citations were rendered by the inline
+         rules above into numbered slots and are written back last, as the
+         engine's own anchors: to garden.html#<id>, and to the reference
+         list's #ref-<key>. scan_essays() always passes `references`, empty
+         for an essay with no reference file, so a citation there still
+         warns; only a direct call without it leaves the syntax alone.
     """
     links = []
 
@@ -562,7 +629,7 @@ def render_body(body, essay_id, resolve, known_ids, garden_href):
         return _LINK_SLOT.format(len(links) - 1)
 
     env = {"resolve": resolve, "known_ids": known_ids, "garden_href": garden_href,
-           "essay_id": essay_id, "keep": keep}
+           "essay_id": essay_id, "keep": keep, "essay_references": references}
     rendered = _markdown.render(body, env)
     cleaned = nh3.clean(rendered)
     restored = re.sub(_LINK_SLOT.format(r"(\d+)"), lambda m: links[int(m.group(1))], cleaned)
@@ -603,6 +670,9 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
                 "label": label.strip(),
                 "href": f"{garden_href}#{target_id}" if target_id in discipline_ids else None,
             })
+        references = References(essay["refs"], raw["id"], f"{raw['id']}.refs.yaml")
+        body_html = render_body(body, raw["id"], resolve, known_ids, garden_href, references)
+        references.warn_uncited()
         published.append({
             "id": raw["id"],
             "slug": raw["slug"],
@@ -625,8 +695,11 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
             "companion": list(raw.get("companion") or []),
             "youtube": raw.get("youtube"),
             "reading_minutes": reading_minutes(body),
-            "body_html": render_body(body, raw["id"], resolve, known_ids, garden_href),
+            "body_html": body_html,
             "references": essay["refs"],
+            # The APA 7 list (engine/citations.py); `references` stays the
+            # records as written, which the disclosure note counts (S17).
+            "reference_list": references.entries(),
             "source": essay["rel"],
         })
 

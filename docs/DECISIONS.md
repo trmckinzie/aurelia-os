@@ -954,6 +954,54 @@ knowing so you don't "fix" something that was a deliberate decision:
       structured data, the Atom feed and search (S18), and essays in Garden backlinks (B22).
       Until S16 a citation key in an essay renders as written; the fixture essay has none.
 
+44. **Essay citations and an in-house APA 7 formatter (roadmap S16, 2026-10-15).** The second
+    Essays session, on item 41's decision of 2026-10-12: one CSL reference file per essay, Pandoc
+    citation syntax, and APA 7 formatted by the engine from the records. What it built, and why:
+    - **In-house, after the maintained processor failed the rules.** The entry asked first
+      whether a maintained CSL processor renders APA 7 correctly for the five types. citeproc-py
+      is maintained (0.11.1, released 2026-09-01) and was tried in a scratch environment, never
+      installed here, with the official `apa.csl` from citeproc-py-styles 0.1.6. It printed no
+      1979a/1979b suffixes, left the reference list in the order given rather than APA's, wrote
+      "(eds.)" for "(Eds.)", and raised on a page locator. Those are four of the rules
+      `docs/ESSAYS.md` names, so `engine/citations.py` formats the five types itself, in about
+      the size the design expected, and no dependency was added. The records stay CSL, so a
+      later processor can replace the module without touching an essay. The verdict is also in
+      the dev vault's `50_Library/Resources.md`.
+    - **Citations are markdown-it inline rules**, like S15's wikilinks, so code spans, fenced
+      blocks and link text keep `[@key]` literal and nothing is a regex over the output. The
+      bracketed rule runs before markdown-it's link rule, so `[@key]` is a citation, not a failed
+      link, while `[@key](url)` stays a link. A narrative `@key` counts only at the start of a
+      word and only for a key the reference file holds, so an email address is text. Each
+      rendered citation is the engine's own anchor to `#ref-<key>`, written back after nh3 the
+      way the Garden links are.
+    - **Two tiers of failure, as S15 drew them.** What may be committed raises `EssayError` in
+      every build: the record's field allowlist now reaches inside each name (only `family`,
+      `given`, `literal`), the key must be safe as an HTML id, and `verified` is required on
+      every record, because S17's disclosure note counts it and a missing answer must not read
+      as "no". What only affects rendering warns, so the strict CI build fails and a local
+      preview still builds: a citation with no record, a record nothing cites, a duplicate key,
+      a type the formatter does not cover or a record missing what its type needs (left out of
+      the list rather than rendered wrong), and two works that would cite identically.
+    - **APA 7 calls made where the design was silent:** works in one parenthetical citation are
+      put in reference-list order (APA 7 asks for it) unless a prefix such as "see" is present;
+      the same authors share one name ("1979a, 1979b"); a publisher that repeats the group
+      author is dropped; a first edition is not mentioned; "p." before a range becomes "pp.";
+      list order compares authors letter by letter with accents ignored, one-author works before
+      that author's co-authored ones. Not handled: adding names to separate two "et al." works
+      (warns instead), group-author abbreviations, and the web style (S18).
+    - **The `garden-publication-reviewer` pass** found no escaping hole (every field and every
+      piece of citation text was probed) and one real gap: a misspelled narrative `@key` reached
+      the page as raw text with no warning, since only known keys counted. Now any word-initial
+      `@token` that is no key warns (`\@` writes a literal one), an `@` after `/` or `:` is a
+      URL path, not a citation, a wrongly typed `issued` fails with the record's shape, a field
+      a type's entry does not show warns, `![@key]` stays an image with its alt text, and a
+      preprint names its server once even when the server is the author.
+    - **The fixture essay now cites eight real sources** in every citation form, so the
+      phone-width screenshots and the browser spec check a real list: the jump to each entry
+      clears the fixed nav, the hanging indent, the italics, the DOI links. Two page locators
+      first drafted for it were removed rather than shipped unchecked; the one that stayed
+      (Prospect theory's value function, p. 279) is a page that can be checked.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

@@ -1,3 +1,110 @@
-# Reference records for E01, in CSL field names (docs/ESSAYS.md). Empty
-# until roadmap S16 resolves citations; the fixture essay cites nothing.
-[]
+# Reference records for E01, in CSL field names (docs/ESSAYS.md). Real
+# sources, so the fixture build's APA 7 list can be checked against the
+# originals; between them they cover four of the five supported types, a
+# group author and a 1979a/1979b pair. The preprint type and the
+# author-count cases are golden-tested in tests/test_citations.py.
+- id: kahneman1979
+  type: article-journal
+  author:
+    - {family: Kahneman, given: Daniel}
+    - {family: Tversky, given: Amos}
+  issued: 1979
+  title: "Prospect theory: An analysis of decision under risk"
+  container-title: Econometrica
+  volume: 47
+  issue: 2
+  page: 263-291
+  DOI: 10.2307/1914185
+  verified: true
+
+- id: kahneman1979a
+  type: article-journal
+  author:
+    - {family: Kahneman, given: Daniel}
+    - {family: Tversky, given: Amos}
+  issued: 1979
+  title: "Intuitive prediction: Biases and corrective procedures"
+  container-title: TIMS Studies in Management Science
+  volume: 12
+  page: 313-327
+  verified: false
+
+- id: kahneman1990
+  type: article-journal
+  author:
+    - {family: Kahneman, given: Daniel}
+    - {family: Knetsch, given: Jack L.}
+    - {family: Thaler, given: Richard H.}
+  issued: 1990
+  title: Experimental tests of the endowment effect and the Coase theorem
+  container-title: Journal of Political Economy
+  volume: 98
+  issue: 6
+  page: 1325-1348
+  DOI: 10.1086/261737
+  verified: true
+
+- id: thaler1980
+  type: article-journal
+  author:
+    - {family: Thaler, given: Richard H.}
+  issued: 1980
+  title: Toward a positive theory of consumer choice
+  container-title: Journal of Economic Behavior & Organization
+  volume: 1
+  issue: 1
+  page: 39-60
+  DOI: 10.1016/0167-2681(80)90051-7
+  verified: true
+
+- id: kahneman2011
+  type: book
+  author:
+    - {family: Kahneman, given: Daniel}
+  issued: 2011
+  title: Thinking, fast and slow
+  publisher: Farrar, Straus and Giroux
+  verified: true
+
+- id: kahneman1982
+  type: chapter
+  author:
+    - {family: Kahneman, given: Daniel}
+    - {family: Tversky, given: Amos}
+  editor:
+    - {family: Kahneman, given: Daniel}
+    - {family: Slovic, given: Paul}
+    - {family: Tversky, given: Amos}
+  issued: 1982
+  title: The simulation heuristic
+  container-title: "Judgment under uncertainty: Heuristics and biases"
+  page: 201-208
+  publisher: Cambridge University Press
+  verified: false
+
+- id: steele2020
+  type: entry-encyclopedia
+  author:
+    - {family: Steele, given: Katie}
+    - {family: Stefánsson, given: H. Orri}
+  editor:
+    - {family: Zalta, given: Edward N.}
+  issued: 2020
+  title: Decision theory
+  container-title: The Stanford encyclopedia of philosophy
+  version: Winter 2020
+  publisher: Metaphysics Research Lab, Stanford University
+  URL: https://plato.stanford.edu/archives/win2020/entries/decision-theory/
+  open_access: true
+  verified: true
+
+- id: apa2020
+  type: book
+  author:
+    - {literal: American Psychological Association}
+  issued: 2020
+  title: Publication manual of the American Psychological Association
+  edition: 7
+  publisher: American Psychological Association
+  DOI: 10.1037/0000165-000
+  verified: true

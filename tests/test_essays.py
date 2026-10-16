@@ -101,7 +101,10 @@ def test_fixture_essay_scans_with_its_contract_fields():
     assert essay["thesis"].startswith("Losses weigh more than equal gains")
     assert essay["citation_style"] == "apa7"
     assert essay["methods"]["ai_roles"] == ["source search", "source summaries", "citation audit"]
-    assert essay["references"] == []
+    # The records as written (the disclosure note counts them, S17), and
+    # the APA 7 list built from them (S16, tests/test_citations.py).
+    assert [r["id"] for r in essay["references"]][:2] == ["kahneman1979", "kahneman1979a"]
+    assert len(essay["reference_list"]) == len(essay["references"]) == 8
     assert isinstance(essay["body_html"], Markup)
 
 
@@ -527,6 +530,58 @@ def test_a_build_without_strict_passes_a_clean_essays_folder(tmp_path, monkeypat
     assert [e["id"] for e in captured["essays"]] == ["E02"]
 
 
+# --- citations: a strict build stops, a local one warns (S16) -------------
+
+_ONE_RECORD = """\
+- id: thaler1980
+  type: article-journal
+  author:
+    - {family: Thaler, given: Richard H.}
+  issued: 1980
+  title: Toward a positive theory of consumer choice
+  container-title: Journal of Economic Behavior & Organization
+  volume: 1
+  page: 39-60
+  verified: true
+"""
+
+
+@pytest.mark.parametrize("body, message", [
+    ("Loss looms larger [@thaler1980; @kahneman1979].\n", "cites 'kahneman1979', which has no record in E02.refs.yaml"),
+    ("A body that cites nothing.\n", "reference 'thaler1980' in E02.refs.yaml is cited nowhere in the essay"),
+])
+def test_a_citation_problem_fails_the_strict_build_and_only_warns_without_it(tmp_path, monkeypatch, body, message):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Cited.md", _essay_note(body=body))
+    _write(folder, "E02.refs.yaml", _ONE_RECORD)
+    _stub_build(monkeypatch, tmp_path, folder)
+    with pytest.raises(pipeline.StrictBuildError):
+        pipeline.build_all(sort_dropzone=False, strict=True)
+    assert any(message in w for w in get_warnings()), get_warnings()
+
+    reset_warnings()
+    pipeline.build_all(sort_dropzone=False, strict=False)    # a local preview still builds
+    assert any(message in w for w in get_warnings())
+
+
+def test_a_fully_cited_essay_passes_the_strict_build(tmp_path, monkeypatch):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Cited.md", _essay_note(body="As @thaler1980 argued [@thaler1980, p. 44].\n"))
+    _write(folder, "E02.refs.yaml", _ONE_RECORD)
+    _stub_build(monkeypatch, tmp_path, folder)
+    pipeline.build_all(sort_dropzone=False, strict=True)
+    assert get_warnings() == []
+
+
+def test_a_reference_record_without_verified_fails_every_build(tmp_path, monkeypatch):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Cited.md", _essay_note(body="[@thaler1980]\n"))
+    _write(folder, "E02.refs.yaml", _ONE_RECORD.replace("  verified: true\n", ""))
+    _stub_build(monkeypatch, tmp_path, folder)
+    with pytest.raises(EssayError, match=r"verified: required"):
+        pipeline.build_all(sort_dropzone=False, strict=False)
+
+
 def test_the_cli_reports_an_essay_error_as_a_failed_build(monkeypatch, capsys):
     def _fail(**kwargs):
         raise EssayError("Essays folder x: 1 problem(s)")
@@ -594,6 +649,17 @@ def test_the_essay_page_shows_byline_dates_disciplines_and_body():
     assert 'href="/garden.html#note-cognitive-psychology"' in html
     assert "<h2>The shape of the asymmetry</h2>" in html
     assert "<title>Why loss looms larger — " in html
+    # S16: the citations link into an APA 7 reference list.
+    assert '<h2 id="essay-references-title">References</h2>' in html
+    assert ('(<a href="#ref-kahneman1979" class="essay-citation">Kahneman &amp; Tversky, 1979b</a>; '
+            '<a href="#ref-thaler1980" class="essay-citation">Thaler, 1980</a>)') in html
+    assert '<a href="#ref-kahneman1990" class="essay-citation">Kahneman et al. (1990)</a>' in html
+    assert "essays@example.com" in html and "essay-missing-citation" not in html.split("</style>")[-1]
+    entries = re.findall(r'<li id="(ref-[^"]+)">', html)
+    assert entries == ["ref-apa2020", "ref-kahneman2011", "ref-kahneman1990", "ref-kahneman1979a",
+                       "ref-kahneman1979", "ref-kahneman1982", "ref-steele2020", "ref-thaler1980"]
+    for target in set(re.findall(r'href="#(ref-[^"]+)"', html)):
+        assert target in entries
     assert '<link rel="canonical" href="https://example.org/essays/why-loss-looms-larger/">' in html
 
 
@@ -645,6 +711,7 @@ def test_the_fixture_build_publishes_the_essay_pages_and_no_card(tmp_path, monke
 
     assert "Why loss looms larger" in index and "Friday, 20 November 2026" in index
     assert 'href="/garden.html#note-active-recall"' in page
+    assert 'class="essay-citation"' in page and '<li id="ref-kahneman1979">' in page
 
     # Never a Garden card, however the essay is typed.
     assert "note-why-loss-looms-larger" not in garden
