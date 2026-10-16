@@ -8,14 +8,14 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 
 ## Reach done (second roadmap, planned 2026-10-10)
 
-Order from here: **S12 next**, then S15, S16, S17, S18 (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
+Order from here: S12, S15 and S16 are done; **S17 next**, then S18 (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
 
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
 - [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)
-- [ ] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (due 2026-11-30) #next
-- [ ] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (added 2026-10-12)
-- [ ] S16 essay citations resolved and references formatted in APA 7
-- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player
+- [x] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (2026-10-14, #51–#52)
+- [x] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (2026-10-14, #53–#54)
+- [x] S16 essay citations resolved and references formatted in APA 7 (2026-10-15, #55)
+- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player #next
 - [ ] S18 the web citation style, essay structured data, the Essays feed and search
 - [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh`
 
@@ -26,7 +26,7 @@ Order from here: **S12 next**, then S15, S16, S17, S18 (Essays), then S13. `tool
 
 ## Harden
 - [x] `npm audit --omit=dev` is 0, and pip-audit finds nothing in `requirements.txt` (2026-10-09)
-- [ ] 8 dev-only npm advisories (Playwright/Tailwind toolchain): cleared by S12, or by Dependabot's pull requests if they land first (due 2026-11-30)
+- [ ] Dev-only npm advisories (Playwright/Tailwind toolchain): S12 cleared them at merge (2026-10-14), but new ones can surface after a session closes one — `npm audit` showed 4 high again by 2026-10-14, via the `@tailwindcss/cli` toolchain (`braces`/`micromatch`/`@parcel/watcher`). Review when the repo resumes, or if Dependabot's pull requests land first (due 2026-11-30)
 
 ## First Done line, met 2026-10-09
 - [x] B04 keep every Garden note in the page and watch its size against a 1 MB threshold (2026-10-09)
