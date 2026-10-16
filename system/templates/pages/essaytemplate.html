@@ -4,16 +4,19 @@
    The essay itself, the first of the five parts docs/ESSAYS.md lays out for
    this page: title in the display serif, the byline, the publish date with
    its weekday (and "Updated" when set), discipline labels, the reading
-   time, then the body at the brand's 68-character measure. The disclosure
-   note, the reference list, the study companion and the YouTube episode are
-   roadmap S16 to S18 and are not rendered yet.
+   time, then the body at the brand's 68-character measure, then the
+   reference list in APA 7 (roadmap S16), which every in-text citation links
+   into. The disclosure note, the study companion and the YouTube episode are
+   roadmap S17 and S18 and are not rendered yet.
 
    `essay.body_html` is the one value here that is not autoescaped: it
    arrives as Markup from engine/essays.py's render_body(), which rendered
    the note text with markdown-it (raw HTML off, so every tag it emits is
    its own), cleaned the result with nh3, and resolved the [[wikilinks]]
-   into Garden links through a markdown-it inline rule. Nothing on this
-   page uses |safe.
+   into Garden links through a markdown-it inline rule. Each reference
+   entry's `html` is Markup the same way, from engine/citations.py's
+   format_entry(), which escapes every field it writes. Nothing on this page
+   uses |safe.
 
    This page sits two folders below the top of dist/, so like 404.html it
    links from the site root (`site_root`); `page_path` feeds base.html's
@@ -79,14 +82,14 @@
     .essay-body li > p { margin-bottom: 0.4em; }
     .essay-body li::marker { color: var(--aurelia-accent); }
 
-    .essay-body a {
+    .essay-body a, .essay-references a {
         color: var(--aurelia-accent);
         text-decoration: underline;
         text-decoration-color: color-mix(in srgb, var(--aurelia-accent) 33%, transparent);
         text-underline-offset: 3px;
         transition: text-decoration-color var(--dur-2) ease;
     }
-    .essay-body a:hover { text-decoration-color: var(--aurelia-accent); }
+    .essay-body a:hover, .essay-references a:hover { text-decoration-color: var(--aurelia-accent); }
     /* A wikilink whose Garden note is not published: plain text, marked so
        the owner can find it (the build also warns). */
     .essay-missing-link { color: var(--aurelia-text-muted); }
@@ -144,8 +147,47 @@
     }
     .essay-body th { background: var(--aurelia-bg-layer-2); font-weight: 700; }
 
+    /* A citation whose record is missing: shown as written, so the owner
+       can find it (the build also warns, and the strict build fails). */
+    .essay-missing-citation { color: var(--aurelia-text-muted); }
+
+    /* The reference list (S16): APA 7's hanging indent, half an inch at
+       body size, and room under the fixed nav for an entry a citation
+       jumps to. */
+    .essay-references {
+        margin-top: 3rem; padding-top: 2rem;
+        border-top: 1px solid var(--aurelia-border-main);
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--aurelia-text-main);
+        /* A DOI or a long URL wraps inside the column at phone width. */
+        overflow-wrap: anywhere;
+    }
+    .essay-references h2 {
+        color: var(--aurelia-text-main);
+        font-family: var(--aurelia-font-reader-heading);
+        font-size: 1.625rem; font-weight: 700; line-height: 1.3;
+        margin-bottom: 1em;
+        text-wrap: balance;
+    }
+    .essay-references .essay-reference-list {
+        list-style: none; margin: 0; padding: 0;
+        font-size: 1rem; line-height: 1.7;
+    }
+    .essay-reference-list li {
+        padding-left: 2.25em;
+        text-indent: -2.25em;
+        margin-bottom: 0.9em;
+        scroll-margin-top: calc(var(--nav-h, 4rem) + 1rem);
+    }
+    .essay-reference-list li:target {
+        background: var(--aurelia-bg-layer-2);
+        outline: 2px solid var(--aurelia-secondary);
+        outline-offset: 4px;
+    }
+    .essay-reference-list i { font-style: italic; }
+
     @media (prefers-reduced-motion: reduce) {
-        .essay-body a { transition: none; }
+        .essay-body a, .essay-references a { transition: none; }
     }
 }
 </style>
@@ -189,6 +231,17 @@
     </header>
 
     <div class="essay-body">{{ essay.body_html }}</div>
+
+    {% if essay.reference_list %}
+    <section class="essay-references" aria-labelledby="essay-references-title">
+        <h2 id="essay-references-title">References</h2>
+        <ul class="essay-reference-list">
+            {% for ref in essay.reference_list %}
+            <li id="{{ ref.anchor }}">{{ ref.html }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 
 </article>
 {% endblock %}

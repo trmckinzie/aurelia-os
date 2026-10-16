@@ -176,6 +176,10 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   each body with markdown-it (raw HTML off) and resolves its `[[wikilinks]]` through the Garden's
   resolver into links to `garden.html#id`. `pipeline._scan_garden()` prunes the folder from the
   Garden walk, so an essay is never a card, and fails on a `type: essay` note anywhere else.
+- `engine/citations.py`: essay citations (roadmap S16). Pandoc's `[@key]`, `[@key, p. 12]`,
+  `[@a; @b]` and narrative `@key` as markdown-it inline rules, and an in-house APA 7 formatter
+  for the essay's `E01.refs.yaml` (citeproc-py failed the rules; `docs/DECISIONS.md` item 44).
+  A citation with no record or a record nothing cites warns, so only the strict build fails.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
   deploy's new files aren't masked by GitHub Pages' ten-minute cache. Walks `dist/` recursively,
   as `csp.py` does, because the essay pages sit below the top of it.
@@ -219,9 +223,10 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
   "Privacy model", then hand to `garden-publication-reviewer`.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
 - Essays: `docs/ESSAYS.md` is the design and its data contract, `docs/DECISIONS.md` item 41
-  records why and item 43 what S15 built (the content type, the privacy checks, the index and
-  essay pages). Citations, the disclosure note, the companion, the feed and search are S16 to
-  S18, not built yet.
+  records why, item 43 what S15 built (the content type, the privacy checks, the index and
+  essay pages) and item 44 what S16 built (citations and the APA 7 reference list). The
+  disclosure note, the companion, the web citation style, the feed and search are S17 and S18,
+  not built yet.
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 
@@ -262,6 +267,9 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
   under a bare `--text-*`, `--ease-*`, `--font-*`, `--color-*`, `--spacing`, `--radius-*` or
   `--shadow-*` name: v4's utilities read those at runtime, so the site's value replaces theirs.
   `tests/test_tailwind_build.py` pins both.
+- **markdown-it owns `env["references"]`** (its link reference definitions). An essay's own
+  data rides in the render env under another name (`essay_references`), or every link rule
+  breaks.
 - **A parent template's top-level `{% set %}` is invisible in a child's blocks.** Child templates
   `{% set %}` `site` themselves.
 - **Don't reintroduce `review_seed`.** `dueCount()` counts logged entries only, so the Lobby

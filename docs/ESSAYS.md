@@ -9,7 +9,8 @@ S15 to S18 (`docs/roadmap.yaml`), after S12 and before S13. The decisions behind
 S15 is built (2026-10-14, `docs/DECISIONS.md` item 43): the content type in `engine/essays.py`,
 the draft gate and privacy checks, the index and essay pages (`system/templates/pages/essaystemplate.html`
 and `essaytemplate.html`), the Garden links, and the recursive security-policy and cache-busting
-walks. S16 to S18 are not. Paths that do not exist yet are written plainly rather than as code, so
+walks. S16 is built (2026-10-15, item 44): citations and the APA 7 reference list, in
+`engine/citations.py`. S17 and S18 are not. Paths that do not exist yet are written plainly rather than as code, so
 `tests/test_docs_paths.py` does not hold them to the file system until a session creates them;
 vault/30_ESSAYS/ is one of them, since no essay is in the vault until S17 is done. The test essay
 lives in `tests/fixtures/essays/`, and the build reads it through `AURELIA_ESSAYS_DIR`.
@@ -151,7 +152,16 @@ why a later switch of formatter does not touch the data.
 
 Allowed fields: `id`, `type`, `author`, `editor`, `issued`, `title`, `container-title`,
 `edition`, `volume`, `issue`, `page`, `publisher`, `DOI`, `URL`, `version` (encyclopedia
-editions), `genre` (preprint server), `open_access`, `verified`. Everything else fails.
+editions), `genre` (a preprint's bracketed description, "Preprint" when absent), `open_access`,
+`verified`. Everything else fails. A preprint's server goes in `publisher`, as Zotero exports it.
+
+The shape of each record is part of the contract and also fails every build (S16): `id` is a
+citation key (letters, digits and `_`, with `:`, `.`, `/` and `-` allowed only between them, so
+it is safe as an HTML id); `verified` is required on every record, `true` or `false`, so the
+disclosure count never reads a missing answer as "no"; `open_access` is `true` or `false`; and
+`author` and `editor` are lists of names, each `{family, given}` for a person or `{literal}` for
+a group, with nothing else inside a name. `issued`, when present, is a four-digit year (a record
+without one is left out of the list with a warning, like any record missing what its type needs).
 
 The disclosure note counts the records: "N sources; M of N verified against the original by the
 author", where M counts `verified: true`. The count is of cited sources, which the build
@@ -174,7 +184,9 @@ citation with its key. Each rendered citation links to its entry in the referenc
 holds; an email address is left alone.
 
 Strict checks, both directions: a citation with no matching record fails, and a record nothing
-cites fails. Duplicate keys fail.
+cites fails. Duplicate keys fail, as does a record of an unsupported type or one missing what its
+type needs, which is left out of the list. These leak nothing, so they go through `warn()` and
+fail the strict build, as a dangling wikilink does; a local preview still builds.
 
 **APA 7 formatting, first version.** The engine formats from the records. Covered, each with
 golden-output tests: journal article; authored book (with edition); chapter in an edited book;
@@ -187,13 +199,38 @@ never changes a title's case, since only a person knows which words are proper n
 
 Not in the first version: conference papers, theses, reports and grey literature, translated
 or republished works, audiovisual and legal sources, datasets, secondary citations ("as cited
-in") and footnotes. A record of an unsupported `type` fails the build rather than rendering
-wrong.
+in") and footnotes. A record of an unsupported `type` is left out of the list with a warning,
+so the strict build fails rather than rendering it wrong.
 
-S16 first checks whether a maintained CSL processor renders the APA 7 style correctly for the
-five types (vetting it under the dev root's rule for any new dependency). If none does, the
-formatter is a small in-house module. Either way the records are CSL, so the choice can be
-reversed later.
+S16 first checked whether a maintained CSL processor renders the APA 7 style correctly for the
+five types. citeproc-py 0.11.1 with the official `apa.csl` did not (no year suffixes, an
+unsorted list, "(eds.)", a crash on page locators), so the formatter is the small in-house
+module `engine/citations.py` (`docs/DECISIONS.md` item 44). The records are CSL either way, so
+the choice can be reversed later.
+
+**How the first version reads the syntax** (S16):
+
+- Within one parenthetical citation, works are put in reference-list order, as APA 7 asks, and
+  the same authors share one name: `[@kahneman1979; @kahneman1979a]` renders "(Kahneman &
+  Tversky, 1979a, 1979b)". A prefix (`[see @key]`) keeps the order as written.
+- Pandoc's other forms work too: a locator without the comma (`[@key p. 12]`), a suppressed
+  author (`[-@key]` renders "(1979)"), and a narrative locator (`@key [p. 12]` renders
+  "Kahneman and Tversky (1979, p. 12)"). A page range written with "p." becomes "pp.", and every
+  range takes an en dash.
+- `\@` writes a literal at sign. A word-initial `@name` that is no key in the reference file
+  renders as written but warns, so a misspelled narrative citation fails the strict build; an
+  email address or a URL path (`example.com/@name`) is never read as one. A citation inside a
+  code span or link text stays literal, and `![@key]` is an image.
+- Any bracket that opens with `@` is read as a citation, so `[@media screen]` warns as one with
+  no record; write `[\@media screen]`.
+- A field a record's type does not show (an `edition` on a journal article, a `page` on a
+  preprint) warns rather than being dropped silently.
+- Every work is linked to its entry; a citation with no record renders as written, muted, and
+  warns.
+- Two different works that would cite the same way ("Lee et al., 2023" twice) warn instead of
+  rendering ambiguously: APA 7 adds author names to tell them apart, which the first version
+  does not. Neither does it abbreviate a group author on second use.
+- An essay whose `citation_style` is `web` renders APA 7 until S18 builds the web style.
 
 **Web style** (`citation_style: web`), from the same records: each citation renders as a link on
 the short author-year text, straight to the source's DOI or URL, and the essay ends with a short
@@ -310,7 +347,7 @@ S15 is Opus because it changes the publish surface and the shape of the build's 
 anything that changes what the public site renders is reviewed by `garden-publication-reviewer`
 (`.claude/agents/`). The rest follow a contract this document fixes, which is Sonnet's work.
 
-Until S16, a citation in an essay renders as its raw key; S15's test essay has none. No real
+Since S16 the test essay cites eight real sources in every form. No real
 essay goes into the vault until S17 is done, so nothing ships half-rendered. The Essays nav item
 and index appear only once one essay is published, so S15 to S18 change nothing a visitor sees.
 Until then each session's acceptance is checked on phone-width (375-pixel) screenshots of a

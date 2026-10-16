@@ -29,7 +29,8 @@ the link graph itself made visible and navigable.
   `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename.
 - Essays (`/essays/`, one page per essay): short human-written pieces from a `vault/30_ESSAYS/`
   folder, rendered server-side from Markdown with their `[[wikilinks]]` resolved into Garden
-  links, listed newest first with the publish date, disciplines, thesis and reading time. The
+  links and their Pandoc citations formatted in APA 7, each linked to a reference list built
+  from structured records, listed newest first with the publish date, disciplines, thesis and reading time. The
   index and its nav link appear only once an essay is published, and the folder's contents are
   held to a contract and a set of privacy checks that fail the build outright (a draft, an
   unknown field, a notebook or Drive link, any non-text file). See `docs/ESSAYS.md`.

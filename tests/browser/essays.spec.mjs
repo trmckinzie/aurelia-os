@@ -66,6 +66,70 @@ test.describe("with the fixture essay built", () => {
     await expectNoHorizontalScroll(page);
   });
 
+  // Roadmap S16: APA 7 in-text citations that jump to their entries, and a
+  // reference list with a hanging indent, APA's italics and DOI links.
+  test("each citation reads as APA 7 and jumps to its reference entry", async ({ page }) => {
+    await page.goto(ESSAY_PATH);
+    const citations = page.locator(".essay-body a.essay-citation");
+    expect(await citations.count()).toBeGreaterThan(8);
+    await expect(page.locator(".essay-missing-citation")).toHaveCount(0);
+    await expect(citations.first()).toHaveText("Kahneman et al., 1990");
+    await expect(page.locator(".essay-body a.essay-citation", { hasText: "Kahneman and Tversky (1982)" })).toHaveCount(1);
+    await expect(page.locator(".essay-body a.essay-citation", { hasText: "Kahneman & Tversky, 1979b, p. 279" })).toHaveCount(1);
+    await expect(page.locator(".essay-body")).toContainText("(Kahneman & Tversky, 1979b; Thaler, 1980)");
+    await expect(page.locator(".essay-body")).toContainText("essays@example.com");
+
+    // Every citation targets an entry that exists.
+    const targets = await citations.evaluateAll((links) => links.map((a) => a.getAttribute("href")));
+    for (const href of new Set(targets)) {
+      await expect(page.locator(`.essay-reference-list li${href}`), href).toHaveCount(1);
+    }
+
+    // Following one lands on its entry, visible below the fixed nav.
+    const thaler = page.locator('.essay-body a.essay-citation[href="#ref-thaler1980"]').first();
+    await thaler.click();
+    await expect(page).toHaveURL(/#ref-thaler1980$/);
+    const entry = page.locator("#ref-thaler1980");
+    await expect(entry).toBeInViewport();
+    await expect(entry).toContainText("Thaler, R. H. (1980). Toward a positive theory of consumer choice.");
+    const navBottom = await page.locator("nav.nav-shell").evaluate((n) => n.getBoundingClientRect().bottom);
+    const entryTop = await entry.evaluate((li) => li.getBoundingClientRect().top);
+    expect(entryTop, "the entry must not sit under the fixed nav").toBeGreaterThanOrEqual(navBottom);
+    await expectNoHorizontalScroll(page);
+  });
+
+  test("the reference list has hanging indents, APA 7 italics and DOIs as https://doi.org/ links", async ({ page }) => {
+    await page.goto(ESSAY_PATH);
+    const list = page.locator(".essay-references");
+    await expect(list.getByRole("heading", { level: 2 })).toHaveText("References");
+    const entries = list.locator(".essay-reference-list li");
+    await expect(entries).toHaveCount(8);
+    await expect(entries.first()).toHaveText(/^American Psychological Association\. \(2020\)\./);
+
+    // A hanging indent: the first line starts left of the lines after it.
+    const indent = await entries.first().evaluate((li) => {
+      const style = getComputedStyle(li);
+      return { text: parseFloat(style.textIndent), pad: parseFloat(style.paddingLeft) };
+    });
+    expect(indent.text).toBeLessThan(0);
+    expect(indent.pad).toBeCloseTo(-indent.text, 1);
+
+    // Italic journal title and volume; the issue and the article title stay roman.
+    const journal = page.locator("#ref-kahneman1979");
+    await expect(journal.locator("i")).toHaveText(["Econometrica", "47"]);
+    expect(await journal.locator("i").first().evaluate((i) => getComputedStyle(i).fontStyle)).toBe("italic");
+    await expect(page.locator("#ref-kahneman2011 i")).toHaveText("Thinking, fast and slow");
+    await expect(page.locator("#ref-kahneman1982 i")).toHaveText("Judgment under uncertainty: Heuristics and biases");
+    await expect(page.locator("#ref-steele2020 i")).toHaveText("The Stanford encyclopedia of philosophy");
+
+    // DOIs as links; en-dash page ranges.
+    const doi = journal.locator("a");
+    await expect(doi).toHaveAttribute("href", "https://doi.org/10.2307/1914185");
+    await expect(doi).toHaveText("https://doi.org/10.2307/1914185");
+    await expect(journal).toContainText("263–291");
+    await expectNoHorizontalScroll(page);
+  });
+
   test("a Garden link in the essay opens the right Garden note", async ({ page }) => {
     await page.goto(ESSAY_PATH);
     const link = page.locator('.essay-body a[data-garden-note="note-active-recall"]');

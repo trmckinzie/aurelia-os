@@ -781,7 +781,10 @@ sessions:
       show Travis the diff before committing.
   - id: S16
     title: Resolve essay citations and format references in APA 7
-    status: todo
+    status: done
+    started: 2026-10-15
+    completed: 2026-10-15
+    commits: []
     area: Content
     effort: L
     model: sonnet
@@ -802,22 +805,32 @@ sessions:
     depends_on: [S15]
     tasks:
       - text: Check whether a maintained CSL processor renders APA 7 correctly for the five first-version types (vetted like any dependency); otherwise write a small in-house formatter. Record the choice in DECISIONS
-        done: false
+        done: true
       - text: Load and validate each essay's reference file against the allowed CSL fields, with verified true or false per record
-        done: false
+        done: true
       - text: Parse Pandoc citations (parenthetical, page locators, several sources, narrative) and link each to its reference entry; leave email addresses alone
-        done: false
+        done: true
       - text: Warn on a citation with no record, a record nothing cites, a duplicate key, and an unsupported source type
-        done: false
+        done: true
       - text: Format APA 7 for journal article, book, chapter in an edited book, encyclopedia entry and preprint, with the author-count, group-author, 1979a/1979b, DOI-over-URL, en-dash and ordering rules in docs/ESSAYS.md, and a hanging indent
-        done: false
+        done: true
       - text: Golden-output tests for every type and rule above, and for each citation form
-        done: false
+        done: true
     done_when:
       - In phone-width screenshots of the fixture build, the essay's citations read as APA 7 in-text citations and each one jumps to its reference entry
       - The reference list has hanging indents, italics where APA 7 puts them, and DOIs as https://doi.org/ links
       - A citation with no record, or a record nothing cites, fails the strict build, each proven by a test
       - bash verify.sh passes and the live check is green
+    notes: >-
+      Built 2026-10-15 (docs/DECISIONS.md item 44). citeproc-py 0.11.1 with
+      the official apa.csl was tried in a scratch environment and failed four
+      of the rules (no 1979a/1979b, unsorted list, "(eds.)", a crash on page
+      locators), so engine/citations.py formats APA 7 in-house and no
+      dependency was added. Golden tests are tests/test_citations.py; the
+      strict-build tests are in tests/test_essays.py; the jump to each entry,
+      the hanging indent, the italics and the DOI links are held by
+      tests/browser/essays.spec.mjs at 375 pixels. The squash commit and the
+      live check come with the merge.
   - id: S17
     title: Add the essay disclosure note, the study companion and its media
     status: todo
