@@ -132,7 +132,7 @@ def _stub_build(monkeypatch, warning=None):
     # never writes. A stale dist/ from an earlier local build hid that until
     # CI's fresh checkout ran these.
     monkeypatch.setattr(pipeline, "report_page_sizes", lambda: {})
-    monkeypatch.setattr(pipeline, "apply_csp", lambda dist: {})
+    monkeypatch.setattr(pipeline, "apply_csp", lambda dist, **kwargs: {})
 
     def _scan():
         if warning:

@@ -13,6 +13,12 @@ keys are rejected so a misspelt key fails here instead of silently rendering
 nothing. Like profile.py, this is hand-written rules rather than JSON Schema,
 to keep the dependency list where it is.
 
+`media_origins` (roadmap S17) is the one list of origins an essay's study
+companion may load audio or video from (docs/ESSAYS.md, "Media"). It feeds
+the essay pages' Content-Security-Policy media-src, and engine/essays.py
+fails every build on a companion URL whose origin is not on it, so moving
+the media to another host is an edit here and nowhere else.
+
 What this does not check: the Toolkit copy's voice rule and length budget,
 which tests/test_lobby.py enforces on the real file, and site.domain's format,
 which pipeline._write_cname() validates when it writes dist/CNAME.
@@ -98,7 +104,9 @@ _TOOL_FIELDS = {
 _TOP_LEVEL = {
     "system_name": True, "system_version": False, "status_message": True,
     "site": False, "author": True, "links": False, "tech_stack": True,
+    "media_origins": False,
 }
+MEDIA_ORIGINS_MAX = 10
 
 
 def _check_fields(obj, path, fields):
@@ -146,6 +154,38 @@ def _validate_tech_stack(value, path):
             _fail(_join(item_path, "draft"), "must be a boolean")
 
 
+def _validate_media_origins(value, path):
+    """An https origin each, written as one: scheme and host, nothing after
+    it, no credentials, no port, lowercase, and no repeats. A path or a
+    trailing slash fails rather than being trimmed, since the policy's
+    media-src and the essays' URL check both read the value as written."""
+    if not isinstance(value, list):
+        _fail(path, "must be an array")
+    if len(value) > MEDIA_ORIGINS_MAX:
+        _fail(path, f"must have at most {MEDIA_ORIGINS_MAX} item(s)")
+    for i, origin in enumerate(value):
+        item_path = f"{path}[{i}]"
+        _check_str(origin, item_path, 200)
+        parts = urlsplit(origin)
+        try:
+            port = parts.port
+        except ValueError:   # "host:80x" -- named below like any other bad origin
+            port = "invalid"
+        if (parts.scheme != "https" or not parts.hostname or parts.username is not None
+                or parts.password is not None or port is not None
+                or f"https://{parts.hostname}" != origin):
+            _fail(item_path, "must be an https origin with no path, port or trailing slash, "
+                             "in lowercase, like https://media.example.com")
+        if origin in value[:i]:
+            _fail(item_path, f"lists {origin} twice")
+
+
+def media_origins(data):
+    """The allowed media origins from a validated config, as a tuple; empty
+    when the file names none, which means no essay may carry a companion."""
+    return tuple(data.get("media_origins") or ()) if isinstance(data, dict) else ()
+
+
 def validate_user_config(data):
     """Returns `data` unchanged if it satisfies the schema, else raises
     UserConfigError naming the first problem found."""
@@ -161,6 +201,8 @@ def validate_user_config(data):
     if "links" in data:
         _validate_links(data["links"], "links")
     _validate_tech_stack(data["tech_stack"], "tech_stack")
+    if "media_origins" in data:
+        _validate_media_origins(data["media_origins"], "media_origins")
     return data
 
 

@@ -343,7 +343,10 @@ once at least one is published; without the folder the site is the three
 pages above. Each essay needs the frontmatter fields the engine's
 `engine/essays.py` lists, and the folder may hold nothing but `.md` and
 `.yaml` files: a draft, an unknown field or a Google Drive, Docs, Gemini,
-NotebookLM or reMarkable link stops the build, by design.
+NotebookLM or reMarkable link stops the build, by design. An essay's study
+companion (audio, video or exported files) must sit on an origin listed in
+`user_config.json`'s `media_origins`, an array of https origins such as
+`"https://media.example.com"`; with none listed, a companion stops the build.
 """
     with open(os.path.join(TARGET_DIR, "README.md"), "w", encoding="utf-8", newline="\n") as f:
         f.write(readme_text)

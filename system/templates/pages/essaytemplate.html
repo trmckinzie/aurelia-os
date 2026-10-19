@@ -6,8 +6,15 @@
    its weekday (and "Updated" when set), discipline labels, the reading
    time, then the body at the brand's 68-character measure, then the
    reference list in APA 7 (roadmap S16), which every in-text citation links
-   into. The disclosure note, the study companion and the YouTube episode are
-   roadmap S17 and S18 and are not rendered yet.
+   into. Between the two, "How this essay was made" (S17), on the same paper
+   surface: its sentences come from engine/essays.py's disclosure(), never
+   from the note text, and its counts from the reference records. After the
+   list, the study companion (S17): the one zone with AI output on the page,
+   on an inverted surface built from theme tokens, under its label, holding
+   only players and links made from the companion entries. Last, the YouTube
+   episode, as a button that loads nothing from Google until it is pressed;
+   then it swaps in a youtube-nocookie.com player, which the page's policy
+   allows as its one frame-src (engine/csp.py).
 
    `essay.body_html` is the one value here that is not autoescaped: it
    arrives as Markup from engine/essays.py's render_body(), which rendered
@@ -22,7 +29,8 @@
    links from the site root (`site_root`); `page_path` feeds base.html's
    canonical link. Legible with zero JavaScript: no [data-reveal], and the
    Garden links are plain anchors to garden.html#<note id>, which the Garden
-   opens from the hash on load.
+   opens from the hash on load. Without JavaScript the episode is still a
+   plain link to YouTube.
 ============================================================================ #}
 
 {% set active_page = "essays" %}
@@ -186,8 +194,87 @@
     }
     .essay-reference-list i { font-style: italic; }
 
+    /* How this essay was made (S17): the same paper surface as the essay,
+       under a small label. */
+    .essay-disclosure {
+        margin-top: 3rem; padding-top: 2rem;
+        border-top: 1px solid var(--aurelia-border-main);
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--aurelia-text-main);
+    }
+    .essay-disclosure h2 {
+        font-size: 0.8125rem; font-weight: var(--aurelia-label-weight, 700);
+        text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--aurelia-text-muted);
+        margin-bottom: 0.75rem;
+    }
+    .essay-disclosure p { font-size: 1rem; line-height: 1.7; }
+
+    /* The study companion (S17): the one place AI output appears, so it is
+       a different zone at a glance on a phone. The theme's ink and paper
+       swap places (in the dark theme that makes it the one light block on
+       the page), under a heavy rule in the theme's signature color. Every
+       text color inside is the zone's own paper, so its contrast is the
+       page's body contrast, inverted. */
+    .essay-companion {
+        margin-top: 3.5rem;
+        background: var(--aurelia-text-main);
+        color: var(--aurelia-bg-main);
+        border-top: 6px solid var(--aurelia-secondary);
+        padding: 1.75rem 1.25rem 2rem;
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        overflow-wrap: anywhere;
+    }
+    @media (min-width: 640px) { .essay-companion { padding: 2rem 2rem 2.25rem; } }
+    .essay-companion h2 {
+        font-size: 0.875rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        margin-bottom: 0.5rem;
+    }
+    .essay-companion-note { font-size: 0.9375rem; line-height: 1.6; margin-bottom: 1.5rem; }
+    .essay-companion-list { list-style: none; margin: 0; padding: 0; }
+    .essay-companion-list > li + li { margin-top: 1.25rem; }
+    .essay-companion-item-label { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .essay-companion audio, .essay-companion video { display: block; width: 100%; max-width: 100%; }
+    .essay-companion a {
+        color: inherit; font-weight: 700;
+        text-decoration: underline; text-underline-offset: 3px;
+    }
+    .essay-companion a:focus-visible, .essay-companion audio:focus-visible, .essay-companion video:focus-visible {
+        outline: 2px solid var(--aurelia-bg-main); outline-offset: 3px;
+    }
+
+    /* Listen (S17): the episode, loaded only when Play episode is pressed. */
+    .essay-listen {
+        margin-top: 3rem;
+        font-family: var(--aurelia-font-body), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: var(--aurelia-text-main);
+    }
+    .essay-listen h2 {
+        font-family: var(--aurelia-font-reader-heading);
+        font-size: 1.625rem; font-weight: 700; line-height: 1.3;
+        margin-bottom: 1rem;
+    }
+    .essay-episode-play {
+        display: inline-flex; align-items: center; gap: 0.6em;
+        min-height: 44px; padding: 0.6rem 1.25rem;
+        border: 1px solid var(--aurelia-text-main);
+        background: transparent; color: var(--aurelia-text-main);
+        font: inherit; font-size: 1rem; font-weight: 700;
+        border-radius: var(--aurelia-radius);
+        cursor: var(--aurelia-cursor-interactive, pointer);
+        transition: background-color var(--dur-2) ease, color var(--dur-2) ease;
+    }
+    .essay-episode-play:hover { background: var(--aurelia-text-main); color: var(--aurelia-bg-main); }
+    .essay-episode-note { font-size: 0.9375rem; line-height: 1.6; color: var(--aurelia-text-muted); margin-top: 0.75rem; }
+    .essay-episode-note a {
+        color: var(--aurelia-accent);
+        text-decoration: underline; text-underline-offset: 3px;
+    }
+    .essay-episode-frame { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; }
+
     @media (prefers-reduced-motion: reduce) {
-        .essay-body a, .essay-references a { transition: none; }
+        .essay-body a, .essay-references a, .essay-episode-play { transition: none; }
     }
 }
 </style>
@@ -232,6 +319,12 @@
 
     <div class="essay-body">{{ essay.body_html }}</div>
 
+    <section class="essay-disclosure" aria-labelledby="essay-disclosure-title"
+             data-sources="{{ essay.disclosure.sources }}" data-verified="{{ essay.disclosure.verified }}">
+        <h2 id="essay-disclosure-title">How this essay was made</h2>
+        <p>{{ essay.disclosure.sentences | join(" ") }}</p>
+    </section>
+
     {% if essay.reference_list %}
     <section class="essay-references" aria-labelledby="essay-references-title">
         <h2 id="essay-references-title">References</h2>
@@ -243,5 +336,69 @@
     </section>
     {% endif %}
 
+    {% if essay.companion %}
+    <section class="essay-companion" aria-labelledby="essay-companion-title" data-ai-generated="true">
+        <h2 id="essay-companion-title">AI-generated study companion</h2>
+        <p class="essay-companion-note">Made with Gemini Notebook from this essay and the open-access sources listed.</p>
+        <ul class="essay-companion-list">
+            {% for item in essay.companion %}
+            <li data-kind="{{ item.kind }}">
+                {% if item.player %}
+                <p class="essay-companion-item-label" id="essay-companion-{{ loop.index }}">{{ item.label }}</p>
+                {% if item.kind == "audio" %}
+                <audio controls preload="none" src="{{ item.url }}" aria-labelledby="essay-companion-{{ loop.index }}">
+                    <a href="{{ item.url }}" rel="noopener noreferrer">Download {{ item.label }}</a>
+                </audio>
+                {% else %}
+                <video controls preload="none" playsinline src="{{ item.url }}" aria-labelledby="essay-companion-{{ loop.index }}">
+                    <a href="{{ item.url }}" rel="noopener noreferrer">Download {{ item.label }}</a>
+                </video>
+                {% endif %}
+                {% else %}
+                <a href="{{ item.url }}" rel="noopener noreferrer">{{ item.label }}</a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {% if essay.youtube_id %}
+    <section class="essay-listen" aria-labelledby="essay-listen-title">
+        <h2 id="essay-listen-title">Listen</h2>
+        <div class="essay-episode">
+            <button type="button" class="essay-episode-play" data-action="playEpisode"
+                    data-video-id="{{ essay.youtube_id }}" data-title="Episode: {{ essay.title }}"
+                    aria-describedby="essay-episode-note">
+                <span aria-hidden="true">&#9654;</span> Play episode
+            </button>
+            <p class="essay-episode-note" id="essay-episode-note">Nothing loads from YouTube until you press Play episode. Or <a href="{{ essay.youtube }}" rel="noopener noreferrer">watch it on YouTube</a>.</p>
+        </div>
+    </section>
+    {% endif %}
+
 </article>
+{% endblock %}
+
+{% block scripts %}
+{% if essay.youtube_id %}
+<script>
+// The episode (roadmap S17): nothing from Google loads until a reader presses
+// Play episode. Then the button and its note give way to a
+// youtube-nocookie.com player, the one frame the page's policy allows.
+registerActions({
+    playEpisode: function (button) {
+        var frame = document.createElement('iframe');
+        frame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(button.dataset.videoId) + '?autoplay=1';
+        frame.title = button.dataset.title;
+        frame.className = 'essay-episode-frame';
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        frame.referrerPolicy = 'strict-origin-when-cross-origin';
+        button.closest('.essay-episode').replaceChildren(frame);
+        frame.focus();
+    }
+});
+</script>
+{% endif %}
 {% endblock %}

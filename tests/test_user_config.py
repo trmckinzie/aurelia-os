@@ -103,3 +103,39 @@ def test_real_config_is_unchanged_by_validation():
     with open(os.path.join(ROOT_DIR, "user_config.json"), encoding="utf-8") as f:
         raw = json.load(f)
     assert load_user_config() == raw
+
+
+# --- media_origins (roadmap S17) --------------------------------------------
+
+def test_media_origins_are_optional_and_read_as_a_tuple():
+    from engine.user_config import media_origins
+    assert media_origins(validate_user_config(_minimal())) == ()
+    config = _minimal()
+    config["media_origins"] = ["https://media.example.com", "https://cdn.example.org"]
+    assert media_origins(validate_user_config(config)) == ("https://media.example.com", "https://cdn.example.org")
+
+
+def test_the_real_config_names_the_media_host():
+    from engine.user_config import media_origins
+    assert media_origins(load_user_config()) == ("https://media.travisrmckinzie.com",)
+
+
+@pytest.mark.parametrize("origins, message", [
+    ("https://media.example.com", "media_origins: must be an array"),
+    (["http://media.example.com"], r"media_origins\[0\]: must be an https origin"),
+    (["https://media.example.com/"], r"media_origins\[0\]: must be an https origin"),
+    (["https://media.example.com/audio"], r"media_origins\[0\]: must be an https origin"),
+    (["https://media.example.com:8443"], r"media_origins\[0\]: must be an https origin"),
+    (["https://media.example.com:80x"], r"media_origins\[0\]: must be an https origin"),
+    (["https://user@media.example.com"], r"media_origins\[0\]: must be an https origin"),
+    (["https://Media.Example.com"], r"media_origins\[0\]: must be an https origin"),
+    (["*"], r"media_origins\[0\]: must be an https origin"),
+    ([""], r"media_origins\[0\]: must not be empty"),
+    (["https://a.example.com", "https://a.example.com"], r"media_origins\[1\]: lists https://a.example.com twice"),
+    ([f"https://m{i}.example.com" for i in range(11)], "media_origins: must have at most 10"),
+])
+def test_media_origins_must_each_be_a_bare_https_origin(origins, message):
+    config = _minimal()
+    config["media_origins"] = origins
+    with pytest.raises(UserConfigError, match=message):
+        validate_user_config(config)

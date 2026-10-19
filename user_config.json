@@ -19,6 +19,9 @@
     "links": {
         "github": "https://github.com/trmckinzie"
     },
+    "media_origins": [
+        "https://media.travisrmckinzie.com"
+    ],
     "tech_stack": [
         {
             "name": "Mac mini M6",

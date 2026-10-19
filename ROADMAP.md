@@ -15,7 +15,7 @@ Order from here: S12, S15 and S16 are done; **S17 next**, then S18 (Essays), the
 - [x] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (2026-10-14, #51–#52)
 - [x] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (2026-10-14, #53–#54)
 - [x] S16 essay citations resolved and references formatted in APA 7 (2026-10-15, #55)
-- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player #next
+- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player (built 2026-10-18; waits on the media bucket and its live audio check) #next
 - [ ] S18 the web citation style, essay structured data, the Essays feed and search
 - [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh`
 

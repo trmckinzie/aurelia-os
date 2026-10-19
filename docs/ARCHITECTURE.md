@@ -209,7 +209,13 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   1979a/1979b, DOI over URL, en-dash ranges, APA order) in-house, after citeproc-py failed the
   same rules (`docs/DECISIONS.md` item 44). A reference record's shape (names, key, `verified`)
   raises with the privacy checks; a citation with no record, a record nothing cites, a duplicate
-  key or an unsupported type only warns, so the strict build fails on it. Essays sort newest first and render only once at least
+  key or an unsupported type only warns, so the strict build fails on it. Roadmap S17 adds the
+  two parts that say who made what: `disclosure()` builds "How this essay was made" from the
+  `methods` block and the reference records, never from typed prose, and `companion_entries()`
+  turns the `companion` list into the players and links of the study companion, each URL on
+  an origin in `user_config.json`'s `media_origins` or the build fails; `page_policy_sources()`
+  tells `csp.py` which essay pages need the media host or the YouTube player
+  (`docs/DECISIONS.md` item 45). Essays sort newest first and render only once at least
   one is published; until then `_render_pages()` writes no `essays/` folder and `base.html`
   shows no Essays link.
 - **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
@@ -276,7 +282,10 @@ Seven template files exist. Two are the Essays pages (roadmap S15): `pages/essay
 the index, and `pages/essaytemplate.html`, one essay, both at a 68-character reading measure with
 their prose rules in an inline `<style>` wrapped in `@layer utilities`, and both rendered only
 once an essay is published. The essay page ends with the APA 7 reference list (S16), a hanging
-indent on each entry and room under the fixed nav for the entry a citation jumps to. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
+indent on each entry and room under the fixed nav for the entry a citation jumps to. Between the
+body and the list sits "How this essay was made" (S17); after the list, the AI-generated study
+companion on an inverted surface (the theme's ink and paper swapped), and the YouTube episode as
+a "Play episode" button that swaps in the player only when pressed. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
 the self-hosted fonts, `marked.js` and Motion from `assets/fonts/` and `assets/vendor/`, loads
 `assets/js/utils.js` for the shared `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
 (Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live
@@ -381,7 +390,12 @@ Every page carries a Content-Security-Policy (backlog B02, DECISIONS items 35 an
 Pages sends no headers, so it is a `<meta http-equiv>` tag, the first element of `<head>`,
 rendered with a token that `engine/csp.py` fills after the asset stamp: `'self'` plus a sha256
 hash of each of that page's own inline `<script>` and `<style>` blocks, never `'unsafe-inline'`.
-That is what lets the Garden keep its one large inline script. Nothing else inline is allowed:
+That is what lets the Garden keep its one large inline script.
+Two directives may widen on one page only: an essay page with a study companion player adds
+`user_config.json`'s `media_origins` to `media-src`, and one with a YouTube episode sets
+`frame-src` to `https://www.youtube-nocookie.com` (roadmap S17, `docs/DECISIONS.md` item 45);
+`build_policy()` refuses any other widening. Every other page keeps `media-src 'self'` and
+`frame-src 'none'`. Nothing else inline is allowed:
 no page carries an inline event handler or style attribute (controls name a `data-action` that
 `assets/js/utils.js` dispatches; styles live in `main.css` or are set through the CSSOM), and
 `tests/test_no_inline_handlers.py`, the build's own warning and the browser suite, which reads
@@ -449,8 +463,10 @@ Source Ledger, AI summaries, notebook links, source PDFs. So `engine/essays.py` 
 strict or not, on a note in `vault/30_ESSAYS/` without `publish: true`, on any field outside the
 allowlist (CSL's `abstract`, `annote` and `note` included), on a Google Drive, Docs or Sheets,
 Gemini, NotebookLM or reMarkable host anywhere in an essay or its reference file, on any file in
-the folder other than `.md` and `.yaml`, and on a `type: essay` note anywhere else in the vault.
-A failure here is not a warning, because `verify.sh` adds `--strict` only on GitHub and a pushed
+the folder other than `.md` and `.yaml`, on a `type: essay` note anywhere else in the vault,
+and (roadmap S17) on a study companion URL whose origin is not in `user_config.json`'s
+`media_origins`. The companion's media and the YouTube episode are never in the repo; neither
+loads until a reader presses play. A failure here is not a warning, because `verify.sh` adds `--strict` only on GitHub and a pushed
 branch is public before CI runs. Like `publish:`, it governs the current tree, not git history.
 
 **Who serves the site, and who sees a visit.** Since roadmap S14 the site is
