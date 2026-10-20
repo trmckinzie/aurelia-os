@@ -10,6 +10,10 @@
 //   - a request to any origin other than the test server's. data: and blob:
 //     URLs are local, so they are allowed. This keeps the promise in
 //     docs/DECISIONS.md item 29: no page asks another server for anything.
+//     The one exception is a request a test declares with expectForeign():
+//     the essay page's study companion audio and its YouTube player, which
+//     load only when a reader presses play (roadmap S17), and whose tests
+//     assert exactly when they do.
 import { test as base, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
@@ -23,6 +27,7 @@ export const test = base.extend({
       const origin = new URL(baseURL).origin;
       const problems = [];
       const expected = [];
+      const expectedForeign = [];
       const foreign = [];
 
       page.on("console", (msg) => {
@@ -59,11 +64,17 @@ export const test = base.extend({
         expectStatus(status, urlMatcher) {
           expected.push({ status, test: (u) => (typeof urlMatcher === "string" ? u.includes(urlMatcher) : urlMatcher.test(u)) });
         },
+        // Declares requests to another origin this test causes on purpose
+        // and checks itself, e.g. the media a reader presses play on.
+        expectForeign(urlMatcher) {
+          expectedForeign.push((u) => (typeof urlMatcher === "string" ? u.startsWith(urlMatcher) : urlMatcher.test(u)));
+        },
         foreign,
         problems,
       });
 
-      expect(foreign, "requests to another origin (only the site's own files may load)").toEqual([]);
+      const unexpected = foreign.filter((u) => !expectedForeign.some((matches) => matches(u)));
+      expect(unexpected, "requests to another origin (only the site's own files may load)").toEqual([]);
       expect(problems, "console errors, page errors or failed requests").toEqual([]);
     },
     { auto: true },

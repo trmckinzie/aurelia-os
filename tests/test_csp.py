@@ -127,3 +127,49 @@ def test_apply_csp_ignores_attribute_shaped_text_inside_scripts_and_styles(tmp_p
           "<style>/* style = \"inside a comment\" */</style>")
     csp.apply_csp(tmp_path)
     assert get_warnings() == []
+
+
+# --- per-page widening (roadmap S17) ----------------------------------------
+
+def test_a_page_may_widen_media_and_frame_src_by_named_origins_only():
+    policy = csp.build_policy([], [], {"media-src": ["https://media.example.com"],
+                                       "frame-src": ["https://www.youtube-nocookie.com"]})
+    assert "media-src 'self' https://media.example.com;" in policy
+    # A frame-src that gains an origin drops 'none' rather than contradicting it.
+    assert "frame-src https://www.youtube-nocookie.com;" in policy
+    assert "frame-src 'none'" not in policy
+    # Everything else is the site-wide policy, unchanged.
+    for closed in ("object-src 'none'", "base-uri 'none'", "form-action 'none'", "connect-src 'self'"):
+        assert closed in policy
+    assert csp.build_policy([], [], {}) == csp.build_policy([], [])
+
+
+@pytest.mark.parametrize("extra", [
+    {"script-src": ["https://cdn.example.com"]},
+    {"connect-src": ["https://api.example.com"]},
+    {"media-src": ["*"]},
+    {"media-src": ["http://media.example.com"]},
+    {"media-src": ["https://media.example.com/path"]},
+    {"frame-src": ["https://x.example.com; script-src *"]},
+    {"media-src": ["https://a.example.com\n"]},
+    {"media-src": [None]},
+])
+def test_a_page_cannot_widen_anything_else_or_with_a_non_origin(extra):
+    with pytest.raises(ValueError):
+        csp.build_policy([], [], extra)
+
+
+def test_apply_csp_widens_only_the_pages_it_is_told_to(tmp_path):
+    _page(tmp_path, "index.html", "<head><meta content=\"@@csp@@\"></head>")
+    (tmp_path / "essays" / "slug").mkdir(parents=True)
+    _page(tmp_path / "essays" / "slug", "index.html", "<head><meta content=\"@@csp@@\"></head>")
+    policies = csp.apply_csp(tmp_path, page_sources={
+        "essays/slug/index.html": {"media-src": ["https://media.example.com"]}})
+    assert "media-src 'self' https://media.example.com;" in policies["essays/slug/index.html"]
+    assert "media-src 'self';" in policies["index.html"]
+
+
+def test_apply_csp_fails_on_sources_for_a_page_it_did_not_write(tmp_path):
+    _page(tmp_path, "index.html", "<head><meta content=\"@@csp@@\"></head>")
+    with pytest.raises(RuntimeError, match="essays/gone/index.html"):
+        csp.apply_csp(tmp_path, page_sources={"essays/gone/index.html": {"media-src": ["https://m.example.com"]}})

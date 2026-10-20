@@ -42,7 +42,11 @@ _EXECUTED_TYPES = {"", "text/javascript", "application/javascript", "module"}
 # (tests/browser/origin.spec.mjs holds it to that): fonts, scripts, styles,
 # media and the search index are all served from the site itself. data: is
 # for the favicon, an inline SVG data URL in base.html. No frames, plugins,
-# forms or <base> anywhere, so each of those is closed outright.
+# forms or <base> anywhere, so each of those is closed outright. The one
+# exception is per page and named in the build: an essay page with a study
+# companion player opens media-src to user_config.json's media origins, and
+# one with a YouTube episode opens frame-src to the youtube-nocookie.com
+# player it loads on a tap (roadmap S17, engine/essays.page_policy_sources).
 STATIC_DIRECTIVES = (
     "default-src 'self'",
     "img-src 'self' data:",
@@ -80,14 +84,39 @@ def style_block_hashes(page_html):
     return [sha256_source(m.group("body")) for m in _STYLE_RE.finditer(page_html)]
 
 
-def build_policy(script_hashes, style_hashes):
+# The directives a page may widen, and only by naming https origins.
+EXTENDABLE = frozenset({"media-src", "frame-src"})
+_ORIGIN_RE = re.compile(r"^https://[a-z0-9.-]+$")
+
+
+def build_policy(script_hashes, style_hashes, extra=None):
     """The policy string for one page. 'self' plus that page's hashes; never
-    'unsafe-inline' or 'unsafe-eval'."""
+    'unsafe-inline' or 'unsafe-eval'. `extra` maps a directive in
+    EXTENDABLE to the https origins this page adds to it; a frame-src that
+    gains one drops its 'none'. Anything else raises, since a policy built
+    from a typo would be wider than anyone meant."""
+    extra = extra or {}
+    for directive, origins in extra.items():
+        if directive not in EXTENDABLE:
+            raise ValueError(f"{directive} is not a directive a page may widen")
+        for origin in origins:
+            # fullmatch, not match: `$` would pass a trailing newline, and the
+            # policy lands in an attribute escaped without quote=True.
+            if not isinstance(origin, str) or not _ORIGIN_RE.fullmatch(origin):
+                raise ValueError(f"{directive}: {origin!r} is not an https origin")
+    rest = []
+    for directive in STATIC_DIRECTIVES[1:]:
+        name = directive.split(" ", 1)[0]
+        origins = extra.get(name)
+        if origins:
+            base = [] if directive.endswith("'none'") else [directive.split(" ", 1)[1]]
+            directive = " ".join([name, *base, *origins])
+        rest.append(directive)
     directives = [
         STATIC_DIRECTIVES[0],
         " ".join(["script-src 'self'", *script_hashes]),
         " ".join(["style-src 'self'", *style_hashes]),
-        *STATIC_DIRECTIVES[1:],
+        *rest,
     ]
     return "; ".join(directives)
 
@@ -98,7 +127,7 @@ def _markup_only(page_html):
     return _STYLE_RE.sub("<style>", _SCRIPT_RE.sub("<script>", page_html))
 
 
-def apply_csp(dist_dir):
+def apply_csp(dist_dir, page_sources=None):
     """Fills each page's policy token with hashes of that page's own inline
     blocks. Returns {page path under dist/: policy}. Warns, so --strict
     fails, when a page has no token to fill or carries an inline style
@@ -107,7 +136,12 @@ def apply_csp(dist_dir):
 
     Every page at any depth: the essay pages (roadmap S15) are the first
     output below the top of dist/, and one this walk missed would ship with
-    an unfilled policy, which the browser reads as refusing everything."""
+    an unfilled policy, which the browser reads as refusing everything.
+
+    `page_sources` maps a page path under dist/ ("essays/<slug>/index.html")
+    to the `extra` that page's policy adds (build_policy). A path that names
+    no page fails the build outright, so a widening cannot quietly miss."""
+    page_sources = dict(page_sources or {})
     dist = Path(dist_dir)
     policies = {}
     for page in sorted(dist.rglob("*.html")):
@@ -126,7 +160,10 @@ def apply_csp(dist_dir):
             warn(f"{name} carries an inline style attribute, which the Content-Security-Policy refuses")
         if _HANDLER_ATTR_RE.search(markup):
             warn(f"{name} carries an inline event handler, which the Content-Security-Policy refuses")
-        policy = build_policy(inline_script_hashes(text), style_block_hashes(text))
+        policy = build_policy(inline_script_hashes(text), style_block_hashes(text), page_sources.pop(name, None))
         page.write_text(text.replace(TOKEN, html.escape(policy, quote=False)), encoding="utf-8")
         policies[name] = policy
+    if page_sources:
+        raise RuntimeError(f"Content-Security-Policy sources named for pages the build did not write: "
+                           f"{', '.join(sorted(page_sources))}")
     return policies
