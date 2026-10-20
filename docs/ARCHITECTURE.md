@@ -105,12 +105,15 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   empty directories, so the placeholders an earlier revision of this file described are gone);
   the only tracked assets are `assets/css`, `assets/js`, five
   flashcard CSVs at the **repo root** in `assets/flashcards/` — which is why `resolve_asset()`'s
-  ROOT_DIR fallback is load-bearing rather than vestigial — and two site images in
-  `assets/images/` added 2026-09-07 — `headshot.webp`
-  (650×650, 43 KB, no EXIF/XMP; referenced by `profile.json`'s optional `identity.photo` and
-  validated by `engine/profile.py` as a real file under `assets/images/`) and
-  `social-preview.jpg` (1200×630, the `og:image`, generated from the headshot with ffmpeg on
-  TIMBERLINE's paper color). All Gemini Notebook audio and mind-map images were removed from the repo *and its
+  ROOT_DIR fallback is load-bearing rather than vestigial — and three site images in
+  `assets/images/` — `headshot.webp` (added 2026-09-07)
+  (650×650, 31 KB, no EXIF/XMP, replaced 2026-10-19 with a crop of the autumn river photo; referenced by `profile.json`'s optional `identity.photo` and
+  validated by `engine/profile.py` as a real file under `assets/images/`),
+  `social-preview.jpg` (1200×630, the `og:image`, generated from the headshot on
+  TIMBERLINE's paper color, with ffmpeg at first and with Pillow since 2026-10-19), and
+  `hero-portrait.webp` (840×1120, 3:4, added 2026-10-19: the Lobby's split hero, from
+  `profile.json`'s optional `identity.portrait`, which takes `identity.photo`'s shape and checks;
+  without it the Lobby shows the round photo). All Gemini Notebook audio and mind-map images were removed from the repo *and its
   history* in 2026 (see docs/DECISIONS.md item 9). The 16 references were deleted from the 9 notes
   that named them in commit 370e8eb (2026-09-10), and the build now prints no media warning; if the
   warning ever returns it means a note names an asset that is not in `vault/assets/` or repo-root
