@@ -1069,7 +1069,7 @@ knowing so you don't "fix" something that was a deliberate decision:
     - **With no AI role and a study companion, the "No AI was used" sentence is left out**
       (`disclosure(..., has_companion=True)`), since it would sit directly above the
       "AI-generated study companion" block. Without a companion it stays as written.
-    - **The episode stays outside the AI zone**, under "Listen", as built: Travis makes it
+    - **The episode stays outside the AI zone**, under "Listen", as built: Travis makes
       it.
     The same pass fixed CodeQL's two alerts on the PR, both in tests: the media-request
     listener compares `new URL(...).origin` instead of a prefix, and the script-stripping regex
