@@ -1002,6 +1002,15 @@ knowing so you don't "fix" something that was a deliberate decision:
       first drafted for it were removed rather than shipped unchecked; the one that stayed
       (Prospect theory's value function, p. 279) is a page that can be checked.
 
+47. **Dependabot waits 7 days; motion 14.6.0 went live 2 days early (2026-10-27).** Merging
+    the Dependabot backlog (#47, #49, #59, #61, and #62 for the reader's "Prev note" label that
+    axe 4.14 required), Dependabot's rebase of #49 moved motion from 14.1.0 to 14.6.0, released
+    2026-10-22, and it was merged without the date being rechecked: five days old against
+    ADR-006's seven. Travis chose to keep it (it clears the window on 2026-10-29; checks were
+    green). The cause is that npm's min-release-age setting binds `npm install`, not
+    Dependabot, which resolves versions itself, so `.github/dependabot.yml` now sets
+    `cooldown: default-days: 7` on all three ecosystems.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
