@@ -5,7 +5,9 @@
 # did that one by hand).
 #
 # Every PR runs the full check suite (see deploy.yml), and nothing merges
-# itself. Security updates are a separate GitHub setting and ignore this file's
+# itself. Each ecosystem waits 7 days after a release before proposing it, the
+# release-age quarantine of Dev Roadmap ADR-006 (npm's min-release-age setting
+# does not bind Dependabot, which resolves versions itself). Security updates are a separate GitHub setting and ignore this file's
 # schedule.
 version: 2
 updates:
@@ -14,6 +16,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     groups:
       actions:
         update-types: [minor, patch]
@@ -23,6 +27,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     groups:
       python:
         update-types: [minor, patch]
@@ -32,6 +38,8 @@ updates:
     schedule:
       interval: weekly
       day: monday
+    cooldown:
+      default-days: 7
     groups:
       npm:
         update-types: [minor, patch]
