@@ -761,7 +761,7 @@ def test_a_build_without_essays_changes_nothing_a_visitor_sees(tmp_path, monkeyp
 
 DOC_SAMPLE = (
     "I wrote this essay by hand: the first draft on a reMarkable tablet, the revisions in Google Docs. "
-    "AI was used for research, not writing. Claude searched for sources and drafted short summaries of "
+    "AI was used for research, not writing. An AI assistant searched for sources and drafted short summaries of "
     "them; I checked each summary against the original and wrote every evaluation myself. An AI citation "
     "audit checked that each citation supports its claim and matches the reference list; it flagged "
     "problems and changed no prose. {n} sources; {m} of {n} verified against the original by the author."
@@ -783,13 +783,13 @@ def _methods(roles, drafted_on="reMarkable", edited_in="Google Docs"):
 
 @pytest.mark.parametrize("roles, present, absent", [
     (["source search", "source summaries"], ["AI was used for research, not writing.",
-                                             "Claude searched for sources and drafted short summaries"],
+                                             "An AI assistant searched for sources and drafted short summaries"],
      ["citation audit"]),
-    (["source search"], ["Claude searched for sources; I read each one"], ["summaries", "citation audit"]),
-    (["source summaries"], ["Claude drafted short summaries of the sources"], ["searched", "citation audit"]),
+    (["source search"], ["An AI assistant searched for sources; I read each one"], ["summaries", "citation audit"]),
+    (["source summaries"], ["An AI assistant drafted short summaries of the sources"], ["searched", "citation audit"]),
     (["citation audit"], ["AI was used to check citations, not to write.", "An AI citation audit checked"],
      ["searched", "summaries", "research"]),
-    ([], ["No AI was used in researching or writing it."], ["Claude", "audit"]),
+    ([], ["No AI was used in researching or writing it."], ["assistant", "audit"]),
 ])
 def test_each_sentence_drops_out_with_its_role(roles, present, absent):
     text = " ".join(essays.disclosure(_methods(roles), [])["sentences"])
@@ -797,8 +797,19 @@ def test_each_sentence_drops_out_with_its_role(roles, present, absent):
         assert phrase in text
     for phrase in absent:
         assert phrase not in text
-    # Never anything about writing being done by AI.
+    # Never anything about writing being done by AI, and never a vendor.
     assert "AI wrote" not in text and "drafted by AI" not in text
+    assert "Claude" not in text and "Gemini" not in text
+
+
+def test_the_no_ai_sentence_is_left_out_above_a_companion():
+    # It would sit directly above the "AI-generated study companion" zone.
+    with_companion = " ".join(essays.disclosure(_methods([]), [], has_companion=True)["sentences"])
+    assert "No AI" not in with_companion
+    assert with_companion.startswith("I wrote this essay by hand")
+    # The roles still speak for themselves when there is a companion.
+    roles = " ".join(essays.disclosure(_methods(["source search"]), [], has_companion=True)["sentences"])
+    assert "AI was used for research, not writing." in roles
 
 
 def test_the_counts_are_singular_when_one_and_absent_without_records():
@@ -919,7 +930,7 @@ def test_the_episode_is_a_button_and_a_link_until_it_is_pressed():
     assert "Nothing loads from YouTube until you press Play episode." in html
     assert ('<a href="https://www.youtube.com/watch?v=XXXXXXXXXXX" rel="noopener noreferrer">'
             'watch it on YouTube</a>') in html
-    markup = re.sub(r"<script>.*?</script>", "", html, flags=re.S)
+    markup = re.sub(r"<script\b[^>]*>.*?</script\b[^>]*>", "", html, flags=re.S | re.I)
     assert "youtube-nocookie" not in markup and "<iframe" not in markup and "ytimg" not in markup
     assert "registerActions({\n    playEpisode" in html
 

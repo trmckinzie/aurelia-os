@@ -1059,6 +1059,22 @@ knowing so you don't "fix" something that was a deliberate decision:
       in the companion zone in a way that could not fail. A page with a player gains every
       configured media origin, not only the one it uses; with one origin that is the same thing.
 
+46. **The S17 open calls, answered (2026-10-27).** Travis settled the three questions S17 left
+    on PR #58:
+    - **The disclosure note names no vendor.** "An AI assistant searched for sources…", not
+      "Claude": `ai_roles` records what AI did, not which tool, and the summaries are made in
+      the Gemini notebook, so a named tool could be wrong on the one paragraph whose job is to
+      be accurate. `docs/ESSAYS.md`'s sample changed with it; the essay tests hold the note to
+      no "Claude" and no "Gemini".
+    - **With no AI role and a study companion, the "No AI was used" sentence is left out**
+      (`disclosure(..., has_companion=True)`), since it would sit directly above the
+      "AI-generated study companion" block. Without a companion it stays as written.
+    - **The episode stays outside the AI zone**, under "Listen", as built: Travis makes it
+      it.
+    The same pass fixed CodeQL's two alerts on the PR, both in tests: the media-request
+    listener compares `new URL(...).origin` instead of a prefix, and the script-stripping regex
+    in the episode test is case-insensitive and tolerates attributes.
+
 ## Known gaps / deliberately not done
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the

@@ -240,7 +240,7 @@ test.describe("with the fixture essay built", () => {
 
   test("no audio request before play, and the test audio file plays after it", async ({ page, guard }) => {
     const mediaRequests = [];
-    page.on("request", (req) => { if (req.url().startsWith(MEDIA_ORIGIN)) mediaRequests.push(req.url()); });
+    page.on("request", (req) => { if (new URL(req.url()).origin === MEDIA_ORIGIN) mediaRequests.push(req.url()); });
     guard.expectForeign(AUDIO_URL);
     if (!LIVE_MEDIA) {
       await page.route(`${MEDIA_ORIGIN}/**`, (route) =>

@@ -678,7 +678,7 @@ def _count(n, word):
     return f"{n} {word}{'' if n == 1 else 's'}"
 
 
-def disclosure(methods, records):
+def disclosure(methods, records, has_companion=False):
     """The sentences of "How this essay was made" (docs/ESSAYS.md, "The
     essay page"), from the essay's `methods` and its reference records.
 
@@ -686,7 +686,11 @@ def disclosure(methods, records):
     AI role in the closed vocabulary has its own sentence and drops out
     with it, and the counts are of the records, with "verified" counting
     `verified: true` only. Returns a dict of the sentences, in order, and
-    the two counts, which the page and its tests read.
+    the two counts, which the page and its tests read. With no AI role the
+    note says no AI was used, unless the essay has a study companion: that
+    sentence would sit directly above the AI-generated zone, so it is left
+    out there (Travis, 2026-10-27). The roles name no vendor, so neither
+    does the note: "an AI assistant", always true whichever tool was used.
     """
     roles = set(methods["ai_roles"])
     search, summaries, audit = (r in roles for r in AI_ROLES)
@@ -696,15 +700,15 @@ def disclosure(methods, records):
         sentences.append("AI was used for research, not writing.")
     elif audit:
         sentences.append("AI was used to check citations, not to write.")
-    else:
+    elif not has_companion:
         sentences.append("No AI was used in researching or writing it.")
     if search and summaries:
-        sentences.append("Claude searched for sources and drafted short summaries of them; I checked each "
+        sentences.append("An AI assistant searched for sources and drafted short summaries of them; I checked each "
                          "summary against the original and wrote every evaluation myself.")
     elif search:
-        sentences.append("Claude searched for sources; I read each one and wrote every evaluation myself.")
+        sentences.append("An AI assistant searched for sources; I read each one and wrote every evaluation myself.")
     elif summaries:
-        sentences.append("Claude drafted short summaries of the sources; I checked each summary against the "
+        sentences.append("An AI assistant drafted short summaries of the sources; I checked each summary against the "
                          "original and wrote every evaluation myself.")
     if audit:
         sentences.append("An AI citation audit checked that each citation supports its claim and matches the "
@@ -870,7 +874,8 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
             "companion": companion_entries(raw.get("companion")),
             "youtube": raw["youtube"].strip() if raw.get("youtube") else None,
             "youtube_id": youtube_id(raw["youtube"]) if raw.get("youtube") else None,
-            "disclosure": disclosure(raw["methods"], listed_records(essay["refs"], reference_list)),
+            "disclosure": disclosure(raw["methods"], listed_records(essay["refs"], reference_list),
+                                     has_companion=bool(raw.get("companion"))),
             "reading_minutes": reading_minutes(body),
             "body_html": body_html,
             "references": essay["refs"],

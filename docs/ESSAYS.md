@@ -274,13 +274,16 @@ The line between Travis's writing and AI output has to be obvious at a glance on
    surface as the essay, under a small label:
 
    > I wrote this essay by hand: the first draft on a reMarkable tablet, the revisions in Google
-   > Docs. AI was used for research, not writing. Claude searched for sources and drafted short
-   > summaries of them; I checked each summary against the original and wrote every evaluation
+   > Docs. AI was used for research, not writing. An AI assistant searched for sources and drafted
+   > short summaries of them; I checked each summary against the original and wrote every evaluation
    > myself. An AI citation audit checked that each citation supports its claim and matches the
    > reference list; it flagged problems and changed no prose. 14 sources; 14 of 14 verified
    > against the original by the author.
 
-   Sentences drop out with their roles: no citation audit in `ai_roles`, no audit sentence.
+   Sentences drop out with their roles: no citation audit in `ai_roles`, no audit sentence. The
+   note names no AI vendor. With no AI role it says "No AI was used in researching or writing
+   it.", except on an essay with a study companion, where that sentence is left out because it
+   would sit directly above the AI-generated zone.
 3. **References.** APA 7 (or the web style's Sources list).
 4. **Study companion.** A visually separate zone, the one place AI output appears: an inverted
    surface (paper on the theme's darkest ink) with a heavy top rule, headed by the label
