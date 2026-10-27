@@ -255,6 +255,30 @@ def test_repo_profile_photo_exists():
     assert os.path.isfile(resolved)
 
 
+# identity.portrait shares _validate_photo with identity.photo, so these only
+# pin that it is routed through the same checks under its own path.
+
+def test_portrait_requires_alt():
+    profile = minimal_profile()
+    profile["identity"]["portrait"] = {"src": "assets/images/x.webp"}
+    with pytest.raises(ProfileError, match=r"identity\.portrait\.alt"):
+        validate_profile(profile)
+
+
+def test_portrait_rejects_bad_src():
+    profile = minimal_profile()
+    profile["identity"]["portrait"] = {"src": "https://evil.example/x.webp", "alt": "A photo"}
+    with pytest.raises(ProfileError, match=r"identity\.portrait\.src"):
+        validate_profile(profile)
+
+
+def test_portrait_missing_file_raises(tmp_path):
+    profile = minimal_profile()
+    profile["identity"]["portrait"] = {"src": "assets/images/nope.webp", "alt": "A photo"}
+    with pytest.raises(ProfileError, match="photo not found"):
+        validate_profile(profile, root=str(tmp_path))
+
+
 # --- person_jsonld -----------------------------------------------------
 
 def test_person_jsonld_sameas_excludes_mailto():

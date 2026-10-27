@@ -168,7 +168,7 @@ _TOP_LEVEL_KEYS = {
     "projects", "links", "meta",
 }
 
-_IDENTITY_ALLOWED = {"name", "headline", "location", "summary", "pronouns", "photo"}
+_IDENTITY_ALLOWED = {"name", "headline", "location", "summary", "pronouns", "photo", "portrait"}
 _IDENTITY_REQUIRED = {"name", "headline", "location", "summary"}
 _IDENTITY_SPECS = {
     "name": (80, False),
@@ -180,6 +180,8 @@ _IDENTITY_SPECS = {
 
 # identity.photo is optional, but when present both keys are required --
 # there is no such thing as an image with no alt text on a published page.
+# identity.portrait (the Lobby hero's 3:4 photo) takes the same shape and the
+# same checks; without it the Lobby falls back to the round photo.
 _PHOTO_ALLOWED = {"src", "alt"}
 _PHOTO_REQUIRED = {"src", "alt"}
 
@@ -264,8 +266,9 @@ def _validate_identity(value, path, root):
     for field, (max_len, multiline) in _IDENTITY_SPECS.items():
         if field in value:
             _check_str(value[field], _join(path, field), max_len, multiline)
-    if "photo" in value:
-        _validate_photo(value["photo"], _join(path, "photo"), root)
+    for field in ("photo", "portrait"):
+        if field in value:
+            _validate_photo(value[field], _join(path, field), root)
 
 
 def _validate_roles(value, path):
@@ -370,8 +373,8 @@ def validate_profile(data, root=None):
     depth and never coerces types -- a bool or int where a string is
     expected is an error, not a silent cast.
 
-    `root`, when given, additionally verifies that identity.photo.src (if
-    present) resolves to a real file under <root>/assets/images -- see
+    `root`, when given, additionally verifies that identity.photo.src and
+    identity.portrait.src (if present) resolve to a real file under <root>/assets/images -- see
     _photo_file_exists. Pass None (the default) to skip that filesystem
     check and validate shape only, which is what every existing caller and
     test does; load_profile() always passes ROOT_DIR, since a photo the

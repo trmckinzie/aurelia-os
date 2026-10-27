@@ -144,6 +144,22 @@ def test_lobby_renders_headshot_when_present():
     assert 'width="650" height="650"' in header
 
 
+def test_lobby_portrait_replaces_round_headshot():
+    # Split hero (handoff-banner mockup 1b): with a portrait the hero shows it
+    # with the location tag, eager and high priority, and drops the round
+    # photo (which the About page still uses).
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["photo"] = {"src": "assets/images/headshot.webp", "alt": "Ada Lovelace, portrait"}
+    profile["identity"]["portrait"] = {"src": "assets/images/hero-portrait.webp", "alt": "Ada Lovelace by a river"}
+    html = render_index(profile=profile)
+    header = html[html.index("<header"):html.index("</header>")]
+    assert '<img src="assets/images/hero-portrait.webp" alt="Ada Lovelace by a river"' in header
+    assert 'loading="eager" fetchpriority="high"' in header
+    assert "<figcaption" in header and "London, UK" in header
+    assert "headshot.webp" not in header
+
+
 def test_lobby_without_photo_has_no_hero_img():
     html = render_index()
     header = html[html.index("<header"):html.index("</header>")]

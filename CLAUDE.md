@@ -80,6 +80,9 @@ themes, not part of the brand.
 - **Model routing:** Sonnet executes, Opus escalates, Fable only on Travis's explicit say-so.
   Subagents live in `.claude/agents/`; doctrine is `90_Meta/Model Routing.md` in the dev
   mono-vault that contains this repo.
+- **Deliberate exception (Dev Environment Standard, audit A-21):** `pyflakes` is the lint, not
+  `ruff` as the Standard otherwise asks; `ruff check .` (via `uvx ruff`, 0.17.1) reports 77
+  violations on this tree as of 2026-10-16, so it is deferred rather than wired into `verify.sh`.
 
 ## Commands
 
