@@ -16,8 +16,8 @@ Order from here: S12, S15, S16 and S17 are done; **S18 next** (Essays), then S13
 - [x] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (2026-10-14, #53–#54)
 - [x] S16 essay citations resolved and references formatted in APA 7 (2026-10-15, #55)
 - [x] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player (built 2026-10-18; bucket `aurelia-media` on media.travisrmckinzie.com and the live audio check 2026-10-28, #58)
-- [ ] S18 the web citation style, essay structured data, the Essays feed and search #next
-- [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh`
+- [x] S18 the web citation style, the Article structured data, per-essay Open Graph, the Essays Atom feed and essays in search (2026-10-28, #64)
+- [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh` #next
 
 ## Standardize
 - [x] `.python-version`, `.nvmrc`, hash-locked requirements, `package-lock.json`, `verify.sh`, CI pinned to SHAs, the `.claude/agents` pair (already in place before 2026-10-09)

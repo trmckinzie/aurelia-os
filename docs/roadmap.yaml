@@ -894,11 +894,14 @@ sessions:
       test passed against test/tone.wav with AURELIA_LIVE_MEDIA=1.
   - id: S18
     title: Add the web citation style, essay structured data and the Essays feed
-    status: in_progress
+    status: done
+    started: 2026-10-28
+    completed: 2026-10-28
+    commits:
+      - "1fc15c5"
     area: Content
     effort: M
     model: sonnet
-    started: 2026-10-28
     why: >-
       Finishes the first version of Essays (docs/ESSAYS.md). A second
       citation style for essays written for the web, from the same reference
@@ -926,10 +929,12 @@ sessions:
     notes: >-
       All five tasks built and tested (tests/test_citations.py,
       tests/test_essays.py, tests/test_feed.py, tests/browser/essays.spec.mjs).
-      The live-check item can only be proven after this merges and deploys,
-      so the session stays in_progress rather than done; mark it done and
-      record the merge commit in the follow-up change, per the roadmap-session
-      skill's convention (roadmap S09, docs/DECISIONS.md item 31).
+      Merged 2026-10-28 as #64 (squash 1fc15c5); the deploy's live check
+      passed on the first run. check-macos (non-blocking) failed once on the
+      unchanged "a discipline label links to its Garden note" test, a timing
+      flake, and passed on rerun. Before the push, a fixture sentence in E02
+      that credited Thaler (1980) with a finding his paper does not report
+      was reworded.
   - id: S13
     title: Split the Garden's inline script into modules with unit tests
     status: todo
