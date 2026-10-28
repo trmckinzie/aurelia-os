@@ -27,15 +27,18 @@ the link graph itself made visible and navigable.
   a JSON export/import to move it between devices; nothing is sent anywhere.
 - Wikilinks resolve through frontmatter `aliases:` and unique parenthetical title suffixes, so
   `[[Dopamine]]` reaches `Dopamine (Reward Prediction Error)` without a rename.
-- Essays (`/essays/`, one page per essay): short human-written pieces from a `vault/30_ESSAYS/`
-  folder, rendered server-side from Markdown with their `[[wikilinks]]` resolved into Garden
-  links and their Pandoc citations formatted in APA 7, each linked to a reference list built
-  from structured records, listed newest first with the publish date, disciplines, thesis and reading time.
+- Essays (`/essays/`, one page per essay, plus an Atom feed at `/essays/feed.xml`): short
+  human-written pieces from a `vault/30_ESSAYS/` folder, rendered server-side from Markdown with
+  their `[[wikilinks]]` resolved into Garden links and their Pandoc citations formatted either in
+  APA 7 or, for an essay written for the web, as links straight to each source's DOI or URL with
+  a short "Sources" list, each essay carrying an Article JSON-LD block and its own Open Graph
+  tags, and listed newest first with the publish date, disciplines, thesis and reading time.
   Each essay page carries a disclosure note generated from its data ("How this essay was made"),
   a visibly separate AI-generated study companion whose audio loads only on play from a host
   listed in `user_config.json`'s `media_origins`, and a YouTube episode that loads nothing from
   Google until its Play button is pressed. The
-  index and its nav link appear only once an essay is published, and the folder's contents are
+  index, its feed and its nav link appear only once an essay is published, essays join the site
+  search, and the folder's contents are
   held to a contract and a set of privacy checks that fail the build outright (a draft, an
   unknown field, a notebook or Drive link, any non-text file). See `docs/ESSAYS.md`.
 - A professional About page (`about.html`) — roles, education, skills, selected work, and

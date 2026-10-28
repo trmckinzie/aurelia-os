@@ -33,7 +33,7 @@ from engine.essays import (
     reading_minutes,
     scan_essays,
 )
-from tests.test_about import base_context, make_config
+from tests.test_about import base_context, make_config, make_profile
 
 FIXTURE_DIR = os.path.join(ROOT_DIR, "tests", "fixtures", "essays")
 FIXTURE_NOTE = os.path.join(FIXTURE_DIR, "E01 Why loss looms larger.md")
@@ -93,10 +93,17 @@ def _problems(folder, media_origins=MEDIA_ORIGINS):
     return [message for _rel, message in problems]
 
 
+# FIXTURE_DIR holds two essays since roadmap S18 (E01, apa7; E02, web style,
+# tests/fixtures/essays/E02 Attention is a budget.md) -- a test about E01's
+# own contract scans for it by id instead of assuming it is the only one.
+def _e01(folder=FIXTURE_DIR, **kwargs):
+    return next(e for e in _scan(folder, **kwargs) if e["id"] == "E01")
+
+
 # --- the fixture essay, as the templates receive it -----------------------
 
 def test_fixture_essay_scans_with_its_contract_fields():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     assert essay["id"] == "E01"
     assert essay["slug"] == "why-loss-looms-larger"
     assert essay["url"] == "essays/why-loss-looms-larger/"
@@ -118,7 +125,7 @@ def test_reading_time_is_words_over_230_rounded_up():
     with open(FIXTURE_NOTE, encoding="utf-8") as f:
         body = f.read().split("---\n", 2)[2]
     words = len(re.findall(r"\S+", re.sub(r"\[\[(?:[^|\]]*\|)?([^\]]*)\]\]", r"\1", body)))
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     assert essay["reading_minutes"] == math.ceil(words / 230)
     assert reading_minutes(" ".join(["word"] * 230)) == 1
     assert reading_minutes(" ".join(["word"] * 231)) == 2
@@ -131,7 +138,7 @@ def test_long_date_carries_the_weekday():
 
 
 def test_discipline_labels_link_to_a_published_discipline_note_only():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     assert essay["disciplines"] == [
         {"label": "cognitive psychology", "href": "/garden.html#note-cognitive-psychology"},
         {"label": "philosophy", "href": None},
@@ -139,7 +146,7 @@ def test_discipline_labels_link_to_a_published_discipline_note_only():
 
 
 def test_body_renders_markdown_with_garden_links():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     html = str(essay["body_html"])
     assert "<h2>The shape of the asymmetry</h2>" in html
     assert "<blockquote>" in html and "<ul>" in html
@@ -151,7 +158,7 @@ def test_body_renders_markdown_with_garden_links():
 
 
 def test_garden_links_follow_the_site_root():
-    [essay] = _scan(FIXTURE_DIR, site_root="/aurelia-os/")
+    essay = _e01(site_root="/aurelia-os/")
     assert 'href="/aurelia-os/garden.html#note-active-recall"' in str(essay["body_html"])
     assert essay["disciplines"][0]["href"] == "/aurelia-os/garden.html#note-cognitive-psychology"
 
@@ -505,6 +512,7 @@ def _stub_build(monkeypatch, tmp_path, essays_dir):
     monkeypatch.setattr(pipeline, "_write_cname", lambda cfg: None)
     monkeypatch.setattr(pipeline, "publish_referenced_media", lambda referenced: None)
     monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: None)
+    monkeypatch.setattr(pipeline, "_write_essays_feed", lambda cfg, ess: None)
     monkeypatch.setattr(pipeline, "stamp_asset_versions", lambda dist, **kwargs: {})
     monkeypatch.setattr(pipeline, "apply_csp", lambda dist, **kwargs: {})
     monkeypatch.setattr(pipeline, "report_page_sizes", lambda: {})
@@ -605,7 +613,7 @@ def _config():
 
 def test_essay_pages_exist_only_once_an_essay_is_published():
     assert pipeline._essay_pages(_config(), []) == []
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     pages = pipeline._essay_pages(_config(), [essay])
     assert [(t, p.replace(os.sep, "/")) for t, p, _c in pages] == [
         ("pages/essaystemplate.html", "essays/index.html"),
@@ -629,7 +637,7 @@ def render_essays_index(**overrides):
 
 
 def render_essay_page(**overrides):
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     return _render("pages/essaytemplate.html", active_page="essays", essay=essay,
                    page_title=essay["title"], page_path=essay["url"], **overrides)
 
@@ -719,9 +727,22 @@ def test_the_fixture_build_publishes_the_essay_pages_and_no_card(tmp_path, monke
     assert 'href="/garden.html#note-active-recall"' in page
     assert 'class="essay-citation"' in page and '<li id="ref-kahneman1979">' in page
 
-    # Never a Garden card, however the essay is typed.
+    # Never a Garden card, however the essay is typed. Scoped to everything
+    # OUTSIDE the page's own SYSTEM_INDEX command-palette blob (base.html):
+    # since roadmap S18 that legitimately carries the essay's title, the
+    # same way it already carries every Garden note's id. Split on the
+    # enclosing <script>...</script> tag, not on the JSON's own ";", since
+    # the real vault's 580 KB blob is not guaranteed to hold no semicolon
+    # before the one that ends `const SYSTEM_INDEX = [...];` -- a note's
+    # own text easily could (tests/test_lobby.py's small fixture can't).
+    before, marker, after = garden.partition("const SYSTEM_INDEX = ")
+    assert marker, "SYSTEM_INDEX script tag not found in rendered Garden HTML"
+    _, tag, after_script = after.partition("</script>")
+    assert tag, "no closing </script> found after SYSTEM_INDEX"
+    garden_outside_index = before + tag + after_script
     assert "note-why-loss-looms-larger" not in garden
-    assert "Why loss looms larger" not in garden
+    assert "Why loss looms larger" not in garden_outside_index
+    assert "Why loss looms larger" in garden, "sanity check: the title should be in the page via SYSTEM_INDEX"
     # The top-level pages link relatively, as they always have.
     assert "ESSAYS" in lobby and 'href="essays/"' in lobby
 
@@ -751,10 +772,84 @@ def test_a_build_without_essays_changes_nothing_a_visitor_sees(tmp_path, monkeyp
     empty.mkdir()
     dist = _build(tmp_path, monkeypatch, str(empty), "without-essays")
     assert not os.path.exists(os.path.join(dist, "essays"))
+    # S18: no essay means no feed file and no feed link in any page's head,
+    # the same "nothing until the first essay" rule the index and the nav
+    # item already follow.
+    assert not os.path.exists(os.path.join(dist, "essays", "feed.xml"))
     for page in ("index.html", "garden.html", "about.html", "404.html"):
         html = _read(dist, page)
         assert "essays/" not in html, page
         assert "ESSAYS" not in html, page
+        assert "atom+xml" not in html, page
+        assert 'og:type" content="article"' not in html, page
+
+
+@_needs_node_modules
+def test_the_fixture_build_adds_s18_metadata_the_feed_and_search(tmp_path, monkeypatch):
+    import json
+    import xml.etree.ElementTree as ET
+
+    from engine.feed import ATOM_NS
+
+    dist = _build(tmp_path, monkeypatch, FIXTURE_DIR, "with-essays-s18")
+    page = _read(dist, "essays", "why-loss-looms-larger", "index.html")
+    web_page = _read(dist, "essays", "attention-is-a-budget", "index.html")
+    lobby = _read(dist, "index.html")
+    about = _read(dist, "about.html")
+
+    # Per-essay Open Graph: article, its own title and thesis, both times.
+    assert 'property="og:type" content="article"' in page
+    assert 'property="og:title" content="Why loss looms larger"' in page
+    assert 'name="description" content="Losses weigh more than equal gains' in page
+    assert 'property="og:description" content="Losses weigh more than equal gains' in page
+    assert 'property="article:published_time" content="2026-11-20"' in page
+    assert 'property="article:modified_time" content="2026-11-22"' in page
+    assert 'property="og:url" content="https://travisrmckinzie.com/essays/why-loss-looms-larger/"' in page
+    # No updated date on the web-style essay: modified falls back to published.
+    assert 'property="article:published_time" content="2026-12-01"' in web_page
+    assert 'property="article:modified_time" content="2026-12-01"' in web_page
+    # Every other page keeps og:type website.
+    for other in (lobby, about):
+        assert 'property="og:type" content="website"' in other
+
+    # The Article JSON-LD parses, and cites the page's own references.
+    match = re.search(r'<script type="application/ld\+json">(.*?)</script>', page, re.S)
+    article = json.loads(match.group(1))
+    assert article["@type"] == "Article"
+    assert article["headline"] == "Why loss looms larger"
+    assert article["author"]["@type"] == "Person"
+    assert article["datePublished"] == "2026-11-20"
+    assert article["dateModified"] == "2026-11-22"
+    assert article["url"] == "https://travisrmckinzie.com/essays/why-loss-looms-larger/"
+    assert len(article["citation"]) == 8
+    assert {c["@type"] for c in article["citation"]} <= {"ScholarlyArticle", "CreativeWork"}
+
+    # The web style's Sources list, linked straight to the source.
+    assert '<h2 id="essay-references-title">Sources</h2>' in web_page
+    assert 'href="https://doi.org/10.2307/1914185" class="essay-citation" rel="noopener noreferrer"' in web_page
+    assert 'href="#ref-' not in web_page
+
+    # The feed: linked from every page's head, valid Atom, listing both
+    # essays. Site-root-relative like every other nav link (base.html):
+    # "essays/feed.xml" from a top-level page, "/essays/feed.xml" from one
+    # that sits below the top (an essay page, like 404.html).
+    assert '<link rel="alternate" type="application/atom+xml" title="Travis R. McKinzie — Essays" href="essays/feed.xml">' in lobby
+    assert '<link rel="alternate" type="application/atom+xml" title="Travis R. McKinzie — Essays" href="essays/feed.xml">' in about
+    assert '<link rel="alternate" type="application/atom+xml" title="Travis R. McKinzie — Essays" href="/essays/feed.xml">' in page
+    feed_path = os.path.join(dist, "essays", "feed.xml")
+    root = ET.parse(feed_path).getroot()
+    ns = {"a": ATOM_NS}
+    assert root.tag == f"{{{ATOM_NS}}}feed"
+    titles = {e.find("a:title", ns).text for e in root.findall("a:entry", ns)}
+    assert titles == {"Why loss looms larger", "Attention is a budget"}
+    for entry in root.findall("a:entry", ns):
+        content = entry.find("a:content", ns).text
+        assert "essay-companion" not in content and "Play episode" not in content
+
+    # Essays join the site search: a result for each, opening its own page.
+    assert '"type": "ESSAY"' in lobby
+    assert '"url": "essays/why-loss-looms-larger/"' in lobby
+    assert '"url": "essays/attention-is-a-budget/"' in lobby
 
 
 # --- the disclosure note, the companion and the episode (roadmap S17) ------
@@ -769,7 +864,7 @@ DOC_SAMPLE = (
 
 
 def test_the_disclosure_note_reads_as_docs_essays_sample_with_counted_sources():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     note = essay["disclosure"]
     # Counted from the records, and equal to the list a reader sees.
     assert note["sources"] == len(essay["references"]) == len(essay["reference_list"]) == 8
@@ -873,7 +968,7 @@ def test_with_no_media_origins_configured_any_companion_fails(tmp_path):
 
 
 def test_page_policy_sources_name_only_what_the_page_uses():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     assert essays.page_policy_sources(essay, MEDIA_ORIGINS) == {
         "media-src": list(MEDIA_ORIGINS), "frame-src": ["https://www.youtube-nocookie.com"]}
     bare = dict(essay, companion=[{"kind": "other", "label": "Cards", "url": "https://x", "player": False}],
@@ -916,7 +1011,7 @@ def test_the_companion_holds_only_players_and_links_from_its_entries():
 
 
 def test_a_video_entry_renders_a_player_that_loads_nothing_before_play():
-    [essay] = _scan(FIXTURE_DIR)
+    essay = _e01()
     essay = dict(essay, companion=essays.companion_entries(
         [{"kind": "video", "label": "Video overview", "url": "https://media.travisrmckinzie.com/v.mp4"}]))
     html = _render("pages/essaytemplate.html", active_page="essays", essay=essay,
@@ -972,3 +1067,48 @@ def test_the_essay_page_keeps_the_voice_rule():
     visible = re.sub(r"<(script|style)\b.*?</\1>", "", html, flags=re.S)
     for token in LEGACY_TOKENS:
         assert token not in visible, token
+
+
+# --- Article JSON-LD, per-essay metadata and the site search (roadmap S18) -
+
+def test_article_jsonld_reuses_the_given_person_and_cites_the_shown_records():
+    essay = _e01()
+    person = {"@type": "Person", "name": "Travis R. McKinzie"}
+    url = "https://example.org/essays/why-loss-looms-larger/"
+    article = essays.article_jsonld(essay, person, url)
+    assert article["@type"] == "Article"
+    assert article["headline"] == "Why loss looms larger"
+    assert article["author"] is person   # the same object, not a copy
+    assert article["datePublished"] == "2026-11-20"
+    assert article["dateModified"] == "2026-11-22"
+    assert article["url"] == article["mainEntityOfPage"] == url
+    assert len(article["citation"]) == len(essay["reference_list"]) == len(essay["listed_references"]) == 8
+    assert {c["@type"] for c in article["citation"]} <= {"ScholarlyArticle", "CreativeWork"}
+
+
+def test_article_jsonld_falls_back_to_published_and_drops_url_with_none():
+    essay = dict(_e01(), updated_iso=None)
+    article = essays.article_jsonld(essay, {"@type": "Person", "name": "X"})
+    assert article["dateModified"] == article["datePublished"] == "2026-11-20"
+    assert "url" not in article and "mainEntityOfPage" not in article
+
+
+def test_essays_join_the_master_search_index_and_open_their_own_url():
+    essay = _e01()
+    index = pipeline._build_search_index([], make_profile(), [essay])
+    entries = [e for e in index if e["type"] == "ESSAY"]
+    assert entries == [{
+        "title": "Why loss looms larger", "url": "essays/why-loss-looms-larger/", "type": "ESSAY",
+        "tags": ["cognitive psychology", "philosophy"],
+        "desc": essay["thesis"],
+    }]
+    # A Garden result opens the note reader by hash; an essay result opens
+    # its own standalone page -- different shapes of url on purpose.
+    assert "#" not in entries[0]["url"]
+
+
+def test_the_master_search_index_is_unchanged_with_no_essays():
+    # The default essays=() keeps every existing caller's behaviour exactly
+    # as it was before roadmap S18.
+    index = pipeline._build_search_index([], make_profile())
+    assert not any(e["type"] == "ESSAY" for e in index)

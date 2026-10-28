@@ -19,6 +19,10 @@ if (process.env.AURELIA_ESSAYS_FIXTURE && !FIXTURE_BUILT) {
 }
 
 const ESSAY_PATH = "essays/why-loss-looms-larger/";
+// The second fixture essay (roadmap S18): citation_style: web, so its
+// in-text citations link straight to a source instead of jumping to a
+// reference-list entry, and its list is "Sources" rather than "References".
+const WEB_ESSAY_PATH = "essays/attention-is-a-budget/";
 const PHONE = { width: 375, height: 812 };
 
 // The study companion's media host (user_config.json's media_origins) and
@@ -174,7 +178,34 @@ test.describe("with the fixture essay built", () => {
     await expect(page.locator("#modal-title")).toHaveText("Cognitive Psychology");
   });
 
-  for (const [name, path] of [["index", "essays/"], ["essay page", ESSAY_PATH]]) {
+  // Roadmap S18: citation_style: web renders each citation as a link on the
+  // short author-year text straight to the source, and ends with a "Sources"
+  // list instead of the APA 7 reference list -- both from the same records.
+  test("a web-style essay links citations straight to their sources and ends with a Sources list", async ({ page }) => {
+    await page.goto(WEB_ESSAY_PATH);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Attention is a budget");
+
+    const citations = page.locator(".essay-body a.essay-citation");
+    expect(await citations.count()).toBeGreaterThan(0);
+    await expect(page.locator(".essay-missing-citation")).toHaveCount(0);
+    await expect(page.locator(".essay-citation-unlinked")).toHaveCount(0);
+
+    // Straight to the source, never to a reference-list entry.
+    const hrefs = await citations.evaluateAll((links) => links.map((a) => a.getAttribute("href")));
+    for (const href of hrefs) expect(href.startsWith("#")).toBe(false);
+    const doiCitation = page.locator('.essay-body a.essay-citation[href="https://doi.org/10.2307/1914185"]');
+    await expect(doiCitation).toHaveCount(1);
+    await expect(doiCitation).toHaveAttribute("rel", "noopener noreferrer");
+
+    const list = page.locator(".essay-references");
+    await expect(list.getByRole("heading", { level: 2 })).toHaveText("Sources");
+    const entries = list.locator(".essay-reference-list li");
+    expect(await entries.count()).toBeGreaterThan(0);
+    await expect(list.locator('a[href="https://doi.org/10.2307/1914185"]')).toHaveCount(1);
+    await expectNoHorizontalScroll(page);
+  });
+
+  for (const [name, path] of [["index", "essays/"], ["essay page", ESSAY_PATH], ["web-style essay page", WEB_ESSAY_PATH]]) {
     test(`the ${name} has no WCAG A/AA violations in either offered theme, at phone width and on a desktop`, async ({ page }) => {
       test.slow();
       for (const viewport of [PHONE, { width: 1440, height: 900 }]) {

@@ -174,18 +174,29 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
 - `engine/assets_pipeline.py`: the Drop Zone sort, the site's own assets into `dist/`, the media
   publish gate (a media file ships only when a published note references it), and ffmpeg
   compression for oversized drop-zone audio.
-- `engine/essays.py`: Essays (roadmap S15). Reads `vault/30_ESSAYS/` (or `AURELIA_ESSAYS_DIR`),
+- `engine/essays.py`: Essays (roadmap S15-S18). Reads `vault/30_ESSAYS/` (or `AURELIA_ESSAYS_DIR`),
   validates the contract in `docs/ESSAYS.md` (field allowlist, id, slug, dates, closed `ai_roles`
   vocabulary, CSL reference fields), runs the privacy checks that raise `EssayError`, renders
   each body with markdown-it (raw HTML off) and resolves its `[[wikilinks]]` through the Garden's
   resolver into links to `garden.html#id`. Since S17 it also builds the disclosure note from
   `methods` and the reference records and the study companion from its entries, and names the
-  per-page policy sources an essay needs. `pipeline._scan_garden()` prunes the folder from the
+  per-page policy sources an essay needs. Since S18, `article_jsonld()` builds the per-page
+  Article JSON-LD, reusing `profile.person_jsonld()`'s Person as its author.
+  `pipeline._scan_garden()` prunes the folder from the
   Garden walk, so an essay is never a card, and fails on a `type: essay` note anywhere else.
-- `engine/citations.py`: essay citations (roadmap S16). Pandoc's `[@key]`, `[@key, p. 12]`,
-  `[@a; @b]` and narrative `@key` as markdown-it inline rules, and an in-house APA 7 formatter
-  for the essay's `E01.refs.yaml` (citeproc-py failed the rules; `docs/DECISIONS.md` item 44).
-  A citation with no record or a record nothing cites warns, so only the strict build fails.
+- `engine/citations.py`: essay citations (roadmap S16, S18). Pandoc's `[@key]`, `[@key, p. 12]`,
+  `[@a; @b]` and narrative `@key` as markdown-it inline rules, an in-house APA 7 formatter
+  for the essay's `E01.refs.yaml` (citeproc-py failed the rules; `docs/DECISIONS.md` item 44),
+  and, for `citation_style: web`, a plainer "Sources" list whose citations link straight to each
+  record's DOI or URL instead of to the list (`docs/DECISIONS.md` item 48). A citation with no
+  record, a record nothing cites, or (web style) a record with neither a DOI nor a URL warns, so
+  only the strict build fails.
+- `engine/feed.py`: the Essays Atom feed (roadmap S18). `build_atom_feed()` builds
+  `dist/essays/feed.xml` with `xml.etree.ElementTree`, one entry per published essay (newest
+  first), each id and link the essay's own absolute URL; entry content is the rendered essay plus
+  its disclosure note and references, never the study companion or the episode, with every
+  relative link rewritten absolute. Written and linked from every page's head only once an essay
+  is published and `user_config.json` has a `site.domain` to build absolute URLs from.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
   deploy's new files aren't masked by GitHub Pages' ten-minute cache. Walks `dist/` recursively,
   as `csp.py` does, because the essay pages sit below the top of it.
@@ -231,9 +242,10 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
 - Essays: `docs/ESSAYS.md` is the design and its data contract, `docs/DECISIONS.md` item 41
   records why, item 43 what S15 built (the content type, the privacy checks, the index and
-  essay pages), item 44 what S16 built (citations and the APA 7 reference list) and item 45
+  essay pages), item 44 what S16 built (citations and the APA 7 reference list), item 45
   what S17 built (the disclosure note, the study companion, the media allowlist and the
-  tap-to-load episode). The web citation style, the feed and search are S18, not built yet.
+  tap-to-load episode), and item 48 what S18 built (the web citation style, the Article
+  JSON-LD, per-essay Open Graph, the Atom feed and search) -- the first version is now complete.
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 

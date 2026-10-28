@@ -81,15 +81,35 @@
     <meta property="og:image:height" content="630">
     {% endif %}
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="og:type" content="website">
+    {# website on every page except an essay's own (roadmap S18,
+       docs/ESSAYS.md, "Metadata"), which overrides this block to
+       "article" -- the one og:type Open Graph defines for a dated,
+       authored piece of writing. #}
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
 
-    {# Only emitted once a real domain is configured. A canonical URL built
-       from an empty domain would point every page at "https:///page.html",
-       which is worse than having none. A page below the top of dist/ (the
-       Essays index and each essay page, roadmap S15) names its own path
-       in `page_path`; the top-level pages derive it from active_page. #}
+    {# Only emitted once a real domain is configured. A canonical/og:url
+       built from an empty domain would point every page at
+       "https:///page.html", which is worse than having none. A page below
+       the top of dist/ (the Essays index and each essay page, roadmap S15)
+       names its own path in `page_path`; the top-level pages derive it
+       from active_page. og:url is the same address as the canonical link
+       (roadmap S18): the two exist for different consumers (a crawler
+       reading structured metadata vs. a browser's own notion of the page's
+       canonical form), but a page has exactly one canonical address either
+       way, so both read from the same expression. #}
     {% if site.get('domain') %}
-    <link rel="canonical" href="https://{{ site.get('domain') }}/{% if page_path %}{{ page_path }}{% elif active_page != 'index' %}{{ active_page }}.html{% endif %}">
+    {% set canonical_path = page_path if page_path else (active_page + '.html' if active_page != 'index' else '') %}
+    <link rel="canonical" href="https://{{ site.get('domain') }}/{{ canonical_path }}">
+    <meta property="og:url" content="https://{{ site.get('domain') }}/{{ canonical_path }}">
+    {% endif %}
+
+    {# The Essays Atom feed (roadmap S18, docs/ESSAYS.md, "Metadata"):
+       linked from every page's head, but only once engine/pipeline.py has
+       actually written dist/essays/feed.xml -- the same "nothing until the
+       first essay" rule the nav's Essays item and the index already
+       follow, so the live site never advertises an empty or missing feed. #}
+    {% if feed_href %}
+    <link rel="alternate" type="application/atom+xml" title="{{ site.get('name', 'Personal site') }} — Essays" href="{{ site_root }}{{ feed_href }}">
     {% endif %}
 
     <!-- Theme-independent monogram favicon: a square #2f6b4f (TRM / Pine)
@@ -669,12 +689,14 @@
 
             // Render List
             cmdResults.innerHTML = results.map((item, index) => {
-                // Color coding based on type
-                // Only SYSTEM (Lobby/Garden) and GARDEN (notes) are ever
-                // indexed -- see engine/pipeline.py._build_search_index.
+                // Color coding based on type. SYSTEM (Lobby/Garden/About),
+                // GARDEN (notes) and, since roadmap S18, ESSAY (essays,
+                // which a result opens at their own URL, never the Garden's
+                // note reader) -- see engine/pipeline.py._build_search_index.
                 let typeColor = "text-aurelia-muted border-aurelia-border";
                 if(item.type === "GARDEN") typeColor = "text-aurelia-primary border-aurelia-primary/50";
                 if(item.type === "SYSTEM") typeColor = "text-aurelia-text border-aurelia-text/30";
+                if(item.type === "ESSAY") typeColor = "text-aurelia-secondary border-aurelia-secondary/50";
                 const selected = index === selectedIndex;
 
                 return `

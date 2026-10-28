@@ -13,12 +13,15 @@ import pytest
 from engine.buildlog import get_warnings, reset_warnings
 from engine.citations import (
     References,
+    citation_jsonld,
     edition_label,
     en_dash,
     format_entry,
+    format_web_entry,
     initials,
     locator_text,
     parse_bracket,
+    source_url,
 )
 from engine.content import make_id
 from engine.essays import check_reference_records, render_body
@@ -463,3 +466,103 @@ def test_parse_bracket():
     assert parse_bracket("just text") is None
     assert parse_bracket("x@a") is None
     assert parse_bracket("@a.") is None
+
+
+# --- the web citation style (roadmap S18) ----------------------------------
+
+def _web_refs(*records):
+    return References(list(records), "E09", "E09.refs.yaml", style="web")
+
+
+def test_source_url_prefers_doi_over_url_or_neither():
+    assert source_url(JOURNAL) == "https://doi.org/10.2307/1914185"
+    assert source_url(ENCYCLOPEDIA) == "https://plato.stanford.edu/archives/win2020/entries/decision-theory/"
+    assert source_url({**BOOK, "DOI": None, "URL": None}) is None
+
+
+def test_the_web_style_sources_list_entry_is_title_authors_year_link():
+    assert str(format_web_entry(JOURNAL, "1979")) == (
+        "Prospect theory: An analysis of decision under risk. Kahneman, D., &amp; Tversky, A. (1979). "
+        '<a href="https://doi.org/10.2307/1914185">https://doi.org/10.2307/1914185</a>'
+    )
+    # Plainer than the APA 7 entry: no journal, volume, issue or page range.
+    web = str(format_web_entry(JOURNAL, "1979"))
+    assert "Econometrica" not in web and "263" not in web
+    [source] = _web_refs(JOURNAL).entries()
+    assert str(source["html"]) == str(format_web_entry(JOURNAL, "1979"))
+
+
+def test_web_style_citations_link_straight_to_the_source_not_the_list():
+    html, refs = cite_web("[@kahneman1979] and [@steele2020]", [JOURNAL, ENCYCLOPEDIA])
+    assert html == (
+        '(<a href="https://doi.org/10.2307/1914185" class="essay-citation" rel="noopener noreferrer">'
+        'Kahneman &amp; Tversky, 1979</a>) and '
+        '(<a href="https://plato.stanford.edu/archives/win2020/entries/decision-theory/" '
+        'class="essay-citation" rel="noopener noreferrer">Steele &amp; Stefánsson, 2020</a>)'
+    )
+    assert get_warnings() == []
+    assert refs.entry("kahneman1979")["cite_href"] == "https://doi.org/10.2307/1914185"
+
+
+def cite_web(text, records):
+    refs = _web_refs(*records)
+    html = str(render_body(text, "E09", make_id, set(), "/garden.html", refs))
+    return html.removeprefix("<p>").removesuffix("</p>\n"), refs
+
+
+def test_a_record_with_neither_doi_nor_url_renders_unlinked_and_warns_once():
+    bare = {**BOOK, "DOI": None, "URL": None}
+    html, _refs = cite_web("[@kahneman2011]", [bare])
+    assert html == '(<span class="essay-citation essay-citation-unlinked">Kahneman, 2011</span>)'
+    assert get_warnings() == [
+        "Essay E09: reference 'kahneman2011' in E09.refs.yaml has no DOI or URL; "
+        "its web-style citations render as plain text"
+    ]
+    # Not print() -- the one path --strict counts (engine/buildlog.warn()).
+    from engine import buildlog
+    assert buildlog.get_warnings() == get_warnings()
+
+
+def test_web_style_keeps_the_missing_and_uncited_record_warnings():
+    html, _refs = cite_web("[@kahneman1979; @nobody2020]", [JOURNAL])
+    assert html == '<span class="essay-missing-citation">[@kahneman1979; @nobody2020]</span>'
+    assert any("cites 'nobody2020', which has no record in E09.refs.yaml" in w for w in get_warnings())
+
+    reset_warnings()
+    _html, refs = cite_web("[@kahneman1979]", [JOURNAL, BOOK])
+    refs.warn_uncited()
+    assert "Essay E09: reference 'kahneman2011' in E09.refs.yaml is cited nowhere in the essay" in get_warnings()
+
+
+def test_web_style_does_not_warn_about_fields_an_apa_7_entry_would_not_show():
+    # unused_fields() is about what an APA 7 entry would show; the web
+    # style's plainer entry never shows a volume, issue or page either way,
+    # so it is not a field the web style "does not show" in the same sense.
+    _web_refs(JOURNAL)
+    assert get_warnings() == []
+
+
+# --- Article JSON-LD citation entries (roadmap S18) -------------------------
+
+def test_citation_jsonld_is_scholarly_article_for_a_journal_article_or_preprint():
+    entry = citation_jsonld(JOURNAL)
+    assert entry == {
+        "@type": "ScholarlyArticle",
+        "name": "Prospect theory: An analysis of decision under risk",
+        "author": [{"@type": "Person", "name": "Daniel Kahneman"}, {"@type": "Person", "name": "Amos Tversky"}],
+        "datePublished": "1979",
+        "url": "https://doi.org/10.2307/1914185",
+    }
+    assert citation_jsonld(PREPRINT)["@type"] == "ScholarlyArticle"
+
+
+def test_citation_jsonld_is_creative_work_otherwise_with_a_group_author():
+    entry = citation_jsonld(GROUP)
+    assert entry["@type"] == "CreativeWork"
+    assert entry["author"] == [{"@type": "Organization", "name": "American Psychological Association"}]
+    assert citation_jsonld(BOOK)["@type"] == "CreativeWork"
+
+
+def test_citation_jsonld_has_no_url_when_the_record_has_neither():
+    entry = citation_jsonld({**BOOK, "DOI": None, "URL": None})
+    assert "url" not in entry

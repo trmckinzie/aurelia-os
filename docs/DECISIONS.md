@@ -1084,7 +1084,84 @@ knowing so you don't "fix" something that was a deliberate decision:
     Dependabot, which resolves versions itself, so `.github/dependabot.yml` now sets
     `cooldown: default-days: 7` on all three ecosystems.
 
-## Known gaps / deliberately not done
+48. **The web citation style, Article JSON-LD, per-essay Open Graph, the Essays feed and search
+    (roadmap S18, 2026-10-28).** The fourth and last Essays session on item 41's plan. What it
+    built, and the calls made where the design was silent:
+    - **The web style shares everything with APA 7 except the two renderers.** `References.__init__`
+      takes a `style` ("apa7" or "web"); the record-shape checks, the sort order, the 1979a/1979b
+      lettering, and the missing-record, uncited-record and ambiguous-citation warnings are
+      unchanged either way, since they are about the citations and the records, not about either
+      style's text. Only `format_entry()` vs. `format_web_entry()` (the "Sources" list: title,
+      authors, year, link, with none of APA 7's journal/volume/page detail) and the in-text
+      link's target differ. `source_url(record)` -- DOI preferred, as an `https://doi.org/` link,
+      else the URL, else `None` -- is the one DOI-or-URL rule, shared by the web style's in-text
+      link, the APA 7 entry's own link (refactored to use it, no behaviour change), and the
+      Article JSON-LD's per-citation `url` below. A record with neither has nothing to link to:
+      its citations render as plain text, muted (`.essay-citation-unlinked`), and
+      `engine/citations.py` warns once per record, not once per citation, since the record is
+      the thing wrong, not any one occurrence -- `print()` would have made the problem invisible
+      to `--strict`, exactly the trap `docs/ESSAYS.md`'s "Citations" section warns about.
+      `unused_fields()` (a field an APA 7 entry would not show) only runs for `style == "apa7"`,
+      since the web style was never going to show a volume or a page range either way -- nothing
+      about a record is "unused" by a renderer that only ever shows five fields.
+    - **Article JSON-LD reuses the About page's own Person, not a second copy of it.**
+      `engine/essays.article_jsonld(essay, person, url)` takes the `person` dict
+      `engine/profile.person_jsonld()` already built for About, so the two pages' author field is
+      one function's output; `engine/pipeline.py` calls `person_jsonld()` again for each essay
+      page rather than threading one object through the whole render, since the two calls are
+      deterministic and cheap, and building `_essay_pages()` a `profile` parameter just to carry
+      it through would be the wider change for no different result. `citation` entries
+      (`engine/citations.citation_jsonld()`) cite the records `essay["listed_references"]` holds
+      -- the ones the reference list actually shows, the same records `disclosure()` counts, not
+      the file as written, so neither can claim a source the page does not display. A journal
+      article or a preprint (CSL `article`) is a `ScholarlyArticle`; everything else is the more
+      general `CreativeWork`. `url`/`mainEntityOfPage` are left out, like `person_jsonld()`'s own
+      `url`, when `site.domain` is not configured -- there is no address worth claiming either way.
+    - **`og:type` is a block (`{% block og_type %}website{% endblock %}`), not a second
+      conditional.** `essaytemplate.html` overrides it to `article`; the Open Graph `article:`
+      namespace's two time fields are the one addition that needed no existing mechanism:
+      `article:published_time` is the essay's own `published`, and `article:modified_time` falls
+      back to `published` with no `updated` -- the same rule the JSON-LD's `dateModified` uses, so
+      the two can never disagree. `og:url` is new, site-wide, built from the same expression the
+      canonical link already used (now a `{% set canonical_path %}` shared by both), since a page
+      has exactly one canonical address for either consumer.
+    - **The feed's entry ids are the essay's own absolute URL, not a `tag:` URI.** Considered
+      both, as Atom's spec allows either: a `tag:` URI needs no working address and survives a
+      future change of host, but an essay's URL is already permanent by contract
+      (`docs/ESSAYS.md`, "Pages and URLs": "An essay's URL is permanent once published") and is
+      also the address worth dereferencing to read the piece the id names, which a `tag:` URI is
+      not. `engine/feed.py` builds the whole document with `xml.etree.ElementTree`, as the task
+      asked, with a plain `xmlns` attribute on the root rather than etree's namespace-prefix
+      machinery, since nothing here needs a second namespace or a `ns0:` prefix on every tag. An
+      entry's `<content type="html">` is the essay's rendered body plus "How this essay was made"
+      and the reference list (or the web style's "Sources" list) -- never the study companion or
+      the YouTube episode, the one zone with AI output and the one piece of third-party-loading
+      markup on the page, neither of which belongs in a reader's feed client. Relative links the
+      content carries -- a Garden wikilink built from `site_root` ("/"), an in-text citation's own
+      `#ref-<key>` anchor -- are rewritten absolute by two string replacements
+      (`href="/` and `href="#`), since markdown-it's own link validator and nh3's cleaning pass
+      already guarantee every other `href` is either `https://` or one of those two relative
+      forms; nothing else needed rewriting. No `site.domain` configured means no absolute address
+      to build ids and links from, so `engine/pipeline.py` warns and writes neither the feed file
+      nor its `<link>` -- a state the real site is never in, since a domain was configured well
+      before this session (roadmap S14).
+    - **Essays join the Lobby's command-palette index, not the Garden's deep-search index.**
+      `engine/pipeline._build_search_index()` (the `SYSTEM_INDEX` every page's command palette
+      reads, `base.html`) is the one a result can navigate from, by `url`; the Garden's own
+      `_write_deep_search_index()` only feeds `garden.html`'s in-page card filter and never
+      produces a navigable result, so it was never the right place for a page that is not a
+      Garden card. An essay entry's `url` is its own page (`essays/<slug>/`), not a
+      `garden.html#id` hash, so a result opens the essay directly rather than the Garden's note
+      reader -- the one real difference from a Garden entry, which the command palette's
+      `resultUrl()` needed no change to handle, since it was already relative-or-absolute agnostic.
+      A new `ESSAY` type got its own swatch colour in the palette's result list, the one
+      genuinely optional piece of this item.
+    - **A second fixture essay, E02 ("Attention is a budget"), carries `citation_style: web`.**
+      E01 stays `apa7` so every existing S15-S17 test and golden string is untouched; every test
+      that scanned `tests/fixtures/essays/` and assumed exactly one essay (`[essay] = _scan(...)`)
+      was updated to ask for E01 by id instead. Both fixture essays build warning-free under
+      `--strict`, so the "a record with neither a DOI nor a URL warns" case is a unit test
+      (`tests/test_citations.py`), never shipped in a checked-in fixture.
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
   templating engine for everything else. This was considered and explicitly deferred as

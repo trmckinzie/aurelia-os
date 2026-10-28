@@ -42,6 +42,19 @@ so they go through engine/buildlog.warn() and fail only the strict build,
 like a dangling wikilink: a citation with no record, a record nothing
 cites, a key used twice, a type this module does not format, or two
 different works that would cite identically.
+
+THE WEB STYLE AND THE ARTICLE CITATIONS (roadmap S18)
+------------------------------------------------------
+`citation_style: web` renders from the same records (docs/ESSAYS.md,
+"Citations"): each in-text citation links straight to the record's DOI or
+URL instead of to a reference-list entry, and the list itself is a plainer
+"Sources" entry (format_web_entry: title, authors, year, link) rather than
+an APA 7 one. A record with neither a DOI nor a URL has nothing to link
+to, so its citations render as plain text and References.__init__ warns
+once, the same way an unsupported type does. source_url() is the one
+DOI-or-URL rule, shared by the web style, the APA 7 entry's own link, and
+citation_jsonld() -- the per-reference `citation` entry engine/essays.py
+builds into each essay page's Article JSON-LD.
 """
 import re
 import unicodedata
@@ -234,18 +247,29 @@ def _author_sort(names):
 
 # --- one entry ------------------------------------------------------------
 
-def _link(record):
-    """The DOI as an https://doi.org/ link, else the URL, else nothing."""
+def source_url(record):
+    """The DOI as an https://doi.org/ link, else the URL, else None.
+
+    Shared by three callers that all want "the one address this source
+    lives at": the APA 7 entry's own link (_link, below), the web citation
+    style's in-text link (docs/ESSAYS.md, "Citations" -- a record with
+    neither warns and renders unlinked), and the Article JSON-LD's
+    `citation` entries (roadmap S18), where it is the `url` field.
+    """
     doi = _text(record.get("DOI"))
     if doi:
         doi = _DOI_PREFIX_RE.sub("", doi)
-        href = "https://doi.org/" + quote(doi, safe="/:;()._-")
-        text = "https://doi.org/" + doi
-    else:
-        href = text = _text(record.get("URL"))
+        return "https://doi.org/" + quote(doi, safe="/:;()._-")
+    return _text(record.get("URL")) or None
+
+
+def _link(record):
+    """The APA 7 entry's own link: source_url(record) as an anchor whose
+    text is the address itself, or nothing when there is none."""
+    href = source_url(record)
     if not href:
         return ""
-    return f'<a href="{escape(href)}">{escape(text)}</a>'
+    return f'<a href="{escape(href)}">{escape(href)}</a>'
 
 
 def _italic(text):
@@ -329,6 +353,53 @@ def format_entry(record, year_label):
     return Markup(head + body + (f" {link}" if link else ""))
 
 
+def format_web_entry(record, year_label):
+    """One entry of the web citation style's "Sources" list (roadmap S18,
+    docs/ESSAYS.md, "Citations"): title, authors, year, link -- plainer
+    than the APA 7 entry above, since the web style is read online rather
+    than cited formally, and it never shows a journal, volume, page range
+    or publisher. The record has passed check_record(), the same gate the
+    APA 7 entry uses, so title/author/issued are present either way."""
+    authors = record["author"]
+    title = _text(record["title"])
+    who = reference_authors(authors)
+    head = f"{escape(_closing(title, title))} {escape(_closing(who, who))} ({escape(year_label)})."
+    link = _link(record)
+    return Markup(head + (f" {link}" if link else ""))
+
+
+# A CSL type that reads as a scholarly article; everything else (a book, a
+# chapter, an encyclopedia entry) is the more general CreativeWork. Used by
+# citation_jsonld() only -- the APA 7 formatter above treats all five types
+# alike.
+_SCHOLARLY_TYPES = frozenset({"article-journal", "article"})
+
+
+def _citation_person(name):
+    """One name of a citation_jsonld() author list: a Person for a person,
+    an Organization for a CSL `literal` group author."""
+    if _is_group(name):
+        return {"@type": "Organization", "name": _text(name["literal"])}
+    given = _text(name.get("given"))
+    family = _text(name["family"])
+    return {"@type": "Person", "name": f"{given} {family}".strip() if given else family}
+
+
+def citation_jsonld(record):
+    """One Article `citation` entry (roadmap S18, docs/ESSAYS.md,
+    "Metadata"): a ScholarlyArticle for a journal article or a preprint,
+    else a CreativeWork, with name, author, datePublished and, when the
+    record has one, the same DOI-or-URL address source_url() gives every
+    other sink. Takes a record that has already passed check_record()."""
+    return {
+        "@type": "ScholarlyArticle" if record["type"] in _SCHOLARLY_TYPES else "CreativeWork",
+        "name": _text(record["title"]),
+        "author": [_citation_person(n) for n in record["author"]],
+        "datePublished": str(record["issued"]),
+        **({"url": source_url(record)} if source_url(record) else {}),
+    }
+
+
 # --- the reference file as a whole ---------------------------------------
 
 def unused_fields(record):
@@ -365,9 +436,10 @@ class References:
     text depends on the whole list (1979a needs to know about 1979b).
     """
 
-    def __init__(self, records, essay_id, refs_name):
+    def __init__(self, records, essay_id, refs_name, style="apa7"):
         self.essay_id = essay_id
         self.refs_name = refs_name
+        self.style = style
         self.keys = set()        # every key in the file, formattable or not
         self.cited = set()
         self._entries = {}
@@ -384,10 +456,15 @@ class References:
                 warn(f"Essay {essay_id}: reference '{key}' in {refs_name} is left out of the list: "
                      + "; ".join(problems))
                 continue
-            unused = unused_fields(record)
-            if unused:
-                warn(f"Essay {essay_id}: reference '{key}' in {refs_name} has {', '.join(unused)}, "
-                     f"which an APA 7 {record['type']} entry does not show")
+            # unused_fields() is about what an *APA 7* entry would show, so
+            # it says nothing about the web style, whose entry is plainer by
+            # design (title, authors, year, link) and was never going to show
+            # a volume or a page range either way.
+            if style == "apa7":
+                unused = unused_fields(record)
+                if unused:
+                    warn(f"Essay {essay_id}: reference '{key}' in {refs_name} has {', '.join(unused)}, "
+                         f"which an APA 7 {record['type']} entry does not show")
             usable.append(record)
 
         usable.sort(key=lambda r: (_author_sort(r["author"]), r["issued"], _title_sort(_text(r["title"]))))
@@ -418,13 +495,28 @@ class References:
         self.order = [r["id"] for r in usable]
         for record in usable:
             key = record["id"]
+            if style == "web":
+                html = format_web_entry(record, year_labels[key])
+                # A citation links straight to the source (docs/ESSAYS.md,
+                # "Citations"); a record with neither a DOI nor a URL has
+                # nowhere to link to, so it renders unlinked and this is the
+                # one warning that leaks nothing but earns a mention, not
+                # print() (engine/buildlog.warn() is what --strict counts).
+                cite_href = source_url(record)
+                if cite_href is None:
+                    warn(f"Essay {essay_id}: reference '{key}' in {refs_name} has no DOI or URL; its "
+                         f"web-style citations render as plain text")
+            else:
+                html = format_entry(record, year_labels[key])
+                cite_href = f"#{anchor(key)}"
             self._entries[key] = {
                 "key": key,
                 "anchor": anchor(key),
                 "authors": record["author"],
                 "identity": _author_identity(record["author"]),
                 "year": year_labels[key],
-                "html": format_entry(record, year_labels[key]),
+                "html": html,
+                "cite_href": cite_href,
             }
 
     def __contains__(self, key):
@@ -475,7 +567,17 @@ def locator_text(locator):
 
 
 def _citation_link(entry, text):
-    return f'<a href="#{escape(entry["anchor"])}" class="essay-citation">{escape(text)}</a>'
+    """The in-text citation as HTML: a link to the reference-list entry
+    (apa7: entry["cite_href"] is "#ref-<key>") or, in the web style,
+    straight to the source's DOI or URL -- or, when it has neither, the
+    text alone (References.__init__ already warned about that record).
+    rel="noopener noreferrer" only on a link that actually leaves the page;
+    a same-page anchor needs neither."""
+    href = entry["cite_href"]
+    if href is None:
+        return f'<span class="essay-citation essay-citation-unlinked">{escape(text)}</span>'
+    rel = "" if href.startswith("#") else ' rel="noopener noreferrer"'
+    return f'<a href="{escape(href)}" class="essay-citation"{rel}>{escape(text)}</a>'
 
 
 def _missing(raw):
