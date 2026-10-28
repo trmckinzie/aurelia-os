@@ -834,12 +834,9 @@ sessions:
       deploy's live check was green and the live site serves 8efa850.
   - id: S17
     title: Add the essay disclosure note, the study companion and its media
-    status: blocked
+    status: done
     started: 2026-10-18
-    blocker: >-
-      Travis's account step: the R2 bucket and media.travisrmckinzie.com, which did not
-      resolve on 2026-10-18. Everything else is built; once the subdomain answers,
-      upload test/tone.wav and run the audio test with AURELIA_LIVE_MEDIA=1.
+    completed: 2026-10-28
     area: Content
     effort: M
     model: sonnet
@@ -862,7 +859,7 @@ sessions:
     depends_on: [S16]
     tasks:
       - text: "Travis: create the R2 bucket and connect media.travisrmckinzie.com in Cloudflare (an account step a session does not take); record the bucket name in notes, never a credential"
-        done: false
+        done: true
       - text: Render "How this essay was made" from methods and the reference file, with the audit sentence only when citation audit is a role
         done: true
       - text: Render the study companion zone on an inverted surface from theme tokens, labelled AI-generated, holding only players and links built from the companion list
@@ -892,8 +889,9 @@ sessions:
       episode. tests/browser/essays.spec.mjs proves no request to the media host or
       Google before play or the tap and one after, with both answered by page.route() so
       CI never contacts them. media_origins names the media host before it resolved,
-      since the fixture build needs it; nothing live changes. Left: the Travis task,
-      then the live audio check (AURELIA_LIVE_MEDIA=1, the essays spec's audio test).
+      since the fixture build needs it; nothing live changes. Finished 2026-10-28:
+      bucket aurelia-media on media.travisrmckinzie.com (r2.dev off); the audio
+      test passed against test/tone.wav with AURELIA_LIVE_MEDIA=1.
   - id: S18
     title: Add the web citation style, essay structured data and the Essays feed
     status: todo

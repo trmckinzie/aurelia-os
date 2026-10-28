@@ -8,15 +8,15 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 
 ## Reach done (second roadmap, planned 2026-10-10)
 
-Order from here: S12, S15 and S16 are done; **S17 next**, then S18 (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
+Order from here: S12, S15, S16 and S17 are done; **S18 next** (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
 
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
 - [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)
 - [x] S12 Tailwind v4, and `npm audit` at zero advisories including dev dependencies (2026-10-14, #51–#52)
 - [x] S15 essays as a content type: the index, a page per essay, Garden links and the privacy checks (2026-10-14, #53–#54)
 - [x] S16 essay citations resolved and references formatted in APA 7 (2026-10-15, #55)
-- [ ] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player (built 2026-10-18; waits on the media bucket and its live audio check) #next
-- [ ] S18 the web citation style, essay structured data, the Essays feed and search
+- [x] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player (built 2026-10-18; bucket `aurelia-media` on media.travisrmckinzie.com and the live audio check 2026-10-28, #58)
+- [ ] S18 the web citation style, essay structured data, the Essays feed and search #next
 - [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh`
 
 ## Standardize
