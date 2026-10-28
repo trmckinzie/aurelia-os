@@ -172,18 +172,29 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   derives the degree counts from those edges. Its own docstring notes these were originally two
   separate functions, each doing its own scan over the same data, consolidated into one pass. `_build_search_index()` builds the command-palette JSON (title/type/
   tags/short-snippet only, **not** full note bodies — this was a deliberate size fix, see
-  docs/DECISIONS.md item 5). A separate, larger index for the Garden's own deep-search field is
+  docs/DECISIONS.md item 5); since roadmap S18 it also takes the published essays and adds one
+  entry per essay, `type: "ESSAY"`, whose `url` is the essay's own page rather than a
+  `garden.html#id` hash, so a search result opens the essay directly instead of the Garden's note
+  reader (`base.html`'s command palette needed no change to follow it). A separate, larger index
+  for the Garden's own deep-search field is
   built by `_build_deep_search_index()` (longer snippets, mirroring `_build_search_index()`'s size
   discipline) and written by `_write_deep_search_index()` to `assets/js/search-index.js` — a file
   generated at build time, gitignored, and loaded by `gardentemplate.html` as a separately cached
   script rather than inlined, so re-opening the Garden doesn't re-parse it from the page's own
-  JSON every load. `report_page_sizes()` runs last, after the asset-version stamp, and prints the
+  JSON every load; essays do **not** join this one, since it only feeds the Garden's own in-page
+  card filter and never produces a navigable result. `report_page_sizes()` runs last, after the asset-version stamp, and prints the
   compressed and raw size of `garden.html` and that index; a Garden page over
   `GARDEN_COMPRESSED_LIMIT_BYTES` (1 MiB, backlog B04) is a build warning, which `--strict` fails
   on. `_render_pages()` renders `index.html`, `garden.html`, `about.html`,
   `404.html`, and, once an essay is published, `essays/index.html` and one
   `essays/<slug>/index.html` per essay (`_essay_pages()`), which link from the site root the way
-  `404.html` does and name their own path for the canonical link. `build_all()` loads `profile.json` (below) *before* scanning the
+  `404.html` does and name their own path for the canonical link; for an essay page it also
+  builds that page's Article JSON-LD (`essays.article_jsonld()`, below), reusing the same Person
+  `profile.person_jsonld()` builds for About. `_write_essays_feed()` (roadmap S18) writes
+  `dist/essays/feed.xml` from `engine/feed.py` and returns its href for every page's
+  `<link rel="alternate" type="application/atom+xml">` (`base.html`), or `None` — with no essay
+  published, or with no `site.domain` configured to build absolute feed ids and links from, in
+  which case it warns and writes nothing. `build_all()` loads `profile.json` (below) *before* scanning the
   vault, so a malformed profile aborts the build before any vault work; it also writes
   `dist/CNAME` when `user_config.json`'s `site.domain` is set (validated as a bare hostname).
   `build_all(strict=True)` (`build.py --strict`, CI only) raises `StrictBuildError` at the end of
@@ -205,14 +216,8 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   case variants of its name. `pipeline._scan_garden()` carries the other half: the folder is
   pruned from the Garden walk, so an essay is never a card, and a `type: essay` note anywhere
   else, the pruned `20_AURELIA` included and read from the raw frontmatter text, raises the
-  same error. Citations (roadmap S16) are two more markdown-it inline rules, from
-  **`citations.py`**: Pandoc's `[@key]`, `[@key, p. 12]`, `[@a; @b]` and narrative `@key` become
-  APA 7 in-text citations linking to `#ref-<key>`, and `References` formats the essay's
-  `E01.refs.yaml` into an APA 7 list (five source types, author-count rules, group authors,
-  1979a/1979b, DOI over URL, en-dash ranges, APA order) in-house, after citeproc-py failed the
-  same rules (`docs/DECISIONS.md` item 44). A reference record's shape (names, key, `verified`)
-  raises with the privacy checks; a citation with no record, a record nothing cites, a duplicate
-  key or an unsupported type only warns, so the strict build fails on it. Roadmap S17 adds the
+  same error. Citations (roadmap S16, S18) are two more markdown-it inline rules, from
+  **`citations.py`** (its own bullet, below). Roadmap S17 adds the
   two parts that say who made what: `disclosure()` builds "How this essay was made" from the
   `methods` block and the reference records, never from typed prose, and `companion_entries()`
   turns the `companion` list into the players and links of the study companion, each URL on
@@ -220,7 +225,36 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   tells `csp.py` which essay pages need the media host or the YouTube player
   (`docs/DECISIONS.md` item 45). Essays sort newest first and render only once at least
   one is published; until then `_render_pages()` writes no `essays/` folder and `base.html`
-  shows no Essays link.
+  shows no Essays link. Roadmap S18 (`docs/DECISIONS.md` item 48) adds the web citation style
+  (below), `article_jsonld()` (headline, the same Person `profile.person_jsonld()` built for
+  About, dates, and one `citation` entry per reference the page's list shows, built by
+  `citations.citation_jsonld()`), and threads `listed_references` (the records the list
+  actually shows) onto the published essay dict so `article_jsonld()` and `disclosure()` read
+  the same set rather than recomputing it twice.
+- **`citations.py`** — essay citations and reference lists (roadmap S16 and S18,
+  `docs/ESSAYS.md`, "Citations"). Pandoc's `[@key]`, `[@key, p. 12]`, `[@a; @b]` and narrative
+  `@key` are two markdown-it inline rules; `References` builds the list once per essay (a 1979a
+  needs to know about its 1979b) and takes a `style` — `format_entry()` for `apa7` (five source
+  types, author-count rules, group authors, 1979a/1979b, DOI over URL, en-dash ranges, APA order,
+  in-house after citeproc-py failed the same rules, `docs/DECISIONS.md` item 44) or
+  `format_web_entry()` for `web` (title, authors, year, link — no journal, volume or page detail).
+  `source_url(record)` is the one DOI-or-URL rule (DOI preferred, as `https://doi.org/`), shared
+  by the web style's in-text link, the APA 7 entry's own link, and `citation_jsonld()`'s per-record
+  `url`. Each in-text citation's `cite_href` is `#ref-<key>` under `apa7` or `source_url(record)`
+  under `web`; a `web`-style record with neither a DOI nor a URL renders unlinked and warns once
+  (not per citation). A reference record's shape (names, key, `verified`) raises with the privacy
+  checks regardless of style; a citation with no record, a record nothing cites, a duplicate key,
+  an unsupported type, or (`apa7` only) a field that type's entry would not show, only warns, so
+  the strict build fails on it.
+- **`feed.py`** — the Essays Atom feed (roadmap S18, `docs/ESSAYS.md`, "Metadata").
+  `build_atom_feed()` takes the published essays (newest first, as `scan_essays()` already
+  returns them), the site's absolute address and the author's name, and returns the feed's bytes,
+  built with `xml.etree.ElementTree`. Each entry's id and links are the essay's own absolute URL
+  — permanent by the same contract the URL itself carries, not a `tag:` URI (`docs/DECISIONS.md`
+  item 48). `entry_content_html()` is the rendered essay plus "How this essay was made" and the
+  reference (or web-style Sources) list, never the study companion or the YouTube episode, with
+  every relative link (a Garden wikilink, an in-text citation's own `#ref-<key>` anchor) rewritten
+  absolute, since a feed entry carries no notion of the page it came from.
 - **`buildlog.py`** — `warn()` prints a build warning and records it; `build_all()` lists them at
   the end. Every skip a human should fix goes through it (malformed frontmatter and an
   unrecognized `publish:` value, naming the note; ambiguous aliases, each one; a missing media

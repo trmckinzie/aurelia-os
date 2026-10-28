@@ -63,6 +63,16 @@ and links built from the `companion` entries (a kind, a short label, a URL
 on an allowed origin), so the one zone with AI output on the page cannot
 hold prose. The YouTube episode renders as a control that loads nothing
 from Google until it is pressed (essaytemplate.html).
+
+METADATA, THE FEED AND SEARCH (S18)
+------------------------------------
+article_jsonld() builds the Article JSON-LD each essay page carries,
+reusing engine/profile.person_jsonld()'s output as its author rather than
+duplicating fields by hand, and citing the same records disclosure()
+counts (listed_records()). engine/feed.py builds the Atom feed from the
+essays this module returns; engine/pipeline.py decides whether to write it
+and link it, and does both only once at least one essay is published, the
+same rule the index and the nav item already follow.
 """
 import datetime
 import math
@@ -81,6 +91,7 @@ from engine.buildlog import warn
 from engine.citations import (
     References,
     bracket_rule,
+    citation_jsonld,
     is_key,
     narrative_rule,
     plain_citations_in_alt_text,
@@ -738,6 +749,35 @@ def listed_records(records, reference_list):
     return listed
 
 
+def article_jsonld(essay, person, url=None):
+    """The Article JSON-LD for one essay page (roadmap S18, docs/ESSAYS.md,
+    "Metadata"): headline, author, dates, the essay's own URL and a
+    `citation` entry per reference it actually lists.
+
+    `person` is the same Person dict engine/profile.person_jsonld() builds
+    for the About page -- passed in rather than built here, so the two
+    pages' author field is one function's output, not two hand-written
+    copies that can drift. `url` is the essay's absolute address
+    (engine/pipeline.py's _site_url() plus essay["url"]); without a
+    configured site.domain there is no address worth claiming, so url and
+    mainEntityOfPage are left out rather than pointing at nothing, the same
+    rule person_jsonld() applies to its own `url` field.
+    """
+    article = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": essay["title"],
+        "author": person,
+        "datePublished": essay["published_iso"],
+        "dateModified": essay["updated_iso"] or essay["published_iso"],
+        "citation": [citation_jsonld(record) for record in essay["listed_references"]],
+    }
+    if url:
+        article["url"] = url
+        article["mainEntityOfPage"] = url
+    return article
+
+
 def companion_entries(companion):
     """The study companion as the template draws it: one player or link per
     entry, built from the structured fields only (kind, label, URL)."""
@@ -848,10 +888,15 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
                 "label": label.strip(),
                 "href": f"{garden_href}#{target_id}" if target_id in discipline_ids else None,
             })
-        references = References(essay["refs"], raw["id"], f"{raw['id']}.refs.yaml")
+        references = References(essay["refs"], raw["id"], f"{raw['id']}.refs.yaml", style=raw["citation_style"])
         body_html = render_body(body, raw["id"], resolve, known_ids, garden_href, references)
         references.warn_uncited()
         reference_list = references.entries()
+        # The records the list actually shows (a record left out by a
+        # warning-only problem is not one of them): disclosure() counts
+        # these, and so does the Article JSON-LD's `citation` list below,
+        # so neither can say more sources than a reader can see.
+        shown_records = listed_records(essay["refs"], reference_list)
         published.append({
             "id": raw["id"],
             "slug": raw["slug"],
@@ -874,14 +919,17 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
             "companion": companion_entries(raw.get("companion")),
             "youtube": raw["youtube"].strip() if raw.get("youtube") else None,
             "youtube_id": youtube_id(raw["youtube"]) if raw.get("youtube") else None,
-            "disclosure": disclosure(raw["methods"], listed_records(essay["refs"], reference_list),
-                                     has_companion=bool(raw.get("companion"))),
+            "disclosure": disclosure(raw["methods"], shown_records, has_companion=bool(raw.get("companion"))),
             "reading_minutes": reading_minutes(body),
             "body_html": body_html,
             "references": essay["refs"],
-            # The APA 7 list (engine/citations.py); `references` stays the
-            # records as written, which `disclosure` counts.
+            # The APA 7 or web-style list (engine/citations.py); `references`
+            # stays the records as written, which `disclosure` counts.
             "reference_list": reference_list,
+            # The same records, for the Article JSON-LD's `citation` list
+            # (article_jsonld(), below) -- built once here rather than
+            # recomputed, same as disclosure's count above.
+            "listed_references": shown_records,
             "source": essay["rel"],
         })
 

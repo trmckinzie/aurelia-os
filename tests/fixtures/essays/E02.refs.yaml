@@ -1,0 +1,48 @@
+# Reference records for E02 (roadmap S18): the web citation style, from the
+# same CSL fields as E01's apa7 list. Three records, each with a DOI or a
+# URL, so the fixture build stays warning-free -- the "no DOI or URL, so its
+# citations render unlinked" case (engine/citations.py) is covered by a unit
+# test (tests/test_citations.py) rather than shipped here, since a checked-in
+# fixture essay must build clean under --strict.
+- id: kahneman1979
+  type: article-journal
+  author:
+    - {family: Kahneman, given: Daniel}
+    - {family: Tversky, given: Amos}
+  issued: 1979
+  title: "Prospect theory: An analysis of decision under risk"
+  container-title: Econometrica
+  volume: 47
+  issue: 2
+  page: 263-291
+  DOI: 10.2307/1914185
+  verified: true
+
+- id: thaler1980
+  type: article-journal
+  author:
+    - {family: Thaler, given: Richard H.}
+  issued: 1980
+  title: Toward a positive theory of consumer choice
+  container-title: Journal of Economic Behavior & Organization
+  volume: 1
+  issue: 1
+  page: 39-60
+  DOI: 10.1016/0167-2681(80)90051-7
+  verified: true
+
+- id: steele2020
+  type: entry-encyclopedia
+  author:
+    - {family: Steele, given: Katie}
+    - {family: Stefánsson, given: H. Orri}
+  editor:
+    - {family: Zalta, given: Edward N.}
+  issued: 2020
+  title: Decision theory
+  container-title: The Stanford encyclopedia of philosophy
+  version: Winter 2020
+  publisher: Metaphysics Research Lab, Stanford University
+  URL: https://plato.stanford.edu/archives/win2020/entries/decision-theory/
+  open_access: true
+  verified: true

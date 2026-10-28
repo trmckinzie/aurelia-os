@@ -894,10 +894,11 @@ sessions:
       test passed against test/tone.wav with AURELIA_LIVE_MEDIA=1.
   - id: S18
     title: Add the web citation style, essay structured data and the Essays feed
-    status: todo
+    status: in_progress
     area: Content
     effort: M
     model: sonnet
+    started: 2026-10-28
     why: >-
       Finishes the first version of Essays (docs/ESSAYS.md). A second
       citation style for essays written for the web, from the same reference
@@ -908,20 +909,27 @@ sessions:
     depends_on: [S17]
     tasks:
       - text: Render citation_style web - each citation a link on the short author-year text to the DOI or URL, and a short Sources list in place of the APA list
-        done: false
+        done: true
       - text: Emit an Article JSON-LD block per essay (headline, author as the About page's Person, dates, citation entries) and test it parses
-        done: false
+        done: true
       - text: Give essay pages og:type article, their own title, the thesis as description, and article published and modified times
-        done: false
+        done: true
       - text: Write an Atom feed at /essays/feed.xml with full essay text and the disclosure note, linked from every page's head, and test it against the Atom required elements
-        done: false
+        done: true
       - text: Add essays to the site search, and update docs/ARCHITECTURE.md and docs/ESSAYS.md
-        done: false
+        done: true
     done_when:
       - In phone-width screenshots of the fixture build, an essay set to citation_style web shows linked citations and a Sources list
       - A test proves an essay page's Open Graph title and description come from its title and thesis, and its JSON-LD parses as an Article
       - A test proves /essays/feed.xml is valid Atom listing the fixture essay
       - bash verify.sh passes and the live check is green
+    notes: >-
+      All five tasks built and tested (tests/test_citations.py,
+      tests/test_essays.py, tests/test_feed.py, tests/browser/essays.spec.mjs).
+      The live-check item can only be proven after this merges and deploys,
+      so the session stays in_progress rather than done; mark it done and
+      record the merge commit in the follow-up change, per the roadmap-session
+      skill's convention (roadmap S09, docs/DECISIONS.md item 31).
   - id: S13
     title: Split the Garden's inline script into modules with unit tests
     status: todo

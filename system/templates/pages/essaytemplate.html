@@ -16,14 +16,22 @@
    then it swaps in a youtube-nocookie.com player, which the page's policy
    allows as its one frame-src (engine/csp.py).
 
+   roadmap S18 adds: an Article JSON-LD block and per-essay Open Graph tags
+   above, both in head_extra; an essay set to citation_style: web renders
+   the reference list as a plainer "Sources" list (format_web_entry()) with
+   every in-text citation linking straight to its source instead of to the
+   list, built by the same engine/citations.py from the same records.
+
    `essay.body_html` is the one value here that is not autoescaped: it
    arrives as Markup from engine/essays.py's render_body(), which rendered
    the note text with markdown-it (raw HTML off, so every tag it emits is
    its own), cleaned the result with nh3, and resolved the [[wikilinks]]
    into Garden links through a markdown-it inline rule. Each reference
    entry's `html` is Markup the same way, from engine/citations.py's
-   format_entry(), which escapes every field it writes. Nothing on this page
-   uses |safe.
+   format_entry() or format_web_entry(), which escape every field they
+   write. `article_jsonld` is Markup from textutils.dumps_for_script_tag(),
+   the same guarantee abouttemplate.html's person_jsonld carries. Nothing
+   on this page uses |safe.
 
    This page sits two folders below the top of dist/, so like 404.html it
    links from the site root (`site_root`); `page_path` feeds base.html's
@@ -36,10 +44,23 @@
 {% set active_page = "essays" %}
 {% block title %}{{ essay.title }} — {{ site.get('name', 'Personal site') }}{% endblock %}
 {% block nav_title %}ESSAYS{% endblock %}
+{% block og_type %}article{% endblock %}
 {% block og_title %}{{ essay.title }}{% endblock %}
 {% block description %}{{ essay.thesis }}{% endblock %}
 
 {% block head_extra %}
+{# article:modified_time falls back to published, the same rule the
+   Article JSON-LD's dateModified uses below, so the two never disagree. #}
+<meta property="article:published_time" content="{{ essay.published_iso }}">
+<meta property="article:modified_time" content="{{ essay.updated_iso or essay.published_iso }}">
+{# The Article JSON-LD (roadmap S18, docs/ESSAYS.md, "Metadata"):
+   engine/pipeline.py builds it with engine/essays.article_jsonld(), reusing
+   the same Person the About page emits (engine/profile.person_jsonld())
+   as its author rather than duplicating identity fields by hand. Already
+   made safe for a <script> body by textutils.dumps_for_script_tag(), the
+   same guarantee person_jsonld carries on abouttemplate.html -- no filter
+   needed here either. #}
+<script type="application/ld+json">{{ article_jsonld }}</script>
 <style>
 /* Inside Tailwind's utilities layer, after main.css (roadmap S12). The
    .essay-body rules mirror the Garden reader's .obsidian-reader typography
@@ -158,6 +179,10 @@
     /* A citation whose record is missing: shown as written, so the owner
        can find it (the build also warns, and the strict build fails). */
     .essay-missing-citation { color: var(--aurelia-text-muted); }
+    /* The web citation style (roadmap S18): a source with no DOI or URL has
+       nothing to link to, so its citations render as plain text instead
+       (engine/citations.py warns about the record once). */
+    .essay-citation-unlinked { color: var(--aurelia-text-main); }
 
     /* The reference list (S16): APA 7's hanging indent, half an inch at
        body size, and room under the fixed nav for an entry a citation
@@ -327,7 +352,10 @@
 
     {% if essay.reference_list %}
     <section class="essay-references" aria-labelledby="essay-references-title">
-        <h2 id="essay-references-title">References</h2>
+        {# The web style ends with a plainer "Sources" list in place of the
+           APA 7 reference list (docs/ESSAYS.md, "Citations"); the markup
+           and the id are the same either way. #}
+        <h2 id="essay-references-title">{% if essay.citation_style == "web" %}Sources{% else %}References{% endif %}</h2>
         <ul class="essay-reference-list">
             {% for ref in essay.reference_list %}
             <li id="{{ ref.anchor }}">{{ ref.html }}</li>

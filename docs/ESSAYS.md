@@ -11,10 +11,13 @@ the draft gate and privacy checks, the index and essay pages (`system/templates/
 and `essaytemplate.html`), the Garden links, and the recursive security-policy and cache-busting
 walks. S16 is built (2026-10-15, item 44): citations and the APA 7 reference list, in
 `engine/citations.py`. S17 is built (2026-10-18, item 45): the disclosure note, the study
-companion, the `media_origins` allowlist and the tap-to-load episode. S18 is not. Paths that do not exist yet are written plainly rather than as code, so
-`tests/test_docs_paths.py` does not hold them to the file system until a session creates them;
-vault/30_ESSAYS/ is one of them, since no essay is in the vault until Travis publishes the first. The test essay
-lives in `tests/fixtures/essays/`, and the build reads it through `AURELIA_ESSAYS_DIR`.
+companion, the `media_origins` allowlist and the tap-to-load episode. S18 is built (2026-10-28,
+item 48): the web citation style, the Article JSON-LD, per-essay Open Graph, the Atom feed at
+`engine/feed.py`, and essays in the site search. Paths that do not exist yet are written plainly
+rather than as code, so `tests/test_docs_paths.py` does not hold them to the file system until a
+session creates them; vault/30_ESSAYS/ is one of them, since no essay is in the vault until Travis
+publishes the first. Two test essays live in `tests/fixtures/essays/` (E01, `citation_style: apa7`;
+E02, `citation_style: web`), and the build reads them through `AURELIA_ESSAYS_DIR`.
 
 ## Where essays come from
 
@@ -233,11 +236,18 @@ the choice can be reversed later.
 - Two different works that would cite the same way ("Lee et al., 2023" twice) warn instead of
   rendering ambiguously: APA 7 adds author names to tell them apart, which the first version
   does not. Neither does it abbreviate a group author on second use.
-- An essay whose `citation_style` is `web` renders APA 7 until S18 builds the web style.
 
-**Web style** (`citation_style: web`), from the same records: each citation renders as a link on
-the short author-year text, straight to the source's DOI or URL, and the essay ends with a short
-Sources list (title, authors, year, link) instead of an APA reference list.
+**Web style** (`citation_style: web`, built S18), from the same records: each citation renders as
+a link on the short author-year text, straight to the source's DOI or URL (DOI preferred, as an
+`https://doi.org/` link, same as APA 7), and the essay ends with a short "Sources" list (title,
+authors, year, link) in place of the APA reference list. The record-shape checks, the missing-
+record and uncited-record warnings, and the two-works-that-would-cite-alike warning are the same
+checks the APA 7 style uses, since they are about the citations and the records, not about either
+style's text. A record with neither a DOI nor a URL has nothing to link to: its citations render
+as plain text, muted, and `engine/citations.py` warns once per record (not per citation), so the
+strict build fails on it the way an unsupported type does. `engine/essays.py`'s
+`References(..., style=essay["citation_style"])` is the one switch between the two; which list an
+essay gets is otherwise invisible to the rest of the pipeline.
 
 ## Pages and URLs
 
@@ -333,13 +343,28 @@ backlog item B21, decided separately.
 
 ## Metadata
 
-| | Today | Essays add |
+Built S18, `docs/DECISIONS.md` item 48:
+
+| | Every other page | An essay page |
 |---|---|---|
-| Open Graph | Site-wide tags in `system/templates/base.html`; `og:type` website; one preview image | Per essay: `og:type` article, title, thesis as description, `article:published_time` and `article:modified_time`. The preview image stays site-wide in the first version. |
-| Canonical URL | From `site.domain` | The essay's own URL. |
-| Structured data | Person on About only (`engine/profile.py`) | An Article per essay: headline, author (the About page's Person), dates, and `citation` entries for each reference. |
-| Feed | None | Atom at /essays/feed.xml, linked from every page's head. Atom over RSS because its one specification requires the ids and update dates a reader needs, and every feed reader supports it. Entries carry the full essay and its disclosure note, not the companion. |
-| Search | Lobby search over Garden notes | Essays join the site search. |
+| Open Graph | `og:type` website; title and description from `base.html`'s blocks; one site-wide preview image | `og:type` article (`{% block og_type %}`); title and description are the essay's own title and thesis; `article:published_time` and `article:modified_time` (the latter falling back to `published` with no `updated`). The preview image stays site-wide. |
+| `og:url` and canonical URL | From `site.domain` plus the page's path | The essay's own URL (`essays/<slug>/`), the same path the canonical link already used since S15. |
+| Structured data | Person on About only (`engine/profile.py`'s `person_jsonld()`) | An Article (`engine/essays.article_jsonld()`): headline, author (the same Person dict, not a hand-duplicated copy), `datePublished`/`dateModified`, its own URL as `url`/`mainEntityOfPage`, and one `citation` entry per reference the page's list actually shows -- a ScholarlyArticle for a journal article or a preprint, else a CreativeWork (`engine/citations.citation_jsonld()`). |
+| Feed | None | Every page links `/essays/feed.xml` once it exists (`<link rel="alternate" type="application/atom+xml">`, `base.html`). |
+| Search | Garden notes and the three system pages | Essays join the same index, opening their own URL rather than the Garden's note reader. |
+
+The feed itself, `engine/feed.py`: Atom over RSS because its one specification requires the ids
+and update dates a reader needs, and every feed reader supports it. One entry per published
+essay, newest first; each entry's id and links are the essay's own absolute URL -- permanent by
+the same contract as the URL itself (see "Pages and URLs"), not a `tag:` URI (`docs/DECISIONS.md`
+item 48 records the choice). An entry's content is the full rendered essay plus "How this essay
+was made" and the reference list (or the web style's Sources list) -- never the study companion or
+the YouTube episode, the one place AI output appears. Relative links the essay carries (a Garden
+wikilink, an in-text citation's own `#ref-<key>` anchor) are rewritten absolute, since a feed entry
+has no notion of the page it came from. Built with `xml.etree.ElementTree`, never string
+concatenation. The feed needs `site.domain` configured (its ids must be absolute); without one
+`engine/pipeline.py` warns and writes neither the file nor the link, which never happens on the
+real site since a domain is already configured (roadmap S14).
 
 ## Garden integration
 
@@ -360,16 +385,18 @@ S15 is Opus because it changes the publish surface and the shape of the build's 
 anything that changes what the public site renders is reviewed by `garden-publication-reviewer`
 (`.claude/agents/`). The rest follow a contract this document fixes, which is Sonnet's work.
 
-Since S16 the test essay cites eight real sources in every form, and since S17 it carries a
-companion and an episode. With S17 done, Travis may publish the first real essay. The Essays nav item
+Since S16 the first test essay (E01, `citation_style: apa7`) cites eight real sources in every
+form, and since S17 it carries a companion and an episode. Since S18 a second test essay (E02,
+`citation_style: web`, `tests/fixtures/essays/E02 Attention is a budget.md`) exercises the web
+style end to end. With S17 done, Travis may publish the first real essay. The Essays nav item
 and index appear only once one essay is published, so S15 to S18 change nothing a visitor sees.
-Until then each session's acceptance is checked on phone-width (375-pixel) screenshots of a
-build that includes the test essay, attached to its pull request; the first real essay, published
-by Travis after S17, is the check on the live site.
+Each session's acceptance was checked on phone-width (375-pixel) screenshots of a build that
+includes the test essays, attached to its pull request; the first real essay, published by
+Travis whenever he chooses to, is the check on the live site.
 
 ## Test plan
 
-All of it in `verify.sh`, so CI and a local run agree. The test essay lives under `tests/fixtures/`,
+All of it in `verify.sh`, so CI and a local run agree. The test essays live under `tests/fixtures/`,
 never in the vault.
 
 - **Formatter (S16):** golden strings per source type and author-count case; a/b disambiguation;
@@ -386,9 +413,27 @@ never in the vault.
 - **Privacy (S15), each in a build without `--strict`:** an unknown frontmatter or reference field fails; `abstract`, `annote` and
   `note` fail; a Drive, Docs, Gemini, NotebookLM or reMarkable URL anywhere fails; a non-text file
   in the folder fails; a companion URL off the media allowlist fails (S17).
-- **Browser (S15 to S18):** both pages pass axe at WCAG A/AA in both offered themes; no horizontal
-  scroll at a 375-pixel phone width; the companion zone carries its label; no request to YouTube
-  before the tap and one after it; no audio request before play.
+- **Web style (S18, `tests/test_citations.py`):** a citation links to the record's DOI or URL, not
+  to a reference-list entry; a record with neither renders unlinked and warns once; the Sources
+  list is title/authors/year/link; the missing-record, uncited-record and ambiguous-citation
+  warnings are the same ones the APA 7 style raises.
+- **Article JSON-LD and per-essay Open Graph (S18, `tests/test_essays.py`):** the Article parses
+  with `@type: Article`, reuses the About page's own Person as its author, and cites the page's
+  own reference list; `og:type` is article only on an essay page and website everywhere else;
+  `article:published_time`/`article:modified_time` and `og:url` read from the essay's own dates
+  and URL.
+- **The Atom feed (S18, `tests/test_feed.py`):** parses, and carries every element Atom requires
+  (feed: id, title, updated, author; entry: id, title, updated); lists the fixture essays, newest
+  first; an entry's content is the essay plus its disclosure note and references, never the
+  companion or the episode; a relative link in that content comes out absolute. Built and linked
+  only with at least one essay published (`tests/test_essays.py`'s real-build tests), both ways.
+- **Search (S18, `tests/test_essays.py`):** an essay is an entry in the site's search index,
+  opening its own URL rather than the Garden's note reader; the Garden's own entries are unchanged.
+- **Browser (S15 to S18):** both pages pass axe at WCAG A/AA in both offered themes, now including
+  a web-style essay page; no horizontal scroll at a 375-pixel phone width; the companion zone
+  carries its label; no request to YouTube before the tap and one after it; no audio request
+  before play; a web-style essay's citations link straight to their sources and its list reads
+  "Sources".
 
 ## Out of scope for the first version
 

@@ -94,5 +94,7 @@ def test_check_essays_reports_a_draft_and_a_stray_file(tmp_path):
 
 
 def test_check_essays_passes_the_fixture_essay():
+    # Two since roadmap S18: E01 (apa7) and E02, Attention is a budget (web
+    # citation style, tests/fixtures/essays/E02 Attention is a budget.md).
     fixture = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fixtures", "essays")
-    assert check_essays(fixture) == (1, [])
+    assert check_essays(fixture) == (2, [])

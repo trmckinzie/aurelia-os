@@ -24,7 +24,8 @@ from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.cachebust import stamp_asset_versions
 from engine.csp import apply_csp
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
-from engine.essays import ESSAYS_DIR_NAME, EssayError, essays_path, page_policy_sources, scan_essays
+from engine.essays import ESSAYS_DIR_NAME, EssayError, article_jsonld, essays_path, page_policy_sources, scan_essays
+from engine.feed import build_atom_feed
 from engine.content import (
     _FRONTMATTER_FENCE_RE,
     build_link_resolver,
@@ -490,7 +491,7 @@ def _build_lobby_context(garden_cards, graph_index):
     }
 
 
-def _build_search_index(garden_cards, profile):
+def _build_search_index(garden_cards, profile, essays=()):
     master_index = [
         {"title": "Home", "url": "index.html", "type": "SYSTEM", "tags": ["home", "root"], "desc": "Start page"},
         {
@@ -517,6 +518,17 @@ def _build_search_index(garden_cards, profile):
         # command palette script, so duplicating full note bodies here
         # bloated every single page. Snippet only.
         master_index.append({"title": c['title'], "url": c['link'], "type": "GARDEN", "tags": c['tags'], "desc": truncate(c['desc'], 200)})
+
+    # Essays join the site search (roadmap S18, docs/ESSAYS.md, "Metadata"):
+    # a result opens the essay's own page (essay["url"], e.g.
+    # "essays/<slug>/"), never the Garden's note-reader modal, the way a
+    # GARDEN result's url (a "garden.html#id" hash) does. `essays` is empty
+    # until the first one is published, so this adds nothing until then.
+    for e in essays:
+        master_index.append({
+            "title": e["title"], "url": e["url"], "type": "ESSAY",
+            "tags": [d["label"] for d in e["disciplines"]], "desc": truncate(e["thesis"], 200),
+        })
 
     return master_index
 
@@ -691,6 +703,33 @@ def _essay_pages(user_config, essays):
     return pages
 
 
+def _write_essays_feed(user_config, essays):
+    """Writes dist/essays/feed.xml (engine/feed.py) and returns its
+    site-root-relative href ("essays/feed.xml") for base.html's <link
+    rel="alternate">, or None when there is nothing to write: no essay is
+    published (the same guard the index and the nav item use), or
+    user_config.json has no site.domain, since an Atom feed's ids and
+    links have to be permanent, absolute addresses (engine/feed.py,
+    docs/DECISIONS.md item 48) and there is none without a domain.
+    """
+    if not essays:
+        return None
+    site_url = _site_url(user_config)
+    if not site_url:
+        warn("Essays: no site.domain configured in user_config.json, so there is no absolute URL to "
+             "build the Atom feed's ids and links from; skipping essays/feed.xml")
+        return None
+    author = user_config.get("author") if isinstance(user_config, dict) else None
+    author_name = author.get("name") if isinstance(author, dict) else None
+    feed_bytes = build_atom_feed(essays, site_url, author_name)
+    feed_dir = os.path.join(OUTPUT_DIR, "essays")
+    os.makedirs(feed_dir, exist_ok=True)
+    with open(os.path.join(feed_dir, "feed.xml"), "wb") as f:
+        f.write(feed_bytes)
+    print(f"   + Essays feed: {len(essays)} entr{'y' if len(essays) == 1 else 'ies'} -> essays/feed.xml")
+    return "essays/feed.xml"
+
+
 def _essay_policy_sources(essays, origins):
     """{page path under dist/: extra policy sources} for the essay pages
     that need any (a companion player, a YouTube episode); engine/csp.py
@@ -704,7 +743,7 @@ def _essay_policy_sources(essays, origins):
 
 
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
-                   build_commit=None, build_commit_time=None, has_social_preview=True, essays=()):
+                   build_commit=None, build_commit_time=None, has_social_preview=True, essays=(), feed_href=None):
     # Its size is reported with garden.html's by report_page_sizes(), once
     # the build has finished writing both.
     _write_deep_search_index(deep_search_json)
@@ -762,6 +801,18 @@ def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_j
             context["build_commit_time"] = build_commit_time
             context["has_social_preview"] = has_social_preview
             context["essays_published"] = essays_published
+            # The Atom feed's <link> (base.html), on every page's head, only
+            # once there is one to link to -- see _write_essays_feed().
+            context["feed_href"] = feed_href
+            if template_name == "pages/essaytemplate.html":
+                # Reuses the About page's own Person (person_jsonld, built
+                # from the same profile.json) as the Article's author,
+                # rather than duplicating identity fields by hand
+                # (docs/ESSAYS.md, "Metadata").
+                essay_url = _site_url(user_config)
+                essay_url = f"{essay_url}{context['essay']['url']}" if essay_url else None
+                context["article_jsonld"] = dumps_for_script_tag(
+                    article_jsonld(context["essay"], person_jsonld(profile, _site_url(user_config)), essay_url))
             active_page = context.pop("active_page", output_name.replace(".html", ""))
 
             template = env.get_template(template_name)
@@ -987,7 +1038,7 @@ def build_all(sort_dropzone=None, strict=False):
           f"({len(resolved_targets)} distinct targets) resolved via alias or title suffix; "
           f"{len(unresolved_targets)} targets still unresolved (tools/vault_health.py --report pending)")
 
-    master_index = _build_search_index(garden_cards, profile)
+    master_index = _build_search_index(garden_cards, profile, essays)
     json_index = dumps_for_script_tag(master_index)
 
     deep_search_json = dumps_for_script_tag(_build_deep_search_index(garden_cards))
@@ -998,10 +1049,14 @@ def build_all(sort_dropzone=None, strict=False):
 
     lobby_stats = _build_lobby_context(garden_cards, graph_index)
 
+    # Written before _render_pages() so every page's <link rel="alternate">
+    # (base.html) already knows whether there is a feed to point at.
+    feed_href = _write_essays_feed(user_config, essays)
+
     build_commit, build_commit_time = _build_commit_stamp()
     _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
                   build_commit=build_commit, build_commit_time=build_commit_time,
-                  has_social_preview=has_social_preview, essays=essays)
+                  has_social_preview=has_social_preview, essays=essays, feed_href=feed_href)
 
     # Every theme in THEME_CONFIG, not just the default -- lets the nav's
     # switcher change themes at runtime with a pure CSS swap, no rebuild.
