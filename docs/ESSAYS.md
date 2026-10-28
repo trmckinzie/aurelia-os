@@ -10,9 +10,10 @@ S15 is built (2026-10-14, `docs/DECISIONS.md` item 43): the content type in `eng
 the draft gate and privacy checks, the index and essay pages (`system/templates/pages/essaystemplate.html`
 and `essaytemplate.html`), the Garden links, and the recursive security-policy and cache-busting
 walks. S16 is built (2026-10-15, item 44): citations and the APA 7 reference list, in
-`engine/citations.py`. S17 and S18 are not. Paths that do not exist yet are written plainly rather than as code, so
+`engine/citations.py`. S17 is built (2026-10-18, item 45): the disclosure note, the study
+companion, the `media_origins` allowlist and the tap-to-load episode. S18 is not. Paths that do not exist yet are written plainly rather than as code, so
 `tests/test_docs_paths.py` does not hold them to the file system until a session creates them;
-vault/30_ESSAYS/ is one of them, since no essay is in the vault until S17 is done. The test essay
+vault/30_ESSAYS/ is one of them, since no essay is in the vault until Travis publishes the first. The test essay
 lives in `tests/fixtures/essays/`, and the build reads it through `AURELIA_ESSAYS_DIR`.
 
 ## Where essays come from
@@ -76,8 +77,9 @@ failure is left open (see "Open questions"). Citation and link problems, which l
    size. Simpler and stricter than a size threshold, and it covers PDFs of every size.
 4. **Drafts.** A note in the Essays folder without `publish: true` fails, as does a `type: essay`
    note outside that folder.
-5. **Companion and media origins.** A companion or audio URL whose origin is not on the
-   allowlist in `user_config.json` fails (see "Media").
+5. **Companion and media origins.** A companion URL, of any kind, whose origin is not on the
+   `media_origins` allowlist in `user_config.json` fails (see "Media"), as does a `youtube`
+   address with no video id in it. With no origins configured, any companion entry fails.
 
 ## Vault layout and data contract
 
@@ -103,8 +105,8 @@ disciplines: [psychology, philosophy]
 thesis: "One sentence."       # 200 characters at most
 citation_style: apa7          # apa7 | web
 methods:
-  drafted_on: reMarkable
-  edited_in: Google Docs
+  drafted_on: reMarkable      # a tool's name, 60 characters at most
+  edited_in: Google Docs      # likewise
   ai_roles: [source search, source summaries, citation audit]
 companion:                    # optional
   - kind: audio               # audio | video | other
@@ -164,8 +166,9 @@ a group, with nothing else inside a name. `issued`, when present, is a four-digi
 without one is left out of the list with a warning, like any record missing what its type needs).
 
 The disclosure note counts the records: "N sources; M of N verified against the original by the
-author", where M counts `verified: true`. The count is of cited sources, which the build
-guarantees equals the reference list (see "Citations").
+author", where M counts `verified: true`. It counts the records the reference list shows, so
+the numbers match the list even on a local build that left a record out with a warning; the
+strict build guarantees none is left out (see "Citations").
 
 ## Citations
 
@@ -271,13 +274,16 @@ The line between Travis's writing and AI output has to be obvious at a glance on
    surface as the essay, under a small label:
 
    > I wrote this essay by hand: the first draft on a reMarkable tablet, the revisions in Google
-   > Docs. AI was used for research, not writing. Claude searched for sources and drafted short
-   > summaries of them; I checked each summary against the original and wrote every evaluation
+   > Docs. AI was used for research, not writing. An AI assistant searched for sources and drafted
+   > short summaries of them; I checked each summary against the original and wrote every evaluation
    > myself. An AI citation audit checked that each citation supports its claim and matches the
    > reference list; it flagged problems and changed no prose. 14 sources; 14 of 14 verified
    > against the original by the author.
 
-   Sentences drop out with their roles: no citation audit in `ai_roles`, no audit sentence.
+   Sentences drop out with their roles: no citation audit in `ai_roles`, no audit sentence. The
+   note names no AI vendor. With no AI role it says "No AI was used in researching or writing
+   it.", except on an essay with a study companion, where that sentence is left out because it
+   would sit directly above the AI-generated zone.
 3. **References.** APA 7 (or the web style's Sources list).
 4. **Study companion.** A visually separate zone, the one place AI output appears: an inverted
    surface (paper on the theme's darkest ink) with a heavy top rule, headed by the label
@@ -310,8 +316,15 @@ holds no audio or video, and never has.
   it. No YouTube thumbnail, since fetching one is itself a request to Google. The security policy
   gains `frame-src https://www.youtube-nocookie.com`, and the control registers a delegated
   `data-action` like every other control on the site (`assets/js/utils.js`).
-- **Exported assets only.** The companion links exported files (an audio overview, a video on
-  YouTube), never a notebook.
+- **Exported assets only.** The companion links exported files on an allowed media origin (an
+  audio overview, a video file, exported flashcards), never a notebook. A video on YouTube is the
+  essay's `youtube` episode, not a companion entry (`docs/DECISIONS.md` item 45).
+- **What renders (S17).** An `audio` entry is an `<audio controls preload="none">`, a `video`
+  entry a `<video controls preload="none">`, and an `other` entry a plain link, each under its
+  label. Only an essay page with a player widens its policy's `media-src`, and only one with an
+  episode gains the `frame-src`; the rest of the site keeps both closed. The fixture essay's
+  audio entry points at `test/tone.wav` on the media host: the browser suite serves its own copy
+  there, and `AURELIA_LIVE_MEDIA=1` makes it use the real one from the bucket.
 
 The footer says "No analytics or tracking." That stays true through S15 to S18: the site's own
 pages still track nothing, and the YouTube player loads only on a reader's tap, with a note beside
@@ -347,8 +360,8 @@ S15 is Opus because it changes the publish surface and the shape of the build's 
 anything that changes what the public site renders is reviewed by `garden-publication-reviewer`
 (`.claude/agents/`). The rest follow a contract this document fixes, which is Sonnet's work.
 
-Since S16 the test essay cites eight real sources in every form. No real
-essay goes into the vault until S17 is done, so nothing ships half-rendered. The Essays nav item
+Since S16 the test essay cites eight real sources in every form, and since S17 it carries a
+companion and an episode. With S17 done, Travis may publish the first real essay. The Essays nav item
 and index appear only once one essay is published, so S15 to S18 change nothing a visitor sees.
 Until then each session's acceptance is checked on phone-width (375-pixel) screenshots of a
 build that includes the test essay, attached to its pull request; the first real essay, published

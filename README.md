@@ -30,7 +30,11 @@ the link graph itself made visible and navigable.
 - Essays (`/essays/`, one page per essay): short human-written pieces from a `vault/30_ESSAYS/`
   folder, rendered server-side from Markdown with their `[[wikilinks]]` resolved into Garden
   links and their Pandoc citations formatted in APA 7, each linked to a reference list built
-  from structured records, listed newest first with the publish date, disciplines, thesis and reading time. The
+  from structured records, listed newest first with the publish date, disciplines, thesis and reading time.
+  Each essay page carries a disclosure note generated from its data ("How this essay was made"),
+  a visibly separate AI-generated study companion whose audio loads only on play from a host
+  listed in `user_config.json`'s `media_origins`, and a YouTube episode that loads nothing from
+  Google until its Play button is pressed. The
   index and its nav link appear only once an essay is published, and the folder's contents are
   held to a contract and a set of privacy checks that fail the build outright (a draft, an
   unknown field, a notebook or Drive link, any non-text file). See `docs/ESSAYS.md`.

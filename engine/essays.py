@@ -34,7 +34,11 @@ let a local run pass with the leak in it.
      `type: essay` note outside it, the agent-draft folder 20_AURELIA
      included (that half lives in pipeline._scan_garden, which reads the
      raw frontmatter text so a broken YAML block cannot hide the type).
-  5. Companion and media origins against user_config.json's allowlist: S17.
+  5. Media origins (S17). Every companion URL's origin must be on
+     user_config.json's `media_origins` list, the same list that feeds the
+     essay pages' media-src, so nothing in the AI zone points anywhere the
+     owner has not named. The YouTube episode is its own field and must be
+     a YouTube address with a video id.
 
 Citation and link problems leak nothing, so they stay build warnings: a
 wikilink to a missing or unpublished Garden note warns, and --strict fails
@@ -46,7 +50,19 @@ build like the frontmatter does.
 
 The folder is read from AURELIA_ESSAYS_DIR when that is set, so the tests
 and verify.sh build the fixture essay under tests/fixtures/essays/ without
-anything entering the vault. No essay goes into the vault until S17 is done.
+anything entering the vault.
+
+THE PARTS OF AN ESSAY PAGE THAT SAY WHO MADE WHAT (S17)
+------------------------------------------------------
+The disclosure note ("How this essay was made") is rendered from the
+`methods` block and the reference file by disclosure(), never typed: each
+sentence belongs to one fact, so a role the frontmatter does not list has
+no sentence, and the source counts are of the records the reference list
+shows (listed_records()), so they cannot drift from the list a reader sees. The study companion holds only players
+and links built from the `companion` entries (a kind, a short label, a URL
+on an allowed origin), so the one zone with AI output on the page cannot
+hold prose. The YouTube episode renders as a control that loads nothing
+from Google until it is pressed (essaytemplate.html).
 """
 import datetime
 import math
@@ -98,6 +114,7 @@ COMPANION_KINDS = frozenset({"audio", "video", "other"})
 CITATION_STYLES = frozenset({"apa7", "web"})
 THESIS_MAX = 200
 COMPANION_LABEL_MAX = 80
+METHODS_TOOL_MAX = 60
 
 # Reference records, in CSL field names. Everything else fails -- including
 # `abstract`, `annote` and `note`, on purpose (privacy check 1).
@@ -145,7 +162,16 @@ _DENIED_HOST_RE = re.compile(
 TEXT_EXTENSIONS = frozenset({".md", ".yaml"})
 _OS_METADATA_FILES = frozenset({".DS_Store", "Thumbs.db"})
 
-_YOUTUBE_HOSTS = frozenset({"www.youtube.com", "youtube.com", "youtu.be"})
+_YOUTUBE_HOSTS = frozenset({"www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"})
+_YOUTUBE_ID_RE = re.compile(r"^[A-Za-z0-9_-]{11}$")
+# The only player the page ever loads, and only on a reader's tap: the
+# privacy-enhanced host, which sets no cookie until the video plays.
+YOUTUBE_EMBED_ORIGIN = "https://www.youtube-nocookie.com"
+
+# The study companion's kinds and what each renders as: an <audio> or a
+# <video> player for media files, a plain link for anything else (exported
+# flashcards, say). Never an embed of a third-party page.
+PLAYER_KINDS = frozenset({"audio", "video"})
 
 _WIKILINK_RE = re.compile(r"\[\[(.*?)\]\]")
 
@@ -267,6 +293,52 @@ def _check_url(value, field, problems):
     return parts
 
 
+def youtube_id(url):
+    """The video id in a YouTube address (watch?v=, youtu.be/, /embed/,
+    /shorts/ or /live/), or None when there is none to find."""
+    parts = urlsplit(str(url).strip())
+    host = parts.netloc.lower()
+    if parts.scheme != "https" or host not in _YOUTUBE_HOSTS:
+        return None
+    if host == "youtu.be":
+        candidate = parts.path.strip("/")
+    elif parts.path == "/watch":
+        values = [v for k, v in (pair.partition("=")[::2] for pair in parts.query.split("&")) if k == "v"]
+        candidate = values[0] if len(values) == 1 else ""
+    else:
+        segments = parts.path.strip("/").split("/")
+        candidate = segments[1] if len(segments) == 2 and segments[0] in ("embed", "shorts", "live") else ""
+    return candidate if _YOUTUBE_ID_RE.match(candidate) else None
+
+
+def origin_of(url):
+    """'https://host' for an https URL with a plain host, else None. A URL
+    with credentials or a port has no origin on the allowlist's terms."""
+    parts = urlsplit(str(url).strip())
+    try:
+        port = parts.port
+    except ValueError:   # a port that is not a number: no origin, so not allowed
+        return None
+    if parts.scheme != "https" or not parts.hostname or parts.username is not None or port is not None:
+        return None
+    return f"https://{parts.hostname}"
+
+
+def check_media_origins(raw, media_origins):
+    """Privacy check 5: problems with an essay's companion URLs against the
+    allowed media origins (user_config.json's `media_origins`)."""
+    problems = []
+    allowed = set(media_origins)
+    for i, entry in enumerate(raw.get("companion") or []):
+        url = entry.get("url")
+        origin = origin_of(url)
+        if origin not in allowed:
+            listed = ", ".join(sorted(allowed)) or "none"
+            problems.append(f"companion[{i}].url: {url} is not on an allowed media origin "
+                            f"(user_config.json media_origins: {listed})")
+    return problems
+
+
 def check_denied_hosts(text):
     """The denied hosts found in `text`, in order of first appearance."""
     found = []
@@ -352,6 +424,9 @@ def check_essay_frontmatter(raw):
         for key in ("drafted_on", "edited_in"):
             if not _is_str(methods.get(key)):
                 problems.append(f"methods.{key}: must be a non-empty single-line string")
+            elif len(methods[key]) > METHODS_TOOL_MAX:
+                # A tool's name, not a sentence: the note is built from data.
+                problems.append(f"methods.{key}: {len(methods[key])} characters, the limit is {METHODS_TOOL_MAX}")
         roles = methods.get("ai_roles")
         if not isinstance(roles, list):
             problems.append("methods.ai_roles: must be a list (it may be empty)")
@@ -392,6 +467,8 @@ def check_essay_frontmatter(raw):
         parts = _check_url(raw["youtube"], "youtube", problems)
         if parts is not None and parts.netloc.lower() not in _YOUTUBE_HOSTS:
             problems.append(f"youtube: must be a YouTube address, got host {parts.netloc!r}")
+        elif parts is not None and youtube_id(raw["youtube"]) is None:
+            problems.append("youtube: no video id in the address (watch?v=, youtu.be/ or /embed/ followed by 11 characters)")
 
     return problems
 
@@ -485,7 +562,7 @@ def _walk_folder(folder):
     return files, problems
 
 
-def check_essays_folder(folder):
+def check_essays_folder(folder, media_origins=()):
     """Reads and validates the Essays folder without rendering anything.
 
     Returns (essays, problems): `essays` is a list of {"rel", "raw",
@@ -493,6 +570,10 @@ def check_essays_folder(folder):
     (relative path, message) for everything that did not. Shared by
     scan_essays() (which fails the build on any problem) and
     tools/validate_vault_schema.py (which prints them).
+
+    `media_origins` is user_config.json's allowlist; the default, none,
+    means any companion entry fails, so a caller that forgets to pass it
+    errs on the closed side.
     """
     if not os.path.isdir(folder):
         return [], []
@@ -539,7 +620,10 @@ def check_essays_folder(folder):
         if raw is None:
             problems.append((rel, "no frontmatter; an essay needs the fields in docs/ESSAYS.md"))
             continue
-        note_problems = check_essay_frontmatter(raw)
+        # The origin check reads `companion` as the contract shapes it, so it
+        # runs only once the frontmatter itself is clean; an essay with both
+        # problems reports the frontmatter first.
+        note_problems = check_essay_frontmatter(raw) or check_media_origins(raw, media_origins)
         if note_problems:
             problems.extend((rel, p) for p in note_problems)
             continue
@@ -580,6 +664,99 @@ def check_essays_folder(folder):
 
 
 # --- rendering -----------------------------------------------------------
+
+# How a `methods` value reads in a sentence, where the bare name would not.
+# Anything else is written as given.
+_TOOL_PHRASES = {"remarkable": "a reMarkable tablet"}
+
+
+def _tool_phrase(value):
+    return _TOOL_PHRASES.get(value.strip().casefold(), value.strip())
+
+
+def _count(n, word):
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
+def disclosure(methods, records, has_companion=False):
+    """The sentences of "How this essay was made" (docs/ESSAYS.md, "The
+    essay page"), from the essay's `methods` and its reference records.
+
+    Never hand-written, so it cannot claim more or less than the data: each
+    AI role in the closed vocabulary has its own sentence and drops out
+    with it, and the counts are of the records, with "verified" counting
+    `verified: true` only. Returns a dict of the sentences, in order, and
+    the two counts, which the page and its tests read. With no AI role the
+    note says no AI was used, unless the essay has a study companion: that
+    sentence would sit directly above the AI-generated zone, so it is left
+    out there (Travis, 2026-10-27). The roles name no vendor, so neither
+    does the note: "an AI assistant", always true whichever tool was used.
+    """
+    roles = set(methods["ai_roles"])
+    search, summaries, audit = (r in roles for r in AI_ROLES)
+    sentences = [f"I wrote this essay by hand: the first draft on {_tool_phrase(methods['drafted_on'])}, "
+                 f"the revisions in {_tool_phrase(methods['edited_in'])}."]
+    if search or summaries:
+        sentences.append("AI was used for research, not writing.")
+    elif audit:
+        sentences.append("AI was used to check citations, not to write.")
+    elif not has_companion:
+        sentences.append("No AI was used in researching or writing it.")
+    if search and summaries:
+        sentences.append("An AI assistant searched for sources and drafted short summaries of them; I checked each "
+                         "summary against the original and wrote every evaluation myself.")
+    elif search:
+        sentences.append("An AI assistant searched for sources; I read each one and wrote every evaluation myself.")
+    elif summaries:
+        sentences.append("An AI assistant drafted short summaries of the sources; I checked each summary against the "
+                         "original and wrote every evaluation myself.")
+    if audit:
+        sentences.append("An AI citation audit checked that each citation supports its claim and matches the "
+                         "reference list; it flagged problems and changed no prose.")
+    records = records or []
+    total = len(records)
+    verified = sum(1 for r in records if r.get("verified") is True)
+    if total:
+        sentences.append(f"{_count(total, 'source')}; {verified} of {total} verified against the original "
+                         f"by the author.")
+    return {"sentences": sentences, "sources": total, "verified": verified}
+
+
+def listed_records(records, reference_list):
+    """The records the reference list actually shows, once each, in file
+    order. The disclosure note counts these, not the file: a record left
+    out of the list (an unsupported type, a duplicate key) only warns, so a
+    local build without --strict would otherwise say "14 sources" above a
+    list of 13."""
+    shown = {entry["key"] for entry in reference_list}
+    listed, seen = [], set()
+    for record in records or []:
+        key = record.get("id")
+        if key in shown and key not in seen:
+            seen.add(key)
+            listed.append(record)
+    return listed
+
+
+def companion_entries(companion):
+    """The study companion as the template draws it: one player or link per
+    entry, built from the structured fields only (kind, label, URL)."""
+    return [{"kind": entry["kind"], "label": entry["label"].strip(), "url": entry["url"].strip(),
+             "player": entry["kind"] in PLAYER_KINDS}
+            for entry in companion or []]
+
+
+def page_policy_sources(essay, media_origins):
+    """The extra Content-Security-Policy sources one essay page needs, by
+    directive, for engine/csp.py: the allowed media origins when it has a
+    player, and the YouTube player's host when it has an episode. A page
+    with neither keeps the site-wide policy unchanged."""
+    sources = {}
+    if any(entry["player"] for entry in essay["companion"]):
+        sources["media-src"] = list(media_origins)
+    if essay["youtube_id"]:
+        sources["frame-src"] = [YOUTUBE_EMBED_ORIGIN]
+    return sources
 
 def reading_minutes(body):
     """Words divided by WORDS_PER_MINUTE, rounded up, never below one."""
@@ -636,7 +813,7 @@ def render_body(body, essay_id, resolve, known_ids, garden_href, references=None
     return Markup(restored)
 
 
-def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_root="/"):
+def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_root="/", media_origins=()):
     """Reads the Essays folder and returns the essays ready for the
     templates, newest first. Raises EssayError, naming every file and
     problem, if anything in the folder fails the contract or a privacy
@@ -646,9 +823,10 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
     the Garden's own wikilinks use); `discipline_ids` are the published
     Discipline notes, so a discipline label can link to its note;
     `site_root` is where the site is served from, since an essay page sits
-    a folder or two down and links from the root like 404.html does.
+    a folder or two down and links from the root like 404.html does;
+    `media_origins` is user_config.json's allowlist for companion URLs.
     """
-    essays, problems = check_essays_folder(folder)
+    essays, problems = check_essays_folder(folder, media_origins)
     if problems:
         lines = [f"{rel}: {message}" for rel, message in problems]
         raise EssayError(
@@ -673,6 +851,7 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
         references = References(essay["refs"], raw["id"], f"{raw['id']}.refs.yaml")
         body_html = render_body(body, raw["id"], resolve, known_ids, garden_href, references)
         references.warn_uncited()
+        reference_list = references.entries()
         published.append({
             "id": raw["id"],
             "slug": raw["slug"],
@@ -692,14 +871,17 @@ def scan_essays(folder, resolve, known_ids, discipline_ids=frozenset(), site_roo
                 "edited_in": raw["methods"]["edited_in"].strip(),
                 "ai_roles": list(raw["methods"]["ai_roles"]),
             },
-            "companion": list(raw.get("companion") or []),
-            "youtube": raw.get("youtube"),
+            "companion": companion_entries(raw.get("companion")),
+            "youtube": raw["youtube"].strip() if raw.get("youtube") else None,
+            "youtube_id": youtube_id(raw["youtube"]) if raw.get("youtube") else None,
+            "disclosure": disclosure(raw["methods"], listed_records(essay["refs"], reference_list),
+                                     has_companion=bool(raw.get("companion"))),
             "reading_minutes": reading_minutes(body),
             "body_html": body_html,
             "references": essay["refs"],
             # The APA 7 list (engine/citations.py); `references` stays the
-            # records as written, which the disclosure note counts (S17).
-            "reference_list": references.entries(),
+            # records as written, which `disclosure` counts.
+            "reference_list": reference_list,
             "source": essay["rel"],
         })
 

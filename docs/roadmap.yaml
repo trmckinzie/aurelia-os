@@ -834,7 +834,9 @@ sessions:
       deploy's live check was green and the live site serves 8efa850.
   - id: S17
     title: Add the essay disclosure note, the study companion and its media
-    status: todo
+    status: done
+    started: 2026-10-18
+    completed: 2026-10-28
     area: Content
     effort: M
     model: sonnet
@@ -857,17 +859,17 @@ sessions:
     depends_on: [S16]
     tasks:
       - text: "Travis: create the R2 bucket and connect media.travisrmckinzie.com in Cloudflare (an account step a session does not take); record the bucket name in notes, never a credential"
-        done: false
+        done: true
       - text: Render "How this essay was made" from methods and the reference file, with the audit sentence only when citation audit is a role
-        done: false
+        done: true
       - text: Render the study companion zone on an inverted surface from theme tokens, labelled AI-generated, holding only players and links built from the companion list
-        done: false
+        done: true
       - text: Add the media origin allowlist to user_config.json and its validator, feed it to the policy's media-src, and fail every build on a companion or audio URL outside it
-        done: false
+        done: true
       - text: Add the YouTube tap-to-load control as a delegated data-action, with frame-src youtube-nocookie.com and a line beside it saying nothing loads until it is pressed
-        done: false
+        done: true
       - text: Browser tests - no request to YouTube before the tap and one after it, no audio request before play, the companion label present, axe in both themes
-        done: false
+        done: true
     done_when:
       - In phone-width screenshots of the fixture build, the essay text, the disclosure note and the references read as one paper surface, and the study companion is visibly a different zone with its AI label
       - The disclosure note's counts match the reference list
@@ -879,7 +881,17 @@ sessions:
       for them first and verify the subdomain answers before wiring it in. The
       companion zone holds only players and links built from structured
       fields, never prose. After this session Travis may publish the first
-      real essay; until then nothing goes into vault/30_ESSAYS.
+      real essay; until then nothing goes into vault/30_ESSAYS. Built 2026-10-18
+      (docs/DECISIONS.md item 45): essays.disclosure() renders the note, read word for
+      word as the sample in docs/ESSAYS.md for the fixture; the companion zone swaps the
+      theme's ink and paper; user_config.json's media_origins gates every companion URL
+      and widens media-src on that essay page only, as frame-src widens only for an
+      episode. tests/browser/essays.spec.mjs proves no request to the media host or
+      Google before play or the tap and one after, with both answered by page.route() so
+      CI never contacts them. media_origins names the media host before it resolved,
+      since the fixture build needs it; nothing live changes. Finished 2026-10-28:
+      bucket aurelia-media on media.travisrmckinzie.com (r2.dev off); the audio
+      test passed against test/tone.wav with AURELIA_LIVE_MEDIA=1.
   - id: S18
     title: Add the web citation style, essay structured data and the Essays feed
     status: todo

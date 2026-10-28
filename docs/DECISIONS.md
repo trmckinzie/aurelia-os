@@ -1002,6 +1002,79 @@ knowing so you don't "fix" something that was a deliberate decision:
       first drafted for it were removed rather than shipped unchecked; the one that stayed
       (Prospect theory's value function, p. 279) is a page that can be checked.
 
+45. **The essay disclosure note, the study companion and tap-to-load media (roadmap S17,
+    2026-10-18).** The third Essays session, on item 41's media decision of 2026-10-12: audio on
+    a Cloudflare R2 bucket at `media.travisrmckinzie.com`, YouTube loaded only on a tap, and the
+    allowed media origins as one list in `user_config.json`. What it built, and the calls made
+    where the design was silent:
+    - **"How this essay was made" is `essays.disclosure()`**, one sentence per fact. Each of the
+      three AI roles has its own sentence and drops out with it; with no role the note says no AI
+      was used, and with only `citation audit` it says AI checked citations, not writing. The
+      fixture's note reads word for word as the sample in `docs/ESSAYS.md`, which names Claude,
+      so the engine does too. The counts are of the reference records (`verified: true` only),
+      and the browser suite holds them equal to the rendered list. `drafted_on` and `edited_in`
+      are written as given, except "reMarkable", which reads "a reMarkable tablet" as the sample
+      has it.
+    - **`media_origins` in `user_config.json`** is a list of bare https origins (no path, port,
+      credentials or trailing slash, lowercase), validated like the rest of the file. **Every**
+      companion URL must be on it, not only audio: `docs/ESSAYS.md` check 5 names "a companion
+      or audio URL", and a link in the AI zone pointing at a host nobody listed is the same
+      leak. So a `video` entry is a self-hosted `<video preload="none">`, and the YouTube episode
+      stays in its own `youtube` field, which must carry a real 11-character video id. With no
+      origins configured, any companion fails, so the factory clone errs closed. The origin was
+      added on 2026-10-18, while `media.travisrmckinzie.com` did not yet resolve, because the
+      fixture build in `verify.sh` needs it; with no essay published it changes nothing live.
+    - **The policy widens per page, never site-wide.** `csp.build_policy()` lets a page add https
+      origins to `media-src` and `frame-src` only, and raises on any other directive or any
+      source that is not an origin; `apply_csp()` takes the pages by path and fails if it names
+      one the build did not write. Only an essay page with a companion player gains the media
+      origins, and only one with an episode gains `frame-src https://www.youtube-nocookie.com`
+      (dropping `'none'`). Every other page keeps `media-src 'self'` and `frame-src 'none'`.
+    - **"Inverted" is the theme's ink and paper swapped** (`text_main` as the surface, `bg_main`
+      as the text) under a heavy rule in `secondary`. Read literally, "paper on the theme's
+      darkest ink" is the dark theme's own page color, so the zone would vanish there; swapped,
+      it is the one light block in the dark theme and the one dark block in the light one, with
+      the page's body contrast. The browser suite holds the surfaces apart in both offered
+      themes, and axe holds the zone to AA.
+    - **The episode** follows the companion on the page surface, under "Listen": a "Play episode"
+      button (a delegated `data-action`, like every control) with a note that nothing loads from
+      YouTube until it is pressed, and a plain link to the video as the no-JavaScript fallback.
+      The tap swaps in a `youtube-nocookie.com` iframe with `referrerpolicy` set to
+      `strict-origin-when-cross-origin`, since YouTube's embeds refuse to play without a
+      referrer, and moves focus to it. No thumbnail, no preconnect.
+    - **The browser tests never reach the network.** They answer the media host and the player
+      with `page.route()`, so CI depends on neither, and the guard's new `expectForeign()` lets a
+      test declare the one foreign request it causes and assert when it happens: nothing before
+      play or the tap, one request after. `AURELIA_LIVE_MEDIA=1` lets the audio test fetch the
+      real `test/tone.wav` from the bucket instead.
+    - **The `garden-publication-reviewer` pass** found no injection path, no way past the origin
+      check (ports, credentials, case, trailing dots, look-alike full stops) and nothing loaded
+      before a tap. It did find six things, all fixed: a port that is not a number raised a bare
+      `ValueError` instead of a named problem, in both the essay check and `user_config.py`;
+      `build_policy()`'s origin pattern let a trailing newline through (`$`, now `fullmatch`); the
+      note counted every record while a local build without `--strict` can leave one out of the
+      list with only a warning, so it now counts the records the list shows; the new links out
+      carried no `rel="noopener noreferrer"`; `drafted_on` and `edited_in` had no length limit
+      (now 60 characters, a tool's name, not a sentence); and an essay test checked for prose
+      in the companion zone in a way that could not fail. A page with a player gains every
+      configured media origin, not only the one it uses; with one origin that is the same thing.
+
+46. **The S17 open calls, answered (2026-10-27).** Travis settled the three questions S17 left
+    on PR #58:
+    - **The disclosure note names no vendor.** "An AI assistant searched for sources…", not
+      "Claude": `ai_roles` records what AI did, not which tool, and the summaries are made in
+      the Gemini notebook, so a named tool could be wrong on the one paragraph whose job is to
+      be accurate. `docs/ESSAYS.md`'s sample changed with it; the essay tests hold the note to
+      no "Claude" and no "Gemini".
+    - **With no AI role and a study companion, the "No AI was used" sentence is left out**
+      (`disclosure(..., has_companion=True)`), since it would sit directly above the
+      "AI-generated study companion" block. Without a companion it stays as written.
+    - **The episode stays outside the AI zone**, under "Listen", as built: Travis makes
+      it.
+    The same pass fixed CodeQL's two alerts on the PR, both in tests: the media-request
+    listener compares `new URL(...).origin` instead of a prefix, and the script-stripping regex
+    in the episode test is case-insensitive and tolerates attributes.
+
 47. **Dependabot waits 7 days; motion 14.6.0 went live 2 days early (2026-10-27).** Merging
     the Dependabot backlog (#47, #49, #59, #61, and #62 for the reader's "Prev note" label that
     axe 4.14 required), Dependabot's rebase of #49 moved motion from 14.1.0 to 14.6.0, released

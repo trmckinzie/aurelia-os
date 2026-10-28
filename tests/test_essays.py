@@ -78,12 +78,18 @@ def _essay_note(frontmatter=GOOD_FRONTMATTER, body="A short body.\n"):
     return f"---\n{frontmatter}---\n{body}"
 
 
-def _scan(folder, known_ids=GARDEN_IDS, discipline_ids=DISCIPLINE_IDS, site_root="/"):
-    return scan_essays(str(folder), make_id, known_ids, discipline_ids=discipline_ids, site_root=site_root)
+# The fixture's companion sits on the site's real media host, the one entry in
+# user_config.json's media_origins (roadmap S17).
+MEDIA_ORIGINS = ("https://media.travisrmckinzie.com",)
 
 
-def _problems(folder):
-    _essays, problems = check_essays_folder(str(folder))
+def _scan(folder, known_ids=GARDEN_IDS, discipline_ids=DISCIPLINE_IDS, site_root="/", media_origins=MEDIA_ORIGINS):
+    return scan_essays(str(folder), make_id, known_ids, discipline_ids=discipline_ids, site_root=site_root,
+                       media_origins=media_origins)
+
+
+def _problems(folder, media_origins=MEDIA_ORIGINS):
+    _essays, problems = check_essays_folder(str(folder), media_origins)
     return [message for _rel, message in problems]
 
 
@@ -499,8 +505,8 @@ def _stub_build(monkeypatch, tmp_path, essays_dir):
     monkeypatch.setattr(pipeline, "_write_cname", lambda cfg: None)
     monkeypatch.setattr(pipeline, "publish_referenced_media", lambda referenced: None)
     monkeypatch.setattr(pipeline, "_render_pages", lambda *a, **k: None)
-    monkeypatch.setattr(pipeline, "stamp_asset_versions", lambda dist: {})
-    monkeypatch.setattr(pipeline, "apply_csp", lambda dist: {})
+    monkeypatch.setattr(pipeline, "stamp_asset_versions", lambda dist, **kwargs: {})
+    monkeypatch.setattr(pipeline, "apply_csp", lambda dist, **kwargs: {})
     monkeypatch.setattr(pipeline, "report_page_sizes", lambda: {})
 
 
@@ -728,6 +734,16 @@ def test_the_fixture_build_publishes_the_essay_pages_and_no_card(tmp_path, monke
     main_css = re.search(r"/assets/css/main\.css\?v=([0-9a-f]{10})", page).group(1)
     assert f"assets/css/main.css?v={main_css}" in lobby
 
+    # S17: only the essay page widens its policy, and only by the media host
+    # (it has a companion player) and the YouTube player (it has an episode).
+    page_policy = re.search(r'Content-Security-Policy" content="([^"]*)"', page).group(1)
+    assert "media-src 'self' https://media.travisrmckinzie.com;" in page_policy
+    assert "frame-src https://www.youtube-nocookie.com;" in page_policy
+    for other in (index, lobby, garden):
+        policy = re.search(r'Content-Security-Policy" content="([^"]*)"', other).group(1)
+        assert "media-src 'self';" in policy and "frame-src 'none'" in policy
+    assert "<iframe" not in page and 'preload="none"' in page
+
 
 @_needs_node_modules
 def test_a_build_without_essays_changes_nothing_a_visitor_sees(tmp_path, monkeypatch):
@@ -739,3 +755,220 @@ def test_a_build_without_essays_changes_nothing_a_visitor_sees(tmp_path, monkeyp
         html = _read(dist, page)
         assert "essays/" not in html, page
         assert "ESSAYS" not in html, page
+
+
+# --- the disclosure note, the companion and the episode (roadmap S17) ------
+
+DOC_SAMPLE = (
+    "I wrote this essay by hand: the first draft on a reMarkable tablet, the revisions in Google Docs. "
+    "AI was used for research, not writing. An AI assistant searched for sources and drafted short summaries of "
+    "them; I checked each summary against the original and wrote every evaluation myself. An AI citation "
+    "audit checked that each citation supports its claim and matches the reference list; it flagged "
+    "problems and changed no prose. {n} sources; {m} of {n} verified against the original by the author."
+)
+
+
+def test_the_disclosure_note_reads_as_docs_essays_sample_with_counted_sources():
+    [essay] = _scan(FIXTURE_DIR)
+    note = essay["disclosure"]
+    # Counted from the records, and equal to the list a reader sees.
+    assert note["sources"] == len(essay["references"]) == len(essay["reference_list"]) == 8
+    assert note["verified"] == sum(1 for r in essay["references"] if r["verified"] is True) == 6
+    assert " ".join(note["sentences"]) == DOC_SAMPLE.format(n=8, m=6)
+
+
+def _methods(roles, drafted_on="reMarkable", edited_in="Google Docs"):
+    return {"drafted_on": drafted_on, "edited_in": edited_in, "ai_roles": roles}
+
+
+@pytest.mark.parametrize("roles, present, absent", [
+    (["source search", "source summaries"], ["AI was used for research, not writing.",
+                                             "An AI assistant searched for sources and drafted short summaries"],
+     ["citation audit"]),
+    (["source search"], ["An AI assistant searched for sources; I read each one"], ["summaries", "citation audit"]),
+    (["source summaries"], ["An AI assistant drafted short summaries of the sources"], ["searched", "citation audit"]),
+    (["citation audit"], ["AI was used to check citations, not to write.", "An AI citation audit checked"],
+     ["searched", "summaries", "research"]),
+    ([], ["No AI was used in researching or writing it."], ["assistant", "audit"]),
+])
+def test_each_sentence_drops_out_with_its_role(roles, present, absent):
+    text = " ".join(essays.disclosure(_methods(roles), [])["sentences"])
+    for phrase in present:
+        assert phrase in text
+    for phrase in absent:
+        assert phrase not in text
+    # Never anything about writing being done by AI, and never a vendor.
+    assert "AI wrote" not in text and "drafted by AI" not in text
+    assert "Claude" not in text and "Gemini" not in text
+
+
+def test_the_no_ai_sentence_is_left_out_above_a_companion():
+    # It would sit directly above the "AI-generated study companion" zone.
+    with_companion = " ".join(essays.disclosure(_methods([]), [], has_companion=True)["sentences"])
+    assert "No AI" not in with_companion
+    assert with_companion.startswith("I wrote this essay by hand")
+    # The roles still speak for themselves when there is a companion.
+    roles = " ".join(essays.disclosure(_methods(["source search"]), [], has_companion=True)["sentences"])
+    assert "AI was used for research, not writing." in roles
+
+
+def test_the_counts_are_singular_when_one_and_absent_without_records():
+    one = essays.disclosure(_methods([]), [{"id": "a", "verified": False}])
+    assert one["sentences"][-1] == "1 source; 0 of 1 verified against the original by the author."
+    none = essays.disclosure(_methods([]), None)
+    assert none["sources"] == 0 and not any("source" in s and "verified" in s for s in none["sentences"])
+
+
+def test_a_known_tool_reads_as_a_phrase_and_anything_else_as_written():
+    first = essays.disclosure(_methods([], drafted_on="paper", edited_in="Obsidian"), [])["sentences"][0]
+    assert first == "I wrote this essay by hand: the first draft on paper, the revisions in Obsidian."
+
+
+@pytest.mark.parametrize("url, video", [
+    ("https://www.youtube.com/watch?v=AbC_dEf-123", "AbC_dEf-123"),
+    ("https://youtube.com/watch?t=30&v=AbC_dEf-123", "AbC_dEf-123"),
+    ("https://youtu.be/AbC_dEf-123", "AbC_dEf-123"),
+    ("https://www.youtube.com/embed/AbC_dEf-123", "AbC_dEf-123"),
+    ("https://m.youtube.com/shorts/AbC_dEf-123", "AbC_dEf-123"),
+    ("https://www.youtube.com/watch?v=short", None),
+    ("https://www.youtube.com/watch?v=AbC_dEf-123&v=XyZ_dEf-123", None),
+    ("https://www.youtube.com/channel/UCxxxxxxxxxx", None),
+    ("https://www.youtube.com/watch?v=AbC_dEf-12\"", None),
+    ("http://www.youtube.com/watch?v=AbC_dEf-123", None),
+    ("https://evil.example/watch?v=AbC_dEf-123", None),
+])
+def test_youtube_id_reads_only_a_real_video_id(url, video):
+    assert essays.youtube_id(url) == video
+
+
+def test_a_youtube_address_without_a_video_id_fails_the_contract():
+    raw, _ = essays._split_frontmatter(_essay_note(GOOD_FRONTMATTER + "youtube: https://www.youtube.com/@channel\n"))
+    assert any("youtube: no video id" in p for p in check_essay_frontmatter(raw))
+
+
+_COMPANION = "companion:\n  - kind: audio\n    label: Audio overview\n    url: {url}\n"
+
+
+@pytest.mark.parametrize("url", [
+    "https://other.example.com/e02/overview.m4a",
+    "https://media.travisrmckinzie.com.evil.example/a.m4a",
+    "https://media.travisrmckinzie.com:8443/a.m4a",
+    "https://x@media.travisrmckinzie.com/a.m4a",
+    "https://media.travisrmckinzie.com:8443x/a.m4a",
+])
+def test_a_companion_url_off_the_media_allowlist_fails_a_build_without_strict(tmp_path, monkeypatch, url):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Media.md", _essay_note(GOOD_FRONTMATTER + _COMPANION.format(url=url)))
+    _stub_build(monkeypatch, tmp_path, folder)
+    with pytest.raises(EssayError, match=r"companion\[0\]\.url: .* is not on an allowed media origin"):
+        pipeline.build_all(sort_dropzone=False, strict=False)
+
+
+def test_with_no_media_origins_configured_any_companion_fails(tmp_path):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Media.md", _essay_note(
+        GOOD_FRONTMATTER + _COMPANION.format(url="https://media.travisrmckinzie.com/a.m4a")))
+    assert any("media_origins: none" in p for p in _problems(folder, media_origins=()))
+    assert _problems(folder) == []
+
+
+def test_page_policy_sources_name_only_what_the_page_uses():
+    [essay] = _scan(FIXTURE_DIR)
+    assert essays.page_policy_sources(essay, MEDIA_ORIGINS) == {
+        "media-src": list(MEDIA_ORIGINS), "frame-src": ["https://www.youtube-nocookie.com"]}
+    bare = dict(essay, companion=[{"kind": "other", "label": "Cards", "url": "https://x", "player": False}],
+                youtube_id=None)
+    assert essays.page_policy_sources(bare, MEDIA_ORIGINS) == {}
+    assert pipeline._essay_policy_sources([bare], MEDIA_ORIGINS) == {}
+    assert set(pipeline._essay_policy_sources([essay], MEDIA_ORIGINS)) == {"essays/why-loss-looms-larger/index.html"}
+
+
+def test_the_essay_page_orders_disclosure_references_companion_then_episode():
+    html = render_essay_page().split("</style>")[-1]
+    order = [html.index(marker) for marker in (
+        'class="essay-body"', 'id="essay-disclosure-title">How this essay was made</h2>',
+        'id="essay-references-title"', 'id="essay-companion-title">AI-generated study companion</h2>',
+        'id="essay-listen-title">Listen</h2>')]
+    assert order == sorted(order)
+    assert 'data-sources="8" data-verified="6"' in html
+    assert DOC_SAMPLE.format(n=8, m=6) in html
+    assert "Made with Gemini Notebook from this essay and the open-access sources listed." in html
+
+
+def test_the_companion_holds_only_players_and_links_from_its_entries():
+    html = render_essay_page().split("</style>")[-1]
+    zone = html[html.index('<section class="essay-companion"'):]
+    zone = zone[:zone.index("</section>")]
+    assert ('<audio controls preload="none" src="https://media.travisrmckinzie.com/test/tone.wav" '
+            'aria-labelledby="essay-companion-1">') in zone
+    assert ('<a href="https://media.travisrmckinzie.com/test/flashcards.csv" rel="noopener noreferrer">'
+            'Flashcards (CSV)</a>') in zone
+    # Every URL in the zone is one of the entries'; nothing else lives there.
+    assert set(re.findall(r'(?:src|href)="([^"]+)"', zone)) == {
+        "https://media.travisrmckinzie.com/test/tone.wav", "https://media.travisrmckinzie.com/test/flashcards.csv"}
+    assert "<iframe" not in zone
+    # No prose: the zone's only paragraphs are its fixed note and one label per player.
+    paragraphs = re.findall(r"<p\b[^>]*>", zone)
+    assert paragraphs == ['<p class="essay-companion-note">',
+                          '<p class="essay-companion-item-label" id="essay-companion-1">']
+    # A link out of the page sends no referrer, as the footer's links do.
+    assert all('rel="noopener noreferrer"' in a for a in re.findall(r"<a\b[^>]*>", zone))
+
+
+def test_a_video_entry_renders_a_player_that_loads_nothing_before_play():
+    [essay] = _scan(FIXTURE_DIR)
+    essay = dict(essay, companion=essays.companion_entries(
+        [{"kind": "video", "label": "Video overview", "url": "https://media.travisrmckinzie.com/v.mp4"}]))
+    html = _render("pages/essaytemplate.html", active_page="essays", essay=essay,
+                   page_title=essay["title"], page_path=essay["url"])
+    assert '<video controls preload="none" playsinline src="https://media.travisrmckinzie.com/v.mp4"' in html
+
+
+def test_the_episode_is_a_button_and_a_link_until_it_is_pressed():
+    html = render_essay_page().split("</style>")[-1]
+    assert 'data-action="playEpisode"' in html and 'data-video-id="XXXXXXXXXXX"' in html
+    assert "Nothing loads from YouTube until you press Play episode." in html
+    assert ('<a href="https://www.youtube.com/watch?v=XXXXXXXXXXX" rel="noopener noreferrer">'
+            'watch it on YouTube</a>') in html
+    markup = re.sub(r"<script\b[^>]*>.*?</script\b[^>]*>", "", html, flags=re.S | re.I)
+    assert "youtube-nocookie" not in markup and "<iframe" not in markup and "ytimg" not in markup
+    assert "registerActions({\n    playEpisode" in html
+
+
+def test_an_essay_without_companion_or_episode_renders_neither(tmp_path):
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Plain.md", _essay_note())
+    [essay] = _scan(folder)
+    html = _render("pages/essaytemplate.html", active_page="essays", essay=essay,
+                   page_title=essay["title"], page_path=essay["url"]).split("</style>")[-1]
+    assert "How this essay was made" in html
+    assert "essay-companion" not in html and "essay-listen" not in html and "playEpisode" not in html
+
+
+def test_the_counts_are_of_the_records_the_list_shows(tmp_path):
+    # A record the formatter cannot list only warns, so a local build
+    # without --strict still renders; the note must still match the list.
+    folder = tmp_path / "essays"
+    _write(folder, "E02 Counts.md", _essay_note(body="Cited [@a] and [@b].\n"))
+    _write(folder, "E02.refs.yaml",
+           "- {id: a, type: book, author: [{family: Ames, given: Ann}], issued: 2001, title: A book, "
+           "publisher: Press, verified: true}\n"
+           "- {id: b, type: thesis, author: [{family: Bell, given: Bo}], issued: 2002, title: A thesis, "
+           "verified: true}\n")
+    [essay] = _scan(folder)
+    assert [e["key"] for e in essay["reference_list"]] == ["a"]
+    assert (essay["disclosure"]["sources"], essay["disclosure"]["verified"]) == (1, 1)
+    assert any("thesis" in w for w in get_warnings())
+
+
+def test_the_methods_tools_are_names_not_sentences():
+    raw, _ = essays._split_frontmatter(_essay_note(GOOD_FRONTMATTER.replace("Google Docs", "x" * 61)))
+    assert any("methods.edited_in: 61 characters, the limit is 60" in p for p in check_essay_frontmatter(raw))
+
+
+def test_the_essay_page_keeps_the_voice_rule():
+    from tests.voice_fixtures import LEGACY_TOKENS
+    html = render_essay_page()
+    visible = re.sub(r"<(script|style)\b.*?</\1>", "", html, flags=re.S)
+    for token in LEGACY_TOKENS:
+        assert token not in visible, token

@@ -21,6 +21,30 @@ if (process.env.AURELIA_ESSAYS_FIXTURE && !FIXTURE_BUILT) {
 const ESSAY_PATH = "essays/why-loss-looms-larger/";
 const PHONE = { width: 375, height: 812 };
 
+// The study companion's media host (user_config.json's media_origins) and
+// the YouTube player (roadmap S17). Neither may be asked for anything before
+// a reader presses play. The suite serves both itself, so CI never depends on
+// the bucket or on Google; AURELIA_LIVE_MEDIA=1 lets the audio test fetch the
+// real test file from the bucket instead.
+const MEDIA_ORIGIN = "https://media.travisrmckinzie.com";
+const AUDIO_URL = `${MEDIA_ORIGIN}/test/tone.wav`;
+const YOUTUBE_PLAYER = "https://www.youtube-nocookie.com";
+const LIVE_MEDIA = Boolean(process.env.AURELIA_LIVE_MEDIA);
+const GOOGLE_HOST = /(^|\.)(youtube\.com|youtube-nocookie\.com|youtu\.be|ytimg\.com|googlevideo\.com|google\.com|gstatic\.com|doubleclick\.net)$/;
+
+// A two-second 440 Hz tone as a 16-bit mono WAV, which every Chromium build
+// plays (Playwright's has no AAC).
+function toneWav(seconds = 2, rate = 8000) {
+  const samples = seconds * rate;
+  const buffer = Buffer.alloc(44 + samples * 2);
+  buffer.write("RIFF", 0); buffer.writeUInt32LE(36 + samples * 2, 4); buffer.write("WAVE", 8);
+  buffer.write("fmt ", 12); buffer.writeUInt32LE(16, 16); buffer.writeUInt16LE(1, 20); buffer.writeUInt16LE(1, 22);
+  buffer.writeUInt32LE(rate, 24); buffer.writeUInt32LE(rate * 2, 28); buffer.writeUInt16LE(2, 32); buffer.writeUInt16LE(16, 34);
+  buffer.write("data", 36); buffer.writeUInt32LE(samples * 2, 40);
+  for (let i = 0; i < samples; i++) buffer.writeInt16LE(Math.round(8000 * Math.sin((2 * Math.PI * 440 * i) / rate)), 44 + i * 2);
+  return buffer;
+}
+
 async function expectNoHorizontalScroll(page) {
   const widths = await page.evaluate(() => ({
     scroll: document.documentElement.scrollWidth,
@@ -168,6 +192,104 @@ test.describe("with the fixture essay built", () => {
       }
     });
   }
+
+  // Roadmap S17: the disclosure note, the study companion and the episode.
+  test("the disclosure note's counts match the reference list", async ({ page }) => {
+    await page.goto(ESSAY_PATH);
+    const note = page.locator(".essay-disclosure");
+    await expect(note.getByRole("heading", { level: 2 })).toHaveText("How this essay was made");
+    const entries = await page.locator(".essay-reference-list li").count();
+    expect(entries).toBe(8);
+    await expect(note).toHaveAttribute("data-sources", String(entries));
+    const verified = Number(await note.getAttribute("data-verified"));
+    expect(verified).toBe(6);
+    await expect(note).toContainText(`${entries} sources; ${verified} of ${entries} verified against the original by the author.`);
+    await expect(note).toContainText("AI was used for research, not writing.");
+    await expectNoHorizontalScroll(page);
+  });
+
+  test("the study companion is a separate zone with its AI label, in either offered theme", async ({ page }) => {
+    await page.goto(ESSAY_PATH);
+    const themes = await page.evaluate(() => AVAILABLE_THEMES.map((t) => t.key));
+    for (const theme of themes) {
+      await page.evaluate((t) => localStorage.setItem("aurelia_theme", t), theme);
+      await page.reload();
+      const zone = page.locator('section.essay-companion[data-ai-generated="true"]');
+      await expect(zone.getByRole("heading", { level: 2 })).toHaveText("AI-generated study companion");
+      await expect(zone).toContainText("Made with Gemini Notebook from this essay and the open-access sources listed.");
+      const surfaces = await page.evaluate(() => {
+        const bg = (sel) => getComputedStyle(document.querySelector(sel)).backgroundColor;
+        return { page: bg("body"), essay: bg(".essay-body"), disclosure: bg(".essay-disclosure"),
+                 references: bg(".essay-references"), companion: bg(".essay-companion"),
+                 rule: getComputedStyle(document.querySelector(".essay-companion")).borderTopWidth };
+      });
+      // The essay, its disclosure note and its references share the page's
+      // paper; the companion alone has a surface of its own.
+      for (const part of ["essay", "disclosure", "references"]) {
+        expect(surfaces[part], `${theme}: ${part}`).toBe("rgba(0, 0, 0, 0)");
+      }
+      expect(surfaces.companion, theme).not.toBe(surfaces.page);
+      expect(surfaces.companion, theme).not.toBe("rgba(0, 0, 0, 0)");
+      expect(parseFloat(surfaces.rule), theme).toBeGreaterThanOrEqual(4);
+      // Only players and links: an audio player and one link, from the entries.
+      await expect(zone.locator("audio")).toHaveCount(1);
+      await expect(zone.locator("ul > li > a")).toHaveText(["Flashcards (CSV)"]);
+      await expectNoHorizontalScroll(page);
+    }
+  });
+
+  test("no audio request before play, and the test audio file plays after it", async ({ page, guard }) => {
+    const mediaRequests = [];
+    page.on("request", (req) => { if (new URL(req.url()).origin === MEDIA_ORIGIN) mediaRequests.push(req.url()); });
+    guard.expectForeign(AUDIO_URL);
+    if (!LIVE_MEDIA) {
+      await page.route(`${MEDIA_ORIGIN}/**`, (route) =>
+        route.fulfill({ status: 200, contentType: "audio/wav", body: toneWav() }));
+    }
+    await page.goto(ESSAY_PATH);
+    const audio = page.locator(".essay-companion audio");
+    await expect(audio).toHaveAttribute("preload", "none");
+    await audio.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+    expect(mediaRequests, "nothing from the media host before play").toEqual([]);
+
+    await audio.evaluate((a) => a.play());
+    await expect.poll(() => audio.evaluate((a) => a.currentTime), { timeout: 15000 }).toBeGreaterThan(0);
+    await audio.evaluate((a) => { a.pause(); });
+    expect(mediaRequests.length).toBeGreaterThan(0);
+    expect(new Set(mediaRequests)).toEqual(new Set([AUDIO_URL]));
+  });
+
+  test("the YouTube player appears only after Play episode is pressed", async ({ page, guard }) => {
+    const googleRequests = [];
+    page.on("request", (req) => {
+      const url = new URL(req.url());
+      if (GOOGLE_HOST.test(url.hostname)) googleRequests.push(req.url());
+    });
+    guard.expectForeign(`${YOUTUBE_PLAYER}/embed/`);
+    // A stand-in player, so the test proves when the page asks for one
+    // without loading anything from Google.
+    await page.route(`${YOUTUBE_PLAYER}/**`, (route) =>
+      route.fulfill({ status: 200, contentType: "text/html", body: "<!doctype html><title>Player</title><p>Player</p>" }));
+
+    await page.goto(ESSAY_PATH);
+    const listen = page.locator(".essay-listen");
+    await expect(listen.getByRole("heading", { level: 2 })).toHaveText("Listen");
+    await expect(listen).toContainText("Nothing loads from YouTube until you press Play episode.");
+    await expect(listen.locator("iframe")).toHaveCount(0);
+    await page.evaluate(() => document.fonts.ready);
+    expect(googleRequests, "nothing from Google before the tap").toEqual([]);
+
+    await listen.getByRole("button", { name: "Play episode" }).click();
+    const frame = listen.locator("iframe");
+    await expect(frame).toBeVisible();
+    await expect(frame).toHaveAttribute("src", `${YOUTUBE_PLAYER}/embed/XXXXXXXXXXX?autoplay=1`);
+    await expect(frame).toHaveAttribute("title", "Episode: Why loss looms larger");
+    await expect(frame).toBeFocused();
+    await expect(page.frameLocator(".essay-listen iframe").locator("p")).toHaveText("Player");
+    expect(googleRequests).toEqual([`${YOUTUBE_PLAYER}/embed/XXXXXXXXXXX?autoplay=1`]);
+    await expectNoHorizontalScroll(page);
+  });
 
   test("every essay page carries a filled Content-Security-Policy and loads only the site's own files", async ({ page, guard }) => {
     for (const path of ["essays/", ESSAY_PATH]) {

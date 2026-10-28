@@ -33,6 +33,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from engine.config import VAULT_PATH  # noqa: E402
 from engine.content import parse_frontmatter  # noqa: E402
 from engine.essays import ESSAYS_DIR_NAME, check_essays_folder  # noqa: E402
+from engine.user_config import load_user_config, media_origins  # noqa: E402
 
 GARDEN = os.path.join(VAULT_PATH, "10_GARDEN")
 ESSAYS = os.path.join(VAULT_PATH, ESSAYS_DIR_NAME)
@@ -135,7 +136,7 @@ def check_vault():
     return violations, empty_files, untagged_notes
 
 
-def check_essays(folder=None):
+def check_essays(folder=None, origins=None):
     """Validates the Essays folder (vault/30_ESSAYS, or `folder`) against the
     contract and privacy checks in docs/ESSAYS.md, through the same
     engine.essays code the build runs, so "does this essay pass" means one
@@ -144,9 +145,13 @@ def check_essays(folder=None):
     Returns (essay_count, problems): the number of essays that passed, and
     (relpath, problem) for everything that did not. An absent folder is
     (0, []). Unlike the Garden checks above, every problem here also fails
-    the build itself, strict or not.
+    the build itself, strict or not. `origins` is the media allowlist for
+    companion URLs, read from user_config.json as the build reads it when
+    not given.
     """
-    essays, problems = check_essays_folder(ESSAYS if folder is None else folder)
+    if origins is None:
+        origins = media_origins(load_user_config())
+    essays, problems = check_essays_folder(ESSAYS if folder is None else folder, origins)
     return len(essays), problems
 
 

@@ -13,6 +13,17 @@ methods:
   drafted_on: reMarkable
   edited_in: Google Docs
   ai_roles: [source search, source summaries, citation audit]
+# The study companion and the episode (roadmap S17). test/tone.wav is the
+# test file in the media bucket; the browser suite serves its own copy at
+# this address unless AURELIA_LIVE_MEDIA=1, so CI never depends on the bucket.
+companion:
+  - kind: audio
+    label: "Audio overview"
+    url: https://media.travisrmckinzie.com/test/tone.wav
+  - kind: other
+    label: "Flashcards (CSV)"
+    url: https://media.travisrmckinzie.com/test/flashcards.csv
+youtube: https://www.youtube.com/watch?v=XXXXXXXXXXX
 ---
 Hand someone a coffee mug and then ask what they would sell it for. Ask a second person, who has no mug, what they would pay for one. The two numbers should be close. They are not. The owner wants roughly twice what the buyer offers [@kahneman1990], and the gap does not shrink when the mug is replaced with a pen, a chocolate bar or a lottery ticket.
 

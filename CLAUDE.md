@@ -41,7 +41,8 @@ themes, not part of the brand.
   `tests/fixtures/essays/` through `AURELIA_ESSAYS_DIR`.
 - **The Essays privacy checks fail every build, strict or not** (`engine/essays.py`,
   `docs/ESSAYS.md`): a draft, an unknown field, a Drive, Docs, Sheets, Gemini, NotebookLM or
-  reMarkable link, or any file other than `.md` and `.yaml` in the Essays folder raises
+  reMarkable link, a study companion URL off `user_config.json`'s `media_origins`, or any file
+  other than `.md` and `.yaml` in the Essays folder raises
   `EssayError` the way a bad `user_config.json` does. Never route one through `warn()`: a pushed
   branch is public before CI's `--strict` build runs.
 - **Don't commit or push unless asked, and never push to `main`.** Make the change, verify it,
@@ -153,7 +154,7 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   (five themes, `TIMBERLINE` default; each theme's `switchable` flag decides whether the menu
   offers it, and only TIMBERLINE and CYBER_PRIME are offered). Adding a theme is one dict entry.
 - `engine/user_config.py`: `user_config.json` loader and strict validator (site identity, the
-  Lobby Toolkit). Like `profile.py`, any error is fatal.
+  Lobby Toolkit, `media_origins` for essay media). Like `profile.py`, any error is fatal.
 - `engine/buildlog.py`: `warn()`, the one path for build warnings, which `--strict` counts.
 - `engine/pipeline.py`: `build_all()`. `_scan_vault()` is two-pass (ids and link resolver first,
   then wikilinks, media, cards). `_build_link_graph()` computes backlinks and graph edges in one
@@ -177,7 +178,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   validates the contract in `docs/ESSAYS.md` (field allowlist, id, slug, dates, closed `ai_roles`
   vocabulary, CSL reference fields), runs the privacy checks that raise `EssayError`, renders
   each body with markdown-it (raw HTML off) and resolves its `[[wikilinks]]` through the Garden's
-  resolver into links to `garden.html#id`. `pipeline._scan_garden()` prunes the folder from the
+  resolver into links to `garden.html#id`. Since S17 it also builds the disclosure note from
+  `methods` and the reference records and the study companion from its entries, and names the
+  per-page policy sources an essay needs. `pipeline._scan_garden()` prunes the folder from the
   Garden walk, so an essay is never a card, and fails on a `type: essay` note anywhere else.
 - `engine/citations.py`: essay citations (roadmap S16). Pandoc's `[@key]`, `[@key, p. 12]`,
   `[@a; @b]` and narrative `@key` as markdown-it inline rules, and an in-house APA 7 formatter
@@ -188,7 +191,8 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   as `csp.py` does, because the essay pages sit below the top of it.
 - `engine/csp.py`: fills `base.html`'s Content-Security-Policy meta tag after the stamp with
   sha256 hashes of each page's inline `<script>` and `<style>` blocks. Nothing else inline is
-  allowed.
+  allowed. Only an essay page may widen it, and only `media-src` and `frame-src` by named https
+  origins (its media host, the YouTube player).
 - `engine/vendor.py`: copies the pinned web fonts, `marked.js`, and Motion from `node_modules/`
   into `dist/`, so the site serves everything itself.
 - `system/templates/`: `base.html`, `404.html`, `pages/{index,garden,about}template.html`, and
@@ -227,9 +231,9 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
 - Why something looks odd: `docs/DECISIONS.md` (dated decisions plus known gaps).
 - Essays: `docs/ESSAYS.md` is the design and its data contract, `docs/DECISIONS.md` item 41
   records why, item 43 what S15 built (the content type, the privacy checks, the index and
-  essay pages) and item 44 what S16 built (citations and the APA 7 reference list). The
-  disclosure note, the companion, the web citation style, the feed and search are S17 and S18,
-  not built yet.
+  essay pages), item 44 what S16 built (citations and the APA 7 reference list) and item 45
+  what S17 built (the disclosure note, the study companion, the media allowlist and the
+  tap-to-load episode). The web citation style, the feed and search are S18, not built yet.
 - Security history: `docs/SECURITY-AUDIT.md`. Check `git log --grep "audit #"` for the current
   state rather than trusting any list, including that one.
 

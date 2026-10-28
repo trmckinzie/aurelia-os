@@ -24,7 +24,7 @@ from engine.buildlog import get_warnings, reset_warnings, warn
 from engine.cachebust import stamp_asset_versions
 from engine.csp import apply_csp
 from engine.config import CURRENT_THEME, OUTPUT_DIR, VAULT_PATH, env
-from engine.essays import ESSAYS_DIR_NAME, EssayError, essays_path, scan_essays
+from engine.essays import ESSAYS_DIR_NAME, EssayError, essays_path, page_policy_sources, scan_essays
 from engine.content import (
     _FRONTMATTER_FENCE_RE,
     build_link_resolver,
@@ -53,7 +53,7 @@ from engine.tailwind_build import compile_css
 from engine.vendor import copy_vendor_assets
 from engine.textutils import dumps_for_script_tag, truncate
 from engine.theming import available_theme_slugs, available_themes, default_theme_slug, generate_theme_css
-from engine.user_config import load_user_config
+from engine.user_config import load_user_config, media_origins
 
 
 # Vault directories the build never publishes from, whatever a note's
@@ -691,6 +691,18 @@ def _essay_pages(user_config, essays):
     return pages
 
 
+def _essay_policy_sources(essays, origins):
+    """{page path under dist/: extra policy sources} for the essay pages
+    that need any (a companion player, a YouTube episode); engine/csp.py
+    widens only those pages' media-src and frame-src."""
+    sources = {}
+    for essay in essays:
+        extra = page_policy_sources(essay, origins)
+        if extra:
+            sources[f"essays/{essay['slug']}/index.html"] = extra
+    return sources
+
+
 def _render_pages(user_config, garden_cards, json_index, backlinks_json, graph_json, lobby_stats, deep_search_json, profile,
                    build_commit=None, build_commit_time=None, has_social_preview=True, essays=()):
     # Its size is reported with garden.html's by report_page_sizes(), once
@@ -935,6 +947,7 @@ def build_all(sort_dropzone=None, strict=False):
         essays_path(VAULT_PATH), scan.resolve, scan.known_ids,
         discipline_ids={c["id"] for c in garden_cards if c["type"].lower() == "discipline"},
         site_root=_site_root(user_config),
+        media_origins=media_origins(user_config),
     )
     if essays:
         print(f"   + Essays: {len(essays)} published -> essays/")
@@ -1006,7 +1019,7 @@ def build_all(sort_dropzone=None, strict=False):
 
     # After the stamp and before the size report: the policy's hashes are of
     # each page's final inline blocks, and the report measures final bytes.
-    apply_csp(OUTPUT_DIR)
+    apply_csp(OUTPUT_DIR, page_sources=_essay_policy_sources(essays, media_origins(user_config)))
     report_page_sizes()
 
     warnings = get_warnings()
