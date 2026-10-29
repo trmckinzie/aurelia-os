@@ -305,6 +305,7 @@ def generate_theme_css():
     ]
     for key, theme in THEME_CONFIG.items():
         blocks.append(_block(f':root[data-theme="{theme_slug(key)}"]', _variables_for(theme)))
+    blocks.append(_theme_image_rules())
 
     css_dir = os.path.join(OUTPUT_DIR, "assets", "css")
     os.makedirs(css_dir, exist_ok=True)
@@ -369,3 +370,45 @@ def available_theme_slugs():
     whose localStorage still names a theme the menu no longer lists gets the
     default instead of an unlisted one."""
     return [theme["key"] for theme in available_themes()]
+
+
+# --- Theme-matched images (docs/DECISIONS.md item 49) ---
+# A profile.json image (identity.photo or identity.portrait) may carry
+# `themes`: {THEME_CONFIG key: {src, alt}}. Every variant is written into
+# the page as its own <img>, and the rules below show only the one that
+# matches <html data-theme>. That attribute is stamped at build time and
+# corrected from localStorage by base.html's head script before first
+# paint, so the right image is the first one painted, with or without JS
+# after that, and a switch is the same pure attribute change as the colors.
+# A display:none <img> is also out of the accessibility tree, so a screen
+# reader hears only the alt text of the image actually shown.
+def _theme_image_rules():
+    """Two selectors per theme, every THEME_CONFIG entry, offered or not:
+    hide a variant made for another theme, and hide the default image where
+    this theme has a variant of its own."""
+    selectors = []
+    for key in THEME_CONFIG:
+        slug = theme_slug(key)
+        selectors.append(f':root[data-theme="{slug}"] [data-theme-only]:not([data-theme-only~="{slug}"])')
+        selectors.append(f':root[data-theme="{slug}"] [data-theme-hide~="{slug}"]')
+    return ",\n".join(selectors) + " {\n    display: none;\n}"
+
+
+def theme_images(image, current):
+    """The <img> elements for a profile image, in order: the default first,
+    then one per `themes` entry in THEME_CONFIG order. Each is {src, alt,
+    only, hide, current}: `only` is the variant's theme slug, `hide` the
+    space-separated slugs a variant replaces the default in (both None for
+    an image with no variants, which renders exactly as before), and
+    `current` whether it is the one shown under the build's default theme
+    `current`, the one that may load eagerly."""
+    variants = image.get("themes") or {}
+    slugs = {key: theme_slug(key) for key in THEME_CONFIG if key in variants}
+    hide = " ".join(slugs.values()) or None
+    images = [{"src": image["src"], "alt": image["alt"], "only": None, "hide": hide,
+               "current": current not in slugs.values()}]
+    for key, slug in slugs.items():
+        images.append({"src": variants[key]["src"], "alt": variants[key]["alt"],
+                       "only": slug, "hide": None, "current": slug == current})
+    return images
+

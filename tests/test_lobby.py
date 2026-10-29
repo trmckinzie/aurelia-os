@@ -160,6 +160,57 @@ def test_lobby_portrait_replaces_round_headshot():
     assert "headshot.webp" not in header
 
 
+def test_lobby_portrait_theme_variant_is_lazy_and_hidden_until_its_theme():
+    # docs/DECISIONS.md item 49. The portrait shown under the build's default
+    # theme keeps the eager, high-priority load; the variant is lazy, so a
+    # visitor who never switches never downloads it, and carries the slug
+    # theme-vars.css shows it under. Same 840x1120 box, so no layout shift.
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["portrait"] = {
+        "src": "assets/images/hero-portrait-timberline.webp", "alt": "Ada Lovelace by a river",
+        "themes": {"CYBER_PRIME": {"src": "assets/images/hero-portrait-cyber-prime.webp",
+                                   "alt": "A stylized AI avatar of Ada Lovelace"}},
+    }
+    html = render_index(profile=profile)
+    figure = html[html.index('<figure class="hero-portrait'):html.index("</figure>")]
+    assert figure.count("<img ") == 2
+    assert ('<img src="assets/images/hero-portrait-timberline.webp" alt="Ada Lovelace by a river"\n'
+            '     width="840" height="1120" loading="eager" fetchpriority="high" decoding="async" '
+            'data-theme-hide="cyber-prime"') in figure
+    assert ('<img src="assets/images/hero-portrait-cyber-prime.webp" alt="A stylized AI avatar of Ada Lovelace"\n'
+            '     width="840" height="1120" loading="lazy" decoding="async" '
+            'data-theme-only="cyber-prime"') in figure
+    assert figure.count('fetchpriority="high"') == 1
+
+
+def test_lobby_portrait_variant_for_the_build_default_takes_the_eager_load():
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["portrait"] = {
+        "src": "assets/images/a.webp", "alt": "A photo",
+        "themes": {"CYBER_PRIME": {"src": "assets/images/b.webp", "alt": "An avatar"}},
+    }
+    figure = render_index(profile=profile, theme_key="cyber-prime")
+    figure = figure[figure.index('<figure class="hero-portrait'):figure.index("</figure>")]
+    assert 'alt="A photo"\n     width="840" height="1120" loading="lazy"' in figure
+    assert 'alt="An avatar"\n     width="840" height="1120" loading="eager" fetchpriority="high"' in figure
+
+
+def test_lobby_round_photo_fallback_switches_with_the_theme_too():
+    profile = make_profile()
+    profile["identity"] = dict(profile["identity"])
+    profile["identity"]["photo"] = {
+        "src": "assets/images/headshot.webp", "alt": "Ada Lovelace, portrait",
+        "themes": {"CYBER_PRIME": {"src": "assets/images/headshot-cyber-prime.webp", "alt": "An avatar"}},
+    }
+    html = render_index(profile=profile)
+    header = html[html.index("<header"):html.index("</header>")]
+    assert 'data-theme-hide="cyber-prime"' in header
+    assert ('<img src="assets/images/headshot-cyber-prime.webp" alt="An avatar"\n'
+            '     width="650" height="650" loading="lazy" decoding="async" data-theme-only="cyber-prime"') in header
+
+
 def test_lobby_without_photo_has_no_hero_img():
     html = render_index()
     header = html[html.index("<header"):html.index("</header>")]

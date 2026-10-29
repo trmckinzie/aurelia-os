@@ -9,6 +9,7 @@ from engine.theming import (
     default_theme_slug,
     generate_theme_css,
     is_switchable,
+    theme_images,
     theme_mode,
     theme_slug,
 )
@@ -271,3 +272,59 @@ def test_generate_theme_css_is_byte_identical_across_runs(tmp_path, monkeypatch)
     monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path / "b"))
     second = open(generate_theme_css(), "rb").read()
     assert first == second
+
+
+# --- theme-matched images (docs/DECISIONS.md item 49) ------------------
+
+def test_generate_theme_css_hides_images_made_for_another_theme(tmp_path, monkeypatch):
+    # Every theme, offered or not, so an experimental theme stamped as the
+    # build default still shows the default image and no variant.
+    from engine.config import THEME_CONFIG
+
+    monkeypatch.setattr(theming, "OUTPUT_DIR", str(tmp_path))
+    css = open(generate_theme_css(), encoding="utf-8").read()
+    rules = css[css.index("[data-theme-only]") - 40:]
+    for key in THEME_CONFIG:
+        slug = theme_slug(key)
+        assert f':root[data-theme="{slug}"] [data-theme-only]:not([data-theme-only~="{slug}"])' in rules
+        assert f':root[data-theme="{slug}"] [data-theme-hide~="{slug}"]' in rules
+    assert rules.rstrip().endswith("{\n    display: none;\n}")
+
+
+def test_theme_images_without_variants_is_the_image_alone():
+    image = {"src": "assets/images/a.webp", "alt": "A photo"}
+    assert theme_images(image, "timberline") == [
+        {"src": "assets/images/a.webp", "alt": "A photo", "only": None, "hide": None, "current": True},
+    ]
+
+
+def test_theme_images_lists_the_default_then_each_variant_in_theme_order():
+    image = {"src": "a.webp", "alt": "A", "themes": {
+        "GRIZZ": {"src": "g.webp", "alt": "G"},
+        "CYBER_PRIME": {"src": "c.webp", "alt": "C"},
+    }}
+    images = theme_images(image, "timberline")
+    assert [i["src"] for i in images] == ["a.webp", "c.webp", "g.webp"]
+    assert images[0]["hide"] == "cyber-prime grizz"
+    assert [i["only"] for i in images] == [None, "cyber-prime", "grizz"]
+    assert [i["alt"] for i in images] == ["A", "C", "G"]
+
+
+def test_theme_images_marks_the_one_shown_under_the_build_default():
+    # Only that one may load eagerly; the rest wait until a switch shows them.
+    image = {"src": "a.webp", "alt": "A", "themes": {"CYBER_PRIME": {"src": "c.webp", "alt": "C"}}}
+    assert [i["current"] for i in theme_images(image, "timberline")] == [True, False]
+    assert [i["current"] for i in theme_images(image, "cyber-prime")] == [False, True]
+    assert [i["current"] for i in theme_images(image, "grizz")] == [True, False]
+
+
+def test_theme_images_is_a_template_global_without_importing_theming():
+    # Registered where env is made (engine/config.py), so a renderer that
+    # imports only env still has it; a fresh interpreter proves the import.
+    import subprocess
+    import sys
+    code = ("from engine.config import env; "
+            "print(env.globals['theme_images']({'src': 'a', 'alt': 'A'}, 'timberline')[0]['current'])")
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True,
+                         cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    assert out.stdout.strip() == "True"

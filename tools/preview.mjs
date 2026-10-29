@@ -8,7 +8,9 @@
 // extra installed and no interpreter path.
 //
 // Usage: node tools/preview.mjs [port] [base]
-//   port  default 8791
+//   port  default $PORT, then 8791. .claude/launch.json passes no port and
+//         sets autoPort, so a session in a worktree gets a free port while
+//         another checkout's preview holds 8791.
 //   base  the path dist/ is served under, default "/". The browser suite
 //         (playwright.config.mjs) passes BASE_PATH from tests/browser/site.mjs:
 //         "/" on the custom domain, "/aurelia-os/" for the github.io project
@@ -28,7 +30,7 @@ import { fileURLToPath } from "node:url";
 import { extname, join, resolve, sep } from "node:path";
 
 const ROOT = resolve(fileURLToPath(new URL("../dist", import.meta.url)));
-const PORT = Number(process.argv[2] ?? 8791);
+const PORT = Number(process.argv[2] ?? process.env.PORT ?? 8791);
 // Normalised to "/" or "/name/": one leading and one trailing slash.
 const BASE = `/${(process.argv[3] ?? "/").split("/").filter(Boolean).join("/")}/`.replace(/^\/\/$/, "/");
 

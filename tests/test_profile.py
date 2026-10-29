@@ -279,6 +279,73 @@ def test_portrait_missing_file_raises(tmp_path):
         validate_profile(profile, root=str(tmp_path))
 
 
+# --- theme-matched images (docs/DECISIONS.md item 49) -------------------
+
+def _with_variant(field, variant, key="CYBER_PRIME"):
+    profile = minimal_profile()
+    profile["identity"][field] = {"src": "assets/images/a.webp", "alt": "A photo",
+                                  "themes": {key: variant}}
+    return profile
+
+
+@pytest.mark.parametrize("field", ["photo", "portrait"])
+def test_theme_variant_validates(field):
+    validate_profile(_with_variant(field, {"src": "assets/images/b.webp", "alt": "An avatar"}))
+
+
+@pytest.mark.parametrize("field", ["photo", "portrait"])
+def test_theme_variant_requires_alt(field):
+    # Every image a theme can show is on the published page, so each one
+    # needs its own alt text; it never inherits the default's.
+    profile = _with_variant(field, {"src": "assets/images/b.webp"})
+    with pytest.raises(ProfileError, match=rf"identity\.{field}\.themes\.CYBER_PRIME\.alt"):
+        validate_profile(profile)
+
+
+def test_theme_variant_rejects_an_unknown_theme():
+    profile = _with_variant("portrait", {"src": "assets/images/b.webp", "alt": "An avatar"},
+                            key="cyber-prime")
+    with pytest.raises(ProfileError, match=r"identity\.portrait\.themes: unknown key 'cyber-prime'"):
+        validate_profile(profile)
+
+
+def test_theme_variant_rejects_bad_src():
+    profile = _with_variant("portrait", {"src": "https://evil.example/b.webp", "alt": "An avatar"})
+    with pytest.raises(ProfileError, match=r"identity\.portrait\.themes\.CYBER_PRIME\.src"):
+        validate_profile(profile)
+
+
+def test_theme_variant_cannot_nest_themes():
+    profile = _with_variant("portrait", {"src": "assets/images/b.webp", "alt": "An avatar",
+                                         "themes": {}})
+    with pytest.raises(ProfileError, match=r"themes\.CYBER_PRIME: unknown key 'themes'"):
+        validate_profile(profile)
+
+
+def test_theme_variant_missing_file_raises(tmp_path):
+    images = tmp_path / "assets" / "images"
+    images.mkdir(parents=True)
+    (images / "a.webp").write_bytes(b"")
+    profile = _with_variant("portrait", {"src": "assets/images/nope.webp", "alt": "An avatar"})
+    with pytest.raises(ProfileError, match=r"themes\.CYBER_PRIME\.src: photo not found"):
+        validate_profile(profile, root=str(tmp_path))
+
+
+def test_repo_profile_matches_its_images_to_the_two_offered_themes():
+    # The handoff of 2026-10-28: TIMBERLINE shows the photo, CYBER_PRIME the
+    # AI avatar, on the Lobby hero and the round photo alike; every other
+    # theme falls back to the photo. load_profile() has already proven each
+    # file exists.
+    identity = load_profile()["identity"]
+    assert identity["portrait"]["src"] == "assets/images/hero-portrait-timberline.webp"
+    assert identity["portrait"]["themes"]["CYBER_PRIME"]["src"] == "assets/images/hero-portrait-cyber-prime.webp"
+    assert identity["photo"]["themes"]["CYBER_PRIME"]["src"] == "assets/images/headshot-cyber-prime.webp"
+    for field in ("photo", "portrait"):
+        assert list(identity[field]["themes"]) == ["CYBER_PRIME"]
+        assert "AI avatar" in identity[field]["themes"]["CYBER_PRIME"]["alt"]
+        assert "avatar" not in identity[field]["alt"]
+
+
 # --- person_jsonld -----------------------------------------------------
 
 def test_person_jsonld_sameas_excludes_mailto():

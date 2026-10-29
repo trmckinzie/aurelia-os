@@ -79,9 +79,8 @@
            and this whole block is a no-op without one. #}
         <div class="flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-8">
             {% if profile.identity.photo %}
-            <img src="{{ profile.identity.photo.src }}" alt="{{ profile.identity.photo.alt }}"
-                 width="650" height="650" decoding="async"
-                 class="w-28 h-28 sm:w-36 sm:h-36 rounded-full shrink-0 border border-aurelia-border object-cover mx-auto sm:mx-0">
+            {% from "theme_image.html" import theme_img %}
+            {{ theme_img(profile.identity.photo, theme_key, 650, 650, "w-28 h-28 sm:w-36 sm:h-36 rounded-full shrink-0 border border-aurelia-border object-cover mx-auto sm:mx-0") }}
             {% endif %}
             <div class="min-w-0">
                 <p class="field-label text-aurelia-primary mb-5">Profile</p>
