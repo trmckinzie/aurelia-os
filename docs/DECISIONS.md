@@ -1225,6 +1225,22 @@ knowing so you don't "fix" something that was a deliberate decision:
       WebP with alpha (about 470 KB at any setting), and every place that draws the photo
       already clips it with `rounded-full`. The PNG masters live outside the repo, in
       `~/PhotoCraft-sandbox/aurelia-work/`.
+    - **The avatar's chest light became Travis's "T" (2026-10-28, the same night).** The review
+      before #66 merged noted that a round glowing chest light reads close to a well-known
+      franchise design, so the circle was replaced with the favicon's "T" in PhotoCraft 0.12.0,
+      by hand from its CLI (master `cyber-prime-avatar-v6-840x1120.png`, with an editable
+      `-v6-layers.pcraft`). Two rejected tries are worth knowing: a square "T" badge, then the
+      same badge recessed and bevelled, both read as a sticker on the armor however they were lit.
+      What works is a "T" made of the armor's own light. The old core is removed with the Remove
+      brush at 50 px, tight enough that the cyan conduits still run to the centre and feed the
+      new stem, which ends where the armor's two vertical seam lines begin. The "T" is a
+      teal tube with a white-hot core in the conduits' measured colours (`#7fe9ef`, `#f4ffff`),
+      softened to their focus, in a bevelled groove with a faint contact shadow. Its glow is
+      blurred copies added back (3 px and 10 px, Linear Dodge) rather than layer-style glows,
+      a Color Dodge layer lets the light catch the scratches around it, and that area gets the
+      photo's grain. The hero is re-encoded at WebP quality 85 (what the first one used, 103 KB)
+      and the round avatar re-cropped with the same recipe as above (52 KB); both are still
+      simple-format WebP, and `profile.json` is unchanged.
     - **Checked:** the Content-Security-Policy needs nothing new (same-origin images, no inline
       style; the fade is in `main.css`), and the post-deploy live check fetches pages and
       `main.css`, not images, so it is unaffected. `tests/browser/themes.spec.mjs` pins the swap,
