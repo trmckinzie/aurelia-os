@@ -426,6 +426,25 @@ def test_about_renders_photo_with_alt():
     assert '"><script>' not in html
 
 
+def test_about_photo_renders_a_hidden_img_per_theme_variant():
+    # docs/DECISIONS.md item 49: each variant is its own <img> with its own
+    # alt, shown by theme-vars.css only under its theme. The default is
+    # loaded as before; the variant waits, lazy, until a switch shows it.
+    hostile_alt = '"><script>alert(2)</script>'
+    profile = _profile_with_photo()
+    profile["identity"]["photo"]["themes"] = {
+        "CYBER_PRIME": {"src": "assets/images/headshot-cyber-prime.webp", "alt": hostile_alt},
+    }
+    html = render_about(profile=profile)
+    header = html[html.index("<header"):html.index("</header>")]
+    assert header.count("<img ") == 2
+    assert ('<img src="assets/images/headshot.webp" alt="Ada Lovelace, portrait"\n'
+            '     width="650" height="650" decoding="async" data-theme-hide="cyber-prime"') in header
+    assert ('<img src="assets/images/headshot-cyber-prime.webp" alt="&#34;&gt;&lt;script&gt;alert(2)&lt;/script&gt;"\n'
+            '     width="650" height="650" loading="lazy" decoding="async" data-theme-only="cyber-prime"') in header
+    assert "<script>alert" not in html
+
+
 def test_about_without_photo_renders_no_img_in_header():
     html = render_about()
     header = html[html.index("<header"):html.index("</header>")]

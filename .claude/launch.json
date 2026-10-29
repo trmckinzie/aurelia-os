@@ -4,8 +4,9 @@
     {
       "name": "dist-preview",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["tools/preview.mjs", "8791"],
-      "port": 8791
+      "runtimeArgs": ["tools/preview.mjs"],
+      "port": 8791,
+      "autoPort": true
     }
   ]
 }

@@ -32,7 +32,7 @@ import re
 from datetime import date
 from urllib.parse import urlsplit
 
-from engine.config import ROOT_DIR
+from engine.config import ROOT_DIR, THEME_CONFIG
 
 PROFILE_FILENAME = "profile.json"
 SCHEMA_VERSION = 1
@@ -182,8 +182,13 @@ _IDENTITY_SPECS = {
 # there is no such thing as an image with no alt text on a published page.
 # identity.portrait (the Lobby hero's 3:4 photo) takes the same shape and the
 # same checks; without it the Lobby falls back to the round photo.
-_PHOTO_ALLOWED = {"src", "alt"}
+# Either may carry `themes`, {THEME_CONFIG key: {src, alt}}: the image to
+# show instead under that theme, every variant with its own alt text and the
+# same checks (engine/theming.py theme_images(), docs/DECISIONS.md item 49).
+# A theme with no entry shows the default src. A variant has no `themes`.
+_PHOTO_ALLOWED = {"src", "alt", "themes"}
 _PHOTO_REQUIRED = {"src", "alt"}
+_PHOTO_VARIANT_ALLOWED = {"src", "alt"}
 
 _ROLE_ALLOWED = {"org", "title", "period", "description", "url", "primary"}
 _ROLE_REQUIRED = {"org", "title", "period", "description", "primary"}
@@ -241,8 +246,8 @@ def _photo_file_exists(src, root):
     return within and os.path.isfile(candidate)
 
 
-def _validate_photo(value, path, root):
-    _check_object(value, path, _PHOTO_ALLOWED, _PHOTO_REQUIRED)
+def _validate_photo(value, path, root, allowed=_PHOTO_ALLOWED):
+    _check_object(value, path, allowed, _PHOTO_REQUIRED)
     if "src" in value:
         src = value["src"]
         src_path = _join(path, "src")
@@ -259,6 +264,11 @@ def _validate_photo(value, path, root):
             _fail(src_path, f"photo not found: {src}")
     if "alt" in value:
         _check_str(value["alt"], _join(path, "alt"), 160, multiline=False)
+    if "themes" in value:
+        themes_path = _join(path, "themes")
+        _check_object(value["themes"], themes_path, THEME_CONFIG.keys(), ())
+        for key, variant in value["themes"].items():
+            _validate_photo(variant, _join(themes_path, key), root, _PHOTO_VARIANT_ALLOWED)
 
 
 def _validate_identity(value, path, root):
@@ -373,8 +383,9 @@ def validate_profile(data, root=None):
     depth and never coerces types -- a bool or int where a string is
     expected is an error, not a silent cast.
 
-    `root`, when given, additionally verifies that identity.photo.src and
-    identity.portrait.src (if present) resolve to a real file under <root>/assets/images -- see
+    `root`, when given, additionally verifies that identity.photo.src,
+    identity.portrait.src and each of their themes.<KEY>.src (if present)
+    resolve to a real file under <root>/assets/images -- see
     _photo_file_exists. Pass None (the default) to skip that filesystem
     check and validate shape only, which is what every existing caller and
     test does; load_profile() always passes ROOT_DIR, since a photo the

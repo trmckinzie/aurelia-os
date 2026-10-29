@@ -355,6 +355,19 @@ body {
     transition-delay: 0ms !important;
 }
 
+/* A theme-matched image (system/templates/theme_image.html) fades in when a
+   switch shows it, instead of cutting. @starting-style gives only the image
+   that was display:none an opacity to start from, so the one hidden snaps
+   off and an image that stays shown does not flicker. Scoped to the switch
+   so nothing fades on page load, and the selector outranks the rule above,
+   whose !important transition list has no opacity. setTheme() never adds
+   .theme-transition under reduced motion, so there the image simply swaps. */
+:root.theme-transition [data-theme-only],
+:root.theme-transition [data-theme-hide] {
+    transition: opacity var(--dur-3) ease !important;
+    @starting-style { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .nav-shell, .nav-anchored, .nav-indicator, .nav-sub, .mobile-menu { transition: none; }
     :root.theme-transition, :root.theme-transition * { transition: none !important; }
@@ -952,6 +965,13 @@ body {
         background: #fff !important;
         color: #000 !important;
     }
+
+    /* The paper is white whatever the theme, so print the photo, never a
+       theme's variant of it (theme_image.html, docs/DECISIONS.md item 49).
+       !important because the rules that hide them in theme-vars.css are
+       unlayered, and a normal declaration in this layer loses to those. */
+    [data-theme-only] { display: none !important; }
+    [data-theme-hide] { display: revert !important; }
 
     /* nav-offset reserves room for a fixed nav that is not printed. */
     main.nav-offset {

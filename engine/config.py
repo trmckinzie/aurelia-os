@@ -53,6 +53,18 @@ def _longdate(value):
 env.filters["longdate"] = _longdate
 env.globals["asset_url"] = asset_url
 
+
+def _theme_images(image, current):
+    """system/templates/theme_image.html's per-theme <img> list -- see
+    engine/theming.theme_images(). Registered here, where `env` is made, so
+    every render has it whatever else was imported; the import is deferred
+    because engine/theming.py imports this module."""
+    from engine.theming import theme_images
+    return theme_images(image, current)
+
+
+env.globals["theme_images"] = _theme_images
+
 # --- THEME ENGINE V3: RUNTIME-SWITCHABLE (see engine/theming.py) ---
 # Every value here becomes a CSS custom property (--aurelia-*), generated
 # for every theme in this dict -- not just one -- into

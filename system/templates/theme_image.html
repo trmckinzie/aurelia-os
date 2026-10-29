@@ -1,0 +1,15 @@
+{# One profile.json image (identity.photo or identity.portrait) as an <img>
+   per theme variant: engine/theming.py theme_images() lists them, and the
+   rules it writes into theme-vars.css show only the one that matches
+   <html data-theme>. An image without `themes` renders one plain <img>, as
+   before. The image shown under the build's default theme loads as the
+   page asks (`priority`: eager and high priority, for the Lobby hero); every
+   other variant is lazy, so a hidden one is fetched only once a theme
+   switch shows it. docs/DECISIONS.md item 49. #}
+{% macro theme_img(image, theme_key, width, height, class, priority=false) -%}
+{% for img in theme_images(image, theme_key) %}
+<img src="{{ img.src }}" alt="{{ img.alt }}"
+     width="{{ width }}" height="{{ height }}"{% if not img.current %} loading="lazy"{% elif priority %} loading="eager" fetchpriority="high"{% endif %} decoding="async"{% if img.only %} data-theme-only="{{ img.only }}"{% endif %}{% if img.hide %} data-theme-hide="{{ img.hide }}"{% endif %}
+     class="{{ class }}">
+{%- endfor %}
+{%- endmacro %}

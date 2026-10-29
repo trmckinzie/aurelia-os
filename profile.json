@@ -6,8 +6,18 @@
         "headline": "Product & Web Solutions Lead and IT Manager — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
         "location": "Colorado, USA",
         "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website. Where I'm heading: human-computer interaction that supports better learning and better mental health.",
-        "photo": { "src": "assets/images/headshot.webp", "alt": "Travis R. McKinzie" },
-        "portrait": { "src": "assets/images/hero-portrait.webp", "alt": "Travis R. McKinzie beside a river in autumn" }
+        "photo": {
+            "src": "assets/images/headshot.webp", "alt": "Travis R. McKinzie",
+            "themes": {
+                "CYBER_PRIME": { "src": "assets/images/headshot-cyber-prime.webp", "alt": "A stylized AI avatar of Travis R. McKinzie" }
+            }
+        },
+        "portrait": {
+            "src": "assets/images/hero-portrait-timberline.webp", "alt": "Travis R. McKinzie beside a river in autumn",
+            "themes": {
+                "CYBER_PRIME": { "src": "assets/images/hero-portrait-cyber-prime.webp", "alt": "A stylized AI avatar of Travis R. McKinzie" }
+            }
+        }
     },
 
     "roles": [

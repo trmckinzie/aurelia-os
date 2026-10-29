@@ -321,6 +321,7 @@
             const btn = document.getElementById('mobile-menu-btn');
             const open = menu.classList.toggle('is-open');
             if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open) warmThemeImages();
         }
 
         /* --- NAV: sliding active indicator + scroll condensing --------
@@ -500,10 +501,21 @@
         }
         renderThemeMenus();
 
+        /* A theme-matched image (theme_image.html) other than the one
+           showing is loading="lazy", so it costs nothing until a switch
+           shows it, and would then arrive after its fade. Opening a menu
+           that offers the themes starts those downloads instead, before a
+           theme is picked. */
+        function warmThemeImages() {
+            document.querySelectorAll('img[loading="lazy"][data-theme-only], img[loading="lazy"][data-theme-hide]')
+                .forEach((img) => { img.loading = 'eager'; });
+        }
+
         function setThemeMenuOpen(open) {
             const menu = document.getElementById('theme-menu');
             const btn = document.getElementById('theme-menu-btn');
             if (!menu) return;
+            if (open) warmThemeImages();
             menu.classList.toggle('hidden', !open);
             if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
         }

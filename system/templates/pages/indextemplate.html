@@ -115,15 +115,15 @@
       .nav-offset so it meets the nav rule; on phones it also cancels main's
       px-6 and runs edge to edge above the text. identity.portrait is
       optional: without it the round identity.photo sits beside the name as
-      before, and with neither the hero is text only. #}
+      before, and with neither the hero is text only. Either image can
+      switch with the theme: see theme_image.html. #}
+   {% from "theme_image.html" import theme_img %}
    {% set portrait = profile.identity.portrait if profile else None %}
    <header class="mb-16 relative" data-reveal>
     <div class="flex flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_420px] lg:gap-16 lg:items-end">
         {% if portrait %}
         <figure class="hero-portrait relative overflow-hidden bg-aurelia-border -mx-6 -mt-16 mb-10 lg:m-0 lg:order-2 lg:self-stretch">
-            <img src="{{ portrait.src }}" alt="{{ portrait.alt }}"
-                 width="840" height="1120" loading="eager" fetchpriority="high" decoding="async"
-                 class="absolute inset-0 w-full h-full object-cover object-[50%_30%]">
+            {{ theme_img(portrait, theme_key, 840, 1120, "absolute inset-0 w-full h-full object-cover object-[50%_30%]", priority=true) }}
             {% if profile.identity.location %}
             <figcaption class="absolute left-0 bottom-0 bg-aurelia-bg px-3.5 py-2.5 field-label text-aurelia-muted">{{ profile.identity.location }}</figcaption>
             {% endif %}
@@ -153,9 +153,7 @@
                 </p>
             </div>
             {% if not portrait and profile and profile.identity.photo %}
-            <img src="{{ profile.identity.photo.src }}" alt="{{ profile.identity.photo.alt }}"
-                 width="650" height="650" decoding="async"
-                 class="w-28 h-28 md:w-40 md:h-40 rounded-full shrink-0 border border-aurelia-border object-cover mx-auto md:mx-0">
+            {{ theme_img(profile.identity.photo, theme_key, 650, 650, "w-28 h-28 md:w-40 md:h-40 rounded-full shrink-0 border border-aurelia-border object-cover mx-auto md:mx-0") }}
             {% endif %}
         </div>
 

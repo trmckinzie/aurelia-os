@@ -1163,6 +1163,75 @@ knowing so you don't "fix" something that was a deliberate decision:
       `--strict`, so the "a record with neither a DOI nor a URL warns" case is a unit test
       (`tests/test_citations.py`), never shipped in a checked-in fixture.
 
+49. **The Lobby portrait and the round photo switch with the theme (2026-10-28).** Travis's
+    handoff of the same day: the light theme, TIMBERLINE, shows a photo of him and the dark
+    theme, CYBER_PRIME, an AI "neural hero" avatar of him, so a theme switch reads as the same
+    person's human side and AI side. His three answers before the build: the old hoodie
+    `hero-portrait.webp` is deleted, not kept; the round `identity.photo` switches too, while
+    `social-preview.jpg` stays (a page has one `og:image`, which cannot follow a reader's theme);
+    and both avatars' alt text is the short "A stylized AI avatar of Travis R. McKinzie", which
+    says what it is without describing the armor. The photo keeps its existing alt.
+    - **The data stays in `profile.json`.** `identity.photo` and `identity.portrait` each take an
+      optional `themes`, `{THEME_CONFIG key: {src, alt}}`; `engine/profile.py` holds every
+      variant to the default image's checks (a real file under `assets/images/`, its own alt), a
+      key must name a theme in `THEME_CONFIG`, and a variant cannot nest `themes` of its own. A
+      theme with no entry shows the default `src`, so the three themes the menu no longer offers
+      fall back to the photo. Keyed by `THEME_CONFIG` name (`CYBER_PRIME`) rather than slug,
+      the name `engine/config.py` uses to pick the default theme; `theme_slug()` stays the one
+      conversion.
+    - **Every variant is in the page, and CSS alone picks.** `system/templates/theme_image.html`
+      writes one `<img>` per variant from `engine/theming.theme_images()`: the default carries
+      `data-theme-hide` (the slugs that replace it), each variant `data-theme-only` (its own).
+      `generate_theme_css()` appends two selectors per theme to `theme-vars.css` that set the
+      others to `display: none`. `<html data-theme>` is already right before first paint (the
+      build stamps it and `base.html`'s head script corrects it from localStorage), so the
+      first image painted is the right one, with or without JavaScript after that, and a switch
+      is the same attribute change the colors use. Considered and rejected: swapping `src` from
+      JavaScript, which paints the default first whenever the saved theme differs from the
+      build's and fails without JavaScript, and a `<picture>`, whose `media` cannot see a
+      localStorage choice. A hidden `<img>` is out of the accessibility tree, so a screen reader
+      hears only the alt of the image shown. Every variant has the same `width`/`height`, and the
+      hero's sit absolutely in the fixed-ratio `<figure>`, so nothing moves.
+    - **Only the image for the build's default theme loads eagerly.** It keeps the hero's
+      `loading="eager" fetchpriority="high"`; every other variant is `loading="lazy"`, and a
+      `display: none` lazy image is never fetched, so a visitor who never switches downloads one
+      portrait. Opening either theme menu flips the hidden variants to eager (`warmThemeImages()`
+      in `base.html`), so the avatar is usually loaded by the time it is picked. The cost lands
+      on a returning visitor whose saved theme is not the default: the default photo still loads
+      first, hidden, at high priority, and their own image starts as a lazy load. Accepted for
+      now; the remedy would be a per-image preload chosen by the head script.
+    - **The switch fades the new image in, under the existing `.theme-transition` window.**
+      `main.css` gives `[data-theme-only]`/`[data-theme-hide]` an opacity transition with
+      `@starting-style { opacity: 0 }`, which applies only to an element coming out of
+      `display: none`, so the image that stays shown never flickers and nothing fades on page
+      load. `setTheme()` never adds `.theme-transition` under `prefers-reduced-motion`, so there
+      the image cuts. The outgoing image disappears at once; a true crossfade would need both
+      images rendered, which defeats the lazy load above.
+    - **Print shows the photo whatever the theme.** The About page doubles as a printable resume
+      and print forces white paper, so `main.css`'s `@media print` hides every variant and shows
+      the default. Both need `!important`: the hiding rules in `theme-vars.css` are unlayered,
+      and a normal declaration inside the utilities layer loses to them. Caught by the
+      `garden-publication-reviewer` pass on this change.
+    - **`theme_images` is registered as a template global in `engine/config.py`,** where `env` is
+      made, beside `asset_url`, with the import deferred because `engine/theming.py` imports
+      `config`. Registering it from `theming.py` worked only because every renderer happened to
+      import that module too.
+    - **Provenance.** The avatar was generated with Google Gemini (in a Temporary Chat, so not
+      used for training) from a photo of Travis, then retouched in PhotoCraft 0.12.0: blacks
+      matched to CYBER_PRIME's `bg_main` (`#0a0a0b`), an edge fade, a resize to 840 x 1120 and a
+      light sharpen. The round avatar `headshot-cyber-prime.webp` is a 650 x 650 crop of that
+      master in PhotoCraft's CLI (no resampling, WebP quality 82, 53 KB), its corners filled
+      with `#0a0a0b` rather than made transparent: PhotoCraft 0.12.0 ignored `--quality` for a
+      WebP with alpha (about 470 KB at any setting), and every place that draws the photo
+      already clips it with `rounded-full`. The PNG masters live outside the repo, in
+      `~/PhotoCraft-sandbox/aurelia-work/`.
+    - **Checked:** the Content-Security-Policy needs nothing new (same-origin images, no inline
+      style; the fade is in `main.css`), and the post-deploy live check fetches pages and
+      `main.css`, not images, so it is unaffected. `tests/browser/themes.spec.mjs` pins the swap,
+      the unchanged box, the fallback for a theme without a variant, the lazy load and its
+      warm-up, and, with a saved dark theme, that every rendered frame from the first shows the
+      avatar and never the photo.
+
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
   templating engine for everything else. This was considered and explicitly deferred as
   higher-risk-for-the-reward while there were 3 separate card-generator functions; now that only

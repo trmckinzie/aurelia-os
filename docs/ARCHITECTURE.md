@@ -105,15 +105,21 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   empty directories, so the placeholders an earlier revision of this file described are gone);
   the only tracked assets are `assets/css`, `assets/js`, five
   flashcard CSVs at the **repo root** in `assets/flashcards/` — which is why `resolve_asset()`'s
-  ROOT_DIR fallback is load-bearing rather than vestigial — and three site images in
+  ROOT_DIR fallback is load-bearing rather than vestigial — and five site images in
   `assets/images/` — `headshot.webp` (added 2026-09-07)
   (650×650, 31 KB, no EXIF/XMP, replaced 2026-10-19 with a crop of the autumn river photo; referenced by `profile.json`'s optional `identity.photo` and
   validated by `engine/profile.py` as a real file under `assets/images/`),
   `social-preview.jpg` (1200×630, the `og:image`, generated from the headshot on
   TIMBERLINE's paper color, with ffmpeg at first and with Pillow since 2026-10-19), and
-  `hero-portrait.webp` (840×1120, 3:4, added 2026-10-19: the Lobby's split hero, from
-  `profile.json`'s optional `identity.portrait`, which takes `identity.photo`'s shape and checks;
-  without it the Lobby shows the round photo). All Gemini Notebook audio and mind-map images were removed from the repo *and its
+  `hero-portrait-timberline.webp` (840×1120, 3:4: the Lobby's split hero, from `profile.json`'s
+  optional `identity.portrait`, which takes `identity.photo`'s shape and checks; without it the
+  Lobby shows the round photo; it replaced the first portrait, `hero-portrait.webp`, on
+  2026-10-28), and the CYBER_PRIME pair `hero-portrait-cyber-prime.webp` (840×1120) and
+  `headshot-cyber-prime.webp` (650×650), an AI avatar shown in place of the photos under that
+  theme through each image's optional `themes` (theme-matched images, docs/DECISIONS.md item 49).
+  All three added 2026-10-28 are simple-format WebP (a single `VP8 ` chunk), so they carry no
+  EXIF, XMP or ICC data. `assets/images/` is copied into `dist/` whole, with no publish gate,
+  which is why the full-size masters stay outside the repo. All Gemini Notebook audio and mind-map images were removed from the repo *and its
   history* in 2026 (see docs/DECISIONS.md item 9). The 16 references were deleted from the 9 notes
   that named them in commit 370e8eb (2026-09-10), and the build now prints no media warning; if the
   warning ever returns it means a note names an asset that is not in `vault/assets/` or repo-root
@@ -315,7 +321,7 @@ Three things to know before editing links in bulk (all learned in item 17's clea
 
 ### Templates (`system/templates/`)
 
-Seven template files exist. Two are the Essays pages (roadmap S15): `pages/essaystemplate.html`,
+Eight template files exist. Two are the Essays pages (roadmap S15): `pages/essaystemplate.html`,
 the index, and `pages/essaytemplate.html`, one essay, both at a 68-character reading measure with
 their prose rules in an inline `<style>` wrapped in `@layer utilities`, and both rendered only
 once an essay is published. The essay page ends with the APA 7 reference list (S16), a hanging
@@ -331,7 +337,10 @@ here), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like p
 `main.css` so it doubles as a printable résumé). All page templates `{% extends "base.html" %}`.
 `base.html` reads `config.site` (nav brand, `<title>`, canonical URL) and carries the skip link
 and the three nav entries; child templates that need `site` must `{% set %}` it themselves, since
-a parent's top-level `set` is not visible inside a child's blocks.
+a parent's top-level `set` is not visible inside a child's blocks. The eighth,
+`theme_image.html`, is a macro the Lobby and About import to draw a `profile.json` image as one
+`<img>` per theme variant; `theme-vars.css` shows the one matching `<html data-theme>`
+(docs/DECISIONS.md item 49).
 
 `indextemplate.html`'s Toolkit carousel reads two more per-entry `tech_stack` fields,
 `what_it_is` and `how_i_use_it`, to fill a native `<dialog>` detail window (`#toolkit-sheet`)
