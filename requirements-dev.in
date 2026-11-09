@@ -1,5 +1,5 @@
 # Direct dev dependencies on top of the runtime set. Edit here, then regenerate
 # requirements-dev.txt (see the command in its header).
 -r requirements.in
-pytest==9.1.1
-pyflakes==4.0.3
+pytest==9.2.0
+pyflakes==4.1.0
