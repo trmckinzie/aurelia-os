@@ -937,8 +937,11 @@ sessions:
       was reworded.
   - id: S13
     title: Split the Garden's inline script into modules with unit tests
-    status: in_progress
+    status: done
     started: 2026-11-14
+    completed: 2026-11-15
+    commits:
+      - "5e70849"
     area: Frontend
     effort: L
     model: opus
