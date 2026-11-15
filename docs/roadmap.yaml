@@ -937,7 +937,8 @@ sessions:
       was reworded.
   - id: S13
     title: Split the Garden's inline script into modules with unit tests
-    status: todo
+    status: in_progress
+    started: 2026-11-14
     area: Frontend
     effort: L
     model: opus
@@ -951,30 +952,48 @@ sessions:
       guards the move.
     tasks:
       - text: Move the script into assets/js/garden/ modules served through asset_url(), leaving only build-time data in the page as JSON data blocks
-        done: false
+        done: true
       - text: Add a JavaScript unit-test runner and lint step to verify.sh and CI, with tests for the pure functions first (sorting, filtering, roving focus, review scheduling glue)
-        done: false
+        done: true
       - text: Keep the delegated-action registry and the data-note listener as the modules' only entry points
-        done: false
+        done: true
       - text: Confirm the policy's script-src hash list shrinks and the browser suite passes unchanged
-        done: false
+        done: true
       - text: Update CLAUDE.md's map and docs/ARCHITECTURE.md, and close B01
-        done: false
+        done: true
     done_when:
       - garden.html carries no inline script beyond JSON data blocks, and the browser suite passes unchanged
       - A JavaScript unit-test run is part of verify.sh and CI, with tests for at least the sorting, filtering and roving-focus logic
       - bash verify.sh passes and the live check is green
+    notes: >-
+      All five tasks built and tested on 2026-11-14. The script is 21 ES
+      modules in assets/js/garden/ behind one module script tag, with no
+      bundler; garden.html carries two JSON data blocks and no script of its
+      own, and its script-src went from three hashes to two. The browser suite
+      passed with tests/browser/ untouched, and the compiled main.css was
+      byte-identical before and after. New checks: ESLint (10.14.0, pinned)
+      and 64 unit tests on node --test in verify.sh, tests/test_js_checks.py,
+      tests/test_cachebust_modules.py. engine/cachebust.py versions the
+      modules' imports with one hash of the folder. One regression was found
+      by reading, not by a test: flashcards.js reached announce() and
+      isTypingTarget() through window, so both moved to assets/js/utils.js.
+      One defect that predates this session was found and left for B23.
+      docs/DECISIONS.md item 50. The live-check item can only be proven after
+      this merges and deploys, so the session stays in_progress; mark it done
+      and record the merge commit in the follow-up change (roadmap S09,
+      docs/DECISIONS.md item 31).
 
 backlog:
   - id: B01
     title: Split the Garden's 2,800-line inline script into modules, with linting and unit tests
     area: Frontend
-    status: open
+    status: done
     detail: >-
-      Natural modules include the read-aloud panel, topic cloud, graph renderer
-      and review sessions. Scheduled as S13 on the second roadmap (2026-10-10);
-      closes when that session does. No longer a security prerequisite since
-      B02's policy hashes the inline script.
+      Closed 2026-11-14 by roadmap S13: 21 ES modules in assets/js/garden/,
+      ESLint and 64 unit tests on node --test in verify.sh. The classic
+      scripts beside them (review.js, flashcards.js, utils.js) and the Lobby's
+      and essay page's inline scripts were left as they are; docs/DECISIONS.md
+      item 50 and its known gaps.
   - id: B02
     title: Replace inline onclick handlers with delegated listeners, then add a Content-Security-Policy
     area: Security
@@ -1208,7 +1227,23 @@ backlog:
     detail: >-
       Essays link out to Garden notes from S15, but a Garden note does not list
       the essays that cite it. Backlinks and the graph assume every entry is a
-      Garden note and are drawn by the Garden's inline script, which S13 splits
-      into modules, so this waits for S13 and is built once, in testable code.
+      Garden note and are drawn by the Garden's script, which S13 split into
+      modules on 2026-11-14 (assets/js/garden/connections.js and graph.js), so
+      this can now be built once, in testable code.
       Decided 2026-10-12 as the second step of option (b), docs/DECISIONS.md
       item 41.
+  - id: B23
+    title: Opening a note with a flashcard deck can log a blocked inline style
+    area: Frontend
+    status: open
+    detail: >-
+      Found 2026-11-14 during S13 and present before it. A note's body sits in
+      the hidden #data-storage block as live markup, and a flashcard deck there
+      can end up with an empty style attribute on its "due only" checkbox.
+      openNote() parses that block's innerHTML into the reader, so the
+      Content-Security-Policy refuses the attribute and the console shows a
+      style-src-attr violation. Nothing visible changes. Seen on
+      note-psyc-414-1-cognitive-psychology after using search and filters
+      first, not on a fresh page. To do: find what touches that checkbox
+      inside #data-storage, keep decks there from being upgraded, and add a
+      browser test that fails on any policy violation.

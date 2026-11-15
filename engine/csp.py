@@ -5,8 +5,10 @@ tag, the first element in <head> (system/templates/base.html), rendered with
 the placeholder token below and filled in here once the page's bytes are
 final. The policy allows no inline script or style by default: every inline
 <script> and <style> block gets a sha256 hash computed from its exact
-contents, which is what lets the Garden keep its one large inline script
-without 'unsafe-inline' and without the B01 module split. Inline event
+contents, so no page needs 'unsafe-inline'. That is how the Garden kept its
+one large inline script until roadmap S13 moved it into served modules
+(assets/js/garden/), which 'self' covers with no hash; base.html's two
+inline scripts are what every page's script-src still hashes. Inline event
 handlers and style attributes have no hash form the policy accepts here, so
 none exist (the first half of B02 removed the handlers; the second half the
 style attributes), and apply_csp() warns if one comes back, which the

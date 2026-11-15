@@ -104,7 +104,7 @@ def check_vault():
         Also informational, not a violation -- topic assignment is a
         content judgment call, not something this validator should fail a
         build over -- but worth surfacing since "Related by Topic" and the
-        Garden's tag cloud (both in gardentemplate.html) are invisible to a
+        Garden's tag cloud (both in assets/js/garden/) are invisible to a
         note with no topic tag at all.
     """
     violations = []

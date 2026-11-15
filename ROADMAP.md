@@ -8,7 +8,7 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 
 ## Reach done (second roadmap, planned 2026-10-10)
 
-Order from here: S12, S15, S16 and S17 are done; **S18 next** (Essays), then S13. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
+Order from here: S12 and S15 to S18 are done; **S13 is built** (2026-11-14) and closes when its pull request merges and the live check is green. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
 
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
 - [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)

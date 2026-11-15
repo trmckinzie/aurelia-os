@@ -648,7 +648,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # data-label carries the human type label the branches above already
     # computed ("SOURCE" for source/book, "DAILY LOG" for daily-bridge, ...).
     # The note reader's header shows it, and it is emitted here rather than
-    # re-derived in gardentemplate.html because it is NOT a transform of
+    # re-derived in the Garden's script because it is NOT a transform of
     # note_type -- source/book -> SOURCE and discipline -> DISCIPLINE are
     # editorial choices that live in this function's branches. A client-side
     # copy would be a second hand-maintained list of every note type, which
@@ -678,7 +678,7 @@ def generate_garden_card_html(meta, filename, note_id, body_content,
     # on the card (backlog B02).
     #
     # tabindex="-1" on the title because the grid uses roving focus
-    # (gardentemplate.html's ROVING FOCUS block promotes exactly one card's
+    # (assets/js/garden/roving.js promotes exactly one card's
     # title to 0, making the whole grid a single tab stop with arrow keys
     # moving inside it). data-id on the button is what rovingControl() and
     # the grid's click handler read; the article's data-* stay where the

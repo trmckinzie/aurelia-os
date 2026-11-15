@@ -150,7 +150,7 @@ def test_lobby_type_counts_cover_every_garden_type_in_filter_order():
     ]
     assert all(t["count"] == 1 for t in stats["type_counts"])
     # source/book counts under the "source" slug, the same substring match
-    # gardentemplate.html's setFilter()/applyFilters() use against a card's
+    # checkVisibility() in assets/js/garden/grid.js uses against a card's
     # data-type -- so this count always equals what garden.html?type=source
     # actually shows.
     source_entry = next(t for t in stats["type_counts"] if t["slug"] == "source")

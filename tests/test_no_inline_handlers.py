@@ -17,7 +17,7 @@ from engine.content import process_wikilinks
 
 from tests.test_about import render_about
 from tests.test_essays import render_essay_page, render_essays_index
-from tests.test_garden import render_garden
+from tests.test_garden import garden_script, render_garden
 from tests.test_lobby import render_index
 
 # An attribute, not a word: `on` + letters, `=`, then a quote. The JS source
@@ -50,6 +50,17 @@ def test_the_lobby_has_no_inline_handlers():
 
 def test_the_garden_has_no_inline_handlers():
     _assert_clean(render_garden(), "garden.html")
+
+
+def test_the_garden_modules_build_no_inline_handlers():
+    """The markup strings in assets/js/garden/ (roadmap S13). While that code
+    was an inline script the page check above read it; the browser suite
+    checks what the scripts build, and this catches it without a browser."""
+    script = garden_script()
+    hits = [m.group(0) for m in INLINE_HANDLER_RE.finditer(script)]
+    assert hits == [], f"assets/js/garden/ builds inline event handlers: {hits[:5]}"
+    assert JAVASCRIPT_URL_RE.search(script) is None
+    assert STYLE_ATTR_RE.findall(script) == []
 
 
 def test_the_about_page_has_no_inline_handlers():
