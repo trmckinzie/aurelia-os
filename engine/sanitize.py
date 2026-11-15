@@ -33,7 +33,7 @@ where that ordering is enforced.
 
 WHY THE UNESCAPE ON EITHER SIDE
 -------------------------------
-gardentemplate.html's openNote() reads the stored body back out like this:
+openNote() in assets/js/garden/reader.js reads the stored body back out like this:
 
     const txt = document.createElement("textarea");
     txt.innerHTML = rawEl.innerHTML;

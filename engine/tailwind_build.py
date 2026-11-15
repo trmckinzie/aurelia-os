@@ -21,7 +21,9 @@ dist/, those are already literal text Tailwind's scanner can see --
 scanning the .py source directly would miss them. v4's automatic source
 detection would never look there, because it skips every gitignored path
 and dist/ is one, so the import turns it off (`source(none)`) and the
-`@source` line names the pages explicitly.
+`@source` lines name what to scan explicitly: the pages, and the Garden's
+modules in dist/assets/js/garden/, which add classes to elements after load
+(roadmap S13; that code was inside garden.html until then).
 
 main.css is imported into Tailwind's `utilities` cascade layer, after
 Tailwind's own utilities, and not left unlayered. v4 puts every utility in
@@ -91,6 +93,13 @@ def generate_config():
  * the templates instead. */
 @import "tailwindcss" source(none);
 @source "./dist/**/*.html";
+/* The Garden's modules (roadmap S13) add classes to elements after load:
+ * the active filter chip's colours, the backlink and related-note pills.
+ * While that code was an inline script it sat in garden.html and the line
+ * above found those classes; as served files they need naming here. Only
+ * this folder, never all of assets/js/, which also holds the search index:
+ * a megabyte of note text is not a list of class names. */
+@source "./dist/assets/js/garden/**/*.js";
 
 /* `inline` because every value is a var() reference to a runtime-switched
  * custom property: the utility then carries the var() itself, rather than

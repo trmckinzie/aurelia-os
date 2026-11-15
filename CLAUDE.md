@@ -53,8 +53,9 @@ themes, not part of the brand.
   `vault/99_DROP_ZONE/` into `vault/assets/` on the runner, a vault write reviewed by nobody; the
   media publish gate then keeps an unreferenced file off the site, but not out of the vault.
 - **CI gates the deploy on the full check suite.** Every push to `main` and every pull request
-  runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, a
-  `--no-sort` build, then the Playwright browser suite with axe at WCAG A/AA on that build) in
+  runs `verify.sh` (pytest, pyflakes, the vault schema check, `tools/roadmap.py --check`, ESLint
+  and the JavaScript unit tests for `assets/js/garden/`, a `--no-sort` build, then the Playwright
+  browser suite with axe at WCAG A/AA on that build) in
   the `check` job, and on GitHub only that build adds `--strict`; `build` needs `check` and
   `deploy` needs `build`, so neither runs if `check` fails, and a pull request cannot merge until
   `check` passes. Run `bash verify.sh` locally before pushing — it's the same suite, so CI can't
@@ -94,6 +95,8 @@ AURELIA_ESSAYS_DIR=tests/fixtures/essays python build.py --no-sort   # the fixtu
 python -m pytest tests/ -q                             # the unit/integration suite (skips tests/browser/)
 python -m pyflakes engine/*.py tools/*.py build.py deploy.py tests/*.py
 python tools/validate_vault_schema.py                  # frontmatter contract; also runs under pytest
+npx eslint                                             # lint assets/js/garden/ and tests/js/ (eslint.config.mjs names them)
+node --test "tests/js/*.test.mjs"                      # unit tests for the Garden's modules; no build, no browser
 python tools/vault_health.py                           # advisory reports; never writes to the vault
 python tools/roadmap.py --open                         # roadmap dashboard; writes reports/ (gitignored)
 python tools/roadmap.py --check                        # validate roadmap.yaml; exits 1 on any problem
@@ -199,7 +202,9 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   is published and `user_config.json` has a `site.domain` to build absolute URLs from.
 - `engine/cachebust.py`: hashes each served script/stylesheet's actual bytes into its URL, so a
   deploy's new files aren't masked by GitHub Pages' ten-minute cache. Walks `dist/` recursively,
-  as `csp.py` does, because the essay pages sit below the top of it.
+  as `csp.py` does, because the essay pages sit below the top of it. `stamp_module_imports()`
+  versions the imports inside `dist/assets/js/garden/` with one hash of the folder, since no
+  template reaches them.
 - `engine/csp.py`: fills `base.html`'s Content-Security-Policy meta tag after the stamp with
   sha256 hashes of each page's inline `<script>` and `<style>` blocks. Nothing else inline is
   allowed. Only an essay page may widen it, and only `media-src` and `frame-src` by named https
@@ -213,6 +218,13 @@ git switch main && git pull --ff-only && git branch -D s05-strict-build   # afte
   (`tests/test_no_inline_handlers.py`); controls name an action and the page registers it.
   `search-index.js` is generated into this folder at build time (gitignored) — see
   `pipeline._write_deep_search_index`.
+- `assets/js/garden/`: the Garden's script as ES modules (roadmap S13), loaded by one
+  `<script type="module">` for `main.js`, with no bundler. `main.js` starts everything and
+  registers the page's actions; `state.js` is the shared state; the rest are one feature each
+  (`docs/ARCHITECTURE.md`, "The Garden's script", has the table). `gardentemplate.html` holds
+  markup and two JSON data blocks, no script of its own.
+- `tests/js/`: unit tests for those modules on `node --test`. `eslint.config.mjs` lints both
+  folders and nothing else.
 - `tools/`: `validate_vault_schema.py`, `vault_health.py`, `roadmap.py`, and `preview.mjs` (the
   Node static server behind `.claude/launch.json`'s `dist-preview`; `node tools/preview.mjs`).
 - `docs/roadmap.yaml`: the priority-ordered engineering roadmap (sessions plus a backlog), rendered
@@ -235,6 +247,8 @@ referenced from 2+ Discipline notes); nothing auto-edits it.
   `brand/readme.md` for TIMBERLINE's TRM / Pine brand.
 - Study mode, review queue, flashcards: `docs/ARCHITECTURE.md`, "Study layer", and the reasoning
   behind it in `docs/DECISIONS.md` item 18.
+- Anything in `assets/js/garden/`: `docs/ARCHITECTURE.md`, "The Garden's script", and why it is
+  built that way in `docs/DECISIONS.md` item 50.
 - Setting up a new machine, or what git will not carry to one: `docs/MOVING-MACHINES.md`.
 - Rolling back a bad deploy, or what the post-deploy live check verifies: `docs/ROLLBACK.md`.
 - Anything that changes what the public site renders or exposes: `docs/ARCHITECTURE.md`,
@@ -276,8 +290,17 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
   writing a final value.
 - **`git rev-list --objects` lists a blob once**, so a file at two paths looks like one. Use
   `git log --all --name-only` when auditing exposure.
-- **Tailwind scans `dist/**/*.html`**, so classes assembled in Python are fine but classes built
-  client-side after load need an `@source inline(...)` entry in `tailwind_build.py`.
+- **Tailwind scans `dist/**/*.html` and `dist/assets/js/garden/`**, so a class written whole in
+  Python or in a Garden module is fine. One assembled from pieces at run time, or written in any
+  other script, needs an `@source inline(...)` entry in `tailwind_build.py`.
+- **In `assets/js/garden/`, importing a module must run nothing.** A module declares and exports
+  an `init…()`; `main.js` calls it. Shared state goes on `state` (`state.js`), because an import
+  cannot be assigned to. A call into another module needs an import, and `npx eslint` is what
+  finds a missing one; the browser only fails when that line runs.
+- **A classic script cannot import.** `flashcards.js`, `review.js`, `utils.js` and the inline
+  scripts reach only globals, so a helper one of them needs from the Garden belongs in
+  `utils.js`, not in a module. `flashcards.js` guards such calls with `typeof`, which turns a
+  missing global into a feature that silently stops.
 - **Hand-written CSS lives inside Tailwind's `utilities` layer**: `main.css` through the generated
   import, and each template's inline `<style>` through an `@layer utilities { }` wrapper. There a
   rule wins a specificity tie with any utility, responsive variants included (v3 appended those
@@ -309,8 +332,9 @@ Each of these cost real time once. Dates and detail are in `docs/DECISIONS.md`.
 ## Deliberately not done
 
 Card HTML as Jinja macros (deferred), any server or synced store for study progress (the site
-promises no tracking), Lighthouse or visual-regression tests, and a unit-test harness for
-`assets/js/`. Browser and accessibility tests do exist now and block the merge
+promises no tracking), Lighthouse or visual-regression tests, a bundler, and lint or unit tests
+for the classic scripts in `assets/js/` (the Garden's modules have both since roadmap S13,
+`docs/DECISIONS.md` item 50). Browser and accessibility tests block the merge
 (`docs/DECISIONS.md` item 30). `garden.html` keeps every note's body inline rather than fetching
 a note when it opens: decided 2026-10-01, to revisit once the compressed page passes 1 MB; the
 build prints that size and warns past the limit (`docs/DECISIONS.md` item 32). The full list with reasons is in `docs/DECISIONS.md`.

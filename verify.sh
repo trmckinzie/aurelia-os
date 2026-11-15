@@ -59,6 +59,17 @@ echo "== vault schema =="
 echo "== roadmap =="
 "$PYTHON" tools/roadmap.py --check
 
+# The Garden's client modules (roadmap S13): lint, then their unit tests on
+# Node's own test runner. Both are quick and need no build, so they run
+# before it. eslint.config.mjs names the files; no-undef is the rule that
+# matters, since a call into another module with no import fails only when
+# that line runs in a browser.
+echo "== eslint (assets/js/garden, tests/js) =="
+npx --no-install eslint
+
+echo "== JavaScript unit tests (node --test) =="
+node --test "tests/js/*.test.mjs"
+
 # --strict only on GitHub Actions (roadmap S05, Decision 6): there any build
 # warning fails the check job and so blocks the merge and the deploy. A local
 # run stays forgiving, so a half-finished note never stops a preview.

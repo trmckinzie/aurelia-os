@@ -369,8 +369,8 @@ real site since a domain is already configured (roadmap S14).
 ## Garden integration
 
 First version: one-way. Essays link out to Garden notes; the Garden does not change. Showing
-essays in Garden backlinks ("Cited in E01") is backlog item B22, after S13 splits the Garden's
-inline script into modules, so it is built once in testable code instead of twice.
+essays in Garden backlinks ("Cited in E01") is backlog item B22, after S13 split the Garden's
+inline script into modules (2026-11-14), so it is built once in testable code instead of twice.
 
 ## Sessions
 

@@ -789,7 +789,7 @@
         /* --- TOOLKIT DETAIL WINDOW ---
            #toolkit-sheet is rendered server-side just after the Toolkit
            <section> (see indextemplate.html above). Modeled on
-           gardentemplate.html's #shortcut-sheet (openShortcutSheet() /
+           the Garden's #shortcut-sheet (assets/js/garden/keyboard.js, openShortcutSheet() /
            closeShortcutSheet(), ~line 2232): showModal() supplies the focus
            trap and Escape handling for free, so none of that is reimplemented
            here. Declared before the LAUNCH call below, not after: initCarousel()
@@ -855,7 +855,7 @@
         // <div>s (not natively focusable), so the stored element is usually
         // <body>; body.focus() is a silent no-op, so that case and any
         // element that's gone missing since open both fall back to
-        // #readout-more. Mirrors gardentemplate.html's shortcutSheet 'close'
+        // #readout-more. Mirrors assets/js/garden/keyboard.js's shortcutSheet 'close'
         // listener (~line 2254).
         toolkitSheet.addEventListener('close', () => {
             const target = (toolkitSheetReturnFocus

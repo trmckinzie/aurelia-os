@@ -137,8 +137,8 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   object storage linked from the notes, not files in git.
 - **`tailwind_build.py`** — generates `tailwind.input.css` (gitignored) and runs the Tailwind v4
   CLI (`@tailwindcss/cli`) on it. The generated file is v4's CSS-first configuration (roadmap S12,
-  `docs/DECISIONS.md` item 42): it imports Tailwind with `source(none)`, names `dist/**/*.html` as
-  the only `@source`, declares the `aurelia-*` colour tokens and the radius, font, shadow and
+  `docs/DECISIONS.md` item 42): it imports Tailwind with `source(none)`, names `dist/**/*.html` and
+  `dist/assets/js/garden/**/*.js` as the only `@source`s, declares the `aurelia-*` colour tokens and the radius, font, shadow and
   animation tokens in an `@theme inline` block (each a `var(--aurelia-*)` reference, so the file
   is theme-independent), and finally imports `assets/css/main.css` into the `utilities` cascade
   layer. That last part matters: v4 puts every utility in a layer, and unlayered CSS beats any
@@ -150,10 +150,14 @@ around `from engine.pipeline import build_all`). All real logic lives in `engine
   in the rendered HTML; v4's default source detection skips gitignored paths, which is why `dist/`
   has to be named explicitly. Nothing is safelisted (a prior v3 `safelist` existed only for a
   client-side JS `text-*` → `bg-*` class derivation in the now-deleted protocol page; removed once
-  confirmed unused). If a future template assembles Tailwind class names in the browser after page
-  load (rather than server-side in Python, which the `dist/**/*.html` scan already covers), those
-  classes need an `@source inline("...")` line in the generated file — the content scanner can't
-  see anything that only exists once client-side JS runs.
+  confirmed unused). The Garden's modules add classes to elements after load (the active filter chip's colours, the
+  backlink and related-note pills). While that code was an inline script it sat inside
+  `garden.html` and the page scan found those classes; since roadmap S13 it is served files, so
+  `dist/assets/js/garden/` is a second `@source`. Only that folder, never all of `assets/js/`,
+  which also holds the megabyte search index. A class written whole in one of those modules is
+  therefore covered. One assembled from pieces at run time (in a module, or in any other script)
+  still needs an `@source inline("...")` line in the generated file — the scanner reads text, and
+  cannot see a name that only exists once the code runs.
 - **`theming.py`** — turns `THEME_CONFIG` into `dist/assets/css/theme-vars.css`: one
   `:root[data-theme="<slug>"]` block per theme defining every `--aurelia-*` custom property, plus a
   bare `:root` block mirroring the default so the first paint isn't unstyled before the switcher's
@@ -331,8 +335,8 @@ companion on an inverted surface (the theme's ink and paper swapped), and the Yo
 a "Play episode" button that swaps in the player only when pressed. The other five: `base.html` (nav, footer, command palette, theme CSS block, loads
 the self-hosted fonts, `marked.js` and Motion from `assets/fonts/` and `assets/vendor/`, loads
 `assets/js/utils.js` for the shared `escapeHtml()`), `404.html`, `pages/indextemplate.html` (Lobby), `pages/gardentemplate.html`
-(Garden — the note-modal system, search/filter, tree view, and now backlinks + random-note live
-here), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like page: one `<h1>`,
+(Garden — the markup for the grid, tree and graph views, the note reader and the shortcut sheet;
+its script is the modules in `assets/js/garden/`, see "The Garden's script" below), and `pages/abouttemplate.html` (About — a deliberately plain, CV-like page: one `<h1>`,
 `aria-labelledby` sections, no terminal-flavored copy, no `data-reveal`, a `@media print` block in
 `main.css` so it doubles as a printable résumé). All page templates `{% extends "base.html" %}`.
 `base.html` reads `config.site` (nav brand, `<title>`, canonical URL) and carries the skip link
@@ -349,7 +353,8 @@ see docs/DECISIONS.md item 20.
 
 `base.html`'s inline `<script>` embeds `SYSTEM_INDEX` (the command-palette JSON) via
 `dumps_for_script_tag`, safe against a note title containing a literal `</script`.
-`gardentemplate.html` additionally embeds `BACKLINKS_INDEX`.
+`gardentemplate.html` carries its build data the same way, as two JSON data blocks the browser
+never executes: `#garden-backlinks` and `#garden-graph`, read once by `assets/js/garden/data.js`.
 
 ### Study layer (`assets/js/review.js`, `assets/js/flashcards.js`) — added 2026-09-10
 
@@ -408,10 +413,72 @@ no legacy voice tokens). The behaviour is tested in a real browser by the Playwr
 a seeded log; `dialogs.spec.mjs`: the shortcut sheet and the reader's keys; `accessibility.spec.mjs`:
 axe on the reader covered, revealed and rated), which `verify.sh` and CI run against `dist/`
 served under `BASE_PATH` from `tests/browser/site.mjs` by `node tools/preview.mjs 8792` (`/`
-since the site moved to its own domain in roadmap S14; `docs/DECISIONS.md` items 30 and 40). There is still no unit-test harness for `assets/js/`. For a manual look,
+since the site moved to its own domain in roadmap S14; `docs/DECISIONS.md` items 30 and 40). The Garden's own modules also have unit tests (`tests/js/`, next section); `review.js`, `flashcards.js` and `utils.js` do not, and are exercised end to end by the browser suite. For a manual look,
 `node tools/preview.mjs` serves `dist/` at the root (the `dist-preview` entry in
 `.claude/launch.json`). `preview.mjs` sends `Cache-Control: no-store`; against any other server,
 a browser will happily serve a cached `garden.html` after a rebuild unless you add a query string.
+
+### The Garden's script (`assets/js/garden/`) — split into modules 2026-11-14 (roadmap S13)
+
+Until S13 the Garden's script was one inline block of about 2,800 lines in `gardentemplate.html`.
+It is now ES modules, loaded by one tag, `<script type="module" src="…/garden/main.js?v=…">`,
+with no bundler and no build step: the files in `assets/js/garden/` are the files served
+(`docs/DECISIONS.md` item 50).
+
+| Module | Holds |
+|---|---|
+| `main.js` | The entry: loads the data, calls each module's `init…()` in order, runs the first paint, and registers the page's actions |
+| `state.js` | The one object of shared, mutable page state (view, filters, sort, the open note, the review session) |
+| `data.js` | The build's data, read from the page's two JSON blocks and `window.DEEP_SEARCH_INDEX` |
+| `dom.js` | The long-lived elements (the three view panels, the reader, the shortcut sheet) |
+| `grid.js` | Search, the type filter, the sweep that shows and hides items, match highlighting, the grid's click listener |
+| `sorting.js` | Sort order and relevance ranking |
+| `roving.js` | The grid and tree as one tab stop walked with the arrow keys |
+| `views.js` | Switching between grid, tree and graph |
+| `topics.js` | The topic cloud and the topic filter |
+| `url-state.js` | The view in the query string |
+| `reader.js` | Opening and closing a note, its header, next and previous, the hash and history, the focus trap |
+| `outline.js` | The reader's "On this page" outline |
+| `connections.js` | "Referenced By", "Related by Topic" and the "How does this connect?" nudge |
+| `read-aloud.js` | The speech button and its voice panel |
+| `study.js` | Study mode: the recall cover, the rating buttons, "last reviewed / next due" |
+| `review-session.js` | Due markers, a review session's order and progress, progress export and import |
+| `graph.js` | The force-directed graph and its small-screen list |
+| `keyboard.js` | The shortcut sheet and the global key handler |
+| `share.js` | Copying a view link or a note link |
+| `banner.js`, `motion.js` | Decoration: the banner's particle network and the cards' staggered entrance |
+
+Four rules hold the split together, each with a test:
+
+- **Importing a module runs nothing.** Outside `main.js`, a module's top level is imports and
+  declarations; listeners and first paints start from `main.js`, in the order the single script
+  ran them. That is what lets a unit test import one module with no document
+  (`tests/test_garden.py`, and the last test in `tests/js/graph-and-speech.test.mjs`).
+- **Shared state is one object.** An exported `let` is read-only to its importers, so anything
+  two modules write lives on `state` (`state.js`). State only one module touches stays private to
+  it.
+- **Two entry points, no globals.** The page reaches this code through the action registry at
+  the end of `main.js` (`data-action` / `data-change` / `data-input`, dispatched by `utils.js`)
+  and the one `[data-note]` listener in `reader.js`. Nothing is put on `window`.
+- **A call into another module needs an import**, and a missing one fails only when that line
+  runs in a browser. ESLint's `no-undef` finds it first (`eslint.config.mjs`).
+
+The modules still read a handful of globals the page's classic scripts define before they run
+(`escapeHtml`, `registerActions`, `announce`, `isTypingTarget`, `Review`, `marked`, `Motion`,
+`upgradeFlashcardDecks`); a module script is deferred, so those have always executed.
+`eslint.config.mjs` lists them. The traffic is one-way: a classic script cannot import, so
+anything one of them needs from the Garden has to be a global in `utils.js`. That is why
+`announce()` and `isTypingTarget()` live there and not in a module: `flashcards.js` calls both,
+behind a `typeof` guard that would have hidden their loss (`tests/test_garden.py` pins it).
+
+**Unit tests** live in `tests/js/` and run on Node's built-in runner, `node --test`, with no
+added dependency: sorting and relevance, the filter decision and highlighting, the topic cloud's
+counts, the view's query string, the roving-focus index arithmetic, a review session's
+interleaved order, the "next due" wording, the related-note and nudge rankings, the graph's
+degrees and layout, and the read-aloud splitter. Where a function was tangled with the DOM its
+arithmetic was pulled out beside it (`rovingIndexForKey()`, `relatedByTopic()`,
+`viewQueryString()`), so the tests need no browser and no DOM library; a card is a plain object
+with a `dataset`. `verify.sh` runs the lint and the tests before the build, so CI does too.
 
 ### Self-hosted assets and cache busting
 
@@ -427,7 +494,15 @@ GitHub Pages sends `Cache-Control: max-age=600`, so a returning visitor can run 
 against new HTML. Templates write `{{ asset_url('assets/js/utils.js') }}`, which emits a
 `?v=@@asset:<path>@@` token; `engine/cachebust.py` swaps each token for the first ten hex
 characters of the SHA-256 of that file as it sits in `dist/`, after the Tailwind compile has
-written the final `main.css`. Fonts carry their own hash inside `fonts.css`. The stamp and the
+written the final `main.css`. Fonts carry their own hash inside `fonts.css`. No template reaches
+the imports inside an ES module, so `stamp_module_imports()` versions those first: every relative
+import in a folder of modules under `assets/js/` (today only `garden/`) gets one `?v=`, a hash of
+the whole folder. One hash per folder, not per file, because the modules import each other in
+cycles, so no order exists in which each file's hash is known before its importers are
+rewritten, and because a module imported under two spellings is two modules to the browser,
+each with its own copy of the page's state. The entry module's own URL is an ordinary
+`asset_url()`, stamped afterwards from the rewritten bytes, so it changes when anything in the
+folder does (`tests/test_cachebust_modules.py`). The stamp and the
 policy fill below both walk `dist/` recursively since roadmap S15: the essay pages are the first
 output below its top, and a page the walk missed would ship with an unstamped URL and an
 unfilled policy.
@@ -436,7 +511,9 @@ Every page carries a Content-Security-Policy (backlog B02, DECISIONS items 35 an
 Pages sends no headers, so it is a `<meta http-equiv>` tag, the first element of `<head>`,
 rendered with a token that `engine/csp.py` fills after the asset stamp: `'self'` plus a sha256
 hash of each of that page's own inline `<script>` and `<style>` blocks, never `'unsafe-inline'`.
-That is what lets the Garden keep its one large inline script.
+That is how the Garden kept one large inline script until roadmap S13; its script is served
+modules now, which `'self'` covers, so `garden.html` hashes only the two inline scripts
+`base.html` gives every page.
 Two directives may widen on one page only: an essay page with a study companion player adds
 `user_config.json`'s `media_origins` to `media-src`, and one with a YouTube episode sets
 `frame-src` to `https://www.youtube-nocookie.com` (roadmap S17, `docs/DECISIONS.md` item 45);

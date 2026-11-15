@@ -1247,6 +1247,62 @@ knowing so you don't "fix" something that was a deliberate decision:
       the unchanged box, the fallback for a theme without a variant, the lazy load and its
       warm-up, and, with a saved dark theme, that every rendered frame from the first shows the
       avatar and never the photo.
+50. **The Garden's script is ES modules, with no bundler (roadmap S13, 2026-11-14).** Backlog
+    B01: the Garden's one inline script, about 2,800 lines in `gardentemplate.html`, is now 21
+    files in `assets/js/garden/`, loaded by a single `<script type="module">`. The browser suite
+    passed unchanged on the result and the compiled `main.css` was byte-identical before and
+    after, which is the evidence that the move changed nothing a reader sees.
+    - **Real modules, not classic scripts in a row.** Cutting the script into classic files
+      loaded one after another would have needed almost no code change, since their top-level
+      names share one scope. It would also have left every function able to reach every other
+      with nothing saying so, which is the thing the split is meant to end, and left nothing a
+      test could import. With `import` and `export` the dependencies are written down and
+      ESLint's `no-undef` checks them.
+    - **No bundler.** The files in the repo are the files served. A bundler would give one
+      request instead of 21 and nothing else this site needs, at the cost of a build step
+      between the source and what a reader's browser runs, and a toolchain to keep patched.
+      `main.js` imports every module itself, so the browser fetches them together, not as a
+      chain; over HTTP/2 from one origin that is not a cost worth a toolchain.
+    - **One version for the whole folder.** A template versions `main.js` through `asset_url()`,
+      but nothing versions what it imports, and Pages lets a browser reuse a script for ten
+      minutes. `engine/cachebust.stamp_module_imports()` rewrites each relative import in
+      `dist/` to carry one hash of the folder. Per-file hashes were not possible (the modules
+      import each other in cycles) and an import map was not wanted: it is an inline script the
+      policy would have to hash, on the page whose inline script this session removed.
+    - **Importing runs nothing; `main.js` starts everything.** Each module only declares, and
+      exports an `init…()` for its listeners. `main.js` calls them in the order the single
+      script ran. The one behaviour that could not survive as written was the card-entrance
+      code reassigning `updateGrid` to wrap it, since an import cannot be reassigned;
+      `grid.js` takes a wrapper through `setGridUpdateWrapper()` instead.
+    - **Shared state on one object** (`state.js`), for the same reason: a module cannot assign
+      to another's exported `let`. Thirteen fields; everything else stayed private to its module.
+    - **Build data as JSON data blocks.** `#garden-backlinks` and `#garden-graph` are
+      `<script type="application/json">`, which a browser never executes and the policy does not
+      hash. `garden.html`'s `script-src` went from three hashes to the two `base.html` gives
+      every page.
+    - **Tailwind has a second source.** The modules add classes after load, and the page scan
+      only found them while the script was inside `garden.html`. `dist/assets/js/garden/` is now
+      named beside the pages.
+    - **Tests on Node's own runner; ESLint for the lint.** `node --test` ships with Node 24, so
+      the unit tests add no dependency, and they need no DOM library because the logic worth
+      testing was separated from the DOM calls around it. ESLint 10.14.0 and `@eslint/js` are
+      the two new dev dependencies, pinned exactly like Playwright; its browser globals are
+      written out in `eslint.config.mjs` rather than taken from a third package. `package.json`
+      gained `"type": "module"` so Node reads the modules as a browser does. 10.14.0, two weeks
+      old that day, was chosen over 10.15.0, published the day before, in line with item 47's
+      wait on fresh releases. The cost is one moderate `npm audit` advisory, dev-only: its
+      `minimatch` 10.2.6 (GHSA-g3hv-75wg-m249, a slow match on a hostile glob pattern; the only
+      patterns it sees here are the ones in `eslint.config.mjs`). ESLint 10.15.0 moves to
+      `minimatch` 11 and clears it, so the first Dependabot bump does too.
+    - **What a classic script needs stays a global.** `flashcards.js` calls `announce()` and
+      `isTypingTarget()` through `window`, guarded by `typeof`, so when those two became module
+      exports nothing failed: deck announcements simply stopped reaching a screen reader. No
+      test caught it; reading the file did. Both moved to `utils.js`, which the modules now
+      read as globals too, and a test holds every `window.` name a classic script guards that
+      way to a definition outside the modules.
+    - **What was left alone:** `review.js`, `flashcards.js` and `utils.js` stay classic scripts
+      (the Lobby loads two of them too), and the Lobby's and essay page's inline scripts stay
+      inline. Known gaps, below.
 
 - **Card HTML is still built via Python f-strings**, not Jinja2 macros, even though Jinja is the
   templating engine for everything else. This was considered and explicitly deferred as
@@ -1267,9 +1323,18 @@ knowing so you don't "fix" something that was a deliberate decision:
   the threshold, so CI's `--strict` build fails the day it is crossed.
   The study layer added no per-note markup to it; `review.js` and `flashcards.js` ship as
   separately cached files.
-- No performance (Lighthouse) or visual-regression testing, and no unit-test harness for
-  `assets/js/` (`review.js`'s SM-2 maths is exercised end to end by the browser suite, not unit
-  by unit). Browser and accessibility tests now exist and block the merge: item 30.
+- No performance (Lighthouse) or visual-regression testing. Browser and accessibility tests
+  exist and block the merge: item 30.
+- **Only the Garden's modules are linted and unit-tested** (`assets/js/garden/`, item 50).
+  `review.js`, `flashcards.js` and `utils.js` are still classic scripts that publish globals,
+  outside ESLint and with no unit tests: `review.js`'s SM-2 maths is exercised end to end by the
+  browser suite, not unit by unit. The inline scripts in `base.html`, `indextemplate.html` and
+  `essaytemplate.html` are untested by unit too.
+- **Opening a note can log one blocked inline style in the console** (found 2026-11-14 during
+  S13, present before it; backlog B23). A flashcard deck upgraded inside the hidden
+  `#data-storage` copy of a note leaves an empty `style=""` on its "due only" checkbox, and
+  `openNote()` re-parses that copy, so the policy refuses the empty attribute. Nothing visible
+  changes, since the attribute sets nothing.
 - **Study progress is per-browser.** The scheduler state is localStorage only; the Progress panel's
   export/import is the whole sync story. A backend or a synced store was deliberately not added —
   the site has no server and promises no tracking.

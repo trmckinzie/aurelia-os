@@ -562,7 +562,7 @@ def _render_flashcards(path):
     at all, plus a `data-deck` asset path. assets/js/flashcards.js finds
     every `.deck` at runtime and upgrades it into an interactive one-card-
     at-a-time widget (reveal, SM-2 rating, shuffle, due filter) -- see that
-    file and gardentemplate.html's openNote(). Q/A text is emitted as CHILD
+    file and assets/js/garden/reader.js's openNote(). Q/A text is emitted as CHILD
     ELEMENTS (`.deck-q`/`.deck-a`), never as a `data-*` attribute: openNote()
     reads a note's stored body through a <textarea> entity-decode, so an
     escaped quote in an attribute would come back live and break out of it.

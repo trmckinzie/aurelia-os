@@ -73,6 +73,45 @@ function aureliaReveal(el, options) {
     setTimeout(settle, ((opts.duration || 0.45) + (opts.delay || 0)) * 1000 + 700);
 }
 
+/**
+ * True while focus sits in something that consumes ordinary keystrokes as
+ * text rather than as a shortcut, so a page's key handlers can defer to it
+ * instead of fighting it. isContentEditable covers a future rich-text
+ * field; none exists yet, but the check costs nothing.
+ *
+ * Here, not in the Garden's modules, because two scripts need it: the
+ * Garden's global key handler (assets/js/garden/keyboard.js) and the
+ * flashcard widget (assets/js/flashcards.js), which is a classic script and
+ * can only reach a global.
+ */
+function isTypingTarget(e) {
+    const el = e.target;
+    if (!el) return false;
+    if (el.isContentEditable) return true;
+    const tag = el.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+}
+
+/**
+ * Announces `text` to assistive tech through the page's visually-hidden
+ * #a11y-status live region (the Garden has one; on a page without it this
+ * does nothing). Writing the same string twice in a row wouldn't otherwise
+ * re-announce it (most screen readers only speak on a *change*), so this
+ * clears the region first -- "Grid view" can legitimately repeat, e.g.
+ * switching Tree -> Graph -> Grid across three quick clicks.
+ *
+ * Shared for the same reason as isTypingTarget() above: the Garden's
+ * modules and flashcards.js both announce.
+ */
+function announce(text) {
+    const region = document.getElementById('a11y-status');
+    if (!region) return;
+    region.textContent = '';
+    // A short delay so the clear above registers as a change before the
+    // new text lands.
+    setTimeout(() => { region.textContent = text; }, 10);
+}
+
 
 /* === DELEGATED ACTIONS (backlog B02) ====================================
    No page carries an inline event handler (onclick="..." and friends): a
@@ -91,7 +130,7 @@ function aureliaReveal(el, options) {
    attributes, value or files) and the event. Pages register their maps at
    the end of their own script; an action nobody registered is ignored, not
    an error, so a page can carry markup for a feature it does not load.
-   Elements that open a note use data-note instead (gardentemplate.html
+   Elements that open a note use data-note instead (assets/js/garden/reader.js
    handles it, since only the Garden has notes to open). */
 var AURELIA_ACTIONS = Object.create(null);
 

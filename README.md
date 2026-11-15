@@ -108,7 +108,13 @@ python tools/vault_health.py
 # build prints the same warnings and carries on.
 python build.py --no-sort --strict
 
-# Full check suite (pytest, pyflakes, schema, roadmap, --no-sort build, then the
+# The Garden's client modules (assets/js/garden/): lint, then their unit tests
+# on Node's own test runner
+npx eslint
+node --test "tests/js/*.test.mjs"
+
+# Full check suite (pytest, pyflakes, schema, roadmap, the JavaScript lint and
+# unit tests, a --no-sort build, then the
 # Playwright browser suite with axe accessibility checks on that build) --
 # the checks CI runs, where the build also gets --strict. A pull request cannot merge, and the site cannot deploy,
 # until they pass. Run before pushing.

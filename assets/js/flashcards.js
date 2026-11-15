@@ -9,13 +9,13 @@
  * `hidden`), so a reader with JS off -- or a browser that never runs this
  * file -- still gets sensible, readable Q/A pairs.
  *
- * Decks live inside a note's body, which gardentemplate.html's openNote()
+ * Decks live inside a note's body, which assets/js/garden/reader.js's openNote()
  * renders on demand (marked.parse() on every open, not just once at page
  * load) -- so upgradeFlashcardDecks() has to be called after EVERY
  * openNote(), not only here at load time. This file only registers a
  * DOMContentLoaded call for the page-load case (a no-op today: no deck
  * lives outside the note-reader modal); openNote() itself calls
- * upgradeFlashcardDecks(modalContent) directly -- see gardentemplate.html.
+ * upgradeFlashcardDecks(modalContent) directly -- see reader.js.
  *
  * Each upgraded deck is marked `data-upgraded` so re-opening the same note
  * (history back/forward, or a second openNote() call) never double-builds
@@ -26,7 +26,7 @@
  * only ever handles the 1-4 rating shortcuts (after Reveal). Space/Enter
  * on "Show answer" is native <button> activation (plus an explicit
  * preventDefault()-guarded keydown mirroring the note reader's recall-
- * cover Reveal button in gardentemplate.html, so the synthetic click a
+ * cover Reveal button in assets/js/garden/study.js, so the synthetic click a
  * browser fires for Space/Enter never doubles up with it) -- nothing here
  * intercepts Space at the container level, so it can never fight the
  * modal's own scroll or another control's native activation (Shuffle,
@@ -73,12 +73,12 @@
         return arr;
     }
 
-    // announce()/isTypingTarget() live in gardentemplate.html's own inline
-    // script, which runs AFTER this file (loaded earlier in head_extra) --
-    // but neither is called until a user interacts with an already-open
-    // widget, by which point the page has fully parsed and both exist on
-    // window. Guarded anyway, the same defensiveness review.js gives
-    // `window.Review` everywhere it's used.
+    // announce()/isTypingTarget() are globals from assets/js/utils.js,
+    // which base.html loads before this file. They lived in the Garden's
+    // inline script until roadmap S13 made that script modules, whose
+    // exports a classic script like this one cannot reach. Guarded anyway,
+    // the same defensiveness review.js gives `window.Review` everywhere
+    // it's used. tests/test_garden.py holds the two to utils.js.
     function announceIfPresent(text) {
         if (typeof window.announce === 'function') window.announce(text);
     }
@@ -242,7 +242,7 @@
                 body.querySelector('.deck-question').textContent = card.q;
                 var revealBtn = body.querySelector('.deck-reveal-btn');
                 revealBtn.addEventListener('click', reveal);
-                // Mirrors gardentemplate.html's recall-cover Reveal button
+                // Mirrors the recall-cover Reveal button in garden/study.js
                 // exactly: preventDefault() here stops the browser's own
                 // synthetic click for Space/Enter, so reveal() runs once,
                 // not twice.
