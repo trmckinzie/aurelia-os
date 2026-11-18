@@ -8,7 +8,7 @@ Tier: code. See `90_Meta/Dev Environment Standard.md` in the dev vault. This rep
 
 ## Reach done (second roadmap, planned 2026-10-10)
 
-Order from here: S12 and S15 to S18 are done; **S13 is built** (2026-11-14) and closes when its pull request merges and the live check is green. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
+Every session of the second roadmap is done: S13, the last, merged on 2026-11-15 with the live check green. What is left is the backlog in `docs/roadmap.yaml`. `tools/roadmap.py --next` prints the next session's kickoff prompt, its planning notes included.
 
 - [x] S11 the theme switcher offers only TIMBERLINE (light) and CYBER_PRIME (dark); the other three stay defined, not offered (2026-10-10)
 - [x] S14 the site on its own domain, travisrmckinzie.com, with Cloudflare as DNS in front of GitHub Pages, the live check and the rollback runbook moved with it (2026-10-11)
@@ -17,7 +17,7 @@ Order from here: S12 and S15 to S18 are done; **S13 is built** (2026-11-14) and 
 - [x] S16 essay citations resolved and references formatted in APA 7 (2026-10-15, #55)
 - [x] S17 the essay disclosure note, the study companion, R2 audio and the tap-to-load YouTube player (built 2026-10-18; bucket `aurelia-media` on media.travisrmckinzie.com and the live audio check 2026-10-28, #58)
 - [x] S18 the web citation style, the Article structured data, per-essay Open Graph, the Essays Atom feed and essays in search (2026-10-28, #64)
-- [ ] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh` #next
+- [x] S13 the Garden's inline script becomes served modules with a JavaScript unit-test run in `verify.sh` (2026-11-15, #70)
 
 ## Standardize
 - [x] `.python-version`, `.nvmrc`, hash-locked requirements, `package-lock.json`, `verify.sh`, CI pinned to SHAs, the `.claude/agents` pair (already in place before 2026-10-09)
