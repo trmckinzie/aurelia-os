@@ -430,7 +430,7 @@ with no bundler and no build step: the files in `assets/js/garden/` are the file
 | `main.js` | The entry: loads the data, calls each module's `init…()` in order, runs the first paint, and registers the page's actions |
 | `state.js` | The one object of shared, mutable page state (view, filters, sort, the open note, the review session) |
 | `data.js` | The build's data, read from the page's two JSON blocks and `window.DEEP_SEARCH_INDEX` |
-| `dom.js` | The long-lived elements (the three view panels, the reader, the shortcut sheet) |
+| `dom.js` | The long-lived elements (the three view panels, the reader, the shortcut sheet), and `el()` / `noteButton()`, which build an element without an HTML string |
 | `grid.js` | Search, the type filter, the sweep that shows and hides items, match highlighting, the grid's click listener |
 | `sorting.js` | Sort order and relevance ranking |
 | `roving.js` | The grid and tree as one tab stop walked with the arrow keys |
@@ -462,6 +462,15 @@ Four rules hold the split together, each with a test:
   and the one `[data-note]` listener in `reader.js`. Nothing is put on `window`.
 - **A call into another module needs an import**, and a missing one fails only when that line
   runs in a browser. ESLint's `no-undef` finds it first (`eslint.config.mjs`).
+
+One more habit, added 2026-11-18 after CodeQL flagged the split code (three "DOM text
+reinterpreted as HTML" alerts): **markup that carries a note's id or title from the data blocks is
+built with `el()` and `noteButton()` (`dom.js`), not as an HTML string.** The reader's three
+connection sections and the graph's list work this way, so those values can only be text, a
+`data-*` value or an attribute. The data is written by the build, so this was never reachable by
+a visitor; it removes the reliance on every id being a safe slug.
+`tests/js/markup.test.mjs` pins it with hostile ids and titles. Other `innerHTML` strings in the
+modules still escape with `escapeHtml()`.
 
 The modules still read a handful of globals the page's classic scripts define before they run
 (`escapeHtml`, `registerActions`, `announce`, `isTypingTarget`, `Review`, `marked`, `Motion`,

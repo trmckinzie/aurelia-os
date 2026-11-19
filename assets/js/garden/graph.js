@@ -7,6 +7,7 @@
  * order.
  */
 import { GRAPH_INDEX } from './data.js';
+import { el } from './dom.js';
 import { graphNodeMatches } from './grid.js';
 import { openNote } from './reader.js';
 import { state } from './state.js';
@@ -82,15 +83,17 @@ export function renderGraphList() {
         .slice(0, 30);
 
     if (empty) empty.classList.toggle('hidden', matches.length > 0);
-    container.innerHTML = matches.map((n) => {
+    // Elements, not an HTML string: the ids and titles come from the page's
+    // data blocks (dom.js, el()).
+    container.replaceChildren(...matches.map((n) => {
         const d = degree[n.id] || 0;
-        return `<li>
-            <button type="button" data-note="${n.id}" class="graph-list-row">
-                <span class="graph-list-title">${escapeHtml(n.title)}</span>
-                <span class="graph-list-degree">◉ ${d} ${d === 1 ? 'LINK' : 'LINKS'}</span>
-            </button>
-        </li>`;
-    }).join('');
+        return el('li', {}, [
+            el('button', { className: 'graph-list-row', dataset: { note: n.id }, attrs: { type: 'button' } }, [
+                el('span', { className: 'graph-list-title', text: n.title }),
+                el('span', { className: 'graph-list-degree', text: `◉ ${d} ${d === 1 ? 'LINK' : 'LINKS'}` }),
+            ]),
+        ]);
+    }));
 }
 
 // Only announces the list-mode switch on an actual transition into it

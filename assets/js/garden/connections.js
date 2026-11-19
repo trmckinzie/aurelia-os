@@ -8,6 +8,7 @@
  * order.
  */
 import { BACKLINKS_INDEX, GRAPH_INDEX, NODE_BY_ID } from './data.js';
+import { el, noteButton } from './dom.js';
 
 export function renderBacklinks(noteId) {
     const container = document.getElementById('modal-backlinks');
@@ -26,18 +27,32 @@ export function renderBacklinks(noteId) {
     // Ordinary tab stops, unlike the tabindex="-1" pills on the card faces:
     // there are at most a dozen or so here, and the reader already traps
     // focus around its own content, so they cost nothing to tab through.
-    const pill = (r) => `
-                <button type="button" data-note="${r.id}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors">${escapeHtml(r.title)}</button>`;
-    container.innerHTML = `
-        <div class="mt-6 pt-6 border-t border-aurelia-border">
-            <span class="field-label text-aurelia-muted block mb-3">⟵ Referenced By (${refs.length})</span>
-            <div class="flex flex-wrap gap-2">
-                ${shown.map(pill).join('')}
-                ${rest.length ? `<span id="backlinks-rest" hidden>${rest.map(pill).join('')}</span>` : ''}
-                ${rest.length ? `<button type="button" data-action="expandBacklinks" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors">+${rest.length} MORE</button>` : ''}
-            </div>
-        </div>
-    `;
+    const pill = (r) => noteButton(r.id, r.title,
+        'text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-primary hover:text-aurelia-primary cursor-pointer transition-colors');
+    const pills = shown.map(pill);
+    if (rest.length) {
+        const hiddenRest = el('span', { attrs: { id: 'backlinks-rest' } }, rest.map(pill));
+        hiddenRest.hidden = true;
+        pills.push(hiddenRest, el('button', {
+            className: 'text-[0.8125rem] font-mono px-2.5 py-1 border border-dashed border-aurelia-border rounded-theme text-aurelia-muted hover:text-aurelia-text hover:border-aurelia-text/50 cursor-pointer transition-colors',
+            text: `+${rest.length} MORE`,
+            dataset: { action: 'expandBacklinks' },
+            attrs: { type: 'button' },
+        }));
+    }
+    container.replaceChildren(connectionSection(
+        'field-label text-aurelia-muted block mb-3', `⟵ Referenced By (${refs.length})`,
+        'flex flex-wrap gap-2', pills));
+}
+
+// The frame all three sections share: a rule above, a small label, then the
+// items. Built as elements, never as an HTML string, because the items carry
+// note ids and titles read from the page's data blocks (dom.js, el()).
+function connectionSection(labelClass, label, listClass, items) {
+    return el('div', { className: 'mt-6 pt-6 border-t border-aurelia-border' }, [
+        el('span', { className: labelClass, text: label }),
+        el('div', { className: listClass }, items),
+    ]);
 }
 
 // `hidden` rather than a display class: the pills are already in the DOM,
@@ -96,16 +111,12 @@ export function renderRelatedByTopic(noteId) {
         container.innerHTML = '';
         return;
     }
-    container.innerHTML = `
-        <div class="mt-6 pt-6 border-t border-aurelia-border">
-            <span class="field-label text-aurelia-accent block mb-3">✦ Related by Topic</span>
-            <div class="flex flex-wrap gap-2">
-                ${related.map(r => `
-                <button type="button" data-note="${r.node.id}" title="${r.shared} shared tag${r.shared === 1 ? '' : 's'}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>
-                `).join('')}
-            </div>
-        </div>
-    `;
+    container.replaceChildren(connectionSection(
+        'field-label text-aurelia-accent block mb-3', '✦ Related by Topic',
+        'flex flex-wrap gap-2',
+        related.map(r => noteButton(r.node.id, r.node.title,
+            'text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-accent/30 rounded-theme hover:border-aurelia-accent hover:text-aurelia-accent cursor-pointer transition-colors',
+            { title: `${r.shared} shared tag${r.shared === 1 ? '' : 's'}` }))));
 }
 
 // --- Elaboration nudge -----------------------------------------------
@@ -194,17 +205,13 @@ export function renderElaboration(noteId) {
     const scored = elaborationCandidates(noteId);
     if (scored.length === 0) { container.innerHTML = ''; return; }
 
-    container.innerHTML = `
-        <div class="mt-6 pt-6 border-t border-aurelia-border">
-            <span class="field-label text-aurelia-insight block mb-3">How does this connect?</span>
-            <div class="flex flex-col gap-2">
-                ${scored.map(r => `
-                <p class="text-[0.8125rem] text-aurelia-muted">
-                    How does this connect to
-                    <button type="button" data-note="${r.node.id}" class="text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-insight hover:text-aurelia-insight cursor-pointer transition-colors">${escapeHtml(r.node.title)}</button>?
-                </p>
-                `).join('')}
-            </div>
-        </div>
-    `;
+    container.replaceChildren(connectionSection(
+        'field-label text-aurelia-insight block mb-3', 'How does this connect?',
+        'flex flex-col gap-2',
+        scored.map(r => el('p', { className: 'text-[0.8125rem] text-aurelia-muted' }, [
+            'How does this connect to ',
+            noteButton(r.node.id, r.node.title,
+                'text-[0.8125rem] font-mono px-2.5 py-1 border border-aurelia-border rounded-theme pill-live hover:border-aurelia-insight hover:text-aurelia-insight cursor-pointer transition-colors'),
+            '?',
+        ]))));
 }
