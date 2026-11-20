@@ -43,3 +43,27 @@ export function initDom() {
     modalProgress = document.getElementById('modal-progress');
     shortcutSheet = document.getElementById('shortcut-sheet');
 }
+
+// Builds one element without going through an HTML string. Anything that
+// comes from the page's data blocks (a note's id, its title) is set here as
+// a property, a data-* value or a text node, so no character in it can ever
+// be read as markup. `children` takes elements and plain strings; a string
+// becomes a text node. `doc` is a parameter only so a unit test can pass a
+// stand-in for `document`.
+export function el(tag, { className, text, dataset, attrs } = {}, children = [], doc = document) {
+    const node = doc.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = String(text);
+    Object.entries(dataset || {}).forEach(([key, value]) => { node.dataset[key] = String(value); });
+    Object.entries(attrs || {}).forEach(([name, value]) => { node.setAttribute(name, String(value)); });
+    children.forEach((child) => {
+        node.appendChild(typeof child === 'string' ? doc.createTextNode(child) : child);
+    });
+    return node;
+}
+
+// The button that opens a note: reader.js's delegated [data-note] listener
+// is what acts on it, so it needs no handler of its own.
+export function noteButton(id, title, className, attrs = {}, doc = document) {
+    return el('button', { className, text: title, dataset: { note: id }, attrs: { type: 'button', ...attrs } }, [], doc);
+}
