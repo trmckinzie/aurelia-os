@@ -168,10 +168,13 @@ _TOP_LEVEL_KEYS = {
     "projects", "links", "meta",
 }
 
-_IDENTITY_ALLOWED = {"name", "headline", "location", "summary", "pronouns", "photo", "portrait"}
+_IDENTITY_ALLOWED = {"name", "title", "headline", "location", "summary", "pronouns", "photo", "portrait"}
 _IDENTITY_REQUIRED = {"name", "headline", "location", "summary"}
 _IDENTITY_SPECS = {
     "name": (80, False),
+    # Optional: the whole About <title>. Without it the page falls back to
+    # "name — headline", which runs past what a search result shows.
+    "title": (60, False),
     "headline": (160, False),
     "location": (80, False),
     "summary": (1200, True),

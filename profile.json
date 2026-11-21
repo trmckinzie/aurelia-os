@@ -3,9 +3,10 @@
 
     "identity": {
         "name": "Travis R. McKinzie",
-        "headline": "Product & Web Solutions Lead and IT Manager — Cognitive Psychology, Digital Ergonomics, Human-Centered Systems",
+        "title": "Travis McKinzie: IT, code, and how people think",
+        "headline": "IT manager, developer, and student of the mind: psychology, business, and human-centered systems",
         "location": "Colorado, USA",
-        "summary": "I design and build web systems that respect how people actually think and work. My background pairs a psychology degree with business administration and hands-on IT operations, and I apply that mix to web design, digital ergonomics, and automation: interfaces that reduce cognitive load, documentation people can find, and tooling that removes friction instead of adding it. This site is both my working notebook and a live demonstration of that approach — a static site generator I built to publish a personal knowledge base as a navigable, themeable, accessible website. Where I'm heading: human-computer interaction that supports better learning and better mental health.",
+        "summary": "I work in IT, build software, and study how people think. I hold a B.S. in Business Administration and a B.A. in Psychology with an emphasis on cognitive psychology, and I am lead developer at Rocky Mountain Automation AI. I care about systems that fit how minds actually work: interfaces that lower cognitive load, documentation people can find, and tools that remove friction instead of adding it. Outside work I wrestled my whole life, including at Adams State, I am working on getting better at snowboarding, I read a lot, and I will talk about hip-hop, behavior, psychology, and philosophy for as long as anyone will listen. This site is my working notebook and a live example of the way I like to build.",
         "photo": {
             "src": "assets/images/headshot.webp", "alt": "Travis R. McKinzie",
             "themes": {
@@ -25,14 +26,14 @@
             "org": "Rocky Mountain Automation AI",
             "title": "CPO & Head of Web Solutions",
             "period": "2026 — present",
-            "description": "Lead product and web solutions for an automation company serving service businesses: web design, site architecture, and client builds, plus a website audit method grounded in human-centered design.",
+            "description": "Lead developer and head of product for an automation company serving service businesses, with a focus on web design, site architecture, and human-centered design.",
             "primary": true
         },
         {
             "org": "Adams State University — Computing Services",
             "title": "Help Desk Manager",
             "period": "2026 — present",
-            "description": "Run the campus IT help desk and its team of student assistants. Leading the move from Request Tracker to Freshservice, rebuilding the public How-To site around the EDUCAUSE service categories, and producing self-help guides that head off common problems before they become calls. Member of EDUCAUSE and the Colorado Higher Education Computing Organization (CHECO).",
+            "description": "Run the campus IT help desk and its student team, moving it to Freshservice and building self-help guides that head off problems before they become calls.",
             "url": "https://www.adams.edu/",
             "primary": true
         }
@@ -129,7 +130,7 @@
     ],
 
     "meta": {
-        "updated": "2026-10-07",
+        "updated": "2026-11-21",
         "availability": "Professional inquiries welcome through GitHub: web solutions, IT systems, and human-centered design."
     }
 }

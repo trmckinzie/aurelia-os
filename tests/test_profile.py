@@ -445,3 +445,13 @@ def test_json_module_sanity():
     # our own validator, as a sanity check that the fixture above didn't
     # drift from valid JSON syntax.
     json.loads(json.dumps(minimal_profile()))
+
+
+def test_identity_title_is_optional_and_capped_at_60_characters():
+    profile = minimal_profile()
+    validate_profile(profile)                    # absent: fine
+    profile["identity"]["title"] = "x" * 60
+    validate_profile(profile)                    # at the cap: fine
+    profile["identity"]["title"] = "x" * 61
+    with pytest.raises(ProfileError, match="identity.title"):
+        validate_profile(profile)

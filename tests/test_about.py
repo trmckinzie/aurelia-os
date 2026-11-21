@@ -591,3 +591,16 @@ def test_mobile_menu_search_entry_is_plain_english():
     assert ">Search</button>" in html
     assert "🔍" not in html
     assert "// ⌘K" not in html
+
+
+def test_about_title_uses_identity_title_when_set_and_falls_back_without_it():
+    profile = make_profile()
+    profile["identity"].pop("title", None)
+    fallback = render_about(profile=profile)
+    name, headline = profile["identity"]["name"], profile["identity"]["headline"]
+    assert f"<title>{name} — {headline}" in fallback.replace("&amp;", "&")
+
+    profile["identity"]["title"] = "Short Title"
+    html = render_about(profile=profile)
+    assert "<title>Short Title" in html
+    assert headline not in re.search(r"<title>.*?</title>", html, re.S).group(0)
