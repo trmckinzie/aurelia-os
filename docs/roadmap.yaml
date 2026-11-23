@@ -1113,10 +1113,16 @@ backlog:
   - id: B10
     title: Apply the About page intake interview
     area: Content
-    status: open
-    detail: >-
-      Rewrite profile.json, add certifications, and split a short page title from
-      the long headline. Waiting on the interview file.
+    status: done
+    decision: >-
+      Done 2026-11-21 from a short interview with Travis in place of the intake
+      file. profile.json: new headline and summary (cognitive psychology,
+      business, IT, lead developer at RMAAI, wrestling, reading, snowboarding,
+      hip-hop), role descriptions trimmed to skills over employer detail. New
+      optional identity.title (60 characters at most) is the About <title>,
+      falling back to name and headline. aria-current was already in base.html.
+      Certifications deferred: Travis has none yet, so no schema field was added.
+    decided: 2026-11-21
   - id: B11
     title: Confirm the ThinkPad and Next.js descriptions on the Toolkit cards
     area: Content

@@ -25,7 +25,7 @@
 
 {% set active_page = "about" %}
 
-{% block title %}{{ profile.identity.name }} — {{ profile.identity.headline }}{% endblock %}
+{% block title %}{{ profile.identity.title or (profile.identity.name ~ ' — ' ~ profile.identity.headline) }}{% endblock %}
 {% block og_title %}{{ profile.identity.name }}{% endblock %}
 {% block description %}{{ profile.identity.headline }}{% endblock %}
 {% block nav_title %}PROFILE{% endblock %}
